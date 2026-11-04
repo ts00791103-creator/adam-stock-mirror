@@ -689,7 +689,7 @@ def make_figure(
         title=title,
         height=700,
         hovermode="x unified",
-        dragmode="pan",
+        dragmode="zoom",
         xaxis_rangeslider_visible=False,
         xaxis_title="日期／時間",
         yaxis_title="價格",
@@ -1101,7 +1101,9 @@ if st.button(
     config = {
         "scrollZoom": True,
         "displayModeBar": True,
-        "displaylogo": False
+        "displaylogo": False,
+        "responsive": True,
+        "modeBarButtonsToAdd": ["zoom2d", "pan2d", "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d"]
     }
 
     if mode == "三波各自獨立放大":
@@ -1161,8 +1163,8 @@ if st.button(
 
     st.caption("亞當轉折點：點選或長按圖上的彩色圓點，可查看轉折日期與價位。")
     st.caption(
-        "手機放大：上方選「最近5根／10根／15根」後重新分析；"
-        "圖上雙指縮放、單指左右拖曳。電腦可用滾輪縮放。"
+        "手機放大：圖表預設縮放模式，選取範圍即可放大；"
+        "工具列「＋／－」可縮放，按四向箭頭切換平移，房屋圖示還原。"
     )
 
     rows = []
