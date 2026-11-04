@@ -50,6 +50,9 @@ COLORS = {
 }
 
 ZOOMS = [
+    "最近5根",
+    "最近10根",
+    "最近15根",
     "最近30根",
     "最近60根",
     "最近120根",
@@ -574,12 +577,14 @@ def make_figure(
             max(0, len(df)-n)
         ]
 
+        # 手機初始視窗保留少量未來K棒，完整鏡像仍可拖曳查看。
+        future_bars = min(5, max(1, n // 4))
         right = max(
             [df.index[-1]]
             +
             [
                 w["times"][
-                    min(n, len(w["times"])-1)
+                    min(future_bars, len(w["times"])-1)
                 ]
                 for w in waves
             ]
@@ -798,7 +803,7 @@ threshold = st.slider(
 zoom = st.selectbox(
     "三波同圖／單波初始放大範圍",
     ZOOMS,
-    index=1
+    index=4
 )
 
 individual_zoom = {
@@ -814,21 +819,21 @@ if mode == "三波各自獨立放大":
         individual_zoom["短波"] = st.selectbox(
             "短波放大",
             ZOOMS,
-            index=0
+            index=3
         )
 
     with z2:
         individual_zoom["中波"] = st.selectbox(
             "中波放大",
             ZOOMS,
-            index=1
+            index=4
         )
 
     with z3:
         individual_zoom["長波"] = st.selectbox(
             "長波放大",
             ZOOMS,
-            index=3
+            index=6
         )
 
 st.info(
@@ -984,8 +989,8 @@ if st.button(
         )
 
     st.caption(
-        "滑鼠滾輪縮放、拖曳平移；"
-        "下方滑桿可檢視完整鏡像。"
+        "手機放大：上方選「最近5根／10根／15根」後重新分析；"
+        "圖上雙指縮放、單指左右拖曳。電腦可用滾輪縮放。"
     )
 
     rows = []
