@@ -453,21 +453,31 @@ def make_figure(
     zoom,
     title
 ):
+    # 只減少瀏覽器繪製的歷史 K 棒，鏡像仍依完整資料計算。
+    if zoom == "全部歷史與鏡像":
+        plot_df = df
+    else:
+        try:
+            visible_count = int(zoom.replace("最近", "").replace("根", ""))
+        except (ValueError, AttributeError):
+            visible_count = 120
+        plot_df = df.tail(max(visible_count, 300) + 20)
+
     fig = go.Figure()
 
     if chart_type == "K線":
         fig.add_trace(go.Candlestick(
-            x=df.index,
-            open=df["Open"],
-            high=df["High"],
-            low=df["Low"],
-            close=df["Close"],
+            x=plot_df.index,
+            open=plot_df["Open"],
+            high=plot_df["High"],
+            low=plot_df["Low"],
+            close=plot_df["Close"],
             name="歷史K線"
         ))
     else:
         fig.add_trace(go.Scatter(
-            x=df.index,
-            y=df["Close"],
+            x=plot_df.index,
+            y=plot_df["Close"],
             mode="lines",
             name="歷史收盤線",
             line=dict(
@@ -536,7 +546,7 @@ def make_figure(
         height=700,
         hovermode="x unified",
         dragmode="pan",
-        xaxis_rangeslider_visible=True,
+        xaxis_rangeslider_visible=False,
         xaxis_title="日期／時間",
         yaxis_title="價格",
         legend=dict(
