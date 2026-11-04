@@ -1,0 +1,25 @@
+name: B3 Pro 網站健康檢查
+on:
+  schedule:
+    - cron: "20 0 * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: 檢查正式網站 HTTP 回應
+        env:
+          SITE_URL: https://adam-stock-mirror-mkxgzfcscdedtpfd6zx88v.streamlit.app
+        run: |
+          python - <<'PY'
+          import os, urllib.request
+          url = os.environ["SITE_URL"]
+          req = urllib.request.Request(url, headers={"User-Agent": "B3Pro-HealthCheck/1.0"})
+          with urllib.request.urlopen(req, timeout=40) as response:
+              print("HTTP", response.status, response.geturl())
+              if response.status != 200:
+                  raise SystemExit("網站未正常回應")
+          PY
