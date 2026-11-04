@@ -524,7 +524,10 @@ def make_figure(
     waves,
     chart_type,
     zoom,
-    title
+    title,
+    show_bollinger=False,
+    boll_period=20,
+    boll_std=2.0
 ):
     # 只減少瀏覽器繪製的歷史 K 棒，鏡像仍依完整資料計算。
     if zoom == "全部歷史與鏡像":
@@ -558,6 +561,26 @@ def make_figure(
                 width=2
             )
         ))
+
+    # 布林軌道僅使用實際歷史收盤價，不將鏡像預測納入計算。
+    boll_values = None
+    if show_bollinger and len(df) >= boll_period:
+        middle = df["Close"].rolling(window=boll_period, min_periods=boll_period).mean()
+        deviation = df["Close"].rolling(window=boll_period, min_periods=boll_period).std(ddof=0)
+        upper = middle + boll_std * deviation
+        lower = middle - boll_std * deviation
+        boll_values = (upper, middle, lower)
+        for label, series, color, dash in [
+            ("布林上軌", upper, "#e67e22", "solid"),
+            ("布林中軌", middle, "#3498db", "dash"),
+            ("布林下軌", lower, "#27ae60", "solid")
+        ]:
+            fig.add_trace(go.Scatter(
+                x=plot_df.index, y=series.reindex(plot_df.index),
+                mode="lines", name=label,
+                line=dict(color=color, width=1.8, dash=dash),
+                hovertemplate="%{y:,.2f}<extra>" + label + "</extra>"
+            ))
 
     for w in waves:
         r = w["recent"]
@@ -686,6 +709,12 @@ def make_figure(
                     and np.isfinite(price)
                 ):
                     values.append(float(price))
+
+        if boll_values is not None:
+            for series in (boll_values[0], boll_values[2]):
+                shown = series.loc[(series.index >= left) & (series.index <= df.index[-1])].dropna()
+                if not shown.empty:
+                    values.extend([float(shown.min()), float(shown.max())])
 
         if values:
             lo = min(values)
@@ -871,6 +900,10 @@ chart_type = st.radio(
     horizontal=True
 )
 
+show_bollinger = st.checkbox("顯示布林軌道（BOLL）", value=False)
+boll_period = st.number_input("布林均線週期", min_value=5, max_value=120, value=20, step=1, disabled=not show_bollinger)
+boll_std = st.number_input("標準差倍數", min_value=0.5, max_value=4.0, value=2.0, step=0.5, disabled=not show_bollinger)
+
 threshold = st.slider(
     "最小反轉幅度（%）",
     1, 20, 3
@@ -1034,7 +1067,8 @@ if st.button(
                 [w],
                 chart_type,
                 individual_zoom[w["name"]],
-                f"{symbol}｜{w['name']} A模式完整鏡像"
+                f"{symbol}｜{w['name']} A模式完整鏡像",
+                show_bollinger, boll_period, boll_std
             )
 
             for date in roll_dates:
@@ -1058,7 +1092,8 @@ if st.button(
             waves,
             chart_type,
             zoom,
-            f"{symbol}｜{mode}｜A模式完整鏡像"
+            f"{symbol}｜{mode}｜A模式完整鏡像",
+            show_bollinger, boll_period, boll_std
         )
 
         for date in roll_dates:
