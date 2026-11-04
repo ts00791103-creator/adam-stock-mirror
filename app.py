@@ -630,6 +630,15 @@ def make_figure(
             opacity=0.65
         ))
 
+        if w.get("previous_mirror"):
+            old = w["previous_mirror"]
+            fig.add_trace(go.Scatter(
+                x=old["times"], y=old["projection"],
+                mode="lines", name=f"{w['name']}上一版鏡像",
+                line=dict(color=w["color"], width=1.5, dash="dot"),
+                opacity=0.42
+            ))
+
         fig.add_trace(go.Scatter(
             x=w["times"],
             y=w["projection"],
@@ -1082,6 +1091,14 @@ if st.button(
         else list(WAVES)
     )
 
+    # 每個商品／週期／反轉門檻獨立記錄已確認的鏡像轉折。
+    # Streamlit session_state 僅在目前瀏覽器工作階段保留前一版，
+    # 不聲稱能跨裝置或重新啟動後永久保存。
+    if "adam_mirror_history" not in st.session_state:
+        st.session_state.adam_mirror_history = {}
+    mirror_key = (symbol, interval, float(threshold))
+    mirror_history = st.session_state.adam_mirror_history.setdefault(mirror_key, {})
+
     waves = []
 
     for name in names:
@@ -1098,10 +1115,38 @@ if st.button(
                 "請增加歷史資料或降低反轉幅度。"
             )
         else:
+            previous = mirror_history.get(name)
+            signature = (
+                str(result["recent"].index[result["start"]]),
+                str(result["recent"].index[result["end"]]),
+                len(result["segment"])
+            )
+            if previous is not None and previous["signature"] != signature:
+                result["previous_mirror"] = previous["snapshot"]
+                result["mirror_changed"] = True
+            else:
+                result["mirror_changed"] = False
+                if previous is not None and "previous" in previous:
+                    result["previous_mirror"] = previous["previous"]
+            snapshot = {
+                "times": list(result["times"]),
+                "projection": [float(v) for v in result["projection"]],
+                "updated_at": str(df.index[-1])
+            }
+            mirror_history[name] = {
+                "signature": signature,
+                "snapshot": snapshot,
+                **({"previous": result["previous_mirror"]}
+                   if "previous_mirror" in result else {})
+            }
             waves.append(result)
 
     if not waves:
         st.stop()
+
+    for w in waves:
+        if w.get("mirror_changed"):
+            st.info(f"{w['name']}偵測到新的已確認轉折：鏡像已更新，並保留上一版（本次瀏覽器工作階段）。")
 
     st.caption(
         f"商品：{symbol}｜"
