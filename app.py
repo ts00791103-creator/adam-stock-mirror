@@ -6,21 +6,20 @@ import numpy as np
 import plotly.graph_objects as go
 
 st.set_page_config(
-    page_title="亞當理論 B3 Pro",
+    page_title="亞當理論 B3 Pro｜左右鏡像",
     layout="wide"
 )
 
-st.title("亞當理論 B3 Pro｜股票・ETF・期貨")
-st.caption("短中長波鏡像｜互動K線｜完整波段反轉")
+st.title("亞當理論 B3 Pro｜左右鏡像分析")
+st.caption("歷史波段左右翻轉｜短中長波｜轉折價位")
 
 MARKETS = {
     "台灣股票／ETF": None,
-    "小那斯達克 MNQ（NQ參考）": "NQ=F",
-    "微型黃金 MGC（GC參考）": "GC=F",
+    "那斯達克期貨 NQ": "NQ=F",
+    "黃金期貨 GC": "GC=F",
     "原油期貨 CL": "CL=F",
-    "微型標普 MES（ES參考）": "ES=F",
+    "標普期貨 ES": "ES=F",
     "比特幣 BTC": "BTC-USD",
-    "台指期（自訂代碼）": "CUSTOM",
     "其他商品（自訂代碼）": "CUSTOM",
 }
 
@@ -42,16 +41,16 @@ PERIODS = {
     "1mo": ["2y", "5y", "10y", "max"],
 }
 
-COLORS = {
-    "短波": "green",
-    "中波": "orange",
-    "長波": "red",
-}
-
-SETTINGS = {
+WAVE_SETTINGS = {
     "短波": (3, 100),
     "中波": (7, 260),
     "長波": (14, 650),
+}
+
+WAVE_COLORS = {
+    "短波": "#16a34a",
+    "中波": "#ea580c",
+    "長波": "#dc2626",
 }
 
 @st.cache_data(ttl=900)
@@ -71,10 +70,13 @@ def get_data(symbol, period, interval):
     if df.empty:
         return df
 
-    df = df.dropna(subset=["Close"]).copy()
+    df = df.dropna(subset=["Close"]).sort_index().copy()
     df.index = pd.to_datetime(df.index)
 
-    return df
+    if df.index.tz is not None:
+        df.index = df.index.tz_localize(None)
+
+    return df[~df.index.duplicated(keep="last")]
 
 def find_pivots(values, span, min_change):
     x = np.asarray(values, dtype=float)
@@ -84,84 +86,84 @@ def find_pivots(values, span, min_change):
         return []
 
     for i in range(span, len(x) - span):
-        area = x[i-span:i+span+1]
+        window = x[i-span:i+span+1]
 
-        if x[i] >= np.max(area):
+        if x[i] >= np.max(window):
             candidates.append((i, "高"))
-        elif x[i] <= np.min(area):
+        elif x[i] <= np.min(window):
             candidates.append((i, "低"))
 
-    turns = []
+    pivots = []
 
     for i, kind in candidates:
-        if not turns:
-            turns.append((i, kind))
+        if not pivots:
+            pivots.append((i, kind))
             continue
 
-        j, previous = turns[-1]
+        j, previous = pivots[-1]
 
         if kind == previous:
             if (
                 (kind == "高" and x[i] >= x[j])
-                or
-                (kind == "低" and x[i] <= x[j])
+                or (kind == "低" and x[i] <= x[j])
             ):
-                turns[-1] = (i, kind)
+                pivots[-1] = (i, kind)
 
         elif (
             abs(x[i] - x[j])
             / max(abs(x[j]), 1e-9)
             >= min_change
         ):
-            turns.append((i, kind))
+            pivots.append((i, kind))
 
-    return turns
+    return pivots
 
-def future_dates(last_date, steps, interval):
+def extend_dates(last_date, steps, interval):
     last_date = pd.Timestamp(last_date)
+
+    if steps <= 0:
+        return pd.DatetimeIndex([])
 
     if interval == "1d":
         return pd.bdate_range(
-            last_date,
-            periods=steps + 1
-        )[1:]
+            last_date + pd.offsets.BDay(1),
+            periods=steps
+        )
 
     if interval == "1wk":
         return pd.date_range(
-            last_date,
-            periods=steps + 1,
+            last_date + pd.Timedelta(days=7),
+            periods=steps,
             freq="7D"
-        )[1:]
+        )
 
     if interval == "1mo":
         return pd.date_range(
-            last_date,
-            periods=steps + 1,
+            last_date + pd.offsets.MonthBegin(1),
+            periods=steps,
             freq="MS"
-        )[1:]
+        )
 
-    freq = {
-        "5m": "5min",
-        "15m": "15min",
-        "60m": "h",
+    delta = {
+        "5m": pd.Timedelta(minutes=5),
+        "15m": pd.Timedelta(minutes=15),
+        "60m": pd.Timedelta(hours=1),
     }[interval]
 
-    return pd.date_range(
-        last_date,
-        periods=steps + 1,
-        freq=freq
-    )[1:]
+    return pd.DatetimeIndex([
+        last_date + delta * i
+        for i in range(1, steps + 1)
+    ])
 
 market = st.selectbox(
     "選擇市場",
-    list(MARKETS.keys())
+    list(MARKETS)
 )
 
 if MARKETS[market] is None:
     code = st.text_input(
-        "輸入台股代號",
-        "2308"
-    ).strip()
+        "台股代號", value="2308"
+    ).strip().upper()
 
     exchange = st.radio(
         "交易市場",
@@ -170,17 +172,17 @@ if MARKETS[market] is None:
     )
 
     if code.isdigit():
-        suffix = ".TW" if exchange == "上市" else ".TWO"
-        symbol = code + suffix
+        symbol = code + (
+            ".TW" if exchange == "上市" else ".TWO"
+        )
     else:
         symbol = code
 
 elif MARKETS[market] == "CUSTOM":
     symbol = st.text_input(
-        "輸入 Yahoo Finance 商品代碼",
-        ""
-    ).strip()
-
+        "Yahoo Finance 商品代碼",
+        value=""
+    ).strip().upper()
 else:
     symbol = MARKETS[market]
 
@@ -188,31 +190,32 @@ c1, c2 = st.columns(2)
 
 with c1:
     interval_name = st.selectbox(
-        "選擇K線週期",
-        list(INTERVALS.keys()),
+        "K線週期",
+        list(INTERVALS),
         index=3
     )
 
 with c2:
     interval = INTERVALS[interval_name]
+    periods = PERIODS[interval]
 
     period = st.selectbox(
         "歷史資料長度",
-        PERIODS[interval],
-        index=len(PERIODS[interval])-1
+        periods,
+        index=len(periods)-1
     )
 
-display_mode = st.radio(
+mode = st.radio(
     "波段顯示方式",
-    ["單一波段", "三波同時顯示"],
+    ["三波同時顯示", "單一波段"],
     horizontal=True
 )
 
 wave = st.radio(
     "選擇波段",
-    ["短波", "中波", "長波"],
+    list(WAVE_SETTINGS),
     horizontal=True,
-    disabled=(display_mode == "三波同時顯示")
+    disabled=(mode == "三波同時顯示")
 )
 
 chart_type = st.radio(
@@ -223,12 +226,24 @@ chart_type = st.radio(
 
 threshold = st.slider(
     "最小反轉幅度（%）",
-    1, 20, 5
+    1, 20, 3
+)
+
+zoom = st.selectbox(
+    "預設圖表放大範圍",
+    [
+        "最近30根",
+        "最近60根",
+        "最近120根",
+        "最近250根",
+        "全部歷史"
+    ],
+    index=2
 )
 
 st.caption(
-    "鏡像為歷史波段反向排列與價格平移，"
-    "不是保證未來走勢。"
+    "A模式：最後兩個已確認轉折點之間的"
+    "歷史完整波段，左右翻轉後銜接最新收盤價。"
 )
 
 if st.button("開始亞當鏡像分析", type="primary"):
@@ -240,50 +255,51 @@ if st.button("開始亞當鏡像分析", type="primary"):
     try:
         df = get_data(symbol, period, interval)
     except Exception as exc:
-        st.error(f"資料下載失敗：{exc}")
+        st.error(f"資料取得失敗：{exc}")
         st.stop()
 
     if df.empty:
-        st.error("查無資料，請檢查代碼或週期")
+        st.error("沒有取得資料，請檢查商品代碼")
         st.stop()
 
-    if display_mode == "三波同時顯示":
-        selected_waves = ["短波", "中波", "長波"]
-    else:
-        selected_waves = [wave]
+    selected_waves = (
+        list(WAVE_SETTINGS)
+        if mode == "三波同時顯示"
+        else [wave]
+    )
 
     fig = go.Figure()
 
     if chart_type == "K線":
-        fig.add_trace(
-            go.Candlestick(
-                x=df.index,
-                open=df["Open"],
-                high=df["High"],
-                low=df["Low"],
-                close=df["Close"],
-                name="歷史K線"
-            )
-        )
+        fig.add_trace(go.Candlestick(
+            x=df.index,
+            open=df["Open"],
+            high=df["High"],
+            low=df["Low"],
+            close=df["Close"],
+            name="歷史K線"
+        ))
     else:
-        fig.add_trace(
-            go.Scatter(
-                x=df.index,
-                y=df["Close"],
-                mode="lines",
-                name="歷史收盤線",
-                line=dict(color="blue", width=2)
-            )
-        )
+        fig.add_trace(go.Scatter(
+            x=df.index,
+            y=df["Close"],
+            mode="lines",
+            name="歷史收盤價",
+            line=dict(color="#64748b", width=2)
+        ))
 
     results = []
+    projected_dates = []
+
+    last_date = df.index[-1]
+    latest = float(df["Close"].iloc[-1])
 
     for current_wave in selected_waves:
 
-        span, lookback = SETTINGS[current_wave]
+        span, lookback = WAVE_SETTINGS[current_wave]
 
-        recent = df.tail(lookback).copy()
-        close = recent["Close"].astype(float).to_numpy()
+        recent = df.tail(lookback)
+        close = recent["Close"].to_numpy(dtype=float)
 
         points = find_pivots(
             close,
@@ -294,7 +310,7 @@ if st.button("開始亞當鏡像分析", type="primary"):
         if len(points) < 2:
             st.warning(
                 f"{current_wave}轉折點不足，"
-                "請降低反轉幅度或增加資料長度"
+                "請增加資料或降低反轉幅度"
             )
             continue
 
@@ -306,84 +322,172 @@ if st.button("開始亞當鏡像分析", type="primary"):
         if len(segment) < 2:
             continue
 
-        mirrored = segment[::-1]
+        # A模式：歷史價格順序左右反轉
+        reversed_segment = segment[::-1]
 
-        last = float(close[-1])
-
+        # 將鏡像起點平移至最新收盤價
         projection = (
-            last + mirrored - mirrored[0]
+            latest
+            + reversed_segment
+            - reversed_segment[0]
         )
 
-        dates = future_dates(
-            recent.index[-1],
+        future_dates = extend_dates(
+            last_date,
             len(projection)-1,
             interval
         )
 
-        future_x = [recent.index[-1]] + list(dates)
+        future_x = pd.DatetimeIndex(
+            [last_date]
+        ).append(future_dates)
 
-        color = COLORS[current_wave]
+        projected_dates.extend(list(future_dates))
 
-        fig.add_trace(
-            go.Scatter(
-                x=recent.index[start:end+1],
-                y=segment,
-                mode="lines",
-                name=f"{current_wave}歷史參考波段",
-                line=dict(
-                    color=color,
-                    width=3
+        color = WAVE_COLORS[current_wave]
+
+        fig.add_trace(go.Scatter(
+            x=recent.index[start:end+1],
+            y=segment,
+            mode="lines",
+            name=f"{current_wave}歷史完整波段",
+            line=dict(color=color, width=2),
+            opacity=0.65
+        ))
+
+        fig.add_trace(go.Scatter(
+            x=future_x,
+            y=projection,
+            mode="lines",
+            name=f"{current_wave}左右鏡像",
+            line=dict(
+                color=color,
+                width=3,
+                dash="dash"
+            )
+        ))
+
+        high_i = int(np.argmax(projection))
+        low_i = int(np.argmin(projection))
+
+        for idx, label in [
+            (high_i, "高"),
+            (low_i, "低")
+        ]:
+            fig.add_trace(go.Scatter(
+                x=[future_x[idx]],
+                y=[projection[idx]],
+                mode="markers+text",
+                text=[
+                    f"{current_wave}{label} "
+                    f"{projection[idx]:,.2f}"
+                ],
+                textposition=(
+                    "top center"
+                    if label == "高"
+                    else "bottom center"
                 ),
-                opacity=0.6
-            )
-        )
-
-        fig.add_trace(
-            go.Scatter(
-                x=future_x,
-                y=projection,
-                mode="lines",
-                name=f"{current_wave}亞當鏡像",
-                line=dict(
+                marker=dict(
                     color=color,
-                    dash="dash",
-                    width=3
-                )
-            )
-        )
+                    size=9
+                ),
+                showlegend=False
+            ))
 
         results.append({
             "波段": current_wave,
-            "最新收盤價": round(last, 2),
-            "鏡像終點參考價": round(
+            "最新收盤": round(latest, 2),
+            "鏡像最高價": round(
+                float(projection[high_i]), 2
+            ),
+            "最高價參考日": str(future_x[high_i]),
+            "鏡像最低價": round(
+                float(projection[low_i]), 2
+            ),
+            "最低價參考日": str(future_x[low_i]),
+            "鏡像終點價": round(
                 float(projection[-1]), 2
             ),
-            "歷史波段K數": len(segment),
-            "參考起日": str(
-                recent.index[start].date()
-            ),
-            "參考迄日": str(
-                recent.index[end].date()
-            )
+            "終點參考日": str(future_x[-1]),
+            "歷史波段起點": str(recent.index[start]),
+            "歷史波段終點": str(recent.index[end]),
+            "歷史波段根數": len(segment)
         })
 
     fig.update_layout(
-        title=f"{symbol}｜亞當理論 B3 Pro",
-        height=680,
+        title=f"{symbol}｜A模式左右鏡像｜{interval_name}",
+        height=760,
         hovermode="x unified",
         dragmode="pan",
         xaxis_rangeslider_visible=True,
         legend=dict(
             orientation="h",
-            y=1.05
+            y=1.13
         ),
         margin=dict(
-            l=30,
-            r=30,
-            t=90,
-            b=40
+            l=35, r=35, t=110, b=40
+        ),
+        xaxis_title="日期／時間",
+        yaxis_title="價格",
+        yaxis=dict(
+            autorange=True,
+            fixedrange=False
         )
     )
+
+    if zoom != "全部歷史":
+
+        n = int(
+            zoom.replace("最近", "").replace("根", "")
+        )
+
+        left = df.index[max(0, len(df)-n)]
+
+        right = (
+            max(projected_dates)
+            if projected_dates
+            else last_date
+        )
+
+        if left < right:
+            fig.update_xaxes(range=[left, right])
+
+        visible = df.loc[df.index >= left]
+
+        if not visible.empty:
+
+            values = [
+                float(visible["Low"].min()),
+                float(visible["High"].max())
+            ]
+
+            for trace in fig.data:
+                if (
+                    isinstance(trace, go.Scatter)
+                    and trace.y is not None
+                ):
+                    for x_val, y_val in zip(
+                        trace.x, trace.y
+                    ):
+                        if (
+                            pd.Timestamp(x_val) >= left
+                            and pd.notna(y_val)
+                        ):
+                            values.append(float(y_val))
+
+            if values:
+                low = min(values)
+                high = max(values)
+
+                pad = max(
+                    (high-low)*0.08,
+                    abs(high)*0.005,
+                    0.01
+                )
+
+                fig.update_yaxes(
+                    range=[low-pad, high+pad]
+                )
 
     st.plotly_chart(
         fig,
@@ -396,37 +500,42 @@ if st.button("開始亞當鏡像分析", type="primary"):
     )
 
     st.caption(
-        "滑鼠拖曳可移動圖表；"
-        "滾輪可放大縮小；"
+        "滑鼠滾輪可放大縮小；"
+        "拖曳可平移；"
         "下方滑桿可調整時間範圍。"
     )
 
     if results:
-        st.subheader("短中長波參考數值")
 
-        result_df = pd.DataFrame(results)
+        st.subheader("短、中、長波鏡像轉折價位")
+
+        table = pd.DataFrame(results)
 
         st.dataframe(
-            result_df,
-            use_container_width=True,
-            hide_index=True
+            table,
+            hide_index=True,
+            use_container_width=True
         )
 
-        csv_data = result_df.to_csv(
+        csv_data = table.to_csv(
             index=False
         ).encode("utf-8-sig")
 
         st.download_button(
-            "下載分析結果 CSV",
+            "下載轉折價位 CSV",
             csv_data,
-            file_name="adam_b3_pro.csv",
+            file_name="adam_b3_pro_A.csv",
             mime="text/csv"
         )
+
     else:
-        st.info("目前沒有可用的完整波段")
+        st.info(
+            "目前無法計算完整波段，"
+            "請調整反轉幅度或歷史資料。"
+        )
 
     st.warning(
-        "本程式為歷史鏡像情境分析，"
-        "不是買賣建議。"
-        "期貨參考代碼不一定對應微型契約即時報價。"
+        "鏡像為歷史走勢情境分析，"
+        "不是保證未來會到達的價位。"
+        "未來日期為估算，未完整排除交易所休市日。"
     )
