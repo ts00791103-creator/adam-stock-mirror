@@ -1096,7 +1096,7 @@ if st.button(
     # 不聲稱能跨裝置或重新啟動後永久保存。
     if "adam_mirror_history" not in st.session_state:
         st.session_state.adam_mirror_history = {}
-    mirror_key = (symbol, interval, float(threshold))
+    mirror_key = (market, symbol, interval, period, float(threshold))
     mirror_history = st.session_state.adam_mirror_history.setdefault(mirror_key, {})
 
     waves = []
