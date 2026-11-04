@@ -625,6 +625,46 @@ def make_figure(
     return fig
 
 
+
+# ===== 台股中文名稱查詢（官方公開資料；失敗時保留代號輸入）=====
+@st.cache_data(ttl=86400, show_spinner=False)
+def load_tw_symbols():
+    import json
+    from urllib.request import Request, urlopen
+
+    sources = [
+        ("上市", "https://openapi.twse.com.tw/v1/opendata/t187ap03_L", "公司代號", "公司名稱"),
+        ("上櫃", "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O", "公司代號", "公司名稱"),
+        ("上市", "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL", "Code", "Name"),
+        ("上櫃", "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_quotes", "SecuritiesCompanyCode", "CompanyName"),
+    ]
+    found = {}
+    for exchange_name, url, code_key, name_key in sources:
+        try:
+            req = Request(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
+            with urlopen(req, timeout=8) as resp:
+                rows = json.load(resp)
+            if not isinstance(rows, list):
+                continue
+            for row in rows:
+                code = str(row.get(code_key, "")).strip()
+                name = str(row.get(name_key, "")).strip()
+                if code.isdigit() and 4 <= len(code) <= 6 and name:
+                    found[(code, exchange_name)] = name
+        except Exception:
+            continue
+    # 常用股票備援，官方來源暫時無法存取時仍可搜尋
+    backup = {
+        "2330": ("台積電", "上市"), "2308": ("台達電", "上市"),
+        "2317": ("鴻海", "上市"), "2454": ("聯發科", "上市"),
+        "2618": ("長榮航", "上市"), "3481": ("群創", "上市"),
+        "00878": ("國泰永續高股息", "上市"),
+    }
+    for code, (name, exchange_name) in backup.items():
+        found.setdefault((code, exchange_name), name)
+    return [(code, name, exchange_name) for (code, exchange_name), name in sorted(found.items())]
+
+
 # ===== 操作介面 =====
 
 market = st.selectbox(
@@ -633,25 +673,32 @@ market = st.selectbox(
 )
 
 if MARKETS[market] is None:
-    code = st.text_input(
-        "台股代號",
+    query = st.text_input(
+        "股票代號或中文名稱（例如：2330、台積電、台達電）",
         "2308"
-    ).strip().upper()
-
-    exchange = st.radio(
-        "交易市場",
-        ["上市", "上櫃"],
-        horizontal=True
-    )
-
-    if code.isdigit():
-        symbol = code + (
-            ".TW"
-            if exchange == "上市"
-            else ".TWO"
-        )
+    ).strip()
+    stock_list = load_tw_symbols()
+    matches = [
+        (code, name, ex) for code, name, ex in stock_list
+        if query and (query.lower() in code.lower() or query.lower() in name.lower())
+    ]
+    if matches:
+        choices = matches[:100]
+        labels = [f"{code} {name}（{ex}）" for code, name, ex in choices]
+        chosen = st.selectbox("選擇股票／ETF", range(len(choices)),
+                              format_func=lambda i: labels[i])
+        code, stock_name, exchange = choices[chosen]
+        symbol = code + (".TW" if exchange == "上市" else ".TWO")
+        st.caption(f"目前選擇：{code} {stock_name}｜{exchange}")
+    elif query.isdigit():
+        exchange = st.radio("查無名稱對照，請選擇交易市場", ["上市", "上櫃"],
+                            horizontal=True)
+        symbol = query + (".TW" if exchange == "上市" else ".TWO")
+        st.caption("目前使用股票代號查詢；中文名稱資料可能暫時無法取得。")
     else:
-        symbol = code
+        symbol = ""
+        if query:
+            st.warning("找不到符合的中文股票名稱。請輸入完整名稱或股票代號。")
 
 elif MARKETS[market] == "TAIFEX_TX":
     symbol = "TX（官方期交所 CSV）"
