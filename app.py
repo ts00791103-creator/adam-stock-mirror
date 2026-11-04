@@ -104,7 +104,7 @@ def fetch_tx_latest():
         raise ValueError("期交所 API 欄位異動：" + ", ".join(missing))
     data = data.loc[data["Contract"].astype(str).str.strip() == "TX"].copy()
     data["月份"] = data["ContractMonth(Week)"].astype(str).str.strip()
-    data = data.loc[data["月份"].str.fullmatch(r"20\\d{4}")].copy()
+    data = data.loc[data["月份"].str.fullmatch(r"20\d{4}")].copy()
     data["日期"] = pd.to_datetime(data["Date"].astype(str), format="%Y%m%d", errors="coerce")
     data["交易時段"] = data["TradingSession"].astype(str).str.strip()
     for src, dst in [("Open", "Open"), ("High", "High"),
