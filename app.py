@@ -597,9 +597,9 @@ def make_figure(
         lower = middle - boll_std * deviation
         boll_values = (upper, middle, lower)
         for label, series, color, dash in [
-            ("布林上軌", upper, "#e67e22", "solid"),
-            ("布林中軌", middle, "#3498db", "dash"),
-            ("布林下軌", lower, "#27ae60", "solid")
+            ("布林上軌", upper, "#d97706", "solid"),
+            ("布林中軌", middle, "#2563eb", "dash"),
+            ("布林下軌", lower, "#9333ea", "solid")
         ]:
             fig.add_trace(go.Scatter(
                 x=plot_df.index, y=series.reindex(plot_df.index),
@@ -644,17 +644,12 @@ def make_figure(
             fig.add_trace(go.Scatter(
                 x=[w["times"][i]],
                 y=[float(w["projection"][i])],
-                mode="markers+text",
+                mode="markers",
                 text=[
                     f"{w['name']}轉{number} "
                     f"{kind} "
                     f"{w['projection'][i]:,.2f}"
                 ],
-                textposition=(
-                    "top center"
-                    if kind == "高"
-                    else "bottom center"
-                ),
                 marker=dict(
                     color=w["color"],
                     size=9
@@ -971,7 +966,7 @@ zoom = st.selectbox(
 individual_zoom = {
     "短波": "最近30根",
     "中波": "最近60根",
-    "長波": "最近250根"
+    "長波": "最近60根"
 }
 
 if mode == "三波各自獨立放大":
@@ -995,7 +990,7 @@ if mode == "三波各自獨立放大":
         individual_zoom["長波"] = st.selectbox(
             "長波放大",
             ZOOMS,
-            index=6
+            index=4
         )
 
 st.info(
@@ -1164,6 +1159,7 @@ if st.button(
             key="combined"
         )
 
+    st.caption("亞當轉折點：點選或長按圖上的彩色圓點，可查看轉折日期與價位。")
     st.caption(
         "手機放大：上方選「最近5根／10根／15根」後重新分析；"
         "圖上雙指縮放、單指左右拖曳。電腦可用滾輪縮放。"
