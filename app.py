@@ -619,7 +619,7 @@ def make_figure(
         title=title,
         height=700,
         hovermode="x unified",
-        dragmode="zoom",
+        dragmode="pan",
         xaxis_rangeslider_visible=False,
         xaxis_title="日期／時間",
         yaxis_title="價格",
@@ -1075,8 +1075,8 @@ if st.button(
 
     st.caption("亞當轉折點：點選或長按圖上的彩色圓點，可查看轉折日期與價位。")
     st.caption(
-        "手機放大：圖表預設縮放模式，選取範圍即可放大；"
-        "工具列「＋／－」可縮放，按四向箭頭切換平移，房屋圖示還原。"
+        "手機操作：預設左右拖曳移動K線；使用圖表工具列「＋／－」放大縮小。"
+        "若畫面異常，點房屋圖示還原；放大鏡框選模式不適合手機觸控。"
     )
 
     rows = []
