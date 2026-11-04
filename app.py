@@ -20,8 +20,11 @@ MARKETS = {
 }
 
 INTERVALS = {
+    "1分K": "1m",
     "5分K": "5m",
+    "10分K": "10m",
     "15分K": "15m",
+    "30分K": "30m",
     "60分K": "60m",
     "日K": "1d",
     "週K": "1wk",
@@ -29,6 +32,9 @@ INTERVALS = {
 }
 
 PERIODS = {
+    "1m": ["1d", "5d", "7d"],
+    "10m": ["5d", "1mo", "60d"],
+    "30m": ["5d", "1mo", "60d"],
     "5m": ["5d", "1mo", "60d"],
     "15m": ["5d", "1mo", "60d"],
     "60m": ["5d", "1mo", "3mo", "6mo", "2y"],
@@ -63,10 +69,11 @@ ZOOMS = [
 
 @st.cache_data(ttl=900)
 def get_data(symbol, period, interval):
+    source_interval = "5m" if interval == "10m" else interval
     df = yf.download(
         symbol,
         period=period,
-        interval=interval,
+        interval=source_interval,
         auto_adjust=False,
         progress=False,
         threads=False
@@ -84,7 +91,23 @@ def get_data(symbol, period, interval):
     if df.index.tz is not None:
         df.index = df.index.tz_localize(None)
 
-    return df[~df.index.duplicated(keep="last")]
+    df = df[~df.index.duplicated(keep="last")]
+    if interval == "10m":
+        # 以每個交易日首根5分K為起點，避免跨日混合。
+        # 遇到盤中長時間休市亦重新開始合成。
+        gaps = df.index.to_series().diff().gt(pd.Timedelta(minutes=10))
+        sessions = (df.index.to_series().dt.normalize().ne(
+            df.index.to_series().dt.normalize().shift()) | gaps).cumsum()
+        parts = []
+        for _, group in df.groupby(sessions):
+            bars = group.resample("10min", origin=group.index[0], label="left", closed="left").agg({
+                "Open": "first", "High": "max", "Low": "min",
+                "Close": "last", "Volume": "sum"
+            })
+            bars = bars.dropna(subset=["Open", "High", "Low", "Close"])
+            parts.append(bars)
+        df = pd.concat(parts).sort_index() if parts else df.iloc[0:0]
+    return df
 
 
 
@@ -416,8 +439,11 @@ def future_index(last_date, count, interval):
         )
 
     delta = {
+        "1m": pd.Timedelta(minutes=1),
         "5m": pd.Timedelta(minutes=5),
+        "10m": pd.Timedelta(minutes=10),
         "15m": pd.Timedelta(minutes=15),
+        "30m": pd.Timedelta(minutes=30),
         "60m": pd.Timedelta(hours=1),
     }[interval]
 
@@ -428,7 +454,7 @@ def future_index(last_date, count, interval):
 
 
 def fmt_time(value, interval):
-    if interval in ("5m", "15m", "60m"):
+    if interval in ("1m", "5m", "10m", "15m", "30m", "60m"):
         fmt = "%Y-%m-%d %H:%M"
     else:
         fmt = "%Y-%m-%d"
@@ -856,7 +882,7 @@ with c1:
         interval_name = st.selectbox(
             "K線週期",
             list(INTERVALS),
-            index=3
+            index=6
         )
 
 with c2:
