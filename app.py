@@ -694,7 +694,8 @@ def make_figure(
         paper_bgcolor="#101010" if dark else "#ffffff",
         plot_bgcolor="#101010" if dark else "#ffffff",
         font=dict(color="#eeeeee" if dark else "#252a34"),
-        title=title,
+        title=dict(text=title, font=dict(color="#ffffff" if dark else "#252a34", size=17)),
+        modebar=dict(bgcolor="rgba(16,16,16,0.95)" if dark else "rgba(255,255,255,0.9)", color="#f5f5f5" if dark else "#52525b", activecolor="#38bdf8" if dark else "#2563eb"),
         height=700,
         hovermode="x unified",
         dragmode="pan",
@@ -707,7 +708,8 @@ def make_figure(
             xanchor="left",
             y=-0.22,
             yanchor="top",
-            font=dict(size=11)
+            font=dict(size=12, color="#f5f5f5" if dark else "#252a34"),
+            bgcolor="rgba(16,16,16,0)" if dark else "rgba(255,255,255,0)"
         ),
         margin=dict(
             l=35,
@@ -717,8 +719,8 @@ def make_figure(
         )
     )
 
-    fig.update_xaxes(gridcolor="#353535" if dark else "#e5e7eb")
-    fig.update_yaxes(gridcolor="#353535" if dark else "#e5e7eb")
+    fig.update_xaxes(gridcolor="#353535" if dark else "#e5e7eb", tickfont=dict(color="#e5e7eb" if dark else "#52525b"), title_font=dict(color="#e5e7eb" if dark else "#52525b"))
+    fig.update_yaxes(gridcolor="#353535" if dark else "#e5e7eb", tickfont=dict(color="#e5e7eb" if dark else "#52525b"), title_font=dict(color="#e5e7eb" if dark else "#52525b"))
 
     if zoom != "全部歷史與鏡像":
         n = int(
