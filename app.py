@@ -3,6 +3,7 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
+from mobile_chart import mobile_chart
 
 st.set_page_config(page_title="亞當理論 B3 Pro", layout="wide")
 st.title("亞當理論 B3 Pro｜A 模式左右鏡像")
@@ -108,6 +109,76 @@ def get_data(symbol, period, interval):
             parts.append(bars)
         df = pd.concat(parts).sort_index() if parts else df.iloc[0:0]
     return df
+
+
+
+@st.cache_data(ttl=1800, show_spinner=False)
+def fetch_tx_latest():
+    """期交所 OpenAPI 僅提供最近交易日快照，並非歷史查詢 API。"""
+    import json
+    from urllib.request import Request, urlopen
+    url = "https://openapi.taifex.com.tw/v1/DailyMarketReportFut"
+    req = Request(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
+    with urlopen(req, timeout=15) as response:
+        rows = json.load(response)
+    if not isinstance(rows, list):
+        raise ValueError("期交所 API 未回傳行情清單")
+    data = pd.DataFrame(rows)
+    required = ["Date", "Contract", "ContractMonth(Week)", "TradingSession",
+                "Open", "High", "Low", "Last", "Volume"]
+    missing = [col for col in required if col not in data.columns]
+    if missing:
+        raise ValueError("期交所 API 欄位異動：" + ", ".join(missing))
+    data = data.loc[data["Contract"].astype(str).str.strip() == "TX"].copy()
+    data["月份"] = data["ContractMonth(Week)"].astype(str).str.strip()
+    data = data.loc[data["月份"].str.fullmatch(r"20\d{4}")].copy()
+    data["日期"] = pd.to_datetime(data["Date"].astype(str), format="%Y%m%d", errors="coerce")
+    data["交易時段"] = data["TradingSession"].astype(str).str.strip()
+    for src, dst in [("Open", "Open"), ("High", "High"),
+                     ("Low", "Low"), ("Last", "Close"), ("Volume", "成交量數字")]:
+        data[dst] = pd.to_numeric(data[src].astype(str).str.replace(",", "", regex=False),
+                                  errors="coerce")
+    data = data.dropna(subset=["日期", "Open", "High", "Low", "Close"])
+    if data.empty:
+        raise ValueError("最近交易日沒有可用的 TX 行情")
+    return data
+
+
+def tx_latest_bar(session_mode):
+    data = fetch_tx_latest()
+    regular = data.loc[data["交易時段"] == "一般"].copy()
+    if regular.empty:
+        raise ValueError("官方 API 尚未提供最近交易日 TX 日盤資料")
+    chosen = regular.sort_values(["日期", "成交量數字", "月份"],
+                                 ascending=[True, False, True]).drop_duplicates("日期")
+    bars = []
+    for _, day in chosen.iterrows():
+        same = data.loc[(data["日期"] == day["日期"]) &
+                        (data["月份"] == day["月份"])].copy()
+        if session_mode == "日盤":
+            same = same.loc[same["交易時段"] == "一般"]
+        if same.empty:
+            continue
+        night = same.loc[same["交易時段"] == "盤後"]
+        last = night.iloc[-1] if not night.empty else day
+        bars.append({"Date": day["日期"], "Open": day["Open"],
+                     "High": same["High"].max(), "Low": same["Low"].min(),
+                     "Close": last["Close"], "月份": day["月份"]})
+    if not bars:
+        raise ValueError("最近交易日 TX 行情無法合併")
+    return pd.DataFrame(bars).set_index("Date").sort_index()
+
+
+def merge_tx_history(history, latest):
+    """相同日期以最新官方資料為準，換月日重新計算。"""
+    if history is None or history.empty:
+        merged = latest.copy()
+    else:
+        merged = pd.concat([history, latest]).sort_index()
+        merged = merged.loc[~merged.index.duplicated(keep="last")]
+    roll = merged["月份"].ne(merged["月份"].shift())
+    roll.iloc[0] = False
+    return merged, merged.index[roll].tolist()
 
 
 def load_tx_csv(uploaded_files, session_mode):
@@ -793,8 +864,13 @@ if MARKETS[market] is None:
 elif MARKETS[market] == "TAIFEX_TX":
     symbol = "TX（官方期交所 CSV）"
 
+    tx_source = st.radio(
+        "台指期資料來源",
+        ["官方 API 自動取得最新交易日", "官方 CSV 歷史資料"],
+        horizontal=True
+    )
     tx_files = st.file_uploader(
-        "上傳期交所年度期貨 CSV（可一次選多個年份）",
+        "選用：上傳期交所年度 CSV 補足歷史（可多選）",
         type=["csv"],
         accept_multiple_files=True
     )
@@ -806,8 +882,9 @@ elif MARKETS[market] == "TAIFEX_TX":
     )
 
     st.caption(
-        "使用官方交易日期合併夜盤；"
-        "本版依日盤成交量選擇主力月合約。"
+        "官方 API 自動讀取最近交易日，並非即時報價；"
+        "如需長期短中長波分析，請上傳歷史 CSV 補齊。"
+        "依日盤成交量選主力月；夜盤依官方交易日期合併。"
     )
 
 elif MARKETS[market] == "CUSTOM":
@@ -875,6 +952,8 @@ chart_type = st.radio(
     ["K線", "線圖"],
     horizontal=True
 )
+
+mobile_engine = st.checkbox("手機雙指縮放圖表（新版）", value=False, help="取消勾選即回原本 Plotly 圖表。")
 
 chart_theme = st.radio(
     "圖表配色",
@@ -945,10 +1024,22 @@ if st.button(
 
     try:
         if market == "台指期 TX（官方 CSV）":
-            df, roll_dates = load_tx_csv(
-                tx_files,
-                tx_session
-            )
+            history = None
+            if tx_files:
+                history, _ = load_tx_csv(tx_files, tx_session)
+            if tx_source == "官方 API 自動取得最新交易日":
+                try:
+                    latest = tx_latest_bar(tx_session)
+                    df, roll_dates = merge_tx_history(history, latest)
+                except Exception as api_error:
+                    if history is None:
+                        raise ValueError(f"官方 API 取得失敗：{api_error}；可改用 CSV 模式") from api_error
+                    st.warning(f"官方 API 暫時無法取得，改用已上傳 CSV：{api_error}")
+                    df, roll_dates = merge_tx_history(history, pd.DataFrame())
+            else:
+                if history is None:
+                    raise ValueError("CSV 模式請先上傳期交所歷史資料")
+                df, roll_dates = merge_tx_history(history, pd.DataFrame())
         else:
             df = get_data(
                 symbol,
@@ -980,9 +1071,9 @@ if st.button(
 
     if market == "台指期 TX（官方 CSV）":
         st.warning(
-            "此處為按日盤成交量挑選的"
-            "主力連續合約，未回補換月價差。"
-            "2025 年資料不代表 2026 年最新行情。"
+            "官方 API 僅提供最近交易日，不能直接回補 2026 全年歷史。"
+            "目前是未回補換月價差的主力連續合約；"
+            "只有一根 K 棒時無法計算亞當波段。"
         )
 
     names = (
@@ -1051,12 +1142,19 @@ if st.button(
                     opacity=0.5
                 )
 
-            st.plotly_chart(
-                fig,
-                use_container_width=True,
-                config=config,
-                key=f"wave_{w['name']}"
-            )
+            if mobile_engine:
+                mobile_chart(
+                    df, [w], individual_zoom[w["name"]],
+                    f"{symbol}｜{w['name']} A模式完整鏡像",
+                    show_bollinger, boll_period, boll_std, chart_theme
+                )
+            else:
+                st.plotly_chart(
+                    fig,
+                    use_container_width=True,
+                    config=config,
+                    key=f"wave_{w['name']}"
+                )
 
     else:
         fig = make_figure(
@@ -1076,12 +1174,18 @@ if st.button(
                 opacity=0.5
             )
 
-        st.plotly_chart(
-            fig,
-            use_container_width=True,
-            config=config,
-            key="combined"
-        )
+        if mobile_engine:
+            mobile_chart(
+                df, waves, zoom, f"{symbol}｜{mode}｜A模式完整鏡像",
+                show_bollinger, boll_period, boll_std, chart_theme
+            )
+        else:
+            st.plotly_chart(
+                fig,
+                use_container_width=True,
+                config=config,
+                key="combined"
+            )
 
     st.caption("亞當轉折點：點選或長按圖上的彩色圓點，可查看轉折日期與價位。")
     st.caption(
