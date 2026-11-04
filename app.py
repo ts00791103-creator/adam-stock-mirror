@@ -593,6 +593,22 @@ def make_figure(
                 hovertemplate="%{text}<extra></extra>"
             ))
 
+    # 台股分K：移除非交易時段與週末，避免手機圖表出現大片空白。
+    # 僅套用在符合台股日盤時間的資料，避免影響美股期貨與 BTC。
+    is_intraday = (
+        len(df) > 1
+        and pd.Timestamp(df.index[-1]).normalize() != pd.Timestamp(df.index[0]).normalize()
+        and (df.index.to_series().diff().dropna().median() < pd.Timedelta(hours=8))
+    )
+    if is_intraday:
+        market_hours = df.index.hour * 60 + df.index.minute
+        day_session_ratio = ((market_hours >= 9 * 60) & (market_hours <= 13 * 60 + 35)).mean()
+        if day_session_ratio > 0.95:
+            fig.update_xaxes(rangebreaks=[
+                dict(bounds=["sat", "mon"]),
+                dict(bounds=[13.6, 9], pattern="hour")
+            ])
+
     fig.update_layout(
         title=title,
         height=700,
