@@ -663,6 +663,17 @@ def make_figure(
                 hovertemplate="%{text}<extra></extra>"
             ))
 
+    # 日K：隱藏週末及實際資料缺少的平日（假日／休市日）。
+    # 只調整日期軸的顯示，布林軌道與亞當鏡像仍使用原始資料。
+    if pd.DatetimeIndex(df.index).normalize().is_unique and len(df) > 1:
+        observed = pd.DatetimeIndex(df.index).normalize()
+        expected = pd.bdate_range(observed.min(), observed.max())
+        missing_days = expected.difference(observed)
+        daily_breaks = [dict(bounds=["sat", "mon"])]
+        if len(missing_days):
+            daily_breaks.append(dict(values=missing_days.strftime("%Y-%m-%d").tolist()))
+        fig.update_xaxes(rangebreaks=daily_breaks)
+
     # 台股分K：移除非交易時段與週末，避免手機圖表出現大片空白。
     # 僅套用在符合台股日盤時間的資料，避免影響美股期貨與 BTC。
     is_intraday = (
