@@ -1,22 +1,25 @@
-
 import streamlit as st
 import yfinance as yf
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 
-st.set_page_config(page_title="亞當理論 B3 Pro", layout="wide")
+st.set_page_config(
+    page_title="亞當理論 B3 Pro",
+    layout="wide"
+)
+
 st.title("亞當理論 B3 Pro｜A 模式左右鏡像")
-st.caption("完整鏡像 K 棒｜三波同圖／各波獨立放大｜轉折價位表")
+st.caption("完整鏡像｜短中長波｜內部轉折點｜互動圖表")
 
 MARKETS = {
     "台灣股票／ETF": None,
-    "那斯達克期貨 NQ（MNQ 參考）": "NQ=F",
-    "黃金期貨 GC（MGC 參考）": "GC=F",
+    "那斯達克期貨 NQ（MNQ參考）": "NQ=F",
+    "黃金期貨 GC（MGC參考）": "GC=F",
     "原油期貨 CL": "CL=F",
-    "標普期貨 ES（MES 參考）": "ES=F",
+    "標普期貨 ES（MES參考）": "ES=F",
     "比特幣 BTC": "BTC-USD",
-    "其他商品／台指期（自訂 Yahoo 代碼）": "CUSTOM",
+    "其他商品（自訂代碼）": "CUSTOM",
 }
 
 INTERVALS = {
@@ -74,6 +77,7 @@ def get_data(symbol, period, interval):
 
     return df[~df.index.duplicated(keep="last")]
 
+
 def find_pivots(values, span, min_change):
     x = np.asarray(values, dtype=float)
 
@@ -97,13 +101,12 @@ def find_pivots(values, span, min_change):
             pivots.append((i, kind))
             continue
 
-        j, prev_kind = pivots[-1]
+        j, previous = pivots[-1]
 
-        if kind == prev_kind:
+        if kind == previous:
             if (
                 (kind == "高" and x[i] >= x[j])
-                or
-                (kind == "低" and x[i] <= x[j])
+                or (kind == "低" and x[i] <= x[j])
             ):
                 pivots[-1] = (i, kind)
 
@@ -115,6 +118,7 @@ def find_pivots(values, span, min_change):
             pivots.append((i, kind))
 
     return pivots
+
 
 def future_index(last_date, count, interval):
     t = pd.Timestamp(last_date)
@@ -153,6 +157,31 @@ def future_index(last_date, count, interval):
         for i in range(1, count + 1)
     ])
 
+
+def internal_turns(values, span=2, max_points=3):
+    """
+    找出鏡像內部局部高低點。
+    不把第一根與最後一根當作內部轉折。
+    依未來時間排序，最多取前3個。
+    """
+    x = np.asarray(values, dtype=float)
+    turns = []
+
+    if len(x) < 2 * span + 1:
+        return turns
+
+    for i in range(span, len(x) - span):
+        window = x[i-span:i+span+1]
+
+        if x[i] > np.max(np.delete(window, span)):
+            turns.append((i, "高點"))
+
+        elif x[i] < np.min(np.delete(window, span)):
+            turns.append((i, "低點"))
+
+    return turns[:max_points]
+
+
 def mirror_wave(df, name, threshold, interval):
     span, lookback = WAVES[name]
 
@@ -171,17 +200,17 @@ def mirror_wave(df, name, threshold, interval):
     start = pivots[-2][0]
     end = pivots[-1][0]
 
-    segment = close[start:end + 1]
+    segment = close[start:end+1]
 
     if len(segment) < 2:
         return None
 
-    # A模式：歷史價格順序左右翻轉
+    # A模式：左右翻轉歷史完整波段
     reversed_segment = segment[::-1]
 
-    # 銜接最新收盤價
     latest = float(df["Close"].iloc[-1])
 
+    # 鏡像起點銜接最新收盤價
     projection = (
         latest
         + reversed_segment
@@ -190,7 +219,7 @@ def mirror_wave(df, name, threshold, interval):
 
     future = future_index(
         df.index[-1],
-        len(projection) - 1,
+        len(projection)-1,
         interval
     )
 
@@ -200,6 +229,12 @@ def mirror_wave(df, name, threshold, interval):
 
     high_i = int(np.argmax(projection))
     low_i = int(np.argmin(projection))
+
+    turns = internal_turns(
+        projection,
+        span=2,
+        max_points=3
+    )
 
     return {
         "name": name,
@@ -212,16 +247,21 @@ def mirror_wave(df, name, threshold, interval):
         "projection": projection,
         "high_i": high_i,
         "low_i": low_i,
+        "turns": turns,
         "last": latest,
     }
 
+
 def fmt_time(t, interval):
     if interval in ("5m", "15m", "60m"):
-        return pd.Timestamp(t).strftime("%Y-%m-%d %H:%M")
+        return pd.Timestamp(t).strftime(
+            "%Y-%m-%d %H:%M"
+        )
 
     return pd.Timestamp(t).strftime("%Y-%m-%d")
 
-def make_figure(df, waves, chart_type, zoom, interval, title):
+
+def make_figure(df, waves, chart_type, zoom, title):
     fig = go.Figure()
 
     if chart_type == "K線":
@@ -231,7 +271,7 @@ def make_figure(df, waves, chart_type, zoom, interval, title):
             high=df["High"],
             low=df["Low"],
             close=df["Close"],
-            name="歷史 K 線"
+            name="歷史K線"
         ))
     else:
         fig.add_trace(go.Scatter(
@@ -239,23 +279,28 @@ def make_figure(df, waves, chart_type, zoom, interval, title):
             y=df["Close"],
             mode="lines",
             name="歷史收盤線",
-            line=dict(color="#64748b", width=2)
+            line=dict(
+                color="#64748b",
+                width=2
+            )
         ))
 
     for w in waves:
-        color = w["color"]
         name = w["name"]
-
-        r = w["recent"]
-        s = w["start"]
-        e = w["end"]
+        color = w["color"]
+        recent = w["recent"]
+        start = w["start"]
+        end = w["end"]
 
         fig.add_trace(go.Scatter(
-            x=r.index[s:e + 1],
+            x=recent.index[start:end+1],
             y=w["segment"],
             mode="lines",
             name=f"{name}歷史波段",
-            line=dict(color=color, width=3),
+            line=dict(
+                color=color,
+                width=3
+            ),
             opacity=0.65
         ))
 
@@ -271,25 +316,26 @@ def make_figure(df, waves, chart_type, zoom, interval, title):
             )
         ))
 
-        for i, label, position in (
-            (w["high_i"], "高", "top center"),
-            (w["low_i"], "低", "bottom center")
-        ):
+        for i, kind in w["turns"]:
+            price = float(w["projection"][i])
+
             fig.add_trace(go.Scatter(
                 x=[w["times"][i]],
-                y=[float(w["projection"][i])],
+                y=[price],
                 mode="markers+text",
                 text=[
-                    f"{name}{label} "
-                    f"{w['projection'][i]:,.2f}"
+                    f"{name}{kind} {price:,.2f}"
                 ],
-                textposition=position,
+                textposition=(
+                    "top center"
+                    if kind == "高點"
+                    else "bottom center"
+                ),
                 marker=dict(
                     color=color,
-                    size=8
+                    size=9
                 ),
-                showlegend=False,
-                hovertemplate="%{text}<extra></extra>"
+                showlegend=False
             ))
 
     fig.update_layout(
@@ -309,30 +355,39 @@ def make_figure(df, waves, chart_type, zoom, interval, title):
             r=35,
             t=120,
             b=45
-        ),
-        yaxis=dict(
-            autorange=True,
-            fixedrange=False
         )
     )
 
-    # 放大只影響初始顯示，不截斷鏡像資料
+    # 修正縮放：只限制初始視窗，
+    # 不截斷完整鏡像資料
     if zoom != "全部歷史":
         n = int(
             zoom.replace("最近", "").replace("根", "")
         )
 
-        left = df.index[max(0, len(df) - n)]
+        left = df.index[max(0, len(df)-n)]
 
-        right = max(
-            [df.index[-1]]
-            + [w["times"][-1] for w in waves]
+        # 右側只顯示未來前n根
+        right_candidates = [df.index[-1]]
+
+        for w in waves:
+            idx = min(
+                n,
+                len(w["times"])-1
+            )
+            right_candidates.append(
+                w["times"][idx]
+            )
+
+        right = max(right_candidates)
+
+        fig.update_xaxes(
+            range=[left, right]
         )
 
-        fig.update_xaxes(range=[left, right])
+        values = []
 
         visible = df.loc[df.index >= left]
-        values = []
 
         if not visible.empty:
             values.extend([
@@ -342,28 +397,10 @@ def make_figure(df, waves, chart_type, zoom, interval, title):
 
         for w in waves:
             for t, price in zip(
-                w["times"], w["projection"]
+                w["times"],
+                w["projection"]
             ):
-                if (
-                    t >= left
-                    and t <= right
-                    and np.isfinite(price)
-                ):
-                    values.append(float(price))
-
-            r = w["recent"]
-            s = w["start"]
-            e = w["end"]
-
-            for t, price in zip(
-                r.index[s:e + 1],
-                w["segment"]
-            ):
-                if (
-                    t >= left
-                    and t <= right
-                    and np.isfinite(price)
-                ):
+                if left <= t <= right:
                     values.append(float(price))
 
         if values:
@@ -371,18 +408,19 @@ def make_figure(df, waves, chart_type, zoom, interval, title):
             hi = max(values)
 
             pad = max(
-                (hi - lo) * 0.07,
-                abs(hi) * 0.005,
+                (hi-lo)*0.07,
+                abs(hi)*0.005,
                 0.01
             )
 
             fig.update_yaxes(
-                range=[lo - pad, hi + pad]
+                range=[lo-pad, hi+pad]
             )
 
     return fig
 
-# ===== 操作介面 =====
+
+# ===== 使用者操作介面 =====
 
 market = st.selectbox(
     "選擇市場",
@@ -391,7 +429,8 @@ market = st.selectbox(
 
 if MARKETS[market] is None:
     code = st.text_input(
-        "台股代號", "2308"
+        "台股代號",
+        "2308"
     ).strip().upper()
 
     exchange = st.radio(
@@ -409,8 +448,10 @@ if MARKETS[market] is None:
 
 elif MARKETS[market] == "CUSTOM":
     symbol = st.text_input(
-        "Yahoo Finance 商品代碼", ""
+        "Yahoo Finance商品代碼",
+        ""
     ).strip().upper()
+
 else:
     symbol = MARKETS[market]
 
@@ -418,7 +459,7 @@ c1, c2 = st.columns(2)
 
 with c1:
     interval_name = st.selectbox(
-        "K 線週期",
+        "K線週期",
         list(INTERVALS),
         index=3
     )
@@ -430,7 +471,7 @@ with c2:
     period = st.selectbox(
         "歷史資料長度",
         options,
-        index=len(options) - 1
+        index=len(options)-1
     )
 
 mode = st.radio(
@@ -470,56 +511,47 @@ zoom_choices = [
 ]
 
 zoom = st.selectbox(
-    "三波同圖／單波預設放大範圍",
+    "三波同圖／單波放大範圍",
     zoom_choices,
     index=2
 )
 
-if mode == "三波各自獨立放大":
-    st.markdown(
-        "**每一波可選不同的初始放大範圍**"
-    )
+individual_zoom = {
+    "短波": "最近30根",
+    "中波": "最近60根",
+    "長波": "最近250根"
+}
 
+if mode == "三波各自獨立放大":
     z1, z2, z3 = st.columns(3)
 
     with z1:
-        short_zoom = st.selectbox(
+        individual_zoom["短波"] = st.selectbox(
             "短波放大",
             zoom_choices,
             index=0
         )
 
     with z2:
-        mid_zoom = st.selectbox(
+        individual_zoom["中波"] = st.selectbox(
             "中波放大",
             zoom_choices,
             index=1
         )
 
     with z3:
-        long_zoom = st.selectbox(
+        individual_zoom["長波"] = st.selectbox(
             "長波放大",
             zoom_choices,
             index=3
         )
 
-    individual_zoom = {
-        "短波": short_zoom,
-        "中波": mid_zoom,
-        "長波": long_zoom
-    }
-
 st.info(
-    "未來鏡像長度：全部 K 棒（不截斷）。"
-    "圖表縮放只影響觀看範圍。"
+    "未來鏡像保留全部K棒。"
+    "圖表放大只改變初始顯示範圍。"
 )
 
-st.caption(
-    "A 模式：最後兩個已確認轉折點之間的"
-    "歷史波段，左右翻轉並平移銜接最新收盤價。"
-)
-
-# ===== 執行分析 =====
+# ===== 開始分析 =====
 
 if st.button(
     "開始亞當鏡像分析",
@@ -537,14 +569,11 @@ if st.button(
             interval
         )
     except Exception as exc:
-        st.error(f"下載資料失敗：{exc}")
+        st.error(f"資料下載失敗：{exc}")
         st.stop()
 
     if df.empty:
-        st.error(
-            "查無資料，請檢查代碼、"
-            "歷史長度及週期。"
-        )
+        st.error("查無資料")
         st.stop()
 
     if mode == "單一波段":
@@ -564,8 +593,8 @@ if st.button(
 
         if result is None:
             st.warning(
-                f"{name}找不到足夠的完整轉折波段，"
-                "可增加歷史資料或降低反轉幅度。"
+                f"{name}轉折點不足，"
+                "請調整資料長度或反轉幅度。"
             )
         else:
             waves.append(result)
@@ -577,7 +606,7 @@ if st.button(
 
     st.caption(
         f"商品：{symbol}｜"
-        f"最新資料日期：{fmt_time(df.index[-1], interval)}｜"
+        f"資料日期：{fmt_time(df.index[-1], interval)}｜"
         f"最新收盤：{latest:,.2f}"
     )
 
@@ -588,7 +617,6 @@ if st.button(
     }
 
     if mode == "三波各自獨立放大":
-
         for w in waves:
             st.subheader(
                 f"{w['name']}｜獨立放大"
@@ -599,8 +627,7 @@ if st.button(
                 [w],
                 chart_type,
                 individual_zoom[w["name"]],
-                interval,
-                f"{symbol}｜{w['name']}完整左右鏡像"
+                f"{symbol}｜{w['name']}左右鏡像"
             )
 
             st.plotly_chart(
@@ -609,15 +636,13 @@ if st.button(
                 config=config,
                 key=f"chart_{w['name']}"
             )
-
     else:
         fig = make_figure(
             df,
             waves,
             chart_type,
             zoom,
-            interval,
-            f"{symbol}｜{mode}｜完整左右鏡像"
+            f"{symbol}｜{mode}｜左右鏡像"
         )
 
         st.plotly_chart(
@@ -627,15 +652,10 @@ if st.button(
             key="chart_combined"
         )
 
-    st.caption(
-        "滑鼠滾輪放大縮小；拖曳平移；"
-        "下方時間滑桿調整範圍。"
-        "各波完整鏡像資料均保留。"
-    )
+    # ===== 最高最低價表 =====
 
-    # ===== 轉折價位表 =====
-
-    rows = []
+    summary_rows = []
+    turn_rows = []
 
     for w in waves:
         p = w["projection"]
@@ -643,48 +663,76 @@ if st.button(
 
         hi = w["high_i"]
         lo = w["low_i"]
-        r = w["recent"]
 
-        rows.append({
+        summary_rows.append({
             "波段": w["name"],
             "最新收盤": round(w["last"], 2),
             "鏡像最高價": round(float(p[hi]), 2),
-            "高點參考日期": fmt_time(t[hi], interval),
+            "高點日期": fmt_time(t[hi], interval),
             "鏡像最低價": round(float(p[lo]), 2),
-            "低點參考日期": fmt_time(t[lo], interval),
+            "低點日期": fmt_time(t[lo], interval),
             "鏡像終點價": round(float(p[-1]), 2),
-            "終點參考日期": fmt_time(t[-1], interval),
-            "鏡像K棒數": len(p),
-            "歷史波段起日": fmt_time(
-                r.index[w["start"]], interval
-            ),
-            "歷史波段迄日": fmt_time(
-                r.index[w["end"]], interval
-            )
+            "終點日期": fmt_time(t[-1], interval),
+            "鏡像K棒數": len(p)
         })
 
-    st.subheader(
-        "短、中、長波轉折價位表"
-    )
+        for order, (i, kind) in enumerate(
+            w["turns"],
+            start=1
+        ):
+            turn_rows.append({
+                "波段": w["name"],
+                "順序": order,
+                "轉折類型": kind,
+                "參考日期": fmt_time(t[i], interval),
+                "參考價位": round(float(p[i]), 2)
+            })
 
-    table = pd.DataFrame(rows)
+    st.subheader("短中長波｜最高最低價表")
+
+    summary = pd.DataFrame(summary_rows)
 
     st.dataframe(
-        table,
+        summary,
         hide_index=True,
         use_container_width=True
     )
 
     st.download_button(
-        "下載轉折價位 CSV",
-        table.to_csv(index=False).encode("utf-8-sig"),
-        file_name="adam_b3_pro_turning_points.csv",
+        "下載最高最低價CSV",
+        summary.to_csv(
+            index=False
+        ).encode("utf-8-sig"),
+        file_name="adam_summary.csv",
         mime="text/csv"
     )
 
+    st.subheader("短中長波｜前3個內部轉折點")
+
+    if turn_rows:
+        turns_df = pd.DataFrame(turn_rows)
+
+        st.dataframe(
+            turns_df,
+            hide_index=True,
+            use_container_width=True
+        )
+
+        st.download_button(
+            "下載內部轉折點CSV",
+            turns_df.to_csv(
+                index=False
+            ).encode("utf-8-sig"),
+            file_name="adam_turns.csv",
+            mime="text/csv"
+        )
+    else:
+        st.info(
+            "目前鏡像波段內沒有符合條件的內部轉折點。"
+        )
+
     st.warning(
-        "鏡像為歷史波段的情境推演，"
-        "非價格保證或投資建議。"
-        "未來日期為估算；分 K 與期貨未完整排除休市時段。"
-        "Yahoo 期貨連續合約可能不等於微型契約報價。"
+        "本程式為歷史波段左右鏡像情境分析，"
+        "不是價格保證或投資建議。"
+        "未來日期為估算，未完整排除交易所休市日。"
     )
