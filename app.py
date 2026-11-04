@@ -551,13 +551,17 @@ def make_figure(
         yaxis_title="價格",
         legend=dict(
             orientation="h",
-            y=1.15
+            x=0,
+            xanchor="left",
+            y=-0.22,
+            yanchor="top",
+            font=dict(size=11)
         ),
         margin=dict(
             l=35,
             r=35,
-            t=115,
-            b=45
+            t=85,
+            b=135
         )
     )
 
