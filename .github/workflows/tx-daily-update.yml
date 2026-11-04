@@ -1,0 +1,28 @@
+name: TX 官方免費日行情更新（測試）
+on:
+  workflow_dispatch:
+  # 排程將在資料格式驗證後於 main 啟用
+permissions:
+  contents: write
+jobs:
+  update-tx:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: b3-speed-test
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 取得期交所 TX 每日行情
+        run: python scripts/update_tx_daily.py
+      - name: 保存資料（僅變更時提交）
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/tx_daily_official.csv
+          if ! git diff --cached --quiet; then
+            git commit -m "data: update official TX daily quotes"
+            git push origin HEAD:b3-speed-test
+          fi
