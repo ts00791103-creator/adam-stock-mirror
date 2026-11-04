@@ -3,6 +3,7 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
+from mobile_chart import mobile_chart
 
 st.set_page_config(page_title="亞當理論 B3 Pro", layout="wide")
 st.title("亞當理論 B3 Pro｜A 模式左右鏡像")
@@ -952,6 +953,8 @@ chart_type = st.radio(
     horizontal=True
 )
 
+mobile_engine = st.checkbox("測試手機雙指縮放圖表（新版）", value=False, help="僅測試版提供，取消勾選即回原本 Plotly 圖表。")
+
 chart_theme = st.radio(
     "圖表配色",
     ["券商深色", "原本淺色"],
@@ -1139,12 +1142,19 @@ if st.button(
                     opacity=0.5
                 )
 
-            st.plotly_chart(
-                fig,
-                use_container_width=True,
-                config=config,
-                key=f"wave_{w['name']}"
-            )
+            if mobile_engine:
+                mobile_chart(
+                    df, [w], individual_zoom[w["name"]],
+                    f"{symbol}｜{w['name']} A模式完整鏡像",
+                    show_bollinger, boll_period, boll_std, chart_theme
+                )
+            else:
+                st.plotly_chart(
+                    fig,
+                    use_container_width=True,
+                    config=config,
+                    key=f"wave_{w['name']}"
+                )
 
     else:
         fig = make_figure(
@@ -1164,12 +1174,18 @@ if st.button(
                 opacity=0.5
             )
 
-        st.plotly_chart(
-            fig,
-            use_container_width=True,
-            config=config,
-            key="combined"
-        )
+        if mobile_engine:
+            mobile_chart(
+                df, waves, zoom, f"{symbol}｜{mode}｜A模式完整鏡像",
+                show_bollinger, boll_period, boll_std, chart_theme
+            )
+        else:
+            st.plotly_chart(
+                fig,
+                use_container_width=True,
+                config=config,
+                key="combined"
+            )
 
     st.caption("亞當轉折點：點選或長按圖上的彩色圓點，可查看轉折日期與價位。")
     st.caption(
