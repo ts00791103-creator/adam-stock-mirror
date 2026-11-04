@@ -483,7 +483,8 @@ def make_figure(
     title,
     show_bollinger=False,
     boll_period=20,
-    boll_std=2.0
+    boll_std=2.0,
+    chart_theme="券商深色"
 ):
     # 只減少瀏覽器繪製的歷史 K 棒，鏡像仍依完整資料計算。
     if zoom == "全部歷史與鏡像":
@@ -496,6 +497,7 @@ def make_figure(
         plot_df = df.tail(max(visible_count, 300) + 20)
 
     fig = go.Figure()
+    dark = chart_theme == "券商深色"
 
     if chart_type == "K線":
         fig.add_trace(go.Candlestick(
@@ -504,7 +506,9 @@ def make_figure(
             high=plot_df["High"],
             low=plot_df["Low"],
             close=plot_df["Close"],
-            name="歷史K線"
+            name="歷史K線",
+            increasing=dict(line=dict(color="#ff2020"), fillcolor="#ff2020") if dark else dict(),
+            decreasing=dict(line=dict(color="#00e000"), fillcolor="#00e000") if dark else dict()
         ))
     else:
         fig.add_trace(go.Scatter(
@@ -527,9 +531,9 @@ def make_figure(
         lower = middle - boll_std * deviation
         boll_values = (upper, middle, lower)
         for label, series, color, dash in [
-            ("布林上軌", upper, "#d97706", "solid"),
-            ("布林中軌", middle, "#2563eb", "dash"),
-            ("布林下軌", lower, "#9333ea", "solid")
+            ("布林上軌", upper, "#ffff00" if dark else "#d97706", "solid"),
+            ("布林中軌", middle, "#00d9f5" if dark else "#2563eb", "solid" if dark else "dash"),
+            ("布林下軌", lower, "#d000ff" if dark else "#9333ea", "solid")
         ]:
             fig.add_trace(go.Scatter(
                 x=plot_df.index, y=series.reindex(plot_df.index),
@@ -616,6 +620,10 @@ def make_figure(
             ])
 
     fig.update_layout(
+        template="plotly_dark" if dark else "plotly_white",
+        paper_bgcolor="#101010" if dark else "#ffffff",
+        plot_bgcolor="#101010" if dark else "#ffffff",
+        font=dict(color="#eeeeee" if dark else "#252a34"),
         title=title,
         height=700,
         hovermode="x unified",
@@ -638,6 +646,9 @@ def make_figure(
             b=135
         )
     )
+
+    fig.update_xaxes(gridcolor="#353535" if dark else "#e5e7eb")
+    fig.update_yaxes(gridcolor="#353535" if dark else "#e5e7eb")
 
     if zoom != "全部歷史與鏡像":
         n = int(
@@ -872,6 +883,12 @@ chart_type = st.radio(
     horizontal=True
 )
 
+chart_theme = st.radio(
+    "圖表配色",
+    ["券商深色", "原本淺色"],
+    horizontal=True
+)
+
 show_bollinger = st.checkbox("顯示布林軌道（BOLL）", value=False)
 boll_period = st.number_input("布林均線週期", min_value=5, max_value=120, value=20, step=1, disabled=not show_bollinger)
 boll_std = st.number_input("標準差倍數", min_value=0.5, max_value=4.0, value=2.0, step=0.5, disabled=not show_bollinger)
@@ -1030,7 +1047,7 @@ if st.button(
                 chart_type,
                 individual_zoom[w["name"]],
                 f"{symbol}｜{w['name']} A模式完整鏡像",
-                show_bollinger, boll_period, boll_std
+                show_bollinger, boll_period, boll_std, chart_theme
             )
 
             for date in roll_dates:
