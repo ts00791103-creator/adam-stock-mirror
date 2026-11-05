@@ -31,6 +31,39 @@ class TestMopsHistory(unittest.TestCase):
         self.assertEqual(result["verified_eps"], {"quarter_eps": 3.6, "cumulative_eps": 9.4})
         self.assertFalse(result["filing_date_verified"])
 
+    def test_q4_annual_header_2025_delta(self):
+        columns = pd.MultiIndex.from_tuples([
+            ("民國114年第4季", "單位：新台幣仟元", "會計項目", "Unnamed"),
+            ("民國114年第4季", "單位：新台幣仟元", "114年度", "金額"),
+            ("民國114年第4季", "單位：新台幣仟元", "113年度", "金額"),
+        ])
+        frame = pd.DataFrame([["基本每股盈餘", 23.14, 13.56]], columns=columns)
+        class Response:
+            text = "mock"
+            def raise_for_status(self):
+                pass
+        with patch.object(mops_history.requests, "post", return_value=Response()), patch.object(mops_history.pd, "read_html", return_value=[frame]):
+            result, error = mops_history.fetch_mops_quarter("2308", 2025, 4)
+        self.assertIsNone(error)
+        self.assertTrue(result["column_verified"])
+        self.assertEqual(result["verified_eps"], {"quarter_eps": None, "cumulative_eps": 23.14})
+
+    def test_q4_derived_eps_and_ttm(self):
+        def fake(symbol, year, quarter):
+            values = {
+                1: (3.94, 3.94), 2: (5.37, 9.31),
+                3: (7.16, 16.47), 4: (None, 23.14),
+            }
+            single, ytd = values[quarter]
+            return {"column_verified": True, "verified_eps": {
+                "quarter_eps": single, "cumulative_eps": ytd,
+            }, "source": "mock"}, None
+        with patch.object(mops_history, "fetch_mops_quarter", side_effect=fake):
+            rows, failures = mops_history.fetch_mops_eps_history("2308", years=1, end_period="2025Q4")
+        self.assertEqual(failures, [])
+        self.assertAlmostEqual(rows[-1]["quarter_eps"], 6.67)
+        self.assertAlmostEqual(rows[-1]["ttm_eps"], 23.14)
+
     def test_q1_single_eps_header(self):
         columns = pd.MultiIndex.from_tuples([
             ("民國114年第1季", "會計項目", "Unnamed"),
