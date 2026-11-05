@@ -260,3 +260,6 @@
 - app.py 新增 wave_source_rows(waves, interval)，在圖表前顯示短中長波歷史起迄日期、歷史起迄價、鏡像終點及共用來源波段；當起迄時間完全相同，明示鏡像並非獨立來源。commit c6266514f9f1fb2c11402ac4337b1990f085007e。
 - 新增 tests/test_wave_source_rows.py 四項離線測試：日期價格、重複來源、不同來源、圖表前呈現。commit 170beb6dc73530e9c85b5e19ea64b40a0a96330f。
 - 原 mirror_wave 計算與圖表互動未更動。最新 CI 尚待確認。main/b3-speed-test 未動。
+
+## 2026-11-05 Phase 12 mobile source cards
+User confirmed CI green. app.py commit 4ae29818f9fc5f299add74ad40378f85b2269102 renders vertical wave source cards and expandable full table. Test commit f072e3b535256daf74c940d955fb17b61939a94e adds mobile presentation assertion. No changes to mirror math or chart controls. Next: release readiness checks. main and b3-speed-test remain unchanged.
