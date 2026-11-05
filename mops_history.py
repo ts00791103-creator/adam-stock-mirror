@@ -35,7 +35,7 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
             numeric = []
             for cell in cells:
                 cleaned = cell.replace(",","").replace("(","-").replace(")","")
-                if re.fullmatch(r"-?\d+(?:\\.\d+)?",cleaned):
+                if re.fullmatch(r"-?\d+(?:\.\d+)?",cleaned):
                     numeric.append(float(cleaned))
             if len(numeric)==1:
                 candidates.append(numeric[0])
