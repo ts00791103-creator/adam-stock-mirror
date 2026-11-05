@@ -147,3 +147,10 @@
 - 為區分 iOS 觸控事件與圖表價格軸移動問題，於 mobile_chart.py 新增 ↑ K線上移、↓ K線下移、垂直歸位三個明確按鈕，直接調整同一 priceShift；commit 1408f2a2318f017ba67e0d90d2ee9a78469f29a1。
 - 按鈕只是診斷/暫時控制，不代表單指上下拖曳已修好。CI 和手機效果均待驗證。
 - 若按鈕有效但手勢無效，問題偏向 iOS iframe/Lightweight Charts 觸控事件；若按鈕也無效，需替換價格軸平移機制，可能改用自訂 Canvas 圖表。
+
+## 2026-11-05｜第四次垂直移動修正：視覺層平移（待驗收）
+- 使用者回報第三次方案與上下按鈕仍無法上下移動。
+- mobile_chart.py 改為對 chartElement 及 box-overlay 同步套用 translateY(px)，單指上下拖曳與 ↑/↓/歸位按鈕共用 bounded panY（±120px），sessionStorage key v1-visual-pan-y-；commit 6212afa5061c2f545d528f3e58cfb83df9d12949。
+- tests/test_mobile_chart_gestures.py 同步修改靜態測試；commit 0bed0fd4beb7ad7bb49f106c6cbf9da2557611ea。
+- 重要：此為畫面平移的診斷/過渡方案，會移動座標軸並在邊緣產生空白，不是正確的價格軸可視範圍重算。不可宣稱最終完成。CI 和手機驗收待確認。
+- 若這版按鈕也完全不動，應先確認候選站部署更新及 iframe 是否有 JS 錯誤，再進一步修改。
