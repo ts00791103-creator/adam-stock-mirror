@@ -1195,6 +1195,20 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                     with st.expander("🔬 MOPS 財報公告接口診斷（不會改動估價）", expanded=False):
                         st.caption("以最新已取得的季度為測試目標，僅檢查官方介接是否回傳可解析的表格；不會把財報期間當作公告日。")
                         st.markdown("[官方公開資訊觀測站－財務報告公告](https://mops.twse.com.tw/mops/#/web/t163sb01)")
+                        if st.button("交叉測試 2026Q3／2025Q4／2024Q4", key="b3_mops_cross_quarter"):
+                            from official_filing_candidates import compare_filing_quarters
+                            with st.spinner("正在逐季比較官方查詢回應（最多三次查詢）…"):
+                                st.session_state["b3_mops_cross_quarter_result"] = (
+                                    str(symbol).split(".")[0],
+                                    compare_filing_quarters(str(symbol).split(".")[0]))
+                                )
+                        cross_saved = st.session_state.get("b3_mops_cross_quarter_result")
+                        if cross_saved and cross_saved[0] == str(symbol).split(".")[0]:
+                            cross_result = cross_saved[1]
+                            st.dataframe(pd.DataFrame(cross_result["rows"]), hide_index=True)
+                            st.write("三季回應完全相同：", cross_result["all_ajax_responses_identical"])
+                            st.info(cross_result["conclusion"])
+                            st.caption("僅比較官方查詢回應；無法因此認定公告日期或解除歷史 PE 鎖定。")
                         if st.button("同一工作階段核對財報公告查詢", key="b3_mops_session_probe"):
                             from official_filing_candidates import probe_session_backed_filing_query
                             latest_period = pd.Period(history_rows[-1]["quarter"], freq="Q")
