@@ -167,7 +167,7 @@ def fetch_mops_eps_history(symbol, years=5, end_period=None):
             failures.append({"quarter": row["quarter"], "reason": "單季 EPS 與累計 EPS 差異超過容許誤差"})
     for period, row in by_period.items():
         window = [by_period.get(period - offset) for offset in range(4)]
-        if all(w is not None and w["ytd_consistent"] is not False for w in window):
+        if all(w is not None and w["ytd_consistent"] is True for w in window):
             row["ttm_eps"] = round(sum(w["quarter_eps"] for w in window), 4)
         else:
             row["ttm_eps"] = None
