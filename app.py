@@ -1084,15 +1084,17 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
             else:
                 st.warning(official_error)
         st.caption("這是官方最新財報查詢，不是完整歷史 EPS；尚未取得逐季公告日，不會把這筆資料混入歷史 PE 或直接當成 TTM。")
-    filing_upload = st.file_uploader("選用：匯入歷史季度 EPS CSV（含實際公告日）", type=["csv"], key="b3_filing_eps_csv_v1", help="欄位：symbol,quarter_end,announced_on,eps；eps 必須是單季 EPS，不能直接填累計 EPS。")
+    filing_format = st.radio("匯入 EPS 格式", ["單季 EPS", "年初至今累計 EPS（自動換算單季）"], horizontal=True, key="b3_eps_csv_format_v1")
+    filing_upload = st.file_uploader("選用：匯入歷史季度 EPS CSV（含實際公告日）", type=["csv"], key="b3_filing_eps_csv_v1", help="單季格式欄位：symbol,quarter_end,announced_on,eps；累計格式欄位：symbol,quarter_end,announced_on,cumulative_eps。兩者都必須提供真實公告日。")
     st.caption("匯入資料僅用於本次試算，須自行核對公開資訊觀測站的公告日期與單季 EPS；尚未自動串接官方歷史財報。")
     auto_pe_result = None
     auto_pe_enabled = st.checkbox("自動歷史本益比分位數（20%／50%／80%）", value=True, key="b3_auto_pe_v3")
     if valuation_enabled and auto_pe_enabled and eps_value > 0 and market == "台灣股票／ETF":
         try:
             if filing_upload is not None:
-                from filing_eps import parse_quarterly_eps_csv, historical_pe_from_filings
-                filing_data, pe_error = parse_quarterly_eps_csv(filing_upload.getvalue(), symbol)
+                from filing_eps import parse_quarterly_eps_csv, parse_cumulative_eps_csv, historical_pe_from_filings
+                parser = parse_cumulative_eps_csv if filing_format.startswith("年初") else parse_quarterly_eps_csv
+                filing_data, pe_error = parser(filing_upload.getvalue(), symbol)
                 if filing_data is not None:
                     auto_pe_result, pe_error = historical_pe_from_filings(symbol, filing_data, years=3)
             else:
