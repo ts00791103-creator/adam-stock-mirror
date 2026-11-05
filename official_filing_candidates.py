@@ -71,3 +71,41 @@ def review_candidate_coverage(candidates, periods):
                      "多筆公告，須辨識初次申報及更正" if len(grouped[period]) > 1 else
                      "單筆候選，仍須核對是否為初次財報申報")}
             for period in periods]
+
+
+def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
+    """Probe historical MOPS financial-report announcement transport only.
+
+    This intentionally does not infer an announcement timestamp from the
+    report year/quarter or from a response without a validated date field.
+    """
+    code = str(stock_code).strip()
+    if not re.fullmatch(r"\d{4,5}", code):
+        return {"status": "invalid_stock", "message": "股票代號格式錯誤"}
+    if not (isinstance(year, int) and 2000 <= year <= 2100
+            and isinstance(quarter, int) and 1 <= quarter <= 4):
+        return {"status": "invalid_period", "message": "季度格式錯誤"}
+    url = "https://mops.twse.com.tw/mops/web/ajax_t163sb01"
+    payload = {"encodeURIComponent": 1, "step": 1, "firstin": 1,
+               "off": 1, "queryName": "co_id", "inpuType": "co_id",
+               "TYPEK": "all", "isnew": "false", "co_id": code,
+               "year": year - 1911, "season": f"{quarter:02d}"}
+    try:
+        response = requests.post(url, data=payload, timeout=timeout,
+                                 headers={"User-Agent": "Mozilla/5.0",
+                                          "Referer": "https://mops.twse.com.tw/"})
+        response.raise_for_status()
+    except requests.RequestException:
+        return {"status": "connection_error", "message": "MOPS 財報公告介接連線失敗"}
+    body = response.text or ""
+    if not body.strip():
+        return {"status": "empty", "message": "官方接口回傳空白內容"}
+    try:
+        frames = pd.read_html(io.StringIO(body))
+    except (ValueError, ImportError):
+        return {"status": "unparsed", "message": "官方接口有回應，但不是可直接解析的 HTML 表格",
+                "response_chars": len(body)}
+    return {"status": "tables_unverified", "message": "取得 HTML 表格，但尚未驗證公告日期欄位",
+            "table_count": len(frames),
+            "table_headers": [list(map(str, frame.columns))[:12] for frame in frames[:3]],
+            "response_chars": len(body)}
