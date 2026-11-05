@@ -60,6 +60,30 @@ class TestMopsHistory(unittest.TestCase):
         self.assertEqual(rows[-1]["ttm_eps"], 8.0)
         self.assertTrue(all(x["filing_date"] is None for x in rows))
 
+    def test_ttm_rejects_inconsistent_cumulative_eps(self):
+        def fake(symbol, year, quarter):
+            ytd = float(quarter * 2)
+            if quarter == 3:
+                ytd = 99.0
+            return {"column_verified": True, "verified_eps": {
+                "quarter_eps": 2.0, "cumulative_eps": ytd,
+            }, "source": "mock"}, None
+        with patch.object(mops_history, "fetch_mops_quarter", side_effect=fake):
+            rows, failures = mops_history.fetch_mops_eps_history("2308", years=1, end_period="2025Q4")
+        self.assertTrue(any(x["quarter"] == "2025Q3" for x in failures))
+        self.assertIsNone(rows[-1]["ttm_eps"])
+
+    def test_ttm_rejects_unverified_continuity(self):
+        def fake(symbol, year, quarter):
+            return {"column_verified": True, "verified_eps": {
+                "quarter_eps": 1.0, "cumulative_eps": float(quarter),
+            }, "source": "mock"}, None
+        with patch.object(mops_history, "fetch_mops_quarter", side_effect=fake):
+            rows, failures = mops_history.fetch_mops_eps_history("2308", years=1, end_period="2025Q2")
+        self.assertEqual(len(rows), 4)
+        self.assertIsNone(rows[-1]["ttm_eps"])
+        self.assertEqual(failures, [])
+
     def test_ttm_requires_four_consecutive_quarters(self):
         def fake(symbol, year, quarter):
             period = pd.Period(year=year, quarter=quarter, freq="Q")
