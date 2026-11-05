@@ -139,6 +139,26 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
     except (ValueError, ImportError):
         return {"status": "unparsed", "message": "官方接口有回應，但不是可直接解析的 HTML 表格",
                 "response_chars": len(body), **diagnostic}
+    # Identify whether the response is a query UI, and surface safe input names
+    # so the next request can be based on observed parameters rather than guesses.
+    from html.parser import HTMLParser
+    class _InputNames(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.names = set()
+            self.forms = 0
+        def handle_starttag(self, tag, attrs):
+            attrs = dict(attrs)
+            if tag == "form":
+                self.forms += 1
+            if tag in ("input", "select") and attrs.get("name"):
+                name = attrs["name"]
+                if re.fullmatch(r"[A-Za-z0-9_\\-]{1,60}", name):
+                    self.names.add(name)
+    parser = _InputNames()
+    parser.feed(body)
+    diagnostic["form_count"] = parser.forms
+    diagnostic["input_field_names"] = sorted(parser.names)[:40]
     table_profiles = []
     for idx, frame in enumerate(frames[:25]):
         values = frame.astype(str)
