@@ -1192,6 +1192,22 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                     st.caption("證交所財務報告書資訊揭露頁可查公告日期時間；法定截止日、董事會預定日與財報期間結束日，都不能當成實際公告日。")
                     st.markdown("[開啟證交所資訊揭露／財務報告書](https://www.twse.com.tw/IIH2/zh/market/information.html)")
                     st.info("目前尚未取得可逐季對應、可驗證來源的 20 筆公告日期，歷史 PE 回測維持鎖定。")
+                    with st.expander("🔬 MOPS 財報公告接口診斷（不會改動估價）", expanded=False):
+                        st.caption("以最新已取得的季度為測試目標，僅檢查官方介接是否回傳可解析的表格；不會把財報期間當作公告日。")
+                        st.markdown("[官方公開資訊觀測站－財務報告公告](https://mops.twse.com.tw/mops/#/web/t163sb01)")
+                        if st.button("檢查 MOPS 財報公告接口", key="b3_mops_announcement_probe"):
+                            from official_filing_candidates import probe_mops_financial_announcement
+                            latest_period = pd.Period(history_rows[-1]["quarter"], freq="Q")
+                            with st.spinner("正在檢查官方接口…"):
+                                probe_result = probe_mops_financial_announcement(
+                                    str(symbol).split(".")[0], latest_period.year, latest_period.quarter)
+                            st.session_state["b3_mops_announcement_probe_result"] = (
+                                str(symbol).split(".")[0], str(latest_period), probe_result)
+                        probe_saved = st.session_state.get("b3_mops_announcement_probe_result")
+                        if probe_saved and probe_saved[0] == str(symbol).split(".")[0]:
+                            st.write("測試季度：", probe_saved[1])
+                            st.json(probe_saved[2])
+                            st.warning("此處僅測試接口與表格結構；尚未驗證公告日，歷史 PE 不會解鎖。")
                     if st.button("自動查詢證交所財報公告候選紀錄", key="b3_official_filing_fetch"):
                         from official_filing_candidates import fetch_official_filing_candidates, review_candidate_coverage
                         with st.spinner("正在檢查證交所單一公司資訊揭露頁…"):
