@@ -27,7 +27,7 @@ def inspect_filing_date(stock_code, quarter, announced_at, source_url, expected_
         except ValueError:
             return "公告日期格式錯誤"
     month = q * 3
-    quarter_end = date(year, month, monthrange(year, month)[1])
+    quarter_end = datetime(year, month, monthrange(year, month)[1]).date()
     if moment.date() <= quarter_end:
         return "公告日不得早於或等於季度結束日"
     if moment.date() > date.today():
