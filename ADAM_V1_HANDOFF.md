@@ -160,3 +160,9 @@
 - 已檢查 mobile_chart.py，按鈕原先放在 480px 圖表之後，手機可能因 iframe 高度、頁面捲動而難以辨識；目前無瀏覽器主控台證據，不能斷定 JS 是否執行。
 - 將三個控制按鈕移到 K 線圖**上方**，並加入「垂直位移：N px」即時狀態文字，讓使用者可分辨 click 事件未觸發或圖表 transform 沒效果；提高 iframe 高度至 675。commit bc3a13423f086842bcfc8d29c848534bf1c77523。
 - 此次僅改診斷介面，並未完成真正價格座標的自由拖曳。需待 CI 與使用者實測，且不改 B3/main。
+
+## 2026-11-05｜依使用者要求移除上下按鈕，改為直接手勢
+- 使用者明確要求「不要按鈕也能上下移動」。已移除 ↑/↓/歸位三個診斷按鈕及狀態文字。
+- mobile_chart.py 改在 chart-wrap 捕捉 touchstart/move/end（capture:true），垂直觸控位移套用 chartElement 與 box-overlay 同步 translate3d；原生左右時間軸拖曳及 pinch 保留。commit 3f0737f2d0a19bba7fd7177e1bcea1f76254ffaf。
+- 更新 tests/test_mobile_chart_gestures.py 對應新實作及無按鈕檢查。commit 071a1e2b85d48f3b457f87560138bd7996519784。
+- **尚未確認 CI 和手機實測**；視覺平移是有限範圍且會移動價格軸標籤，仍非正式價格軸重算。若手機仍無法上下移動，需改用不同圖表引擎或自訂畫布。不得宣稱完成。
