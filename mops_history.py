@@ -50,24 +50,31 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
     verified = []
     roc = year - 1911
     for candidate in candidates:
-        header = table_headers[candidate["table"]]["columns"]
-        mapping = {}
+        headers = table_headers[candidate["table"]]["columns"]
+        matches = {"quarter_eps": [], "cumulative_eps": []}
         for cell in candidate["values"]:
             index = cell["column"] - 1
-            if index >= len(header):
+            if index >= len(headers):
                 continue
-            label = header[index]
-            current_year = f"{roc}年"
-            prior_year = f"{roc-1}年"
-            current_quarter = f"{roc}年第{quarter}季"
-            ytd_start = f"{roc}年01月01日"
-            ytd_end = f"{roc}年{quarter*3:02d}月"
-            if current_quarter in label and ("金額" in label):
-                mapping["quarter_eps"] = cell["value"]
-            elif ytd_start in label and ytd_end in label and "金額" in label:
-                mapping["cumulative_eps"] = cell["value"]
-        if "quarter_eps" in mapping and "cumulative_eps" in mapping:
-            verified.append(mapping)
+            # MultiIndex headers are stringified tuples. Normalize whitespace
+            # and accept ROC or Gregorian years, padded or unpadded months.
+            label = re.sub(r"\\s+", "", headers[index])
+            label = label.replace("'", "").replace('"', "")
+            if "金額" not in label or "%" in label or "％" in label:
+                continue
+            year_pattern = rf"(?:{roc}|{year})年"
+            quarter_pattern = rf"{year_pattern}第0?{quarter}季"
+            end_month = quarter * 3
+            cumulative_pattern = (
+                rf"{year_pattern}0?1月0?1日至"
+                rf"(?:{roc}|{year})年0?{end_month}月(?:30|31)日"
+            )
+            if re.search(cumulative_pattern, label):
+                matches["cumulative_eps"].append(cell["value"])
+            elif re.search(quarter_pattern, label):
+                matches["quarter_eps"].append(cell["value"])
+        if all(len(matches[k]) == 1 for k in matches):
+            verified.append({k: matches[k][0] for k in matches})
     verified_eps = verified[0] if len(verified) == 1 else None
     if not candidates:
         return None, "找不到可辨識的基本 EPS 數值，請確認 MOPS 是否回傳完整損益表"
