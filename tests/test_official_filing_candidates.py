@@ -45,6 +45,26 @@ class OfficialCandidateTests(unittest.TestCase):
         self.assertEqual(result["status"], "query_form_only")
         self.assertFalse(result["response_has_requested_stock"])
 
+    def test_session_probe_reuses_client_and_never_verifies_date(self):
+        from official_filing_candidates import probe_session_backed_filing_query
+        from unittest.mock import Mock
+        def fake_response(body):
+            response = Mock()
+            response.text = body
+            response.raise_for_status.return_value = None
+            return response
+        client = Mock()
+        client.get.return_value = fake_response("<html><script></script></html>")
+        client.post.return_value = fake_response("<html><table><tr><td>查詢介面</td></tr></table></html>")
+        result = probe_session_backed_filing_query("2308", 2026, 3, session=client)
+        self.assertEqual(result["status"], "session_diagnostic_only")
+        self.assertFalse(result["same_response"])
+        self.assertTrue(result["ajax_result"]["has_table"])
+        self.assertFalse(result["ajax_result"]["has_stock_code"])
+        self.assertEqual(client.get.call_count, 1)
+        self.assertEqual(client.post.call_count, 1)
+        self.assertNotIn("公告日期", result)
+
     def test_duplicate_reports_are_not_verified(self):
         rows = [{"季度": "2025Q4"}, {"季度": "2025Q4"}]
         review = review_candidate_coverage(rows, ["2025Q4", "2026Q1"])
