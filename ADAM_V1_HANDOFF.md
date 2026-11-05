@@ -92,3 +92,10 @@
 - 使用者提供 GitHub Actions 畫面：Adam V1.0 validation #11（31秒）與 #12（30秒）均為綠色成功；#9 與 #10 為紅色失敗。
 - 確認 tests/test_mobile_chart_data.py 的 staticmethod 修正後，現有 CI 已通過；這僅證明目前 CI 所覆蓋的測試通過，不代表實際手機拖曳／縮放與交易日曆已驗收。
 - 下一步：完善交易時段／交易日曆的預測日期標示，測試手機 K 線圖左右拖曳、上下平移、縮放與視窗記憶；保留 main 和 b3-speed-test 不動。
+
+## 2026-11-05｜第四階段手機圖表觸控操作
+- mobile_chart.py：將 #chart touch-action:pan-y 改為 touch-action:none，Lightweight Charts handleScroll 的 vertTouchDrag 改為 true，並更新繁體中文操作提示。
+- 修改 commit：0bfce0b7963e26663b1395440b463cb6319f0d78。
+- 新增 tests/test_mobile_chart_gestures.py，靜態檢查雙軸拖曳設定、觸控事件及 sessionStorage 視窗記憶；commit 939ac9729cec8bc8a0a3c7a7e43f0f2cab715874。
+- 此為 V1.0 分支設定修改，沒有部署到 B3；靜態測試不等於實機操作驗收，且 touch-action:none 可能影響頁面手勢滾動，須在候選站手機實測。
+- 新增測試的 CI 結果待確認；下一步依 GitHub Actions 狀態處理，之後安排獨立候選版部署及實機手勢驗收。
