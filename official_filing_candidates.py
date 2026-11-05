@@ -35,7 +35,7 @@ def fetch_official_filing_candidates(stock_code, timeout=12):
         for _, row in frame.iterrows():
             cells = [str(v).strip() for v in row.tolist()]
             joined = " ".join(cells)
-            if "財務報告書" not in joined or not re.search(r"(?<!\\d)" + re.escape(code) + r"(?!\\d)", joined):
+            if "財務報告書" not in joined or not re.search(r"(?<!\d)" + re.escape(code) + r"(?!\d)", joined):
                 continue
             quarter_match = re.search(r"(\d{3})年第?([1-4])季財務報告書", joined)
             time_match = re.search(r"(\d{3})/(\d{2})/(\d{2})\s+(\d{2}):(\d{2})", joined)
@@ -185,7 +185,7 @@ def classify_filing_response_html(html, stock_code, year, quarter):
                        f"{roc}年 第{quarter}季", f"{roc}/{quarter:02d}"]
     results = []
     for content in parser.tables[:30]:
-        has_code = bool(re.search(r"(?<!\\d)" + re.escape(code) + r"(?!\\d)", content))
+        has_code = bool(re.search(r"(?<!\d)" + re.escape(code) + r"(?!\d)", content))
         has_period = any(marker in content for marker in quarter_markers)
         has_filing = any(x in content for x in ("財務報告", "財報", "申報", "公告"))
         has_date = bool(re.search(r"(?:20\\d{2}|1\\d{2})[/-]\\d{1,2}[/-]\\d{1,2}", content))
