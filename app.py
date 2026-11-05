@@ -1172,6 +1172,41 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
             if history_failures:
                 with st.expander("查看讀取失敗／資料異常季度"):
                     st.dataframe(pd.DataFrame(history_failures), use_container_width=True, hide_index=True)
+                    st.caption("精準診斷：選一個失敗季度，檢查 MOPS 原始 EPS 表頭；不會修改任何估價資料。")
+                    failed_periods = [x["quarter"] for x in history_failures
+                                      if x.get("reason") == "EPS 欄位無法唯一核對"]
+                    if failed_periods:
+                        inspect_period = st.selectbox("診斷季度", failed_periods,
+                                                      key="b3_eps_inspect_period")
+                        if st.button("檢查這一季的 EPS 原始表頭", key="b3_eps_inspect_button"):
+                            from mops_history import fetch_mops_quarter
+                            period_to_check = pd.Period(inspect_period, freq="Q")
+                            with st.spinner("正在讀取官方原始表頭…"):
+                                diagnostic, diagnostic_error = fetch_mops_quarter(
+                                    symbol, period_to_check.year, period_to_check.quarter, timeout=12)
+                            if diagnostic_error:
+                                st.error(diagnostic_error)
+                            elif diagnostic:
+                                st.write("基本 EPS 資料列：", diagnostic.get("eps_row_count", 0))
+                                st.write("欄位是否唯一核對：", diagnostic.get("column_verified", False))
+                                details = diagnostic.get("eps_header_diagnostics", [])
+                                if details:
+                                    st.dataframe(pd.DataFrame([{
+                                        "表格": d["table"], "欄位": d["column"],
+                                        "EPS": d["value"],
+                                        "期間表頭": d["period_text"],
+                                        "原始層級": " / ".join(d["header_levels"]),
+                                    } for d in details]), use_container_width=True, hide_index=True)
+                                st.download_button(
+                                    "下載這季診斷 JSON",
+                                    json.dumps({
+                                        "quarter": inspect_period,
+                                        "eps_rows": diagnostic.get("eps_rows", []),
+                                        "eps_header_diagnostics": details,
+                                    }, ensure_ascii=False, indent=2).encode("utf-8"),
+                                    file_name=f"{str(symbol).split('.')[0]}_{inspect_period}_eps_diagnostic.json",
+                                    mime="application/json",
+                                    key="b3_eps_diagnostic_download")
     filing_format = st.radio("匯入 EPS 格式", ["單季 EPS", "年初至今累計 EPS（自動換算單季）"], horizontal=True, key="b3_eps_csv_format_v1")
     filing_upload = st.file_uploader("選用：匯入歷史季度 EPS CSV（含實際公告日）", type=["csv"], key="b3_filing_eps_csv_v1", help="單季格式欄位：symbol,quarter_end,announced_on,eps；累計格式欄位：symbol,quarter_end,announced_on,cumulative_eps。兩者都必須提供真實公告日。")
     st.caption("匯入資料僅用於本次試算，須自行核對公開資訊觀測站的公告日期與單季 EPS；尚未自動串接官方歷史財報。")
