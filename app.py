@@ -1136,13 +1136,19 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
         st.caption("依序讀取最多 20 季官方財報；首次可能需要較長時間。只顯示可核對期間欄位的 EPS，尚未取得實際公告日，絕不混入歷史 PE。")
         history_years = st.selectbox("抓取年數", [1, 2, 3, 4, 5], index=4, key="b3_mops_history_years")
         @st.cache_data(ttl=86400, show_spinner=False)
-        def cached_mops_eps_history(stock_symbol, years):
-            from mops_history import fetch_mops_eps_history
-            return fetch_mops_eps_history(stock_symbol, years=years)
+        def cached_mops_quarter(stock_symbol, year, quarter):
+            from mops_history import fetch_mops_quarter
+            return fetch_mops_quarter(stock_symbol, year, quarter, timeout=8)
         if st.button("自動抓取官方歷史 EPS", key="b3_mops_history_fetch"):
-            with st.spinner("正在逐季核對 MOPS 財報，請稍候…"):
+            from mops_history import fetch_mops_eps_history
+            progress_bar = st.progress(0, text="準備讀取官方季度財報…")
+            def report_progress(completed, total, quarter):
+                progress_bar.progress(completed / total, text=f"已查詢 {completed}/{total} 季｜{quarter}")
+            with st.spinner("逐季核對 MOPS 財報；已讀取季度會保留快取…"):
                 try:
-                    history_rows, history_failures = cached_mops_eps_history(symbol, int(history_years))
+                    history_rows, history_failures = fetch_mops_eps_history(
+                        symbol, years=int(history_years),
+                        fetcher=cached_mops_quarter, progress=report_progress)
                     st.session_state["b3_mops_history_result"] = (symbol, history_years, history_rows, history_failures)
                 except Exception as exc:
                     st.error(f"歷史資料讀取失敗：{type(exc).__name__}")
