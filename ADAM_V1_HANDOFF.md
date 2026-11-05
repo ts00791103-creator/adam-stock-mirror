@@ -226,3 +226,9 @@
 - 使用者回報第九階段第二批 CI 綠色。
 - 新增 tests/test_yahoo_download_pipeline.py：以 mock yf.download 執行 app.py 原始 get_data、raw_quote_summary、audit_ohlc_data（AST 去除 Streamlit cache decorator），覆蓋資料亂序/重複/NaN 的清洗與警示、Yahoo MultiIndex 欄位、10 分K 跨日不混合、Inf 品質閘門、空資料。commit 503d047c800ce39cd7ac3587869e5ec31813b65b。
 - 本次僅新增測試，未更動正式運算或下載邏輯。這是模擬 Yahoo 回應的管線整合測試，不是網路實際下載或真實股票歷史回放；最新 CI 待確認。main、b3-speed-test 未更動。
+
+## 2026-11-05｜第十階段第二批：真實台股 Yahoo 行情抽查工具
+- 使用者回報第十階段第一批 CI 綠色。
+- 新增 scripts/live_tw_quotes_smoke.py，下載 2330.TW 與 2308.TW 近兩年日K，逐一驗證 OHLC、日期順序、重複、有限值、價格合理關係、至少100根，輸出日期與收盤。commit 9aba0525e3166383c25c7b974bf6c0d193896748。
+- 新增獨立手動觸發 workflow .github/workflows/v1-live-quotes.yml，與既有 v1-validation.yml 離線測試分離，避免網路故障讓離線測試變紅。commit 46e506d3b0d072e41bb6f5fac82521ea0119fc3a。
+- 尚未執行 live workflow，不能宣稱真實行情已驗收；注意 GitHub workflow_dispatch 若工作流程尚未存在於 default branch，Actions UI 可能無法提供手動執行按鈕。切勿為此直接修改 main，應先評估替代方式。main/b3-speed-test 未動。
