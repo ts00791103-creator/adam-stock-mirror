@@ -165,6 +165,37 @@ class MirrorWaveTests(unittest.TestCase):
         np.testing.assert_allclose(result["projection"], expected)
         self.assertEqual(len(result["times"]), len(result["projection"]))
 
+
+    def test_long_wave_uses_650_bars_when_available(self):
+        import types
+        ns = dict(self.calc)
+        ns["find_pivots"] = Mock(return_value=[])
+        fn = types.FunctionType(self.calc["mirror_wave"].__code__, ns)
+        prices = 100 + np.arange(800) * 0.01
+        frame = pd.DataFrame({"Close": prices}, index=pd.bdate_range("2023-01-02", periods=800))
+        self.assertIsNone(fn(frame, "長波", 3, "1d"))
+        self.assertEqual(len(ns["find_pivots"].call_args.args[0]), 650)
+        self.assertAlmostEqual(ns["find_pivots"].call_args.args[0][0], prices[-650])
+
+    def test_short_history_does_not_invent_long_wave_pivots(self):
+        prices = np.linspace(100, 110, 20)
+        frame = pd.DataFrame({"Close": prices}, index=pd.bdate_range("2026-09-01", periods=20))
+        self.assertIsNone(self.calc["mirror_wave"](frame, "長波", 3, "1d"))
+
+    def test_long_wave_uses_only_confirmed_pivots(self):
+        import types
+        ns = dict(self.calc)
+        ns["find_pivots"] = Mock(return_value=[(100, "高"), (300, "低")])
+        ns["internal_turns"] = Mock(return_value=[])
+        fn = types.FunctionType(self.calc["mirror_wave"].__code__, ns)
+        prices = 100 + np.arange(700) * 0.1
+        frame = pd.DataFrame({"Close": prices}, index=pd.bdate_range("2023-01-02", periods=700))
+        result = fn(frame, "長波", 3, "1d")
+        self.assertEqual((result["start"], result["end"]), (100, 300))
+        self.assertEqual(len(result["segment"]), 201)
+        self.assertEqual(len(result["projection"]), 201)
+        self.assertEqual(len(result["times"]), 201)
+
     def test_daily_future_index_excludes_weekends(self):
         future = self.calc["future_index"](pd.Timestamp("2026-11-06"), 2, "1d")
         self.assertEqual([str(x.date()) for x in future], ["2026-11-09", "2026-11-10"])
