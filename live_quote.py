@@ -1,0 +1,93 @@
+"""Personal-use Fugle quote panel. Does not modify historical candles."""
+import re
+import hmac
+import json
+import urllib.request
+import urllib.error
+from datetime import datetime
+from zoneinfo import ZoneInfo
+import streamlit as st
+
+TZ = ZoneInfo("Asia/Taipei")
+
+
+def _secret(name):
+    try:
+        return str(st.secrets.get(name, "")).strip()
+    except (FileNotFoundError, KeyError):
+        return ""
+
+
+def _fetch_quote(symbol, api_key):
+    url = "https://api.fugle.tw/marketdata/v1.0/stock/intraday/quote/" + symbol
+    request = urllib.request.Request(
+        url, headers={"X-API-KEY": api_key, "Accept": "application/json"})
+    with urllib.request.urlopen(request, timeout=7) as response:
+        return json.load(response)
+
+
+def _format_trade_time(microseconds):
+    if not microseconds:
+        return "尚無成交時間"
+    try:
+        return datetime.fromtimestamp(int(microseconds) / 1_000_000, TZ).strftime("%Y-%m-%d %H:%M:%S")
+    except (ValueError, TypeError, OverflowError):
+        return "成交時間無法解析"
+
+
+@st.fragment(run_every="10s")
+def _quote_fragment(symbol, api_key):
+    try:
+        quote = _fetch_quote(symbol, api_key)
+        last_trade = quote.get("lastTrade") or {}
+        price = last_trade.get("price")
+        if price is None:
+            price = quote.get("closePrice")
+        if price is None:
+            st.info("目前沒有實際成交資料（可能尚未開盤或無成交）。")
+            return
+        previous = quote.get("previousClose")
+        change = float(price) - float(previous) if previous else None
+        percent = change / float(previous) * 100 if change is not None else None
+        a, b, c = st.columns(3)
+        a.metric("最新成交價", f"{float(price):,.2f}")
+        b.metric("漲跌", f"{change:+,.2f}" if change is not None else "—")
+        c.metric("漲跌幅", f"{percent:+.2f}%" if percent is not None else "—")
+        trade_time = _format_trade_time(last_trade.get("time") or quote.get("closeTime"))
+        st.caption(f"富果行情｜{symbol}｜成交時間（台灣）：{trade_time}｜每 10 秒查詢一次")
+        if quote.get("isTrial"):
+            st.warning("目前包含試撮資訊；上方只顯示實際成交價。")
+        now = datetime.now(TZ)
+        if trade_time != "尚無成交時間":
+            try:
+                dt = datetime.strptime(trade_time, "%Y-%m-%d %H:%M:%S").replace(tzinfo=TZ)
+                if (now - dt).total_seconds() > 90:
+                    st.info("最新成交時間距現在超過 90 秒，可能已收盤、暫停交易或沒有新成交。")
+            except ValueError:
+                pass
+    except urllib.error.HTTPError as exc:
+        st.warning(f"即時行情暫時不可用（HTTP {exc.code}）。歷史 K 線不受影響。")
+    except Exception:
+        st.warning("即時行情連線失敗，請確認金鑰、網路與權限。歷史 K 線不受影響。")
+
+
+def show_personal_quote(market, symbol):
+    if market != "台灣股票／ETF":
+        return
+    stock_id = str(symbol).split(".")[0]
+    if not re.fullmatch(r"[0-9]{4,6}[A-Za-z]?", stock_id):
+        return
+    with st.expander("個人即時價格（測試版）", expanded=False):
+        st.caption("僅報價面板自動更新；原本歷史 K 線與亞當鏡像不會被改寫。")
+        key = _secret("FUGLE_API_KEY")
+        password = _secret("LIVE_QUOTE_PASSWORD")
+        if not key or not password:
+            st.info("請先在 Streamlit Cloud Secrets 設定 FUGLE_API_KEY 與 LIVE_QUOTE_PASSWORD，才可使用個人報價。")
+            return
+        entered = st.text_input("個人報價密碼", type="password", key="live_quote_password_input")
+        if not entered or not hmac.compare_digest(entered, password):
+            if entered:
+                st.error("密碼不正確")
+            return
+        if st.checkbox("啟用每 10 秒更新", value=False, key="live_quote_enabled"):
+            _quote_fragment(stock_id, key)
