@@ -1084,7 +1084,7 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
             st.caption(f"樣本 {auto_pe_result['samples']} 日｜{auto_pe_result['start']}～{auto_pe_result['end']}｜{auto_pe_result['method']}")
             if auto_pe_result.get("warnings"):
                 st.warning("估價可信度提醒：" + "；".join(auto_pe_result["warnings"]))
-            st.caption(f"季 EPS {auto_pe_result['eps_quarters']} 季｜有效樣本跨度 {auto_pe_result.get('coverage_days', 0)} 天；資料不足時歷史分位數可能偏誤。")
+            st.caption(f"季 EPS {auto_pe_result['eps_quarters']} 季（{auto_pe_result.get('eps_first', '未知')}～{auto_pe_result.get('eps_last', '未知')}）｜有效樣本跨度 {auto_pe_result.get('coverage_days', 0)} 天；資料不足時歷史分位數可能偏誤。")
         else:
             st.warning(f"歷史 PE 無法計算：{pe_error}。改用手動倍數，不視為自動智慧估價。")
     growth_reference = None
