@@ -25,25 +25,31 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
         tables = pd.read_html(io.StringIO(response.text))
     except Exception:
         return None, "MOPS 歷史財報服務無法讀取或格式已變更"
+    # MOPS statements commonly contain current/prior and quarter/YTD columns.
+    # Preserve each distinct EPS row and its original column positions.
     candidates = []
-    for table in tables:
-        for _, row in table.iterrows():
+    for table_number, table in enumerate(tables, start=1):
+        for row_number, (_, row) in enumerate(table.iterrows(), start=1):
             cells = [str(x).strip() for x in row.tolist()]
-            labels = [x for x in cells if "基本每股盈餘" in x or "基本每股收益" in x]
+            labels = [x for x in cells if ("基本每股盈餘" in x or "基本每股收益" in x)]
             if not labels:
                 continue
-            numeric = []
-            for cell in cells:
-                cleaned = cell.replace(",","").replace("(","-").replace(")","")
-                if re.fullmatch(r"-?\d+(?:\.\d+)?",cleaned):
-                    numeric.append(float(cleaned))
-            if len(numeric)==1:
-                candidates.append(numeric[0])
-    if len(candidates)!=1:
-        return None, "EPS 欄位不唯一或無法辨識，為避免誤判已停止"
-    return {"symbol":code,"quarter_end":str(pd.Period(f"{year}Q{quarter}").end_time.date()),
-            "cumulative_eps_candidate":candidates[0],"source":URL,
-            "filing_date_verified":False},None
+            values = []
+            for column_number, cell in enumerate(cells, start=1):
+                cleaned = cell.replace(",", "").replace("(", "-").replace(")", "").strip()
+                if re.fullmatch(r"-?\d+(?:\.\d+)?", cleaned):
+                    values.append({"column": column_number, "value": float(cleaned)})
+            if values:
+                candidates.append({"table": table_number, "row": row_number,
+                                   "label": labels[0][:100], "values": values})
+    if not candidates:
+        return None, "找不到可辨識的基本 EPS 數值，請確認 MOPS 是否回傳完整損益表"
+    # Do not guess which column represents current-year cumulative EPS.
+    return {"symbol": code,
+            "quarter_end": str(pd.Period(f"{year}Q{quarter}").end_time.date()),
+            "eps_rows": candidates[:15], "eps_row_count": len(candidates),
+            "source": URL, "filing_date_verified": False,
+            "column_verified": False}, None
 
 def probe_mops_history(symbol, years=3):
     now = pd.Timestamp.now()
