@@ -28,7 +28,9 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
     # MOPS statements commonly contain current/prior and quarter/YTD columns.
     # Preserve each distinct EPS row and its original column positions.
     candidates = []
+    table_headers = {}
     for table_number, table in enumerate(tables, start=1):
+        table_headers[table_number] = {"columns": [str(c)[:120] for c in table.columns], "top_rows": [[str(v)[:90] for v in row.tolist()] for _, row in table.head(7).iterrows()]}
         for row_number, (_, row) in enumerate(table.iterrows(), start=1):
             cells = [str(x).strip() for x in row.tolist()]
             labels = [x for x in cells if ("基本每股盈餘" in x or "基本每股收益" in x)]
@@ -48,6 +50,7 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
     return {"symbol": code,
             "quarter_end": str(pd.Period(f"{year}Q{quarter}").end_time.date()),
             "eps_rows": candidates[:15], "eps_row_count": len(candidates),
+            "headers": {str(x["table"]): table_headers[x["table"]] for x in candidates[:15]},
             "source": URL, "filing_date_verified": False,
             "column_verified": False}, None
 
