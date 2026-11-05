@@ -87,3 +87,8 @@
 - 修正：改成 cls.points = staticmethod(load_points())，避免綁定；未修改 mobile_chart.py 正式功能。
 - 修正 commit：868521143f0b6637b733dd8f5946ec65ed540ca6。
 - 修正後 GitHub Actions 尚待驗證，不可宣稱已通過。
+
+## 2026-11-05｜手機圖表資料測試修正後綠燈
+- 使用者提供 GitHub Actions 畫面：Adam V1.0 validation #11（31秒）與 #12（30秒）均為綠色成功；#9 與 #10 為紅色失敗。
+- 確認 tests/test_mobile_chart_data.py 的 staticmethod 修正後，現有 CI 已通過；這僅證明目前 CI 所覆蓋的測試通過，不代表實際手機拖曳／縮放與交易日曆已驗收。
+- 下一步：完善交易時段／交易日曆的預測日期標示，測試手機 K 線圖左右拖曳、上下平移、縮放與視窗記憶；保留 main 和 b3-speed-test 不動。
