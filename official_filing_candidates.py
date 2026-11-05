@@ -143,6 +143,11 @@ def probe_discovered_mops_form(stock_code, year, quarter, timeout=12):
                          "含股票代號": bool(re.search(r"(?<!\d)" + re.escape(code) + r"(?!\d)", sample)),
                          "含公告日期字樣": any(k in sample for k in ("公告日期", "申報日期", "公告時間", "申報時間")),
                          "含財報字樣": any(k in sample for k in ("財務報告", "財報"))})
+    if not tables and response_diagnostic["looks_like_html"] and response_diagnostic["contains_script"]:
+        return {"status": "javascript_shell", "endpoint": "/mops/web/ajax_t56sb31_q1",
+                "http_status": response.status_code, "response_chars": len(body),
+                "table_count": 0, "response_diagnostic": response_diagnostic,
+                "message": "回傳公開資訊觀測站網頁外殼，不是公告結果；停止以此請求取得公告日"}
     return {"status": "diagnostic_only", "endpoint": "/mops/web/ajax_t56sb31_q1",
             "http_status": response.status_code, "response_chars": len(body),
             "table_count": len(tables), "table_profiles": profiles,
