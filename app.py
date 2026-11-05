@@ -1192,6 +1192,24 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                     st.caption("證交所財務報告書資訊揭露頁可查公告日期時間；法定截止日、董事會預定日與財報期間結束日，都不能當成實際公告日。")
                     st.markdown("[開啟證交所資訊揭露／財務報告書](https://www.twse.com.tw/IIH2/zh/market/information.html)")
                     st.info("目前尚未取得可逐季對應、可驗證來源的 20 筆公告日期，歷史 PE 回測維持鎖定。")
+                    if st.button("自動查詢證交所財報公告候選紀錄", key="b3_official_filing_fetch"):
+                        from official_filing_candidates import fetch_official_filing_candidates, review_candidate_coverage
+                        with st.spinner("正在檢查證交所單一公司資訊揭露頁…"):
+                            candidates, candidate_error = fetch_official_filing_candidates(str(symbol).split(".")[0])
+                        st.session_state["b3_official_filing_candidates"] = (
+                            str(symbol).split(".")[0], candidates, candidate_error)
+                    official_saved = st.session_state.get("b3_official_filing_candidates")
+                    if official_saved and official_saved[0] == str(symbol).split(".")[0]:
+                        from official_filing_candidates import review_candidate_coverage
+                        _, candidates, candidate_error = official_saved
+                        if candidate_error:
+                            st.warning(candidate_error)
+                        if candidates:
+                            st.write(f"找到 {len(candidates)} 筆公告候選紀錄（非已核實公告日）")
+                            st.dataframe(pd.DataFrame(candidates), use_container_width=True, hide_index=True)
+                        coverage = review_candidate_coverage(candidates, [x["quarter"] for x in history_rows])
+                        st.dataframe(pd.DataFrame(coverage), use_container_width=True, hide_index=True)
+                        st.caption("缺漏、重複、補正公告都不會自動填入歷史 PE；必須核對首次有效申報與原始紀錄。")
                     filing_template = pd.DataFrame([{
                         "股票代號": str(symbol).split(".")[0],
                         "季度": x["quarter"],
