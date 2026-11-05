@@ -106,3 +106,10 @@
 - 新增 V1_DEPLOY_GUIDE.md，記錄 Streamlit Community Cloud 第二個獨立 App 的 repository/branch/app.py 設定、候選站建議名稱與手機驗收清單。Commit b77476421e9fc9a43533acf205fcfb36c02e0775。
 - **尚未實際部署候選網站**，候選 URL 未確認。部署需要在使用者 Streamlit 帳號建立獨立 App；不能宣稱已上線。
 - 下一步：使用者建立第二個 Streamlit App 後提供實際 URL，再驗收並修正；絕不覆蓋 B3。
+
+## 2026-11-05｜候選站已部署（使用者截圖確認）
+- 使用者在 Streamlit 部署畫面設定 repository=ts00791103-creator/adam-stock-mirror、branch=release/v1.0-development、main file=app.py、App URL=adam-v1-candidate，並完成 Deploy。
+- 使用者提供候選站載入截圖：繁體中文 UI 可見，台灣股票/ETF、2308 台達電（上市）、日K、10y、三波同圖控制項均顯示；無可見啟動錯誤。
+- 候選站預期網址：https://adam-v1-candidate.streamlit.app/ （以使用者部署畫面與截圖為依據）。
+- 目前只驗證啟動畫面；尚未確認 K 線是否成功繪製、鏡像結果、手機四向拖曳、雙指縮放、視窗記憶、資料正確性。
+- 截圖標題仍是「亞當理論 B3 Pro｜A 模式左右鏡像」，候選版命名需後續調整，但不要改動 B3/main。
