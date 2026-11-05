@@ -155,6 +155,47 @@ def probe_discovered_mops_form(stock_code, year, quarter, timeout=12):
             "message": "僅診斷回傳資料，不視為已核實公告日期"}
 
 
+def probe_session_backed_filing_query(stock_code, year, quarter, timeout=12, session=None):
+    """Compare the official t163sb01 query page and a same-session AJAX POST.
+
+    Diagnostic only. No filing date is accepted from either response.
+    """
+    code = str(stock_code).strip()
+    if not re.fullmatch(r"\d{4,5}", code):
+        return {"status": "invalid_stock"}
+    if not (isinstance(year, int) and 2000 <= year <= 2100
+            and isinstance(quarter, int) and 1 <= quarter <= 4):
+        return {"status": "invalid_period"}
+    client = session if session is not None else requests.Session()
+    base = "https://mopsov.twse.com.tw/mops/web/"
+    headers = {"User-Agent": "Mozilla/5.0", "Referer": base + "t163sb01"}
+    payload = {"encodeURIComponent": "1", "step": "1", "firstin": "1",
+               "off": "1", "queryName": "co_id", "inpuType": "co_id",
+               "TYPEK": "all", "isnew": "false", "co_id": code,
+               "year": str(year - 1911), "season": f"{quarter:02d}"}
+    try:
+        landing = client.get(base + "t163sb01", headers=headers, timeout=timeout)
+        landing.raise_for_status()
+        result = client.post(base + "ajax_t163sb01", data=payload,
+                             headers=headers, timeout=timeout)
+        result.raise_for_status()
+    except requests.RequestException:
+        return {"status": "connection_error", "message": "官方財報公告查詢連線失敗"}
+    import hashlib
+    def signature(response):
+        body = response.text or ""
+        return {"chars": len(body),
+                "sha256_prefix": hashlib.sha256(body.encode("utf-8")).hexdigest()[:12],
+                "has_table": "<table" in body.lower(),
+                "has_script": "<script" in body.lower(),
+                "has_stock_code": bool(re.search(r"(?<!\d)" + re.escape(code) + r"(?!\d)", body))}
+    a, b = signature(landing), signature(result)
+    return {"status": "session_diagnostic_only",
+            "query_page": a, "ajax_result": b,
+            "same_response": a["sha256_prefix"] == b["sha256_prefix"],
+            "message": "同一工作階段的官方查詢診斷；尚未核實財報首次申報日，不可解鎖歷史 PE"}
+
+
 def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
     """Probe historical MOPS financial-report announcement transport only.
 
