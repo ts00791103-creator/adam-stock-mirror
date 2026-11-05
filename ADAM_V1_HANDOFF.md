@@ -249,3 +249,9 @@
 - 新增 scripts/live_tw_mirror_smoke.py，下載兩檔 5y 日K，需至少650根，透過 AST 執行 app.py 原始 find_pivots/future_index/internal_turns/mirror_wave，逐一測試短中長波的時間左右翻轉公式、錨定最新收盤、日期遞增、長度及有限數值。轉折不足時輸出 NO_PIVOTS，不視為鏡像成功。commit f954d490fb2b84eae99a9c70f697bdf49a2d5e6f。
 - 已將 Optional live Taiwan Adam mirror projection check (non-blocking) 加入既有 .github/workflows/v1-validation.yml，commit 94bb3252592cdf7b7fb02f0691bfa7f1f0736d70。
 - 本批尚未取得 GitHub CI 日誌。因 continue-on-error，主 workflow 綠色不等於鏡像真實測試 PASS，需檢視此步驟輸出。main/b3-speed-test 未動。
+
+## 2026-11-05｜第十一階段真實行情鏡像測試通過（使用者 GitHub Actions 截圖）
+- 2330.TW 1212 根日K，最後日期 2026-11-05，收盤 2240；短波 PASS（12根，鏡像 2240→2440）、中波 PASS（14根，2240→2035）、長波 PASS（49根，2240→1855）。
+- 2308.TW 1212 根日K，最後日期 2026-11-05，收盤 1130；短波 PASS（6根，1130→915）、中波 PASS（15根，1130→700）、長波 PASS（15根，1130→700）。
+- 六項 PASS 證實實際行情下鏡像公式、起點錨定、日期與數值一致性；不代表鏡像預測準確或 UI 完全驗收。
+- 後續優先：檢查台達電中長波是否選到相同轉折區間，並清楚呈現歷史轉折區間起迄日期與實際歷史價格，避免使用者誤解。main/b3-speed-test 不變。
