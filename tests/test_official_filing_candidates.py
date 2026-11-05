@@ -23,6 +23,27 @@ class OfficialCandidateTests(unittest.TestCase):
         self.assertEqual(len(rows), 1)
         self.assertEqual(rows[0]["季度"], "2026Q2")
 
+    def test_prefixed_cells_from_twse_page(self):
+        frame = pd.DataFrame([
+            ["公告日期時間115/08/14 16:30", "證券代號2308",
+             "證券名稱台達電", "主旨115年第2季財務報告書"],
+            ["公告日期時間115/08/14 16:30", "證券代號12308",
+             "證券名稱其他", "主旨115年第2季財務報告書"],
+        ])
+        class Response:
+            text = "<table></table>"
+            def raise_for_status(self):
+                pass
+        with patch("official_filing_candidates.requests.get", return_value=Response()) as getter, patch(
+            "official_filing_candidates.pd.read_html", return_value=[frame]
+        ):
+            rows, error = fetch_official_filing_candidates("2308")
+        self.assertIsNone(error)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["公告日期時間"], "2026-08-14 16:30")
+        self.assertEqual(rows[0]["季度"], "2026Q2")
+        self.assertIn("code=2308", getter.call_args.args[0])
+
     def test_empty_javascript_page_fails_closed(self):
         with patch("official_filing_candidates.requests.get") as getter:
             getter.return_value.text = "<html>No server-side table</html>"
