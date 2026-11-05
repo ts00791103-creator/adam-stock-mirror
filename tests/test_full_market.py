@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch
 import pandas as pd
 from streamlit.testing.v1 import AppTest
-from market_universe import normalize_market, trading_date, shortlist, fetch_universe
+from market_universe import normalize_market, trading_date, shortlist, fetch_universe, history_as_of
 
 
 class OfficialMarketTests(unittest.TestCase):
@@ -21,14 +21,22 @@ class OfficialMarketTests(unittest.TestCase):
             trading_date("")
 
     def test_otc_fields_and_invalid_data(self):
-        companies = [{"公司代號": "6488", "公司名稱": "環球晶"},
-                     {"公司代號": "1001", "公司名稱": "測試"}]
+        companies = [{"SecuritiesCompanyCode": "6488", "CompanyName": "環球晶圓", "CompanyAbbreviation": "環球晶"},
+                     {"SecuritiesCompanyCode": "1001", "CompanyName": "測試"}]
         result = normalize_market(companies, [
             {"SecuritiesCompanyCode": "6488", "Date": "115/11/05", "Close": "450", "TradingShares": "2500000"},
             {"SecuritiesCompanyCode": "1001", "Date": "1151105", "Close": "--", "TradingShares": "nan"}], "上櫃")
         self.assertEqual(result["rows"][0]["Yahoo代號"], "6488.TWO")
         self.assertEqual(result["rows"][0]["官方當日成交量（張）"], 2500)
         self.assertEqual(len(result["failures"]), 1)
+
+    def test_history_is_truncated_at_snapshot_date_without_future_candles(self):
+        frame = pd.DataFrame({"Close": [100, 101, 999]}, index=pd.date_range("2026-11-03", periods=3))
+        aligned = history_as_of(frame, "2026-11-04")
+        self.assertEqual(aligned.Close.iloc[-1], 101)
+        self.assertEqual(len(frame), 3)
+        with self.assertRaises(ValueError):
+            history_as_of(frame, "2026-11-06")
 
     def test_no_fallback_universe_on_source_failure(self):
         with patch("market_universe.fetch_market", side_effect=OSError("offline")):

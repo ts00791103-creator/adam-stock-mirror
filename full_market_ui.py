@@ -1,7 +1,7 @@
 """Two-stage scanner with explicit coverage and user-triggered batches."""
 import pandas as pd
 import streamlit as st
-from market_universe import fetch_universe, shortlist
+from market_universe import fetch_universe, shortlist, history_as_of
 from screener_ui import screening_data
 from stock_screener import screen_frame
 
@@ -25,7 +25,7 @@ def show_full_market():
         near = st.slider("全市場距箱底上限（%）", 1, 20, 5, key="market_near")
         window = st.slider("全市場箱型觀察根數", 10, 60, 20, key="market_window")
         width = st.slider("全市場箱型最大振幅（%）", 3, 25, 20, key="market_width")
-        st.caption("1張＝1000股。初選用官方當日量，複選用Yahoo 20日均量，兩者不同。資料快取最多15分鐘；盤中資料、停牌及不同來源更新時間可能不同，請看日期。")
+        st.caption("1張＝1000股。初選用官方當日量，複選用Yahoo 20日均量，兩者不同。複選截取至官方行情日期，不使用之後的K棒。資料快取最多15分鐘，官方行情可能尚未更新，請看日期。")
         config = (scope, low, high, daily, lots, mode, near, window, width)
         if st.button("取得全市場初選", key="market_start"):
             st.session_state.pop("market_scan", None)
@@ -54,6 +54,8 @@ def show_full_market():
         for result in results:
             dates = sorted({r["官方行情日期"] for r in result["rows"]})
             st.caption(f"{result['市場']}：公司名單{result['公司數']}檔｜有效每日行情{len(result['rows'])}檔｜缺漏或無效{len(result['failures'])}檔｜行情日期：{', '.join(dates)}")
+            if any(day != str(pd.Timestamp.now(tz="Asia/Taipei").date()) for day in dates):
+                st.info(f"{result['市場']}官方行情不是今天，可能休市或尚未更新。複選將以各檔顯示的官方日期為準。")
             issues.extend(result["failures"])
         if issues:
             with st.expander("官方行情缺漏／無效項目"):
@@ -73,7 +75,8 @@ def show_full_market():
             batch = candidates[cursor:cursor+10]
             for index, item in enumerate(batch):
                 try:
-                    row = screen_frame(screening_data(item["Yahoo代號"]), min_price=low, max_price=high,
+                    history = history_as_of(screening_data(item["Yahoo代號"]), item["官方行情日期"])
+                    row = screen_frame(history, min_price=low, max_price=high,
                                        min_lots=lots, mode=mode, near_pct=near, window=window, width_pct=width)
                     if row["資料日期"] != item["官方行情日期"]:
                         raise ValueError(f"來源日期不同：官方{item['官方行情日期']}／日K{row['資料日期']}，本次不判定")

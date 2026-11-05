@@ -44,8 +44,10 @@ def number(value):
 
 def normalize_market(companies, quotes, exchange):
     # Use the company directory, not all securities: exclude ETFs, warrants and emerging stocks.
-    names = {str(r.get("公司代號", "")).strip(): str(r.get("公司名稱", "")).strip()
-             for r in companies if re.fullmatch(r"[1-9][0-9]{3}", str(r.get("公司代號", "")).strip())}
+    company_code, company_name, abbreviation = (("公司代號", "公司名稱", "公司簡稱") if exchange == "上市"
+                                                else ("SecuritiesCompanyCode", "CompanyName", "CompanyAbbreviation"))
+    names = {str(r.get(company_code, "")).strip(): str(r.get(abbreviation) or r.get(company_name, "")).strip()
+             for r in companies if re.fullmatch(r"[1-9][0-9]{3}", str(r.get(company_code, "")).strip())}
     if not names:
         raise ValueError("公司名單無法辨識，未使用少數備援股票冒充全市場")
     code_key, close_key, volume_key = (("Code", "ClosingPrice", "TradeVolume") if exchange == "上市"
@@ -95,3 +97,18 @@ def shortlist(results, minimum, maximum, min_daily_lots):
     rows = [r for result in results for r in result["rows"]
             if minimum <= r["官方收盤"] <= maximum and r["官方當日成交量（張）"] >= min_daily_lots]
     return sorted(rows, key=lambda r: (-r["官方當日成交量（張）"], r["Yahoo代號"]))
+
+
+def history_as_of(frame, day):
+    """Never mix a snapshot from one day with later historical candles."""
+    import pandas as pd
+    data = frame.copy()
+    index = pd.to_datetime(data.index)
+    if index.tz is not None:
+        index = index.tz_convert("Asia/Taipei").tz_localize(None)
+    data.index = index
+    target = pd.Timestamp(day)
+    data = data.loc[data.index.normalize() <= target].sort_index()
+    if data.empty or data.index[-1].normalize() != target:
+        raise ValueError("歷史日K缺少官方行情日期，本次不判定")
+    return data
