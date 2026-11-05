@@ -1039,13 +1039,38 @@ st.info(
 
 # ===== 開始分析 =====
 
-# 估價測試功能：使用者提供 EPS 與倍數，不假稱為任何分析師的專屬公式。
+@st.cache_data(ttl=21600, show_spinner=False)
+def fetch_auto_eps(ticker_symbol):
+    """Yahoo trailingEps is historical TTM, not an analyst forecast."""
+    try:
+        info = yf.Ticker(ticker_symbol).info
+        value = pd.to_numeric(info.get("trailingEps"), errors="coerce")
+        if pd.notna(value) and float(value) > 0:
+            return float(value), "Yahoo Finance trailingEps（近四季歷史 EPS）"
+    except Exception:
+        pass
+    return None, "Yahoo Finance 無有效 EPS"
+
+# 估價：自動 EPS 或手動輸入，倍數為可調示例。
 with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", expanded=False):
     valuation_enabled = st.checkbox("啟用估價", value=False, key="b3_valuation_enabled_v1")
     valuation_mode = st.radio("估價模式", ["參考價值投資分區（可調參數）", "自訂本益比"], horizontal=True, key="b3_valuation_mode_v1")
-    eps_value = st.number_input("預估每股盈餘 EPS（元）", min_value=0.0, value=0.0, step=0.5, key="b3_eps_v1",
-                                help="請填入自行確認的年度預估 EPS；0 表示尚未提供，不產生估價。")
-    eps_period = st.text_input("EPS 年度／資料依據", value="", placeholder="例如：2027 年預估／公司法說", key="b3_eps_period_v1")
+    eps_source_mode = st.radio("EPS 取得方式", ["自動抓取近四季 EPS", "手動輸入 EPS"], horizontal=True, key="b3_eps_source_v2")
+    if eps_source_mode == "自動抓取近四季 EPS":
+        if valuation_enabled and market == "台灣股票／ETF" and symbol:
+            eps_value, eps_period = fetch_auto_eps(symbol)
+            if eps_value is None:
+                eps_value = 0.0
+                st.warning("目前抓不到有效的近四季 EPS，請切換手動輸入。")
+            else:
+                st.success(f"已取得近四季 EPS：{eps_value:,.2f} 元｜來源：{eps_period}")
+        else:
+            eps_value, eps_period = 0.0, "不支援此商品自動 EPS"
+            if valuation_enabled:
+                st.info("此商品不支援自動 EPS，請改選手動輸入。")
+    else:
+        eps_value = st.number_input("年度 EPS（元）", min_value=0.0, value=0.0, step=0.5, key="b3_eps_manual_v2")
+        eps_period = st.text_input("EPS 年度／資料依據", value="", placeholder="例如：2027 年預估／公司法說", key="b3_eps_period_manual_v2")
     v1, v2, v3 = st.columns(3)
     cheap_pe = v1.number_input("便宜 PE", min_value=1.0, max_value=200.0, value=12.0, step=0.5, key="b3_cheap_pe_v1")
     fair_pe = v2.number_input("合理 PE", min_value=1.0, max_value=200.0, value=16.0, step=0.5, key="b3_fair_pe_v1")
@@ -1338,7 +1363,7 @@ if st.button(
     if valuation_enabled:
         st.subheader("🧮 股票估價參考（測試版）")
         if eps_value <= 0:
-            st.info("請先輸入大於 0 的年度預估 EPS，才能計算價格。")
+            st.info("目前沒有有效 EPS，請切換手動輸入或確認資料來源。")
         elif not (cheap_pe < fair_pe < expensive_pe):
             st.warning("本益比需符合：便宜 PE ＜ 合理 PE ＜ 昂貴 PE。")
         else:
@@ -1356,7 +1381,7 @@ if st.button(
             st.write(f"最新資料收盤價：{latest_price:,.2f}｜估價區間：**{category}**")
             st.caption(f"估價依據：EPS {eps_value:,.2f} × PE {cheap_pe:g}／{fair_pe:g}／{expensive_pe:g}；"
                        f"EPS 期間／來源：{eps_period or '未填寫'}。"
-                       "非即時報價、非保證價位，亦非孫慶龍本人發布的估價。")
+                       "自動 EPS 為近四季歷史值、非未來預估；倍數為可調示例，非即時報價、非保證價位，亦非孫慶龍本人發布的估價。")
 
     show_live_candle(
         market, symbol, interval, df, waves,
