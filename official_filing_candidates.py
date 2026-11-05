@@ -145,6 +145,15 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
             "has_date_keyword": any(k in text for k in ("日期", "時間", "公告", "申報")),
             "has_roc_date_pattern": bool(re.search(r"(?<!\\d)1\\d{2}[/.-]\\d{1,2}[/.-]\\d{1,2}", text)),
             "header_labels": [str(x)[:65] for x in frame.columns[:8]],
+            "looks_like_result_table": (
+                code in text
+                and any(k in text for k in ("財務報告", "申報日期", "公告日期"))
+                and any(k in text for k in ("日期", "時間"))
+            ),
+            "likely_ui_table": (
+                code not in text
+                and not bool(re.search(r"(?<!\\d)1\\d{2}[/.-]\\d{1,2}[/.-]\\d{1,2}", text))
+            ),
         })
     return {"status": "tables_unverified", "message": "取得 HTML 表格，但尚未驗證公告日期欄位",
             "table_count": len(frames),
