@@ -1,0 +1,31 @@
+name: Adam V1.0 validation
+on:
+  push:
+    branches:
+      - release/v1.0-development
+  pull_request:
+    branches:
+      - release/v1.0-development
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install application and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install requests lxml html5lib beautifulsoup4
+      - name: Compile Python source
+        run: python -m compileall -q .
+      - name: Run offline regression tests
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
