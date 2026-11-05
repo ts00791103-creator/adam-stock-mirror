@@ -90,19 +90,31 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
                            "color": color,
                            "points": _points([indexes[0], indexes[-1]], [value, value]),
                            "style": 1 if label == "箱中線" else 0})
+    rectangles = []
+    visible_start = pd.Timestamp(plot_df.index[0]).timestamp()
+    visible_end = pd.Timestamp(plot_df.index[-1]).timestamp()
+    for box in boxes:
+        start_ts = int(pd.Timestamp(df.index[box["start"]]).timestamp())
+        end_ts = int(pd.Timestamp(df.index[box["end"]]).timestamp())
+        if end_ts < visible_start or start_ts > visible_end:
+            continue
+        rectangles.append({"start": max(start_ts, int(visible_start)),
+                           "end": min(end_ts, int(visible_end)),
+                           "top": box["top"], "bottom": box["bottom"],
+                           "status": box["status"]})
     # Lightweight Charts requires monotonically increasing unique timestamps.
     for line in series:
         unique = {p["time"]: p for p in line["points"]}
         line["points"] = sorted(unique.values(), key=lambda p: p["time"])
     bars = sorted({b["time"]: b for b in bars}.values(), key=lambda b: b["time"])
-    payload = json.dumps({"rendererVersion": "BOX-1125C", "bars": bars, "lines": series,
+    payload = json.dumps({"rendererVersion": "BOX-1125E", "bars": bars, "lines": series, "boxes": rectangles,
                           "count": view_count, "dark": dark,
                           "title": title, "viewportKey": viewport_key}, ensure_ascii=False).replace("</", "<\\/")
     html = """<!doctype html><html lang="zh-Hant"><head><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <style>html,body{margin:0;padding:0;overflow:hidden;background:BG;color:FG;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif}
-#heading{padding:8px 10px;font-size:14px;font-weight:600}#chart{width:100%;height:480px;touch-action:pan-y}
+#heading{padding:8px 10px;font-size:14px;font-weight:600}#chart-wrap{position:relative;width:100%;height:480px}#chart{width:100%;height:480px;touch-action:pan-y}#box-overlay{position:absolute;inset:0;width:100%;height:480px;pointer-events:none;z-index:2}
 #hint{font-size:12px;opacity:.8;padding:6px 10px}#error{color:#ff7777;padding:12px}</style></head>
-<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 BOX-1125D｜箱型標籤關閉</div><div id="chart"></div><div id="hint">雙指縮放｜單指左右拖曳｜點選 K 棒查看價格</div><div id="error"></div>
+<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 BOX-1125E｜半透明矩形箱型</div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="hint">雙指縮放｜單指左右拖曳｜點選 K 棒查看價格</div><div id="error"></div>
 <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 const data=PAYLOAD;
@@ -134,6 +146,42 @@ else {
    title:line.name||'',priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
   l.setData(line.points);
  }
+ // Draw translucent rectangles on a pointer-transparent SVG; never intercept chart gestures.
+ const overlay=document.getElementById('box-overlay');
+ const svgNS='http://www.w3.org/2000/svg';
+ let boxFrame=0;
+ function drawBoxRectangles(){
+   boxFrame=0;
+   overlay.replaceChildren();
+   const width=document.getElementById('chart').clientWidth;
+   overlay.setAttribute('viewBox','0 0 '+width+' 480');
+   if(!data.boxes || !data.boxes.length)return;
+   for(const b of data.boxes){
+     const x1=chart.timeScale().timeToCoordinate(b.start);
+     const x2=chart.timeScale().timeToCoordinate(b.end);
+     const y1=candle.priceToCoordinate(b.top);
+     const y2=candle.priceToCoordinate(b.bottom);
+     if([x1,x2,y1,y2].some(v=>v===null || !Number.isFinite(v)))continue;
+     const left=Math.min(x1,x2),top=Math.min(y1,y2);
+     const rect=document.createElementNS(svgNS,'rect');
+     rect.setAttribute('x',left);rect.setAttribute('y',top);
+     rect.setAttribute('width',Math.max(1,Math.abs(x2-x1)));
+     rect.setAttribute('height',Math.max(1,Math.abs(y2-y1)));
+     rect.setAttribute('fill',b.status==='整理中'?'rgba(53,160,245,0.13)':'rgba(53,160,245,0.09)');
+     rect.setAttribute('stroke','#52a9ff');
+     rect.setAttribute('stroke-width','1');
+     overlay.appendChild(rect);
+   }
+ }
+ function queueBoxDraw(){
+   if(!boxFrame)boxFrame=requestAnimationFrame(drawBoxRectangles);
+ }
+ chart.timeScale().subscribeVisibleLogicalRangeChange(queueBoxDraw);
+ const chartElement=document.getElementById('chart');
+ chartElement.addEventListener('wheel',queueBoxDraw,{passive:true});
+ chartElement.addEventListener('pointermove',queueBoxDraw,{passive:true});
+ chartElement.addEventListener('touchmove',queueBoxDraw,{passive:true});
+ queueBoxDraw();
  // Remember the visible logical range between Streamlit fragment redraws.
  // Never use the timestamp range: a new candle should not shift the user's view.
  let storageKey=data.viewportKey?'b3pro-viewport-'+data.viewportKey:null;
@@ -155,7 +203,7 @@ else {
      try {sessionStorage.setItem(storageKey,JSON.stringify({from:range.from,to:range.to}));}catch(e){}
    },150);
  });
- const resize=new ResizeObserver(()=>chart.applyOptions({width:document.getElementById('chart').clientWidth}));
+ const resize=new ResizeObserver(()=>{chart.applyOptions({width:document.getElementById('chart').clientWidth});queueBoxDraw();});
  resize.observe(document.getElementById('chart'));
 }
 </script></body></html>"""
