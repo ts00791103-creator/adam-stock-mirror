@@ -31,6 +31,20 @@ class OfficialCandidateTests(unittest.TestCase):
         self.assertEqual(rows, [])
         self.assertIsNotNone(error)
 
+    def test_mops_query_form_not_misclassified_as_filing(self):
+        from official_filing_candidates import probe_mops_financial_announcement
+        class Response:
+            status_code = 200
+            url = "https://mopsov.twse.com.tw/mops/web/ajax_t163sb01"
+            headers = {"Content-Type": "text/html"}
+            text = "<html><table><tr><td>財務報告公告查詢</td></tr></table></html>"
+            def raise_for_status(self):
+                pass
+        with patch("official_filing_candidates.requests.post", return_value=Response()):
+            result = probe_mops_financial_announcement("2308", 2026, 3)
+        self.assertEqual(result["status"], "query_form_only")
+        self.assertFalse(result["response_has_requested_stock"])
+
     def test_duplicate_reports_are_not_verified(self):
         rows = [{"季度": "2025Q4"}, {"季度": "2025Q4"}]
         review = review_candidate_coverage(rows, ["2025Q4", "2026Q1"])
