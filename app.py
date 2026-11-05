@@ -1185,9 +1185,7 @@ if st.button(
                 chart_type,
                 individual_zoom[w["name"]],
                 f"{symbol}｜{w['name']} A模式完整鏡像",
-                show_bollinger, boll_period, boll_std, chart_theme,
-                ma_periods=ma_periods, ema_periods=ema_periods,
-                    auto_boxes=auto_boxes, box_window=box_window, box_width=box_width
+                show_bollinger, boll_period, boll_std, chart_theme
             )
 
             for date in roll_dates:
@@ -1235,7 +1233,9 @@ if st.button(
         if mobile_engine:
             mobile_chart(
                 df, waves, zoom, f"{symbol}｜{mode}｜A模式完整鏡像",
-                show_bollinger, boll_period, boll_std, chart_theme
+                show_bollinger, boll_period, boll_std, chart_theme,
+                ma_periods=ma_periods, ema_periods=ema_periods,
+                auto_boxes=auto_boxes, box_window=box_window, box_width=box_width
             )
         else:
             st.plotly_chart(
