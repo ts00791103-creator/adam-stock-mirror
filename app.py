@@ -7,14 +7,9 @@ from mobile_chart_v2 import mobile_chart
 
 
 def render_mobile_chart(*args, indicators=None, auto_boxes=False, box_window=20, box_width=12.0):
-    """Keep the chart usable while Streamlit Cloud refreshes the renderer module."""
-    try:
-        return mobile_chart(*args, indicators=indicators, auto_boxes=auto_boxes, box_window=box_window, box_width=box_width)
-    except TypeError as exc:
-        if "unexpected keyword argument 'indicators'" not in str(exc):
-            raise
-        st.info("技術指標圖表模組正在更新，暫時顯示原本的 K 線與亞當鏡像。請重新整理頁面。")
-        return mobile_chart(*args)
+    """Stable renderer until indicator and box overlays pass mobile testing."""
+    return mobile_chart(*args)
+
 
 from live_quote import show_personal_quote
 from live_candle import show_live_candle
@@ -983,7 +978,8 @@ indicators = st.multiselect(
     help="MA／EMA 疊加在 K 線上；KD／MACD／RSI／VOL 顯示於下方。"
 )
 show_bollinger = "BOLL" in indicators
-auto_boxes = st.checkbox("自動生成箱型（箱頂／箱底／中線）", value=False)
+auto_boxes = st.checkbox("自動生成箱型（測試中，暫停顯示）", value=False, disabled=True)
+st.caption("為排除手機黑畫面，已暫時停用新版箱型及技術指標繪圖；原本 K 線和亞當鏡像正常使用。")
 box_window = st.slider("箱型整理觀察根數", 10, 60, 20, disabled=not auto_boxes)
 box_width = st.slider("箱型最大振幅（%）", 3.0, 25.0, 12.0, 0.5, disabled=not auto_boxes)
 boll_period = st.number_input("布林均線週期", min_value=5, max_value=120, value=20, step=1, disabled=not show_bollinger)
