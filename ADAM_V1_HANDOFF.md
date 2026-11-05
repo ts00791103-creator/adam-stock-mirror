@@ -269,3 +269,12 @@ Added tests/test_release_readiness.py (commit 472596e5e7a613a6e982b11ef0339233cb
 
 ## 2026-11-05 Phase 13 second batch: release audit
 User confirmed first batch CI green. README is minimal, requirements.txt contains streamlit/yfinance/pandas/numpy/plotly; no .streamlit/config.toml, Procfile or runtime.txt found (these are not necessarily required for Streamlit Cloud). Added V1_RELEASE_CHECKLIST.md commit 5b1c374582358108cc31419dc377f9961fe2f812 with verified test milestones, deployment prerequisites, manual mobile/desktop checks and no-main-change rule. No release or merge performed. Await actual deployment URL and manual acceptance before release.
+
+## 2026-11-05｜瀏覽器驗收後第一批修正
+- 管理頁確認候選站 https://adam-v1-candidate.streamlit.app/ 對應 release/v1.0-development；原 adam-mirror-v1-test 網址登入後仍 not_found。
+- 實測候選站仍顯示 B3 Pro、沒有來源卡片，但目前分支已有 V1.0 標題、來源卡片及重複警示。屬執行版本差異，尚未證明最新程式的來源卡片失效；需核對候選站部署日誌，不可誤稱已修好部署。
+- 程式已使用獨立 volume priceScale；先前瀏覽器測試報告的「量價共用刻度」推論更正。
+- 新增 projection_warnings，揭露零／負數與非有限鏡像值，不裁切結果、不修改左右反轉公式；新增離線測試。
+- 圖表版本統一為 V1-UI-1105，移除以 BOX-1125C 字串猜測新舊元件的錯誤診斷。操作說明依手機圖表／Plotly 分流。iframe 高度 720，預留手機標題與三波切換換行空間。
+- 上下手勢仍沿用原本有限視覺平移，未完成價格軸平移；雙指觸控未實機驗證。沒有新增上下按鈕。
+- 本機沒有可執行 Python，已檢查內嵌 JavaScript 語法；Python 編譯及離線測試需以本次提交的 CI 結果為準。main、b3-speed-test 不修改，不合併、不正式發布。

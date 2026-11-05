@@ -5,6 +5,8 @@ import pandas as pd
 import streamlit.components.v1 as components
 from box_theory import detect_boxes
 
+RENDERER_VERSION = "V1-UI-1105"
+
 
 def _points(index, values):
     result = []
@@ -122,7 +124,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
         unique = {p["time"]: p for p in line["points"]}
         line["points"] = sorted(unique.values(), key=lambda p: p["time"])
     bars = sorted({b["time"]: b for b in bars}.values(), key=lambda b: b["time"])
-    payload = json.dumps({"rendererVersion": "VOL-OHLC-1", "bars": bars, "lines": series, "boxes": rectangles, "volumes": volumes, "volumeMA5": volume_ma5, "volumeMA20": volume_ma20, "volumeUnit": volume_unit,
+    payload = json.dumps({"rendererVersion": RENDERER_VERSION, "bars": bars, "lines": series, "boxes": rectangles, "volumes": volumes, "volumeMA5": volume_ma5, "volumeMA20": volume_ma20, "volumeUnit": volume_unit,
                           "count": view_count, "dark": dark,
                           "title": title, "viewportKey": viewport_key, "mirrorSummary": mirror_summary}, ensure_ascii=False).replace("</", "<\\/")
     html = """<!doctype html><html lang="zh-Hant"><head><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -134,6 +136,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
 <script>
 const data=PAYLOAD;
 document.getElementById('heading').textContent=data.title+'｜'+data.rendererVersion;
+document.getElementById('renderer-status').textContent='手機圖表版本 '+data.rendererVersion+'｜成交量使用獨立刻度';
 if(!window.LightweightCharts){document.getElementById('error').textContent='圖表元件載入失敗，請檢查網路或切回原本圖表。';}
 else {
  const dark=data.dark;
@@ -318,4 +321,5 @@ else {
 </script></body></html>"""
     html = html.replace("BG", "#101010" if dark else "#ffffff").replace(
         "FG", "#ffffff" if dark else "#222222").replace("PAYLOAD", payload)
-    components.html(html, height=610, scrolling=False)
+    # Leave room for wrapped headings and three wave toggles on narrow phones.
+    components.html(html, height=720, scrolling=False)

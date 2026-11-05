@@ -3,7 +3,7 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
-from mobile_chart import mobile_chart
+from mobile_chart import mobile_chart, RENDERER_VERSION
 from live_quote import show_personal_quote
 from live_candle import show_live_candle
 
@@ -622,6 +622,22 @@ def wave_source_rows(waves, interval):
     return rows
 
 
+def projection_warnings(waves):
+    """Disclose non-tradable scenario prices without changing mirror math."""
+    warnings = []
+    for wave in waves:
+        prices = np.asarray(wave["projection"], dtype=float)
+        if not np.isfinite(prices).all():
+            warnings.append(f"{wave['name']}鏡像包含非有限數值，請勿作為價格參考。")
+        finite = prices[np.isfinite(prices)]
+        if len(finite) and (finite <= 0).any():
+            warnings.append(
+                f"{wave['name']}鏡像包含零或負數價位（最低 {float(finite.min()):,.2f}）。"
+                "這是歷史價差平移的數學情境，不是可交易的股價或目標價；原始鏡像數值未裁切。"
+            )
+    return warnings
+
+
 def make_figure(
     df,
     waves,
@@ -1049,12 +1065,8 @@ chart_theme = st.radio(
 show_bollinger = st.checkbox("顯示布林軌道（BOLL）", value=True)
 ma_periods = st.multiselect("測試 MA 均線（可複選）", [5,10,20,60,120,240], default=[])
 ema_periods = st.multiselect("測試 EMA 均線（可複選）", [5,10,20,60,120,240], default=[])
-st.caption("🧪 箱型測試版本 BOX-1125B｜新版不顯示箱型價格標籤")
-import inspect
-_renderer_source = inspect.getsource(mobile_chart)
-st.caption("🧪 圖表元件檢查："
-           + ("BOX-1125C 已載入" if "BOX-1125C" in _renderer_source else "舊版圖表元件仍在執行")
-           + "｜手機圖表：" + ("開啟" if mobile_engine else "關閉"))
+st.caption("候選版本 V1.0｜圖表：" + (RENDERER_VERSION if mobile_engine else "Plotly")
+           + "｜箱型不顯示價格標籤")
 
 auto_boxes = st.checkbox("測試自動箱型（箱頂／箱底／中線）", value=True, key="b3_box_default_on_10_20")
 box_window = st.slider("箱型觀察根數", 10, 60, 10, disabled=not auto_boxes, key="b3_box_window_default_10")
@@ -1690,6 +1702,9 @@ if st.button(
         f"{float(df['Close'].iloc[-1]):,.2f}"
     )
 
+    for message in projection_warnings(waves):
+        st.warning(message)
+
     st.subheader("亞當鏡像｜歷史波段來源")
     source_rows = wave_source_rows(waves, interval)
     # 手機優先：每波段各一張直向摘要，不必橫向捲動寬表格。
@@ -1940,11 +1955,14 @@ if st.button(
         show_bollinger, boll_period, boll_std, chart_theme
     )
 
-    st.caption("亞當轉折點：點選或長按圖上的彩色圓點，可查看轉折日期與價位。")
-    st.caption(
-        "手機操作：預設左右拖曳移動K線；使用圖表工具列「＋／－」放大縮小。"
-        "若畫面異常，點房屋圖示還原；放大鏡框選模式不適合手機觸控。"
-    )
+    if mobile_engine:
+        st.caption(
+            "圖表操作：電腦滾輪放大縮小、按住左右拖曳；手機雙指縮放、單指左右拖曳。"
+            "上下移動仍待實機驗收。點選圖表上方的波段標籤，可切換該波鏡像顯示。"
+        )
+    else:
+        st.caption("亞當轉折點：點選或長按圖上的彩色圓點，可查看轉折日期與價位。")
+        st.caption("圖表操作：使用工具列「＋／－」放大縮小、房屋圖示還原；放大鏡框選模式不適合手機觸控。")
 
     rows = []
     turn_rows = []
