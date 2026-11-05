@@ -88,9 +88,32 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
         # statements publish only a single quarter-period EPS column.
         if quarter == 1 and len(matches["quarter_eps"]) == 1 and not matches["cumulative_eps"]:
             matches["cumulative_eps"] = list(matches["quarter_eps"])
+        if quarter == 1 and len(matches["cumulative_eps"]) == 1 and not matches["quarter_eps"]:
+            matches["quarter_eps"] = list(matches["cumulative_eps"])
         if all(len(matches[k]) == 1 for k in matches):
             verified.append({k: matches[k][0] for k in matches})
     verified_eps = verified[0] if len(verified) == 1 else None
+    # Q4 annual reports may expose full-year YTD but no standalone Q4.
+    # Return YTD only; a later step may derive Q4 from verified Q3 YTD.
+    if verified_eps is None and quarter == 4:
+        ytd_only = []
+        for candidate in candidates:
+            table = tables[candidate["table"] - 1]
+            matches = []
+            for cell in candidate["values"]:
+                idx = cell["column"] - 1
+                if idx >= len(table.columns):
+                    continue
+                raw = table.columns[idx]
+                levels = [re.sub(r"\s+", "", str(x)) for x in (raw if isinstance(raw, tuple) else (raw,))]
+                detail = [x for x in levels if "年" in x and "至" in x and "民國" not in x and "單位" not in x]
+                if any("金額" in x for x in levels) and not any("%" in x or "％" in x for x in levels) and len(detail) == 1:
+                    if re.fullmatch(rf"(?:{roc}|{year})年0?1月0?1日至(?:{roc}|{year})年12月31日", detail[0]):
+                        matches.append(cell["value"])
+            if len(matches) == 1:
+                ytd_only.append(matches[0])
+        if len(ytd_only) == 1:
+            verified_eps = {"quarter_eps": None, "cumulative_eps": ytd_only[0]}
     eps_header_diagnostics = []
     for candidate in candidates[:15]:
         table = tables[candidate["table"] - 1]
@@ -152,7 +175,7 @@ def fetch_mops_eps_history(symbol, years=5, end_period=None, fetcher=None, progr
         eps = result["verified_eps"]
         records.append({
             "quarter": str(period), "quarter_end": str(period.end_time.date()),
-            "quarter_eps": float(eps["quarter_eps"]),
+            "quarter_eps": float(eps["quarter_eps"]) if eps["quarter_eps"] is not None else None,
             "cumulative_eps": float(eps["cumulative_eps"]),
             "filing_date": None, "filing_date_verified": False,
             "source": result["source"],
@@ -161,7 +184,13 @@ def fetch_mops_eps_history(symbol, years=5, end_period=None, fetcher=None, progr
     # are present; otherwise do not mistake a missing quarter for zero.
     by_period = {pd.Period(r["quarter"], freq="Q"): r for r in records}
     for period, row in by_period.items():
-        if period.quarter == 1:
+        if period.quarter == 4 and row["quarter_eps"] is None:
+            prior = by_period.get(period - 1)
+            if prior is not None:
+                row["quarter_eps"] = round(row["cumulative_eps"] - prior["cumulative_eps"], 4)
+        if row["quarter_eps"] is None:
+            row["ytd_consistent"] = None
+        elif period.quarter == 1:
             row["ytd_consistent"] = abs(row["quarter_eps"] - row["cumulative_eps"]) <= 0.03
         else:
             prior = period - 1
