@@ -1,0 +1,50 @@
+"""Historical PE valuation with conservative availability lag; test branch only."""
+import pandas as pd
+import yfinance as yf
+
+def historical_pe_bands(symbol, years=3):
+    """Use trailing four reported quarterly EPS, available only after 75-day lag.
+    Proxy reporting lag is conservative but not actual filing date.
+    """
+    ticker = yf.Ticker(symbol)
+    income = ticker.quarterly_income_stmt
+    if income is None or income.empty:
+        return None, "缺少季報損益資料"
+    names = ["Diluted EPS", "Basic EPS"]
+    row = next((n for n in names if n in income.index), None)
+    if row is None:
+        return None, "季報未提供每股盈餘"
+    eps = pd.to_numeric(income.loc[row], errors="coerce")
+    eps.index = pd.to_datetime(eps.index).tz_localize(None)
+    eps = eps.sort_index().dropna()
+    if len(eps) < 4:
+        return None, "有效季度 EPS 少於四季"
+    daily = ticker.history(period=f"{max(years+2,5)}y", interval="1d", auto_adjust=False)
+    if daily is None or daily.empty:
+        return None, "缺少歷史收盤價"
+    prices = daily["Close"].dropna()
+    prices.index = pd.to_datetime(prices.index).tz_localize(None).normalize()
+    values = []
+    for date, price in prices.items():
+        available = eps.loc[eps.index + pd.Timedelta(days=75) <= date]
+        if len(available) < 4:
+            continue
+        ttm = float(available.iloc[-4:].sum())
+        if ttm <= 0:
+            continue
+        pe = float(price) / ttm
+        if 0 < pe <= 200:
+            values.append((date, pe))
+    if len(values) < 30:
+        return None, "可用歷史本益比樣本不足（至少30個交易日）"
+    latest_date = prices.index[-1]
+    recent = [pe for date, pe in values if date >= latest_date - pd.DateOffset(years=years)]
+    if len(recent) < 30:
+        return None, "近年本益比樣本不足"
+    s = pd.Series(recent)
+    q = [float(s.quantile(p)) for p in (0.2, 0.5, 0.8)]
+    if not q[0] < q[1] < q[2]:
+        return None, "歷史本益比分位數無法有效區分"
+    return {"pes": q, "samples": len(recent), "start": str(latest_date - pd.DateOffset(years=years))[:10],
+            "end": str(latest_date)[:10], "eps_quarters": len(eps),
+            "method": "季 EPS 累計四季；季末後75天視為可用（非實際公告日）"}, None
