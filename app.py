@@ -597,6 +597,31 @@ def mirror_wave(df, name, threshold, interval):
     }
 
 
+def wave_source_rows(waves, interval):
+    """建立鏡像來源摘要，辨識不同波段共用同一歷史區間。"""
+    rows = []
+    seen = {}
+    for wave in waves:
+        recent = wave["recent"]
+        start = int(wave["start"])
+        end = int(wave["end"])
+        start_date = fmt_time(recent.index[start], interval)
+        end_date = fmt_time(recent.index[end], interval)
+        key = (pd.Timestamp(recent.index[start]), pd.Timestamp(recent.index[end]))
+        same_as = "、".join(seen.get(key, [])) or "無"
+        seen.setdefault(key, []).append(wave["name"])
+        rows.append({
+            "波段": wave["name"],
+            "歷史起日": start_date,
+            "歷史迄日": end_date,
+            "歷史起價": round(float(wave["segment"][0]), 2),
+            "歷史迄價": round(float(wave["segment"][-1]), 2),
+            "鏡像終點": round(float(wave["projection"][-1]), 2),
+            "與其他波段相同來源": same_as,
+        })
+    return rows
+
+
 def make_figure(
     df,
     waves,
@@ -1664,6 +1689,17 @@ if st.button(
         f"收盤價："
         f"{float(df['Close'].iloc[-1]):,.2f}"
     )
+
+    st.subheader("亞當鏡像｜歷史波段來源")
+    source_rows = wave_source_rows(waves, interval)
+    st.dataframe(source_rows, use_container_width=True, hide_index=True)
+    for source in source_rows:
+        if source["與其他波段相同來源"] != "無":
+            st.info(
+                f"{source['波段']}與{source['與其他波段相同來源']}使用相同歷史轉折區間，"
+                "兩者鏡像並非獨立來源。"
+            )
+    st.caption("鏡像終點僅為歷史時間左右翻轉的情境結果，不是未來價格預測。")
 
     config = {
         "scrollZoom": True,
