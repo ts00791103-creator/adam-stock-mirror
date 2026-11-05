@@ -124,7 +124,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
 <style>html,body{margin:0;padding:0;overflow:hidden;background:BG;color:FG;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif}
 #heading{padding:8px 10px;font-size:14px;font-weight:600}#ohlc{padding:4px 10px;font-size:12px;min-height:20px;font-variant-numeric:tabular-nums}#chart-wrap{position:relative;width:100%;height:480px}#chart{width:100%;height:480px;touch-action:none}#box-overlay{position:absolute;inset:0;width:100%;height:480px;pointer-events:none;z-index:2}
 #hint{font-size:12px;opacity:.8;padding:6px 10px}#error{color:#ff7777;padding:12px}</style></head>
-<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量｜成交量資料：Yahoo Finance（台股單位：張）</div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="hint">雙指縮放｜左右拖曳｜上下按鈕測試價格軸</div><div id="price-pan-controls" style="display:flex;gap:8px;padding:4px 10px"><button type="button" id="price-up" style="padding:7px 16px">↑ K 線上移</button><button type="button" id="price-down" style="padding:7px 16px">↓ K 線下移</button><button type="button" id="price-reset" style="padding:7px 16px">垂直歸位</button></div><div id="error"></div>
+<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量｜成交量資料：Yahoo Finance（台股單位：張）</div><div id="price-pan-controls" style="display:flex;flex-wrap:wrap;gap:8px;padding:8px 10px"><button type="button" id="price-up" style="padding:9px 12px">↑ K 線上移</button><button type="button" id="price-down" style="padding:9px 12px">↓ K 線下移</button><button type="button" id="price-reset" style="padding:9px 12px">垂直歸位</button><span id="pan-status" style="font-size:12px;align-self:center">操作診斷：尚未按鈕</span></div><div id="hint">雙指縮放｜左右拖曳｜上下移動測試</div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="error"></div>
 <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 const data=PAYLOAD;
@@ -241,6 +241,7 @@ else {
  const movePrice=(step)=>{
    panY=clamp(panY+step,-120,120);
    applyPanY();
+   document.getElementById('pan-status').textContent='垂直位移：'+panY+' px';
    if(panStorageKey){
      try{sessionStorage.setItem(panStorageKey,String(panY));}catch(e){}
    }
@@ -294,4 +295,4 @@ else {
 </script></body></html>"""
     html = html.replace("BG", "#101010" if dark else "#ffffff").replace(
         "FG", "#ffffff" if dark else "#222222").replace("PAYLOAD", payload)
-    components.html(html, height=635, scrolling=False)
+    components.html(html, height=675, scrolling=False)
