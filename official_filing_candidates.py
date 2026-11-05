@@ -155,6 +155,51 @@ def probe_discovered_mops_form(stock_code, year, quarter, timeout=12):
             "message": "僅診斷回傳資料，不視為已核實公告日期"}
 
 
+def classify_filing_response_html(html, stock_code, year, quarter):
+    """Structural evidence only; never extracts or certifies a filing date."""
+    from html.parser import HTMLParser
+    class TableCollector(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.depth = 0
+            self.tables = []
+            self.parts = []
+        def handle_starttag(self, tag, attrs):
+            if tag == "table":
+                if self.depth == 0:
+                    self.parts = []
+                self.depth += 1
+        def handle_endtag(self, tag):
+            if tag == "table" and self.depth:
+                self.depth -= 1
+                if not self.depth:
+                    self.tables.append(" ".join(self.parts))
+        def handle_data(self, data):
+            if self.depth:
+                self.parts.append(data.strip())
+    parser = TableCollector()
+    parser.feed(html or "")
+    code = str(stock_code)
+    roc = str(year - 1911)
+    quarter_markers = [f"{year}Q{quarter}", f"{roc}年第{quarter}季",
+                       f"{roc}年 第{quarter}季", f"{roc}/{quarter:02d}"]
+    results = []
+    for content in parser.tables[:30]:
+        has_code = bool(re.search(r"(?<!\\d)" + re.escape(code) + r"(?!\\d)", content))
+        has_period = any(marker in content for marker in quarter_markers)
+        has_filing = any(x in content for x in ("財務報告", "財報", "申報", "公告"))
+        has_date = bool(re.search(r"(?:20\\d{2}|1\\d{2})[/-]\\d{1,2}[/-]\\d{1,2}", content))
+        results.append({"has_stock_code": has_code, "has_period": has_period,
+                        "has_filing_keyword": has_filing, "has_date_pattern": has_date})
+    candidates = [x for x in results if all(x.values())]
+    return {"table_count": len(parser.tables), "inspected_tables": len(results),
+            "candidate_table_count": len(candidates),
+            "table_signals": results,
+            "classification": ("possible_filing_table_unverified" if candidates else
+                               "no_matching_filing_table"),
+            "verified_filing_date": None}
+
+
 def probe_session_backed_filing_query(stock_code, year, quarter, timeout=12, session=None):
     """Compare the official t163sb01 query page and a same-session AJAX POST.
 
@@ -190,6 +235,7 @@ def probe_session_backed_filing_query(stock_code, year, quarter, timeout=12, ses
                 "has_script": "<script" in body.lower(),
                 "has_stock_code": bool(re.search(r"(?<!\d)" + re.escape(code) + r"(?!\d)", body))}
     a, b = signature(landing), signature(result)
+    b["table_evidence"] = classify_filing_response_html(result.text, code, year, quarter)
     return {"status": "session_diagnostic_only",
             "query_page": a, "ajax_result": b,
             "same_response": a["sha256_prefix"] == b["sha256_prefix"],
@@ -217,6 +263,8 @@ def compare_filing_quarters(stock_code, periods=((2026, 3), (2025, 4), (2024, 4)
                      "包含表格": ajax.get("has_table"),
                      "包含股票代號": ajax.get("has_stock_code"),
                      "回應指紋": ajax.get("sha256_prefix"),
+                     "符合條件候選表格數": (ajax.get("table_evidence") or {}).get("candidate_table_count"),
+                     "表格判讀": (ajax.get("table_evidence") or {}).get("classification"),
                      "公告日期已核實": False})
     fingerprints = [row["回應指紋"] for row in rows if row["回應指紋"]]
     same = len(fingerprints) == len(rows) and len(set(fingerprints)) == 1
