@@ -1084,6 +1084,7 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
             else:
                 st.warning(official_error)
         st.caption("這是官方最新財報查詢，不是完整歷史 EPS；尚未取得逐季公告日，不會把這筆資料混入歷史 PE 或直接當成 TTM。")
+    st.caption("🧩 MOPS 診斷版本：2026-11-05 v2｜多欄 EPS 候選值")
     with st.expander("🧪 MOPS 歷史季報連線測試（不納入估價）", expanded=False):
         st.caption("先測試單一季度的歷史財報讀取。由於尚未核對原始申報日期與欄位，任何抓到的 EPS 都不會進入歷史 PE。")
         test_year = st.number_input("測試西元年度", min_value=2018, max_value=2026, value=2024, step=1, key="b3_mops_year_v1")
