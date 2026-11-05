@@ -18,8 +18,10 @@ def _points(index, values):
 
 
 def mobile_chart(df, waves, zoom, title, show_bollinger=False,
-                 boll_period=20, boll_std=2.0, chart_theme="券商深色"):
+                 boll_period=20, boll_std=2.0, chart_theme="券商深色", indicators=None):
     """Render mobile-friendly pinch zoom; no effect on Adam calculations."""
+    indicators = set(indicators if indicators is not None else (["BOLL"] if show_bollinger else []))
+    show_bollinger = "BOLL" in indicators
     dark = chart_theme == "券商深色"
     if zoom == "全部歷史與鏡像":
         view_count = min(len(df), 120)
@@ -47,6 +49,45 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
         ]:
             series.append({"name": name, "color": color,
                            "points": _points(plot_df.index, values.reindex(plot_df.index))})
+    close = df["Close"].astype(float)
+    for kind, periods in (("MA", (5, 10, 20, 60, 120, 240)), ("EMA", (5, 10, 20, 60))):
+        if kind not in indicators:
+            continue
+        palette = ["#f5c542", "#00bcd4", "#ef6c9a", "#9c80ff", "#66bb6a", "#ff8a65"]
+        for period, color in zip(periods, palette):
+            values = (close.rolling(period, min_periods=period).mean()
+                      if kind == "MA" else close.ewm(span=period, adjust=False, min_periods=period).mean())
+            series.append({"name": f"{kind}{period}", "color": color,
+                           "points": _points(plot_df.index, values.reindex(plot_df.index))})
+    panels = []
+    if "VOL" in indicators:
+        panels.append({"name": "成交量 VOL", "type": "histogram",
+                       "lines": [{"name": "成交量", "color": "#729bc2",
+                                  "points": _points(plot_df.index, df["Volume"].reindex(plot_df.index).fillna(0))}]})
+    if "KD" in indicators:
+        low = df["Low"].rolling(9, min_periods=9).min()
+        high = df["High"].rolling(9, min_periods=9).max()
+        rsv = ((close-low)/(high-low).replace(0, float("nan"))*100).fillna(50)
+        k = rsv.ewm(alpha=1/3, adjust=False).mean()
+        d = k.ewm(alpha=1/3, adjust=False).mean()
+        panels.append({"name": "KD (9,3,3)", "lines": [
+            {"name": "K", "color": "#f5c542", "points": _points(plot_df.index, k.reindex(plot_df.index))},
+            {"name": "D", "color": "#00bcd4", "points": _points(plot_df.index, d.reindex(plot_df.index))}]})
+    if "MACD" in indicators:
+        dif = close.ewm(span=12, adjust=False).mean()-close.ewm(span=26, adjust=False).mean()
+        signal = dif.ewm(span=9, adjust=False).mean()
+        panels.append({"name": "MACD (12,26,9)", "lines": [
+            {"name": "DIF", "color": "#f5c542", "points": _points(plot_df.index, dif.reindex(plot_df.index))},
+            {"name": "訊號", "color": "#00bcd4", "points": _points(plot_df.index, signal.reindex(plot_df.index))},
+            {"name": "柱狀體", "color": "#a88bff", "type": "histogram",
+             "points": _points(plot_df.index, (dif-signal).reindex(plot_df.index))}]})
+    if "RSI" in indicators:
+        delta = close.diff()
+        gain = delta.clip(lower=0).ewm(alpha=1/14, adjust=False, min_periods=14).mean()
+        loss = (-delta.clip(upper=0)).ewm(alpha=1/14, adjust=False, min_periods=14).mean()
+        rsi = 100 - 100/(1+gain/loss.replace(0, float("nan")))
+        panels.append({"name": "RSI (14)", "lines": [
+            {"name": "RSI", "color": "#f5c542", "points": _points(plot_df.index, rsi.reindex(plot_df.index))}]})
     for wave in waves:
         series.append({"name": wave["name"] + "歷史波段",
                        "color": wave["color"],
@@ -63,12 +104,12 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
     bars = sorted({b["time"]: b for b in bars}.values(), key=lambda b: b["time"])
     payload = json.dumps({"bars": bars, "lines": series,
                           "count": view_count, "dark": dark,
-                          "title": title}, ensure_ascii=False).replace("</", "<\\/")
+                          "title": title, "panels": panels}, ensure_ascii=False).replace("</", "<\\/")
     html = """<!doctype html><html lang="zh-Hant"><head><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <style>html,body{margin:0;padding:0;overflow:hidden;background:BG;color:FG;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif}
 #heading{padding:8px 10px;font-size:14px;font-weight:600}#chart{width:100%;height:480px;touch-action:pan-y}
-#hint{font-size:12px;opacity:.8;padding:6px 10px}#error{color:#ff7777;padding:12px}</style></head>
-<body><div id="heading"></div><div id="chart"></div><div id="hint">雙指縮放｜單指左右拖曳｜點選 K 棒查看價格</div><div id="error"></div>
+#panels .panel{height:175px;width:100%}#panels .panel-title{padding:5px 10px;font-size:12px}#hint{font-size:12px;opacity:.8;padding:6px 10px}#error{color:#ff7777;padding:12px}</style></head>
+<body><div id="heading"></div><div id="chart"></div><div id="panels"></div><div id="hint">雙指縮放｜單指左右拖曳｜點選 K 棒查看價格</div><div id="error"></div>
 <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 const data=PAYLOAD;
@@ -105,10 +146,32 @@ else {
   chart.timeScale().setVisibleLogicalRange({from:Math.max(0,data.bars.length-count),
    to:data.bars.length+Math.min(5,Math.max(1,Math.floor(count/4)))});
  }
+ for(const panel of data.panels){
+  const holder=document.createElement('div');
+  const label=document.createElement('div');label.className='panel-title';label.textContent=panel.name;
+  const el=document.createElement('div');el.className='panel';
+  holder.appendChild(label);holder.appendChild(el);document.getElementById('panels').appendChild(holder);
+  const pc=LightweightCharts.createChart(el,{
+   width:el.clientWidth,height:175,
+   layout:{background:{type:'solid',color:dark?'#101010':'#ffffff'},textColor:dark?'#eeeeee':'#333333'},
+   grid:{vertLines:{color:dark?'#242424':'#eeeeee'},horzLines:{color:dark?'#353535':'#eeeeee'}},
+   timeScale:{timeVisible:true,secondsVisible:false},handleScale:{pinch:true},
+   handleScroll:{horzTouchDrag:true,vertTouchDrag:false}
+  });
+  for(const line of panel.lines){
+   if(!line.points.length)continue;
+   const ps=line.type==='histogram'?pc.addHistogramSeries({color:line.color,priceFormat:{type:'volume'}}):
+     pc.addLineSeries({color:line.color,lineWidth:2,title:line.name,priceLineVisible:false});
+   ps.setData(line.points);
+  }
+  if(data.bars.length){const count=Math.min(data.count,data.bars.length);
+   pc.timeScale().setVisibleLogicalRange({from:Math.max(0,data.bars.length-count),to:data.bars.length+5});}
+  new ResizeObserver(()=>pc.applyOptions({width:el.clientWidth})).observe(el);
+ }
  const resize=new ResizeObserver(()=>chart.applyOptions({width:document.getElementById('chart').clientWidth}));
  resize.observe(document.getElementById('chart'));
 }
 </script></body></html>"""
     html = html.replace("BG", "#101010" if dark else "#ffffff").replace(
         "FG", "#ffffff" if dark else "#222222").replace("PAYLOAD", payload)
-    components.html(html, height=555, scrolling=False)
+    components.html(html, height=555 + 198 * len(panels), scrolling=False)
