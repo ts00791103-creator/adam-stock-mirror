@@ -3,7 +3,7 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
-from mobile_chart import mobile_chart
+from mobile_chart_v2 import mobile_chart
 
 
 def render_mobile_chart(*args, indicators=None, auto_boxes=False, box_window=20, box_width=12.0):
