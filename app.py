@@ -1112,6 +1112,18 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                     st.caption("已核對期間欄位，但尚未核對實際申報日期；不納入歷史估價。")
                 else:
                     st.warning("未能唯一核對本季及累計 EPS 欄位；保留候選數值，不納入估價。")
+                with st.expander("🔎 EPS 數值與原始表頭逐欄對照（除錯）", expanded=True):
+                    diagnostic_rows = result.get("eps_header_diagnostics", [])
+                    if diagnostic_rows:
+                        st.dataframe(pd.DataFrame([
+                            {"表格": x["table"], "欄": x["column"], "EPS": x["value"],
+                             "完整表頭": " / ".join(x["header_levels"]),
+                             "包含金額": x["contains_amount"],
+                             "包含百分比": x["contains_percent"]}
+                            for x in diagnostic_rows
+                        ]), use_container_width=True, hide_index=True)
+                    else:
+                        st.info("目前沒有可供對照的表頭資料。")
                 with st.expander("查看 MOPS 原始表頭（辨識本季／累計欄位）", expanded=False):
                     for table_no, header in result.get("headers", {}).items():
                         st.write(f"原始表格 {table_no}｜欄名：", header["columns"])
