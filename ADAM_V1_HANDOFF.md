@@ -71,3 +71,11 @@
 - 使用 AST 只載入 app.py 中的純計算函式，不啟動 Streamlit UI；測試 A 模式左右翻轉（不倒置價格）、最新收盤價對齊、轉折不足保護、短中長波 span/lookback/門檻、轉折確認延遲與日K週末排除。
 - 新增測試後的 CI 結果仍待確認；不可宣稱已通過。
 - 下一步：查看 GitHub Actions 最新 Adam V1.0 validation；失敗則依日誌修正；通過後補充交易日曆與圖表整合測試。
+
+## 2026-11-05｜鏡像 CI 綠燈，開始手機圖表資料測試
+- 使用者回報新增 tests/test_mirror_wave.py 後的 GitHub Actions 最新狀態為綠色（未直接取得 job logs）。
+- 檢查 mobile_chart.py：採用 TradingView Lightweight Charts 4.2.3，將 K 線、鏡像、箱型序列轉換成時間戳；包含可視區間 sessionStorage 邏輯。
+- 新增 tests/test_mobile_chart_data.py，驗證時間戳與數值、NaN/Infinity/None 排除、空序列，commit 225b578bf81fc0c55664af6905026cd0a9b491aa。
+- 靜態檢查發現手機圖表 handleScroll 設定 vertTouchDrag:false，且提示文字為「單指左右拖曳」；使用者要求的上下左右移動尚未獲得實機驗證。不可宣稱已完成。
+- 時間軸：future_index 的日 K 只排除週末，未排除交易所休市日；週 K、月 K、分 K 尚需實際市場行事曆驗證。
+- 新增測試的 CI 結果待確認；下一步視結果修正，並規劃交易時段與圖表操作驗收。
