@@ -1238,6 +1238,8 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                                 st.markdown("**官方查詢表單結構（診斷用途）**")
                                 st.write("欄位名稱：", ", ".join(probe_data.get("input_field_names", [])) or "無")
                                 st.write("提交目標：", probe_data.get("form_targets", []))
+                                st.write("安全查詢預設值：", probe_data.get("safe_form_defaults", {}))
+                                st.caption("RID、SKEY 等可能涉及工作階段的值一律遮蔽；這些欄位不是財報公告日期。")
                             if probe_data.get("table_profiles"):
                                 profiles = pd.DataFrame(probe_data["table_profiles"])
                                 profiles = profiles.rename(columns={
