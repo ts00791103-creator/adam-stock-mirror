@@ -1200,7 +1200,7 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                             with st.spinner("正在逐季比較官方查詢回應（最多三次查詢）…"):
                                 st.session_state["b3_mops_cross_quarter_result"] = (
                                     str(symbol).split(".")[0],
-                                    compare_filing_quarters(str(symbol).split(".")[0]))
+                                    compare_filing_quarters(str(symbol).split(".")[0])
                                 )
                         cross_saved = st.session_state.get("b3_mops_cross_quarter_result")
                         if cross_saved and cross_saved[0] == str(symbol).split(".")[0]:
