@@ -44,6 +44,24 @@ class OfficialCandidateTests(unittest.TestCase):
         self.assertEqual(rows[0]["季度"], "2026Q2")
         self.assertIn("code=2308", getter.call_args.args[0])
 
+    def test_secondary_host_used_when_primary_has_unrelated_table(self):
+        from unittest.mock import Mock
+        first = pd.DataFrame([["無關資料"]])
+        second = pd.DataFrame([
+            ["115/08/14 16:30", "2308", "台達電", "115年第2季財務報告書"]
+        ])
+        response = Mock()
+        response.raise_for_status.return_value = None
+        response.text = "<html><table></table></html>"
+        with patch("official_filing_candidates.requests.get", return_value=response) as getter, patch(
+            "official_filing_candidates.pd.read_html", side_effect=[[first], [second]]
+        ):
+            rows, error = fetch_official_filing_candidates("2308")
+        self.assertIsNone(error)
+        self.assertEqual(len(rows), 1)
+        self.assertIn("wwwc.twse.com.tw", rows[0]["官方來源網址"])
+        self.assertEqual(getter.call_count, 2)
+
     def test_empty_javascript_page_fails_closed(self):
         with patch("official_filing_candidates.requests.get") as getter:
             getter.return_value.text = "<html>No server-side table</html>"
