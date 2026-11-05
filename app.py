@@ -1195,6 +1195,19 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                     with st.expander("🔬 MOPS 財報公告接口診斷（不會改動估價）", expanded=False):
                         st.caption("以最新已取得的季度為測試目標，僅檢查官方介接是否回傳可解析的表格；不會把財報期間當作公告日。")
                         st.markdown("[官方公開資訊觀測站－財務報告公告](https://mops.twse.com.tw/mops/#/web/t163sb01)")
+                        if st.button("同一工作階段核對財報公告查詢", key="b3_mops_session_probe"):
+                            from official_filing_candidates import probe_session_backed_filing_query
+                            latest_period = pd.Period(history_rows[-1]["quarter"], freq="Q")
+                            with st.spinner("正在比對官方查詢頁與資料回應…"):
+                                session_result = probe_session_backed_filing_query(
+                                    str(symbol).split(".")[0], latest_period.year, latest_period.quarter)
+                            st.session_state["b3_mops_session_probe_result"] = (
+                                str(symbol).split(".")[0], str(latest_period), session_result)
+                        session_saved = st.session_state.get("b3_mops_session_probe_result")
+                        if session_saved and session_saved[0] == str(symbol).split(".")[0]:
+                            st.write("同工作階段測試季度：", session_saved[1])
+                            st.json(session_saved[2])
+                            st.caption("本項僅比較請求與回應，不能據此認定公告日期。")
                         if st.button("測試新發現的 MOPS 表單提交路徑", key="b3_mops_discovered_form_probe"):
                             from official_filing_candidates import probe_discovered_mops_form
                             latest_period = pd.Period(history_rows[-1]["quarter"], freq="Q")
