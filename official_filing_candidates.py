@@ -5,6 +5,7 @@ must remain missing. Duplicate announcements require manual adjudication.
 """
 import io
 import re
+from datetime import datetime, timezone
 import requests
 import pandas as pd
 
@@ -56,7 +57,10 @@ def fetch_official_filing_candidates(stock_code, timeout=12):
                         year=int(time_match.group(1)) + 1911,
                         month=int(time_match.group(2)), day=int(time_match.group(3)),
                         hour=int(time_match.group(4)), minute=int(time_match.group(5)))
-                except ValueError:
+                except (ValueError, OverflowError):
+                    continue
+                quarter_end = pd.Period(f"{year}Q{quarter}", freq="Q").end_time
+                if announced <= quarter_end or announced > pd.Timestamp(datetime.now(timezone.utc).replace(tzinfo=None)):
                     continue
                 source_found.append({"股票代號": code, "季度": f"{year}Q{quarter}",
                                      "公告日期時間": announced.strftime("%Y-%m-%d %H:%M"),
