@@ -123,3 +123,10 @@
 - 使用者在 V1.0 候選站確認：左右拖曳正常、雙指縮放正常；上下拖曳不行、繞圈移動不行。
 - 原 mobile_chart.py 雖已設 vertTouchDrag:true / touch-action:none，但這些設定並不保證價格軸可平移；目前只有水平時間軸操作成功。不得標記四向拖曳已完成。
 - 後續需設計/驗證真正的垂直價格軸平移（包括與雙指縮放、成交量副軸、布林線、箱型覆蓋層及 viewport 記憶相容），在 V1.0 候選站實機確認後才可驗收。不要修改 B3/main。
+
+## 2026-11-05｜手機垂直平移首次修正（待驗收）
+- mobile_chart.py 新增單指觸控 Y 位移對應右側價格軸 scaleMargins（上/下 margin 總和固定），以有限範圍上下平移；斜向觸控仍由原生圖表處理 X 軸，Y 軸由自訂事件處理；雙指交由原生 pinch。Commit 2042448dcb7cdd8868daa6f67ff17481f222fa39。
+- 以 sessionStorage 的 v1-price-shift-<viewportKey> 記憶價格軸位置；保留原有水平 logical range 記憶及箱型重畫。
+- tests/test_mobile_chart_gestures.py 增加垂直平移設定及雙指縮放保留的靜態測試；commit eae0ddcd2b44e32c2cd5c013d6f1936ae436345f。
+- **重要限制**：這是以價格軸 scaleMargins 做有界平移，不是無限自由拖曳；尚未實機驗收，也未確認最新 GitHub Actions 結果。若操作仍不符合期待，需要重新設計價格軸座標映射。
+- 下一步請使用者等待候選站自動部署更新，確認 GitHub Actions 綠燈，再用 2308 日K 測試上下、斜向/繞圈、左右、雙指縮放、位置保持。
