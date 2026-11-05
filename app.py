@@ -7,9 +7,9 @@ from mobile_chart import mobile_chart
 from live_quote import show_personal_quote
 from live_candle import show_live_candle
 
-st.set_page_config(page_title="亞當理論 B3 Pro", layout="wide")
-st.title("亞當理論 B3 Pro｜A 模式左右鏡像")
-st.caption("完整鏡像｜三波同圖／獨立放大｜每波前 3 個內部轉折點")
+st.set_page_config(page_title="亞當鏡像分析 V1.0 候選版", layout="wide")
+st.title("亞當鏡像分析 V1.0｜候選測試版")
+st.caption("A 模式左右鏡像｜短、中、長三波｜歷史路徑情境分析")\nst.info("鏡像右側為歷史路徑反向排列的情境示意，並非即時行情或未來價格預測；未來日期為示意刻度，未完整排除台股休市日及盤中休市時段。")
 
 MARKETS = {
     "台灣股票／ETF": None,
