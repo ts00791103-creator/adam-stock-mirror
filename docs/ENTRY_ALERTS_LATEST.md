@@ -1,46 +1,41 @@
-# 最新交接｜亞當鏡像與Telegram提醒（2026-11-06）
-## 立即接續點
-開發程式d0ed81ce8ee54eba1eff7e32f264080c618c8c77，Actions42063754047，Python3.11與3.14皆成功；132項Python測試通過。前版53dfaf6為130項。
-候選站https://adam-v1-candidate.streamlit.app/目前實際載入仍為行情品質改善版d2a204b；提醒三步試跑尚未重啟載入、尚未瀏覽器驗收，不能宣稱使用者已能看到。
-使用者剛誤關瀏覽器，已重新開啟候選站，確認標題及全市場功能可見。新的CUA瀏覽器ID2，候選tab2；GitHub新repo表單tab3在https://github.com/new。舊tab4/5/8已關，不可沿用。
-functions store及Node變數曾因關閉而重置；檔案與GitHub仍完整。Node已重新初始化fs/crypto；沒有本機Python或git執行檔，以GitHub Actions驗證。
+# 最新接續狀態｜2026-11-06
+以本節為準；下方舊紀錄保留追溯。
 
-## 使用者意圖與授權
-使用者持續指示「交給你優化程式」「繼續測試，BOT也排定下去」，希望好上手、可自動提醒進場觀察。
-已選Telegram手機推播及箱底反彈／箱頂突破兩種條件。第一版先日K收盤後，不自動下單。
-自建公開機器人帳號@adam_mirror_007_bot；已在t.me頁確認顯示「亞當」。已引導手機Telegram找此帳號傳/start。本人表示已傳送；尚未取得或驗證Token/Chat ID，未發任何真實訊息。
-Token只由使用者填受保護的後台，不貼對話，不讀取、不寫程式或交接，不截圖Secrets。
-使用者已授權測試站與正式站必要時直接重啟，不需逐次詢問；這不代表核准發布新功能、Secrets修改或刪站。
-原網站只改release/v1.0-development；main與B3禁止動。正式分支release/v1.0-production仍2369c3cc74e875e80e393f174e52924d4f67dd96／V1.0.1。新功能發布前仍須具體更新內容與驗收。
-每階段保存、同步GitHub雲端交接與本機檔，方便新對話讀取。
+## 目前停在這裡
+使用者已同意現在設定Telegram Token。GitHub私有提醒專案已建立並部署，但推播仍關閉。
+已開啟 https://github.com/ts00791103-creator/adam-mirror-alerts/settings/secrets/actions/new ，填Name TELEGRAM_BOT_TOKEN，交由本人把Token貼入Secret並按Add secret；等本人回覆「Token已設定」。不要讀取或截圖輸入中的Secret、不要請本人貼Token到對話。
+CUA瀏覽器2，候選tab2；私有提醒設定tab4（setupTab），Streamlit管理tab1。setupTab已markHandoff；這次Token設定尚未觀察到完成，CUA completion_summary須等交接完成再做。
+接著在私有專案Actions執行check-bot，確認@adam_mirror_007_bot；手機傳精確/start隨機配對碼，再find-chat。將唯一私人收件人設TELEGRAM_CHAT_ID Secret，test-message本人確認，再preview與啟用；目前未發任何真實訊息。
+Token、ChatID、密碼均不寫程式、備份或本文件。
 
-## 已完成提醒實作（未啟用）
-entry_alerts.py：既有箱型與前20日量基準都取訊號日前，不讀未來K線。
-箱底反彈預設：前收盤距箱底3%內、本日漲至少0.5%、收高於開盤且仍在箱內。
-箱頂突破預設：高於箱頂0.5%至5%、量至少前20日均量1.5倍。共同20日均量>=1000張，箱型20根／20%振幅。均為可調測試參數，非回測最佳值。
-entry_alerts_ui.py：三步試跑、進階設定收起來、手機訊息預覽與CSV，網頁永遠不送真實Telegram。試跑結果只存本次瀏覽器工作階段。
-alert_delivery.py：持久去重；先存pending，再發送，狀態不明標uncertain不自動重送；持久保存失敗不發送。去重依股票、日期、條件與參數。
-scripts/run_entry_alerts.py：預設dry run，需--send、config.enabled=true、ALERTS_ENABLED=true及Token/Chat ID才送。平日14:00後只接受當日日K，假日或舊資料不送。
-telegram_setup.py：確認Token屬於預期bot；以精確/start配對碼找唯一私人聊天，禁止猜最後聊天；可人工送明確測試訊息。
-worker明確禁止對原adam-stock-mirror專案git寫狀態。
+## 網站目前版本與驗證
+原專案只修改release/v1.0-development，最新功能提交 e8879fff9b864e3ff58959fea889d1891751031b。
+提醒說明改善提交04db83d76146c5db5f25d972e625a842884a765c；來源診斷7acba3b29a5b7e4fe28b578253fd84d54001caa2。
+Actions42069558393：Python3.11與3.14各137項測試通過，獨立背景包11項通過；前階段42068346766各134項。
+候選站 https://adam-v1-candidate.streamlit.app/ 已重啟載入根數版。
+已實際操作：日K顯示100/260/650；切週K顯示26/78/156；勾自訂顯示三個輸入欄位26/78/156。保留反轉span3/7/14，修改觀察窗不保證完整性或績效，可能改變歷史來源。只對候選版顯示；正式版不變。
+新wave_settings.py檢查短至少7、中15、長29，依序遞增且<=5000；錯誤設定st.stop。日/週自訂鍵分開。這一輪尚未用真實行情完整驗收自訂後的全部鏡像圖。
+原先四檔全部未判定已查出：Yahoo來源2026-11-05的2330/2308/2317/2454都有O/H/L，但Close均NaN；各243根，Volume無缺漏。不是查不到股票或網路下載失敗。
+品質攔截維持，不補收盤、不刪異常列、不借前一天當當日。EntryDataError提供受控公開證據；網頁實測列出日期與收盤價缺漏。全部未判定時改為「尚無法確認」，不再稱沒有條件成立。
+來源缺漏仍存在，不能宣稱四檔提醒判定已成功或資料已修好。
+證據：outputs/提醒試跑_收盤缺漏提示驗收.jpg、波段根數_週K設定驗收.jpg。
+手機視窗模擬set390x844但DOM仍1128x786，未生效，已reset，不能列手機通過；截圖已改名電腦版面複核。
 
-## 背景部署範本與待辦
-deploy/alerts-worker/已備妥獨立私有提醒專案範本（本機work/alerts-worker，outputs/Telegram背景提醒_部署包.zip與部署指南）。
-預設全關閉；設計台灣平日14:47、18:17檢查，GitHub可能延遲或漏排，不能保證準時／即時送達。
-GitHub schedule只在預設分支執行；不動原main/B3，因此需獨立私有提醒專案（建議ts00791103-creator/adam-mirror-alerts），存參數、工作流與持久去重狀態。
-目前僅開到new repo表單，尚未建立、沒有付費或新權限變更。正式建立前釐清此獨立新專案範圍，不能用原網站main放排程。
-原GitHub連接器沒有create repository或Secrets能力，僅tree/commit/ref。新repo可用已登入GitHub瀏覽器UI建立；新repo之連接器權限也可能需確認。瀏覽器上傳前讀file-uploads文件。
-部署步驟：私有repo根目錄放範本→使用者填TELEGRAM_BOT_TOKEN Secret→check-bot→手機傳/start配對碼→find-chat取得唯一收件人→使用者填TELEGRAM_CHAT_ID Secret→test-message本人確認收到→preview→啟用enabled與ALERTS_ENABLED後安排正式send。
-原repo內deploy/嵌套工作流不會自動排程，不能宣稱BOT已啟用。沒有Token、Chat ID或新背景repo，仍是待設定。
+## 獨立私有背景服務
+https://github.com/ts00791103-creator/adam-mirror-alerts （Private）
+提交57c23d27bb4d665328427e585942ffb0be34977b，13檔，預設分支main屬於這個獨立新專案；原網站main未修改。
+連接器已有存取這個私有專案的權限，不必新授權。建立repo因連接器無此能力而用已登入GitHub網頁。
+首次手動preview工作42069055672／job127391520928成功，11測試通過；台灣凌晨不在14:00後，時間保護直接跳過掃描，沒有報告、沒有訊息。不能稱真實掃描成功。
+工作流預定平日14:47/18:17台灣時間，但ALERTS_ENABLED與config.enabled雙開關仍未啟用，Token/ChatID尚待本人設定；GitHub排程可能延遲或漏排。
+worker只接受當日日K、假日或舊資料不發，先持久化pending再送，uncertain不自動重發；原網站repo禁止寫狀態。
 
-## 另已授權、尚未實作
-使用者認為650長波根數可能太多，已同意優化：日K保留100/260/650；週K改參考26/78/156且可進階自訂。需說明是觀察窗參考，非完整性保證或回測最佳值；改長度可能改變波段結果。先完成提醒試跑，再接續此修改與測試。
-全台股正式版整合及合理價格整合仍待處理，並未取消。估價舊介面含大量實驗項，不能整塊直接公開到正式版。
+## 授權與保存
+使用者明確授權測試可直接開網頁、重新登入；測試站/正式站必要時可重啟。本人驗證碼、新增敏感權限仍交由本人。每階段保存並同步雲端交接。
+網站正式發布不等於本輪已授權；正式站V1.0.1仍 https://adam-mirror-v1.streamlit.app/。
+本輪核對：原main9d11d224e7e49ddec40988e3d782828b48fe0edd、B3 0239e3c374297a1d312a773ccdadb553946a1f1b、release/v1.0-production2369c3cc74e875e80e393f174e52924d4f67dd96，均未變。
+完整備份04db83d：92個Git blob逐一SHA一致；outputs/進場提醒_完整程式備份_04db83d.zip。
+完整備份e8879ff：94個Git blob逐一SHA一致；outputs/波段根數優化_完整程式備份_e8879ff.zip；SHA256 BF7BBA951D2100497E53A81C81168EF62179EE2F8BF35FA2F5668409455DEAF0。
+部署包outputs/Telegram背景提醒_部署包.zip已同步EntryDataError。
+全台股與合理價格正式版整合仍待處理，未取消；本輪優先BOT設定、根數與提醒品質。
+公開交接文件不需登入閱讀；新對話若要寫GitHub需確認工具/連線權限，不保證永遠免登入。
 
-## 已有成果與備份
-全市場程式5e35797，曾117項測試通過、官方有效上市1092／上櫃882，合1974，缺漏16另列；預設579初選僅實測20，不能宣稱全部歷史複選完成。
-6148原始3根OHLC欄位不一致非精度誤差，已保留攔截並補明細；2y486根可分析，中波足夠、長波650不足。品質改善d2a204b通過120測試、68檔完整備份已核對。
-備份位於outputs：全台股階段3/4接續包、行情品質改善階段6包、原正式版完整ZIP及更新前回復ZIP皆在。
-最新工作檔work/alerts（提醒與app.py）、work/alerts-worker（獨立部署包）；不是git checkout。根數未實作。
-正式網站https://adam-mirror-v1.streamlit.app/仍V1.0.1，包含自選30檔與個人即時報價，並無全市場／新提醒。
-main9d11d224e7e49ddec40988e3d782828b48fe0edd、B3 0239e3c374297a1d312a773ccdadb553946a1f1b，保持不變。
