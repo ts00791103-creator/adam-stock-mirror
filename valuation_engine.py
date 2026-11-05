@@ -2,23 +2,34 @@
 import pandas as pd
 import yfinance as yf
 
+def _quarter_eps(ticker):
+    """Validate contiguous quarterly EPS before using four-quarter sums."""
+    income = ticker.quarterly_income_stmt
+    if income is None or income.empty:
+        return None, "缺少季報損益資料"
+    row = next((n for n in ("Diluted EPS", "Basic EPS") if n in income.index), None)
+    if row is None:
+        return None, "季報未提供每股盈餘"
+    eps = pd.to_numeric(income.loc[row], errors="coerce").dropna()
+    eps.index = pd.to_datetime(eps.index).tz_localize(None)
+    eps = eps.sort_index()
+    eps = eps[~eps.index.duplicated(keep="last")]
+    if len(eps) < 4:
+        return None, "有效季度 EPS 少於四季"
+    periods = eps.index.to_period("Q")
+    if any((b.ordinal - a.ordinal) != 1 for a, b in zip(periods[:-1], periods[1:])):
+        return None, "季 EPS 缺季或不連續，已停止自動估價"
+    return eps, None
+
+
 def historical_pe_bands(symbol, years=3):
     """Use trailing four reported quarterly EPS, available only after 75-day lag.
     Proxy reporting lag is conservative but not actual filing date.
     """
     ticker = yf.Ticker(symbol)
-    income = ticker.quarterly_income_stmt
-    if income is None or income.empty:
-        return None, "缺少季報損益資料"
-    names = ["Diluted EPS", "Basic EPS"]
-    row = next((n for n in names if n in income.index), None)
-    if row is None:
-        return None, "季報未提供每股盈餘"
-    eps = pd.to_numeric(income.loc[row], errors="coerce")
-    eps.index = pd.to_datetime(eps.index).tz_localize(None)
-    eps = eps.sort_index().dropna()
-    if len(eps) < 4:
-        return None, "有效季度 EPS 少於四季"
+    eps, eps_error = _quarter_eps(ticker)
+    if eps is None:
+        return None, eps_error
     daily = ticker.history(period=f"{max(years+2,5)}y", interval="1d", auto_adjust=False)
     if daily is None or daily.empty:
         return None, "缺少歷史收盤價"
@@ -48,8 +59,12 @@ def historical_pe_bands(symbol, years=3):
     coverage_days = (max(d for d,p in values if d >= latest_date - pd.DateOffset(years=years)) - min(d for d,p in values if d >= latest_date - pd.DateOffset(years=years))).days
     spread = (q[2] - q[0]) / q[1]
     warnings = []
-    if len(eps) < 8:
-        warnings.append("季 EPS 少於 8 季，歷史獲利涵蓋不足")
+    if len(eps) < 12:
+        warnings.append("季 EPS 少於 12 季，三年獲利資料不足")
+    if coverage_days < years * 365 * 0.8:
+        warnings.append("有效歷史 PE 跨度不足設定年數的 80%")
+    if (latest_date - eps.index[-1]).days > 180:
+        warnings.append("最新季 EPS 距股價日期超過 180 天")
     if coverage_days < 365:
         warnings.append("有效 PE 樣本期間不足一年")
     if spread < 0.15:
@@ -57,19 +72,15 @@ def historical_pe_bands(symbol, years=3):
     if spread > 1.0:
         warnings.append("歷史 PE 波動過大")
     return {"pes": q, "samples": len(recent), "coverage_days": coverage_days, "warnings": warnings, "spread": spread, "start": str(latest_date - pd.DateOffset(years=years))[:10],
-            "end": str(latest_date)[:10], "eps_quarters": len(eps),
+            "end": str(latest_date)[:10], "eps_quarters": len(eps), "eps_first": str(eps.index[0].date()), "eps_last": str(eps.index[-1].date()),
             "method": "季 EPS 累計四季；季末後75天視為可用（非實際公告日）"}, None
 
 def eps_growth_reference(symbol):
     """YoY change in latest reported trailing-four-quarter EPS, not a forecast."""
     try:
-        income = yf.Ticker(symbol).quarterly_income_stmt
-        row = next((n for n in ("Diluted EPS", "Basic EPS") if n in income.index), None)
-        if row is None:
-            return None, "找不到季 EPS"
-        eps = pd.to_numeric(income.loc[row], errors="coerce").dropna()
-        eps.index = pd.to_datetime(eps.index)
-        eps = eps.sort_index()
+        eps, eps_error = _quarter_eps(yf.Ticker(symbol))
+        if eps is None:
+            return None, eps_error
         if len(eps) < 8:
             return None, "不足八季 EPS，無法計算近四季年增率"
         recent = float(eps.iloc[-4:].sum())
