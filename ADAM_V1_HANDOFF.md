@@ -221,3 +221,8 @@
 - app.py 新增 raw_quote_summary(df)，在 dropna/sort/dedup 前計數收盤價 NaN/Inf、重複時間、未排序；透過 df.attrs['raw_quote_notes'] 傳回，在分析時 st.warning 呈現。commit 699f4a6e2366512a209319853c639f77daa6e6f3。
 - tests/test_raw_quote_summary.py 新增 5 項離線測試（正常、NaN/Inf、重複、未排序、揭露先於清洗）。commit 53a38b7e373af09819f36c9dd5031e39dc43991a。
 - 僅 Yahoo get_data 管線保留這些整理前提示；期交所 CSV/API 管線仍由整理後的 audit_ohlc_data 檢查。Yahoo 原始異常提示不代表行情已完整修復；沒有改動鏡像公式。CI 尚待確認，真實股票行情回放未完成。main/b3-speed-test 未更動。
+
+## 2026-11-05｜第十階段第一批：Yahoo 下載管線整合測試
+- 使用者回報第九階段第二批 CI 綠色。
+- 新增 tests/test_yahoo_download_pipeline.py：以 mock yf.download 執行 app.py 原始 get_data、raw_quote_summary、audit_ohlc_data（AST 去除 Streamlit cache decorator），覆蓋資料亂序/重複/NaN 的清洗與警示、Yahoo MultiIndex 欄位、10 分K 跨日不混合、Inf 品質閘門、空資料。commit 503d047c800ce39cd7ac3587869e5ec31813b65b。
+- 本次僅新增測試，未更動正式運算或下載邏輯。這是模擬 Yahoo 回應的管線整合測試，不是網路實際下載或真實股票歷史回放；最新 CI 待確認。main、b3-speed-test 未更動。
