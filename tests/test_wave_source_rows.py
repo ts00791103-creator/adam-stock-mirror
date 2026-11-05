@@ -43,6 +43,15 @@ class WaveSourceRowsTests(unittest.TestCase):
         rows = self.source_rows([self.wave, second], "1d")
         self.assertEqual(rows[1]["與其他波段相同來源"], "無")
 
+    def test_mobile_cards_and_optional_full_table(self):
+        source = (Path(__file__).resolve().parents[1] / "app.py").read_text(encoding="utf-8")
+        self.assertIn("with st.container(border=True):", source)
+        self.assertIn('with st.expander("查看完整波段來源表"):', source)
+        self.assertIn("不是獨立鏡像訊號", source)
+        start = source.index('st.subheader("亞當鏡像｜歷史波段來源")')
+        self.assertLess(source.index("with st.container(border=True):", start),
+                        source.index('with st.expander("查看完整波段來源表"):', start))
+
     def test_source_table_precedes_chart(self):
         source = (Path(__file__).resolve().parents[1] / "app.py").read_text(encoding="utf-8")
         self.assertLess(source.index('st.subheader("亞當鏡像｜歷史波段來源")'),
