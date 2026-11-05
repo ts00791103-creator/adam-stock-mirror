@@ -56,6 +56,15 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
                        "color": wave["color"],
                        "points": _points(wave["times"], wave["projection"]),
                        "style": 2})
+    for wave in waves:
+        previous = wave.get("previous_mirror")
+        if previous:
+            series.append({
+                "name": wave["name"] + "上一版鏡像",
+                "color": wave["color"],
+                "points": _points(previous["times"], previous["projection"]),
+                "style": 1
+            })
     # Lightweight Charts requires monotonically increasing unique timestamps.
     for line in series:
         unique = {p["time"]: p for p in line["points"]}
@@ -95,8 +104,8 @@ else {
  candle.setData(data.bars);
  for(const line of data.lines){
   if(!line.points.length)continue;
-  const l=chart.addLineSeries({color:line.color,lineWidth:line.style===2?3:2,
-   lineStyle:line.style===2?LightweightCharts.LineStyle.Dashed:LightweightCharts.LineStyle.Solid,
+  const l=chart.addLineSeries({color:line.color,lineWidth:line.style===2?3:(line.style===1?1:2),
+   lineStyle:line.style===2?LightweightCharts.LineStyle.Dashed:(line.style===1?LightweightCharts.LineStyle.Dotted:LightweightCharts.LineStyle.Solid),
    title:line.name,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
   l.setData(line.points);
  }
