@@ -46,3 +46,7 @@ jobs:
         continue-on-error: true
         timeout-minutes: 3
         run: python scripts/live_tw_mirror_smoke.py
+      - name: Optional official full-market snapshot check (non-blocking)
+        continue-on-error: true
+        timeout-minutes: 3
+        run: python scripts/live_market_smoke.py

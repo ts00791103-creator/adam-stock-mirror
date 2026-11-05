@@ -932,6 +932,10 @@ def load_tw_symbols():
 
 # ===== 操作介面 =====
 
+if not PRODUCTION_MODE:
+    from full_market_ui import show_full_market
+    show_full_market()
+
 from screener_ui import show_screener
 show_screener(load_tw_symbols(), production=PRODUCTION_MODE)
 
