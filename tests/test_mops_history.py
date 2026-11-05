@@ -48,6 +48,28 @@ class TestMopsHistory(unittest.TestCase):
         self.assertTrue(result["column_verified"])
         self.assertEqual(result["verified_eps"], {"quarter_eps": None, "cumulative_eps": 23.14})
 
+    def test_leading_q4_uses_prior_q3_reference(self):
+        seen = []
+        def fake(symbol, year, quarter):
+            period = str(pd.Period(year=year, quarter=quarter, freq="Q"))
+            seen.append(period)
+            if period == "2021Q3":
+                values = (3.0, 8.0)
+            elif period == "2021Q4":
+                values = (None, 10.32)
+            else:
+                values = (2.0, float(quarter * 2))
+            return {"column_verified": True, "verified_eps": {
+                "quarter_eps": values[0], "cumulative_eps": values[1],
+            }, "source": "mock"}, None
+        rows, failures = mops_history.fetch_mops_eps_history(
+            "2308", years=1, end_period="2022Q3", fetcher=fake)
+        self.assertEqual(len(rows), 4)
+        self.assertIn("2021Q3", seen)
+        self.assertAlmostEqual(rows[0]["quarter_eps"], 2.32)
+        self.assertTrue(rows[0]["ytd_consistent"])
+        self.assertEqual(failures, [])
+
     def test_q4_derived_eps_and_ttm(self):
         def fake(symbol, year, quarter):
             values = {
