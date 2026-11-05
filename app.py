@@ -1397,14 +1397,19 @@ if st.button(
             effective_pes = auto_pe_result["pes"] if auto_pe_result else (cheap_pe, fair_pe, expensive_pe)
             cheap_price, fair_price, expensive_price = [eps_value * pe for pe in effective_pes]
             p1, p2, p3 = st.columns(3)
-            p1.metric("🟢 便宜價（參考）", f"{cheap_price:,.2f}")
-            p2.metric("🟡 合理價（參考）", f"{fair_price:,.2f}")
-            p3.metric("🔴 昂貴價（參考）", f"{expensive_price:,.2f}")
+            p1.metric("🟢 歷史估值下緣（試算）" if not quality_ok else "🟢 便宜價（參考）", f"{cheap_price:,.2f}")
+            p2.metric("🟡 歷史估值中位（試算）" if not quality_ok else "🟡 合理價（參考）", f"{fair_price:,.2f}")
+            p3.metric("🔴 歷史估值上緣（試算）" if not quality_ok else "🔴 昂貴價（參考）", f"{expensive_price:,.2f}")
             latest_price = float(df["Close"].iloc[-1])
+            quality_ok = bool(auto_pe_result and auto_pe_result["samples"] >= 250
+                              and auto_pe_result.get("coverage_days", 0) >= 365
+                              and auto_pe_result.get("eps_quarters", 0) >= 12
+                              and not auto_pe_result.get("warnings"))
+            st.info("估值可信度：" + ("中（樣本門檻通過；仍需核對財報公告日）" if quality_ok else "低／未驗證（不提供買進訊號）"))
             category = ("便宜區" if latest_price <= cheap_price else
                         "合理偏低區" if latest_price < fair_price else
                         "合理偏高區" if latest_price < expensive_price else "昂貴區")
-            st.write(f"最新資料收盤價：{latest_price:,.2f}｜隱含 PE：{latest_price / eps_value:.2f} 倍｜估價區間：**{category}**")
+            st.write(f"最新資料收盤價：{latest_price:,.2f}｜隱含 PE：{latest_price / eps_value:.2f} 倍｜估價區間：**{category if quality_ok else '未判定（低可信度）'}**")
             if auto_pe_result and (latest_price / eps_value < effective_pes[0] * 0.8 or latest_price / eps_value > effective_pes[2] * 1.2):
                 st.warning("目前隱含 PE 與歷史區間差距超過 20%；可能是獲利或市場評價結構改變，請勿直接把便宜價視為安全買點。")
             from valuation_engine import valuation_quality, conservative_entry
@@ -1424,6 +1429,8 @@ if st.button(
             except Exception:
                 valuation_date = "日期未知"
             st.caption(f"📅 股價資料日期：{valuation_date}｜價格：歷史 K 線資料｜EPS／季財報：Yahoo Finance｜歷史 PE：本程式依財報季末後 75 天近似可用日計算；非即時報價。")
+            if not quality_ok:
+                st.warning("歷史 EPS 樣本不足或估價未驗證：數字僅供試算，不提供安全進場價。")
             if forecast_enabled:
                 future_eps = eps_value * (1 + forecast_growth / 100)
                 st.markdown("#### 📈 下一年度 EPS 情境估價（自行假設，非市場共識預測）")
