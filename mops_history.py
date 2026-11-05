@@ -44,6 +44,31 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
             if values:
                 candidates.append({"table": table_number, "row": row_number,
                                    "label": labels[0][:100], "values": values})
+    # Map EPS cells only when the source header explicitly identifies the
+    # requested current-quarter and year-to-date periods. Never use positions
+    # alone: MOPS can add/reorder columns between statement formats.
+    verified = []
+    roc = year - 1911
+    for candidate in candidates:
+        header = table_headers[candidate["table"]]["columns"]
+        mapping = {}
+        for cell in candidate["values"]:
+            index = cell["column"] - 1
+            if index >= len(header):
+                continue
+            label = header[index]
+            current_year = f"{roc}年"
+            prior_year = f"{roc-1}年"
+            current_quarter = f"{roc}年第{quarter}季"
+            ytd_start = f"{roc}年01月01日"
+            ytd_end = f"{roc}年{quarter*3:02d}月"
+            if current_quarter in label and ("金額" in label):
+                mapping["quarter_eps"] = cell["value"]
+            elif ytd_start in label and ytd_end in label and "金額" in label:
+                mapping["cumulative_eps"] = cell["value"]
+        if "quarter_eps" in mapping and "cumulative_eps" in mapping:
+            verified.append(mapping)
+    verified_eps = verified[0] if len(verified) == 1 else None
     if not candidates:
         return None, "找不到可辨識的基本 EPS 數值，請確認 MOPS 是否回傳完整損益表"
     # Do not guess which column represents current-year cumulative EPS.
@@ -52,7 +77,8 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
             "eps_rows": candidates[:15], "eps_row_count": len(candidates),
             "headers": {str(x["table"]): table_headers[x["table"]] for x in candidates[:15]},
             "source": URL, "filing_date_verified": False,
-            "column_verified": False}, None
+            "column_verified": verified_eps is not None,
+            "verified_eps": verified_eps}, None
 
 def probe_mops_history(symbol, years=3):
     now = pd.Timestamp.now()
