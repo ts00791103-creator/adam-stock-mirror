@@ -15,9 +15,9 @@ def fetch_official_filing_candidates(stock_code, timeout=12):
     code = str(stock_code).strip()
     if not re.fullmatch(r"\d{4,5}", code):
         return [], "股票代號格式錯誤"
-    url = BASE
+    url = f"https://www.twse.com.tw/IIH2/zh/company/information.html?code={code}"
     try:
-        response = requests.get(BASE, timeout=timeout,
+        response = requests.get(url, timeout=timeout,
                                 headers={"User-Agent": "Mozilla/5.0"})
         response.raise_for_status()
         frames = pd.read_html(io.StringIO(response.text))
@@ -35,7 +35,7 @@ def fetch_official_filing_candidates(stock_code, timeout=12):
         for _, row in frame.iterrows():
             cells = [str(v).strip() for v in row.tolist()]
             joined = " ".join(cells)
-            if "財務報告書" not in joined or code not in cells:
+            if "財務報告書" not in joined or not re.search(r"(?<!\\d)" + re.escape(code) + r"(?!\\d)", joined):
                 continue
             quarter_match = re.search(r"(\d{3})年第?([1-4])季財務報告書", joined)
             time_match = re.search(r"(\d{3})/(\d{2})/(\d{2})\s+(\d{2}):(\d{2})", joined)
