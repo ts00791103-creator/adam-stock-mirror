@@ -30,6 +30,12 @@ class MobileChartGestureConfigurationTests(unittest.TestCase):
         self.assertIn("if(event.touches.length!==1){touchStart=null;return;}", self.source)
         self.assertIn("pinch:true", self.source)
 
+    def test_mirror_wave_horizons_and_future_room(self):
+        self.assertIn('"mirrorSummary": mirror_summary', self.source)
+        self.assertIn("wave.bars", self.source)
+        self.assertIn("Math.min(80,Math.max(12", self.source)
+        self.assertIn("data.mirrorSummary||[]", self.source)
+
     def test_viewport_persistence_is_preserved(self):
         self.assertIn("setVisibleLogicalRange(saved)", self.source)
         self.assertIn("sessionStorage.setItem(storageKey", self.source)
