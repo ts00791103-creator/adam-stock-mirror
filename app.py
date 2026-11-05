@@ -1093,8 +1093,15 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
             with st.spinner("讀取官方歷史季報…"):
                 result, error = fetch_mops_quarter(symbol, int(test_year), int(test_quarter))
             if result:
-                st.write(f"季度末：{result['quarter_end']}｜累計 EPS 候選值：{result['cumulative_eps_candidate']:.2f}")
-                st.warning("此值尚未核對公告日與原始報表欄位，不會納入估價。")
+                st.write(f"季度末：{result['quarter_end']}｜找到 {result['eps_row_count']} 列基本 EPS 候選資料")
+                eps_diagnostic_rows = [
+                    {"表格": item["table"], "列": item["row"],
+                     "欄": value["column"], "欄位名稱": item["label"],
+                     "EPS 候選數值": value["value"]}
+                    for item in result["eps_rows"] for value in item["values"]
+                ]
+                st.dataframe(pd.DataFrame(eps_diagnostic_rows), use_container_width=True, hide_index=True)
+                st.warning("這些數字可能包含本期、去年同期及累計 EPS；尚未核對表頭及公告日，不會納入估價。")
             else:
                 st.warning(error)
     filing_format = st.radio("匯入 EPS 格式", ["單季 EPS", "年初至今累計 EPS（自動換算單季）"], horizontal=True, key="b3_eps_csv_format_v1")
