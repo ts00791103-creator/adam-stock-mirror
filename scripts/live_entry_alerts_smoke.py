@@ -7,6 +7,8 @@ import traceback
 import pandas as pd
 from entry_alerts import evaluate_entry_alerts
 from screener_ui import screening_data
+from quote_quality import invalid_price_rows
+import numpy as np
 
 for symbol in ("2330.TW", "2308.TW", "2317.TW", "2454.TW"):
     stage = "download"
@@ -21,6 +23,12 @@ for symbol in ("2330.TW", "2308.TW", "2317.TW", "2454.TW"):
         if now.hour < 14:
             data = data.loc[data.index.normalize() < now.tz_localize(None).normalize()]
         print(json.dumps({"symbol": symbol, "rows": len(data), "columns": str(data.columns.names)}))
+        flat = data.copy()
+        if isinstance(flat.columns, pd.MultiIndex):
+            flat.columns = flat.columns.get_level_values(0)
+        print(json.dumps({"symbol": symbol, "invalid_prices": invalid_price_rows(flat, limit=4)}, default=str))
+        bad_volume = ~np.isfinite(flat.Volume.to_numpy(dtype=float)) | (flat.Volume.to_numpy(dtype=float) < 0)
+        print(json.dumps({"symbol": symbol, "invalid_volume_dates": [str(d) for d in flat.index[bad_volume]][:4]}))
         stage = "evaluate"
         day = str(data.index[-1].date())
         events = evaluate_entry_alerts(data, symbol, day)
