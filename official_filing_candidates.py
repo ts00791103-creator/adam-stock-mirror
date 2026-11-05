@@ -98,14 +98,28 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
     except requests.RequestException:
         return {"status": "connection_error", "message": "MOPS 財報公告介接連線失敗"}
     body = response.text or ""
+    # Diagnostic metadata only: do not expose raw response text, cookies, or tokens.
+    import hashlib
+    diagnostic = {
+        "http_status": response.status_code,
+        "content_type": response.headers.get("Content-Type", "").split(";")[0],
+        "final_host": __import__("urllib.parse", fromlist=["urlparse"]).urlparse(response.url).hostname,
+        "response_sha256_prefix": hashlib.sha256(body.encode("utf-8")).hexdigest()[:12],
+        "looks_like_html": "<html" in body.lower(),
+        "looks_like_json": body.lstrip().startswith(("{", "[")),
+        "contains_table": "<table" in body.lower(),
+        "contains_captcha": any(x in body.lower() for x in ("captcha", "驗證碼")),
+        "contains_redirect": any(x in body.lower() for x in ("location.href", "window.location")),
+        "contains_error_marker": any(x in body.lower() for x in ("error", "查無資料", "系統忙碌")),
+    }
     if not body.strip():
-        return {"status": "empty", "message": "官方接口回傳空白內容"}
+        return {"status": "empty", "message": "官方接口回傳空白內容", **diagnostic}
     try:
         frames = pd.read_html(io.StringIO(body))
     except (ValueError, ImportError):
         return {"status": "unparsed", "message": "官方接口有回應，但不是可直接解析的 HTML 表格",
-                "response_chars": len(body)}
+                "response_chars": len(body), **diagnostic}
     return {"status": "tables_unverified", "message": "取得 HTML 表格，但尚未驗證公告日期欄位",
             "table_count": len(frames),
             "table_headers": [list(map(str, frame.columns))[:12] for frame in frames[:3]],
-            "response_chars": len(body)}
+            "response_chars": len(body), **diagnostic}
