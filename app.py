@@ -1136,7 +1136,7 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
         st.caption("依序讀取最多 20 季官方財報；首次可能需要較長時間。只顯示可核對期間欄位的 EPS，尚未取得實際公告日，絕不混入歷史 PE。官方連線若失敗，可能顯示缺漏。")
         history_years = st.selectbox("抓取年數", [1, 2, 3, 4, 5], index=4, key="b3_mops_history_years")
         @st.cache_data(ttl=86400, show_spinner=False)
-        def cached_mops_quarter(stock_symbol, year, quarter, parser_version="annual-header-v2"):
+        def cached_mops_quarter(stock_symbol, year, quarter, parser_version="annual-header-v3"):
             from mops_history import fetch_mops_quarter
             return fetch_mops_quarter(stock_symbol, year, quarter, timeout=8)
         if st.button("自動抓取官方歷史 EPS", key="b3_mops_history_fetch"):
