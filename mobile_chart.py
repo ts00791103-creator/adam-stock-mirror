@@ -124,7 +124,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
 <style>html,body{margin:0;padding:0;overflow:hidden;background:BG;color:FG;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif}
 #heading{padding:8px 10px;font-size:14px;font-weight:600}#ohlc{padding:4px 10px;font-size:12px;min-height:20px;font-variant-numeric:tabular-nums}#chart-wrap{position:relative;width:100%;height:480px}#chart{width:100%;height:480px;touch-action:none}#box-overlay{position:absolute;inset:0;width:100%;height:480px;pointer-events:none;z-index:2}
 #hint{font-size:12px;opacity:.8;padding:6px 10px}#error{color:#ff7777;padding:12px}</style></head>
-<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量｜成交量資料：Yahoo Finance（台股單位：張）</div><div id="price-pan-controls" style="display:flex;flex-wrap:wrap;gap:8px;padding:8px 10px"><button type="button" id="price-up" style="padding:9px 12px">↑ K 線上移</button><button type="button" id="price-down" style="padding:9px 12px">↓ K 線下移</button><button type="button" id="price-reset" style="padding:9px 12px">垂直歸位</button><span id="pan-status" style="font-size:12px;align-self:center">操作診斷：尚未按鈕</span></div><div id="hint">雙指縮放｜左右拖曳｜上下移動測試</div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="error"></div>
+<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量｜成交量資料：Yahoo Finance（台股單位：張）</div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="error"></div>
 <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 const data=PAYLOAD;
@@ -216,12 +216,8 @@ else {
  chartElement.addEventListener('wheel',queueBoxDraw,{passive:true});
  chartElement.addEventListener('pointermove',queueBoxDraw,{passive:true});
  chartElement.addEventListener('touchmove',queueBoxDraw,{passive:true});
- // Lightweight Charts v4 pans time horizontally but does not pan the price scale
- // vertically on a one-finger touch. Move the shared price-scale margins explicitly.
- // This keeps candles, indicators and box coordinates on the same price scale.
- // V1 diagnostic: move the rendered chart and its SVG overlay as one visual layer.
- // This is a bounded visual translation, NOT a price-axis rescale.
- // Unlike the previous autoscale-anchor attempts, its effect is directly visible.
+ // Touch gestures: native Lightweight Charts keeps horizontal time pan and pinch.
+ // Vertical movement translates chart and overlay together within a bounded range.
  const chartWrap=document.getElementById('chart-wrap');
  chartWrap.style.overflow='hidden';
  let panY=0;
@@ -229,44 +225,38 @@ else {
  const clamp=(value,low,high)=>Math.max(low,Math.min(high,value));
  const panStorageKey=data.viewportKey?'v1-visual-pan-y-'+data.viewportKey:null;
  const applyPanY=()=>{
-   const translate='translateY('+panY+'px)';
-   chartElement.style.transform=translate;
-   overlay.style.transform=translate;
+   const transform='translate3d(0,'+panY+'px,0)';
+   chartElement.style.transform=transform;
+   overlay.style.transform=transform;
+ };
+ const persistPan=()=>{
+   if(panStorageKey){
+     try{sessionStorage.setItem(panStorageKey,String(panY));}catch(e){}
+   }
  };
  try {
    const stored=panStorageKey?Number(sessionStorage.getItem(panStorageKey)):NaN;
    if(Number.isFinite(stored))panY=clamp(stored,-120,120);
  }catch(e){}
  applyPanY();
- const movePrice=(step)=>{
-   panY=clamp(panY+step,-120,120);
-   applyPanY();
-   document.getElementById('pan-status').textContent='垂直位移：'+panY+' px';
-   if(panStorageKey){
-     try{sessionStorage.setItem(panStorageKey,String(panY));}catch(e){}
-   }
- };
- document.getElementById('price-up').addEventListener('click',()=>movePrice(-35));
- document.getElementById('price-down').addEventListener('click',()=>movePrice(35));
- document.getElementById('price-reset').addEventListener('click',()=>movePrice(-panY));
- chartElement.addEventListener('touchstart',event=>{
+ // Capture at the wrapper so gestures on the chart's internal canvases are seen.
+ chartWrap.addEventListener('touchstart',event=>{
    if(event.touches.length!==1){touchStart=null;return;}
    touchStart={y:event.touches[0].clientY,pan:panY};
- },{passive:true});
- chartElement.addEventListener('touchmove',event=>{
+ },{capture:true,passive:true});
+ chartWrap.addEventListener('touchmove',event=>{
    if(!touchStart || event.touches.length!==1)return;
    const dy=event.touches[0].clientY-touchStart.y;
    if(Math.abs(dy)<2)return;
    panY=clamp(touchStart.pan+dy,-120,120);
    applyPanY();
-   if(panStorageKey){
-     try{sessionStorage.setItem(panStorageKey,String(panY));}catch(e){}
-   }
- },{passive:true});
- chartElement.addEventListener('touchend',event=>{
-   if(!event.touches.length)touchStart=null;
- },{passive:true});
- chartElement.addEventListener('touchcancel',()=>{touchStart=null;},{passive:true});
+ },{capture:true,passive:true});
+ chartWrap.addEventListener('touchend',event=>{
+   if(!event.touches.length){touchStart=null;persistPan();}
+ },{capture:true,passive:true});
+ chartWrap.addEventListener('touchcancel',()=>{
+   touchStart=null;persistPan();
+ },{capture:true,passive:true});
  queueBoxDraw();
  // Remember the visible logical range between Streamlit fragment redraws.
  // Never use the timestamp range: a new candle should not shift the user's view.
@@ -295,4 +285,4 @@ else {
 </script></body></html>"""
     html = html.replace("BG", "#101010" if dark else "#ffffff").replace(
         "FG", "#ffffff" if dark else "#222222").replace("PAYLOAD", payload)
-    components.html(html, height=675, scrolling=False)
+    components.html(html, height=585, scrolling=False)
