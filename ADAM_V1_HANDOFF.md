@@ -215,3 +215,9 @@
 - app.py 新增 audit_ohlc_data(df)；分析前檢查時間排序、重複時間、OHLC 缺欄、NaN/Inf、非正數價格、High/Low 與 Open/Close 的關係；若異常，顯示錯誤並停止分析，不自行猜測補價。commit 0f4b95b7232d84e30e1197f98671b629634704ec。
 - tests/test_market_data_quality.py 新增 7 項離線測試，包括品質閘門位置。commit 86a8dd8bd66f7faaedb436932ea2f13fd6db933c。最新 CI 尚待確認。
 - yfinance get_data 既有的排序、去重、dropna Close 行為保持不變；品質閘門在其後，因此不能檢出已被 get_data 丟棄的原始缺漏。真實行情回放尚未完成。main、b3-speed-test 不變。
+
+## 2026-11-05｜第九階段第二批：Yahoo 原始行情整理前揭露
+- 使用者回報第九階段第一批 CI 綠色。
+- app.py 新增 raw_quote_summary(df)，在 dropna/sort/dedup 前計數收盤價 NaN/Inf、重複時間、未排序；透過 df.attrs['raw_quote_notes'] 傳回，在分析時 st.warning 呈現。commit 699f4a6e2366512a209319853c639f77daa6e6f3。
+- tests/test_raw_quote_summary.py 新增 5 項離線測試（正常、NaN/Inf、重複、未排序、揭露先於清洗）。commit 53a38b7e373af09819f36c9dd5031e39dc43991a。
+- 僅 Yahoo get_data 管線保留這些整理前提示；期交所 CSV/API 管線仍由整理後的 audit_ohlc_data 檢查。Yahoo 原始異常提示不代表行情已完整修復；沒有改動鏡像公式。CI 尚待確認，真實股票行情回放未完成。main/b3-speed-test 未更動。
