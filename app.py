@@ -12,7 +12,7 @@ st.set_page_config(page_title="亞當鏡像分析 V1.0" if PRODUCTION_MODE else 
 st.title("亞當鏡像分析 V1.0" if PRODUCTION_MODE else "亞當鏡像分析 V1.0｜候選測試版")
 st.caption("A 模式左右鏡像｜短、中、長三波｜歷史路徑情境分析")
 if PRODUCTION_MODE:
-    st.caption("V1.0.0｜台股日K／週K核心版｜資料為歷史行情")
+    st.caption("V1.0.1｜自選名單選股・個人即時報價｜鏡像使用歷史行情")
 st.info("鏡像右側為歷史路徑反向排列的情境示意，並非即時行情或未來價格預測；未來日期為示意刻度，未完整排除台股休市日及盤中休市時段。")
 
 MARKETS = {
@@ -932,9 +932,8 @@ def load_tw_symbols():
 
 # ===== 操作介面 =====
 
-if not PRODUCTION_MODE:
-    from screener_ui import show_screener
-    show_screener(load_tw_symbols())
+from screener_ui import show_screener
+show_screener(load_tw_symbols(), production=PRODUCTION_MODE)
 
 if "adam_stock_query" not in st.session_state:
     st.session_state["adam_stock_query"] = "2308"

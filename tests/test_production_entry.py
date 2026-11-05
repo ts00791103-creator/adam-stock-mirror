@@ -29,6 +29,7 @@ class ProductionEntryTests(unittest.TestCase):
         panels = [item.label for item in app.expander]
         self.assertFalse(any("估價" in label for label in panels))
         self.assertIn("個人即時價格", panels)
+        self.assertIn("自選名單選股", panels)
         self.assertEqual(len(app.multiselect), 0)
 
     def test_production_analysis_uses_the_same_core_pipeline(self):
@@ -46,6 +47,21 @@ class ProductionEntryTests(unittest.TestCase):
         self.assertIn("亞當鏡像｜歷史波段來源", headings)
         self.assertIn("自動箱型突破目標分析", headings)
         self.assertFalse(any("估價" in heading for heading in headings))
+
+    def test_production_watchlist_can_screen_and_select_stock(self):
+        frame = pd.DataFrame({"Open": 100., "High": 110., "Low": 100.,
+                              "Close": 101., "Volume": 1000000},
+                             index=pd.bdate_range("2026-01-02", periods=40))
+        with patch("urllib.request.urlopen", side_effect=OSError("offline test")), \
+             patch("screener_ui.screening_data", return_value=frame):
+            app = self.make_app().run()
+            app.text_area[0].set_value("2330,2308")
+            next(b for b in app.button if b.key == "screen_run").click().run()
+            self.assertEqual(len(app.exception), 0)
+            self.assertEqual(len(app.session_state["screen_result"][1]), 2)
+            next(b for b in app.button if b.key == "screen_use").click().run()
+            self.assertEqual(next(i for i in app.text_input if i.key == "adam_stock_query").value, "2330")
+            self.assertEqual(len(app.exception), 0)
 
 
 if __name__ == "__main__":

@@ -11,8 +11,8 @@ def screening_data(symbol):
                        progress=False, threads=False, timeout=12)
 
 
-def show_screener(stock_list):
-    with st.expander("自選名單選股（測試版）", expanded=False):
+def show_screener(stock_list, production=False):
+    with st.expander("自選名單選股" if production else "自選名單選股（測試版）", expanded=False):
         st.caption("最多30檔，依歷史日K篩選。條件符合不代表未來上漲；合理價格與鏡像請於個股分析查看。")
         text = st.text_area("股票名單（代號或完整中文名稱，以逗號或換行分隔）",
                             "2330, 2308, 2317, 2454", key="screen_list")
