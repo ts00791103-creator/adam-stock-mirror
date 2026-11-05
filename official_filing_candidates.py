@@ -67,9 +67,11 @@ def fetch_official_filing_candidates(stock_code, timeout=12):
                                      "官方來源網址": url, "公告主旨": joined[:300]})
         if source_found:
             found.extend(source_found)
-            break
-        diagnostics.append("頁面表格沒有符合股票代號、季度及公告時間的財報紀錄")
-    unique = list({(r["季度"], r["公告日期時間"], r["公告主旨"]): r for r in found}.values())
+        else:
+            diagnostics.append("頁面表格沒有符合股票代號、季度及公告時間的財報紀錄")
+    # Both official hosts may show different historical windows. Keep a
+    # candidate from the primary host when the same record appears twice.
+    unique = list({(r["季度"], r["公告日期時間"], r["公告主旨"]): r for r in reversed(found)}.values())
     unique.sort(key=lambda r: (r["季度"], r["公告日期時間"]))
     if not unique:
         return [], "；".join(dict.fromkeys(diagnostics)) + ("；含財報相關表格但尚無可核實日期" if saw_report_table else "；尚無可核實公告日期")
