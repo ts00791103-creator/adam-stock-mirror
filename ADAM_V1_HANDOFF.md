@@ -311,3 +311,13 @@ User confirmed first batch CI green. README is minimal, requirements.txt contain
 - 本次為使用者實機回報，對應候選版本 V1-READ-1105；沒有取得手機型號、作業系統或瀏覽器版本，因此不可外推為所有裝置皆已驗證。
 - 來源重複警告此前已有瀏覽器驗證；本次使用者沒有逐項另述警告結果。
 - 程式提交45e84cc496f045404371b00ee1aee672a36047e5與已驗證程式不變。本次只記錄驗收，不合併、不正式發布；維持release/v1.0-development分支限制。
+
+## 2026-11-05｜正式發布準備（未發布）
+- 使用者要求「準備發布正式版」。本次僅整理方案、說明草稿、檢查表及備份，未合併、建正式分支/新站、改正式URL/權限、建立標籤或Release。
+- 以07f76db為基準比較main，開發分支275筆獨有提交、main41筆獨有提交，不能直接當作快進發布。建議獨立V1正式站與從最終核准SHA建立的凍結正式來源分支；建立新分支仍需另取得明確授權。
+- 最新07f76db的CI run42034935253：97項Python、9項價格軸、模板顯示與兩項真實行情步驟全成功，並看過日誌PASS。45e84cc至07f76db僅ADAM交接文件差異。
+- 檢查出未鎖依賴、CI3.11/候選3.14.10差異，以及CI額外安裝HTML解析依賴。新增正式版/依賴調整需先形成新候選並測試；附加財報/期貨/即時功能未納入本次完整驗收。
+- tx-daily-update.yml會寫B3，不執行；site-health.yml目前只測舊正式URL的HTTP，不是V1功能監控。
+- 已保存舊main 9d11d22全11檔來源備份並比對blob SHA無差異。main/B3保留原提交與站址。
+- 新文件V1_PUBLICATION_PLAN.md與V1_RELEASE_NOTES_DRAFT.md；更新過時的V1_RELEASE_CHECKLIST.md、V1_DEPLOY_GUIDE.md。輸出備份在outputs/亞當鏡像V1_正式發布準備方案.md等及正式站發布前備份_main_9d11d22.zip。
+- 建議正式網址adam-mirror-v1.streamlit.app僅為提案，未檢查可用性、未建立。下一步先確認方案/授權範圍，再做發布前候選整理；不得把本次「準備」解讀成已准許正式發布。
