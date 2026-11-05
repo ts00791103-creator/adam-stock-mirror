@@ -124,3 +124,51 @@ def probe_mops_history(symbol, years=3):
         if result: rows.append(result)
         else: failures.append(f"{period}: {err}")
     return rows, failures
+
+def fetch_mops_eps_history(symbol, years=5, end_period=None):
+    """Fetch verified period-labelled EPS; never infer filing dates.
+
+    Returns quarter rows with independently verified current-quarter and YTD
+    EPS, plus explicit failures. TTM is only computed for four consecutive
+    verified quarters. The most recent completed quarter may not be filed yet.
+    """
+    if not isinstance(years, int) or not 1 <= years <= 5:
+        raise ValueError("years must be between 1 and 5")
+    end = pd.Period(end_period, freq="Q") if end_period else pd.Timestamp.now().to_period("Q") - 1
+    periods = pd.period_range(end=end, periods=years * 4, freq="Q")
+    records, failures = [], []
+    for period in periods:
+        result, error = fetch_mops_quarter(symbol, period.year, period.quarter)
+        if error or not result or not result.get("column_verified"):
+            failures.append({"quarter": str(period), "reason": error or "EPS 欄位無法唯一核對"})
+            continue
+        eps = result["verified_eps"]
+        records.append({
+            "quarter": str(period), "quarter_end": str(period.end_time.date()),
+            "quarter_eps": float(eps["quarter_eps"]),
+            "cumulative_eps": float(eps["cumulative_eps"]),
+            "filing_date": None, "filing_date_verified": False,
+            "source": result["source"],
+        })
+    # Verify the year-to-date arithmetic only when all earlier quarters
+    # are present; otherwise do not mistake a missing quarter for zero.
+    by_period = {pd.Period(r["quarter"], freq="Q"): r for r in records}
+    for period, row in by_period.items():
+        if period.quarter == 1:
+            row["ytd_consistent"] = abs(row["quarter_eps"] - row["cumulative_eps"]) <= 0.03
+        else:
+            prior = period - 1
+            if prior in by_period and prior.year == period.year:
+                expected = row["cumulative_eps"] - by_period[prior]["cumulative_eps"]
+                row["ytd_consistent"] = abs(expected - row["quarter_eps"]) <= 0.05
+            else:
+                row["ytd_consistent"] = None
+        if row["ytd_consistent"] is False:
+            failures.append({"quarter": row["quarter"], "reason": "單季 EPS 與累計 EPS 差異超過容許誤差"})
+    for period, row in by_period.items():
+        window = [by_period.get(period - offset) for offset in range(4)]
+        if all(w is not None and w["ytd_consistent"] is not False for w in window):
+            row["ttm_eps"] = round(sum(w["quarter_eps"] for w in window), 4)
+        else:
+            row["ttm_eps"] = None
+    return records, failures
