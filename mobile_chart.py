@@ -124,7 +124,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
 <style>html,body{margin:0;padding:0;overflow:hidden;background:BG;color:FG;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif}
 #heading{padding:8px 10px;font-size:14px;font-weight:600}#ohlc{padding:4px 10px;font-size:12px;min-height:20px;font-variant-numeric:tabular-nums}#chart-wrap{position:relative;width:100%;height:480px}#chart{width:100%;height:480px;touch-action:pan-y}#box-overlay{position:absolute;inset:0;width:100%;height:480px;pointer-events:none;z-index:2}
 #hint{font-size:12px;opacity:.8;padding:6px 10px}#error{color:#ff7777;padding:12px}</style></head>
-<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量</div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="hint">雙指縮放｜單指左右拖曳｜點選 K 棒查看價格</div><div id="error"></div>
+<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量｜成交量資料：Yahoo Finance（台股單位：張）</div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="hint">雙指縮放｜單指左右拖曳｜點選 K 棒查看價格</div><div id="error"></div>
 <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 const data=PAYLOAD;
@@ -151,8 +151,8 @@ else {
  candle.setData(data.bars);
  const volume=chart.addHistogramSeries({priceScaleId:'volume',priceFormat:{type:'volume'},priceLineVisible:false,lastValueVisible:false});
  volume.setData(data.volumes);
- chart.priceScale('volume').applyOptions({scaleMargins:{top:0.79,bottom:0.02},visible:false});
- chart.priceScale('right').applyOptions({scaleMargins:{top:0.05,bottom:0.27}});
+ chart.priceScale('volume').applyOptions({scaleMargins:{top:0.76,bottom:0.01},visible:false});
+ chart.priceScale('right').applyOptions({scaleMargins:{top:0.04,bottom:0.28}});
  for(const [points,color] of [[data.volumeMA5,'#ffca28'],[data.volumeMA20,'#42a5f5']]){
    if(!points.length)continue;
    const ma=chart.addLineSeries({priceScaleId:'volume',color,lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
