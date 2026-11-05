@@ -15,9 +15,10 @@ class MobileChartGestureConfigurationTests(unittest.TestCase):
         self.assertIn("touch-action:none", self.source)
 
     def test_vertical_price_scale_pan_is_wired(self):
-        self.assertIn("chart.priceScale('right').applyOptions({scaleMargins:{top,bottom}})", self.source)
-        self.assertIn("touchStart.shift+dy/chartElement.clientHeight", self.source)
-        self.assertIn("v1-price-shift-", self.source)
+        self.assertIn("anchorLow.setData(", self.source)
+        self.assertIn("anchorHigh.setData(", self.source)
+        self.assertIn("touchStart.shift-dy/chartElement.clientHeight", self.source)
+        self.assertIn("v1-price-pan-v2-", self.source)
 
     def test_multitouch_keeps_pinch_zoom(self):
         self.assertIn("if(event.touches.length!==1){touchStart=null;return;}", self.source)
