@@ -45,6 +45,17 @@ def historical_pe_bands(symbol, years=3):
     q = [float(s.quantile(p)) for p in (0.2, 0.5, 0.8)]
     if not q[0] < q[1] < q[2]:
         return None, "歷史本益比分位數無法有效區分"
-    return {"pes": q, "samples": len(recent), "start": str(latest_date - pd.DateOffset(years=years))[:10],
+    coverage_days = (max(d for d,p in values if d >= latest_date - pd.DateOffset(years=years)) - min(d for d,p in values if d >= latest_date - pd.DateOffset(years=years))).days
+    spread = (q[2] - q[0]) / q[1]
+    warnings = []
+    if len(eps) < 8:
+        warnings.append("季 EPS 少於 8 季，歷史獲利涵蓋不足")
+    if coverage_days < 365:
+        warnings.append("有效 PE 樣本期間不足一年")
+    if spread < 0.15:
+        warnings.append("歷史 PE 分位區間過度集中")
+    if spread > 1.0:
+        warnings.append("歷史 PE 波動過大")
+    return {"pes": q, "samples": len(recent), "coverage_days": coverage_days, "warnings": warnings, "spread": spread, "start": str(latest_date - pd.DateOffset(years=years))[:10],
             "end": str(latest_date)[:10], "eps_quarters": len(eps),
             "method": "季 EPS 累計四季；季末後75天視為可用（非實際公告日）"}, None
