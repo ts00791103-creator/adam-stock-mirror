@@ -933,6 +933,8 @@ def load_tw_symbols():
 # ===== 操作介面 =====
 
 if not PRODUCTION_MODE:
+    from entry_alerts_ui import show_entry_alerts
+    show_entry_alerts(load_tw_symbols())
     from full_market_ui import show_full_market
     show_full_market()
 
