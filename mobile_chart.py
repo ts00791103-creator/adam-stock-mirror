@@ -219,21 +219,34 @@ else {
  // Lightweight Charts v4 pans time horizontally but does not pan the price scale
  // vertically on a one-finger touch. Move the shared price-scale margins explicitly.
  // This keeps candles, indicators and box coordinates on the same price scale.
- const defaultMargins={top:0.04,bottom:0.28};
- const marginTotal=defaultMargins.top+defaultMargins.bottom;
+ // Two invisible price-scale anchors provide a real, movable autoscale range.
+ // Unlike scaleMargins, this changes price-to-coordinate mapping in v4.
+ const prices=data.bars.flatMap(b=>[b.high,b.low])
+   .concat(data.lines.flatMap(line=>line.points.map(p=>p.value)))
+   .filter(Number.isFinite);
+ const lowPrice=Math.min(...prices),highPrice=Math.max(...prices);
+ const priceSpan=Math.max(highPrice-lowPrice,Math.abs(highPrice)*0.02,1);
+ const anchorTime=data.bars.length?data.bars[data.bars.length-1].time:null;
+ const anchorLow=chart.addLineSeries({color:'rgba(0,0,0,0)',
+   lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+ const anchorHigh=chart.addLineSeries({color:'rgba(0,0,0,0)',
+   lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
  let priceShift=0;
  let touchStart=null;
  const clamp=(value,low,high)=>Math.max(low,Math.min(high,value));
  const applyPriceShift=()=>{
-   const top=clamp(defaultMargins.top+priceShift,0,marginTotal);
-   const bottom=marginTotal-top;
-   chart.priceScale('right').applyOptions({scaleMargins:{top,bottom}});
+   if(anchorTime===null || !Number.isFinite(priceSpan))return;
+   // Anchor bounds exceed the actual data range so the anchors, not the candles,
+   // determine the vertical viewport. Both shift together during dragging.
+   const padding=priceSpan*1.5;
+   anchorLow.setData([{time:anchorTime,value:lowPrice-padding+priceShift*priceSpan}]);
+   anchorHigh.setData([{time:anchorTime,value:highPrice+padding+priceShift*priceSpan}]);
    queueBoxDraw();
  };
- const priceStorageKey=data.viewportKey?'v1-price-shift-'+data.viewportKey:null;
+ const priceStorageKey=data.viewportKey?'v1-price-pan-v2-'+data.viewportKey:null;
  try {
    const stored=priceStorageKey?Number(sessionStorage.getItem(priceStorageKey)):NaN;
-   if(Number.isFinite(stored))priceShift=clamp(stored,-defaultMargins.top,defaultMargins.bottom);
+   if(Number.isFinite(stored))priceShift=clamp(stored,-1,1);
  }catch(e){}
  applyPriceShift();
  chartElement.addEventListener('touchstart',event=>{
@@ -244,10 +257,9 @@ else {
    if(!touchStart || event.touches.length!==1)return;
    const dx=event.touches[0].clientX-touchStart.x;
    const dy=event.touches[0].clientY-touchStart.y;
-   // Preserve ordinary horizontal drag; diagonal/circular gestures move both axes.
-   if(Math.abs(dy)<3 || Math.abs(dy)<Math.abs(dx)*0.3)return;
-   priceShift=clamp(touchStart.shift+dy/chartElement.clientHeight,
-     -defaultMargins.top,defaultMargins.bottom);
+   // Keep native horizontal scrolling and pinch; add price movement on Y.
+   if(Math.abs(dy)<2)return;
+   priceShift=clamp(touchStart.shift-dy/chartElement.clientHeight*3,-1,1);
    applyPriceShift();
    if(priceStorageKey){
      try{sessionStorage.setItem(priceStorageKey,String(priceShift));}catch(e){}
