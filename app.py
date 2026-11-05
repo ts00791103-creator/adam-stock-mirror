@@ -1106,6 +1106,12 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                     for item in result["eps_rows"] for value in item["values"]
                 ]
                 st.dataframe(pd.DataFrame(eps_diagnostic_rows), use_container_width=True, hide_index=True)
+                if result.get("column_verified"):
+                    verified_eps = result["verified_eps"]
+                    st.success(f"已核對財報表頭｜本季基本 EPS：{verified_eps['quarter_eps']:.2f} 元｜年初至今累計基本 EPS：{verified_eps['cumulative_eps']:.2f} 元")
+                    st.caption("已核對期間欄位，但尚未核對實際申報日期；不納入歷史估價。")
+                else:
+                    st.warning("未能唯一核對本季及累計 EPS 欄位；保留候選數值，不納入估價。")
                 with st.expander("查看 MOPS 原始表頭（辨識本季／累計欄位）", expanded=False):
                     for table_no, header in result.get("headers", {}).items():
                         st.write(f"原始表格 {table_no}｜欄名：", header["columns"])
