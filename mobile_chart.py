@@ -102,7 +102,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
 <style>html,body{margin:0;padding:0;overflow:hidden;background:BG;color:FG;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif}
 #heading{padding:8px 10px;font-size:14px;font-weight:600}#chart{width:100%;height:480px;touch-action:pan-y}
 #hint{font-size:12px;opacity:.8;padding:6px 10px}#error{color:#ff7777;padding:12px}</style></head>
-<body><div id="heading"></div><div id="chart"></div><div id="hint">雙指縮放｜單指左右拖曳｜點選 K 棒查看價格</div><div id="error"></div>
+<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 BOX-1125D｜箱型標籤關閉</div><div id="chart"></div><div id="hint">雙指縮放｜單指左右拖曳｜點選 K 棒查看價格</div><div id="error"></div>
 <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 const data=PAYLOAD;
