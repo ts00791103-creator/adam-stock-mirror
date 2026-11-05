@@ -4,6 +4,7 @@ A syntactically valid date and URL are NOT proof of official publication.
 No output from this module authorizes historical point-in-time PE.
 """
 from datetime import date, datetime
+from calendar import monthrange
 from urllib.parse import urlparse
 import re
 
@@ -26,11 +27,7 @@ def inspect_filing_date(stock_code, quarter, announced_at, source_url, expected_
         except ValueError:
             return "公告日期格式錯誤"
     month = q * 3
-    if month == 12:
-        quarter_end = date(year, 12, 31)
-    else:
-        quarter_end = date(year, month + 1, 1).fromordinal(
-            date(year, month + 1, 1).toordinal() - 1)
+    quarter_end = date(year, month, monthrange(year, month)[1])
     if moment.date() <= quarter_end:
         return "公告日不得早於或等於季度結束日"
     if moment.date() > date.today():
