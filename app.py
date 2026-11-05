@@ -1084,6 +1084,19 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
             else:
                 st.warning(official_error)
         st.caption("這是官方最新財報查詢，不是完整歷史 EPS；尚未取得逐季公告日，不會把這筆資料混入歷史 PE 或直接當成 TTM。")
+    with st.expander("🧪 MOPS 歷史季報連線測試（不納入估價）", expanded=False):
+        st.caption("先測試單一季度的歷史財報讀取。由於尚未核對原始申報日期與欄位，任何抓到的 EPS 都不會進入歷史 PE。")
+        test_year = st.number_input("測試西元年度", min_value=2018, max_value=2026, value=2024, step=1, key="b3_mops_year_v1")
+        test_quarter = st.selectbox("測試季度", [1,2,3,4], index=2, key="b3_mops_quarter_v1")
+        if st.button("測試讀取 MOPS 歷史季報", key="b3_mops_probe_v1"):
+            from mops_history import fetch_mops_quarter
+            with st.spinner("讀取官方歷史季報…"):
+                result, error = fetch_mops_quarter(symbol, int(test_year), int(test_quarter))
+            if result:
+                st.write(f"季度末：{result['quarter_end']}｜累計 EPS 候選值：{result['cumulative_eps_candidate']:.2f}")
+                st.warning("此值尚未核對公告日與原始報表欄位，不會納入估價。")
+            else:
+                st.warning(error)
     filing_format = st.radio("匯入 EPS 格式", ["單季 EPS", "年初至今累計 EPS（自動換算單季）"], horizontal=True, key="b3_eps_csv_format_v1")
     filing_upload = st.file_uploader("選用：匯入歷史季度 EPS CSV（含實際公告日）", type=["csv"], key="b3_filing_eps_csv_v1", help="單季格式欄位：symbol,quarter_end,announced_on,eps；累計格式欄位：symbol,quarter_end,announced_on,cumulative_eps。兩者都必須提供真實公告日。")
     st.caption("匯入資料僅用於本次試算，須自行核對公開資訊觀測站的公告日期與單季 EPS；尚未自動串接官方歷史財報。")
