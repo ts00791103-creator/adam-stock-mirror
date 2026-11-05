@@ -3,6 +3,7 @@ import json
 import math
 import pandas as pd
 import streamlit.components.v1 as components
+from box_theory import detect_boxes
 
 
 def _points(index, values):
@@ -18,7 +19,7 @@ def _points(index, values):
 
 
 def mobile_chart(df, waves, zoom, title, show_bollinger=False,
-                 boll_period=20, boll_std=2.0, chart_theme="券商深色", indicators=None):
+                 boll_period=20, boll_std=2.0, chart_theme="券商深色", indicators=None, auto_boxes=False, box_window=20, box_width=12.0):
     """Render mobile-friendly pinch zoom; no effect on Adam calculations."""
     indicators = set(indicators if indicators is not None else (["BOLL"] if show_bollinger else []))
     show_bollinger = "BOLL" in indicators
@@ -38,6 +39,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
             "open": float(row["Open"]), "high": float(row["High"]),
             "low": float(row["Low"]), "close": float(row["Close"])
         })
+    boxes = detect_boxes(df, box_window, box_width) if auto_boxes else []
     series = []
     if show_bollinger and len(df) >= boll_period:
         mid = df["Close"].rolling(boll_period, min_periods=boll_period).mean()
@@ -104,12 +106,12 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
     bars = sorted({b["time"]: b for b in bars}.values(), key=lambda b: b["time"])
     payload = json.dumps({"bars": bars, "lines": series,
                           "count": view_count, "dark": dark,
-                          "title": title, "panels": panels}, ensure_ascii=False).replace("</", "<\\/")
+                          "title": title, "panels": panels, "boxes": boxes}, ensure_ascii=False).replace("</", "<\\/")
     html = """<!doctype html><html lang="zh-Hant"><head><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <style>html,body{margin:0;padding:0;overflow:hidden;background:BG;color:FG;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif}
-#heading{padding:8px 10px;font-size:14px;font-weight:600}#chart{width:100%;height:480px;touch-action:pan-y}
+#chart-wrap{position:relative}#box-overlay{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}#heading{padding:8px 10px;font-size:14px;font-weight:600}#chart{width:100%;height:480px;touch-action:pan-y}
 #panels .panel{height:175px;width:100%}#panels .panel-title{padding:5px 10px;font-size:12px}#hint{font-size:12px;opacity:.8;padding:6px 10px}#error{color:#ff7777;padding:12px}</style></head>
-<body><div id="heading"></div><div id="chart"></div><div id="panels"></div><div id="hint">雙指縮放｜單指左右拖曳｜點選 K 棒查看價格</div><div id="error"></div>
+<body><div id="heading"></div><div id="chart-wrap"><div id="chart"></div><canvas id="box-overlay"></canvas></div><div id="panels"></div><div id="hint">雙指縮放｜單指左右拖曳｜點選 K 棒查看價格</div><div id="error"></div>
 <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 const data=PAYLOAD;
@@ -168,6 +170,30 @@ else {
    pc.timeScale().setVisibleLogicalRange({from:Math.max(0,data.bars.length-count),to:data.bars.length+5});}
   new ResizeObserver(()=>pc.applyOptions({width:el.clientWidth})).observe(el);
  }
+ const overlay=document.getElementById('box-overlay');
+ function drawBoxes(){
+  if(!data.boxes.length)return;
+  const w=overlay.clientWidth,h=overlay.clientHeight,dpr=window.devicePixelRatio||1;
+  overlay.width=Math.round(w*dpr);overlay.height=Math.round(h*dpr);
+  const ctx=overlay.getContext('2d');ctx.scale(dpr,dpr);
+  for(const b of data.boxes){
+   const x1=chart.timeScale().timeToCoordinate(b.start);
+   const x2=chart.timeScale().timeToCoordinate(b.end);
+   const y1=candle.priceToCoordinate(b.top),y2=candle.priceToCoordinate(b.bottom);
+   if([x1,x2,y1,y2].some(v=>v===null||!Number.isFinite(v)))continue;
+   const left=Math.min(x1,x2),top=Math.min(y1,y2),width=Math.abs(x2-x1)+5,height=Math.abs(y2-y1);
+   ctx.fillStyle='rgba(80,150,230,0.10)';ctx.fillRect(left,top,width,height);
+   ctx.strokeStyle='rgba(95,170,250,0.85)';ctx.lineWidth=1.5;ctx.strokeRect(left,top,width,height);
+   ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(left,(y1+y2)/2);ctx.lineTo(left+width,(y1+y2)/2);ctx.stroke();ctx.setLineDash([]);
+   ctx.font='11px sans-serif';ctx.fillStyle=dark?'#d1e6ff':'#18508a';
+   ctx.fillText('箱 '+b.top+' / '+b.bottom+' '+b.breakout,left+3,Math.max(12,top-4));
+  }
+ }
+ chart.timeScale().subscribeVisibleTimeRangeChange(drawBoxes);
+ chart.timeScale().subscribeVisibleLogicalRangeChange(drawBoxes);
+ requestAnimationFrame(drawBoxes);
+ const resize=new ResizeObserver(()=>{drawBoxes();});
+ resize.observe(document.getElementById('chart'));
  const resize=new ResizeObserver(()=>chart.applyOptions({width:document.getElementById('chart').clientWidth}));
  resize.observe(document.getElementById('chart'));
 }
