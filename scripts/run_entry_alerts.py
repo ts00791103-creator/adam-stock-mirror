@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import yfinance as yf
 from entry_alerts import AlertSettings, evaluate_entry_alerts
 from alert_delivery import AlertLedger, deliver_once
+from telegram_setup import validate_bot
 
 
 TZ = ZoneInfo("Asia/Taipei")
@@ -80,6 +81,8 @@ def main(argv=None):
         raise ValueError("背景推播尚未明確啟用，停止發送")
     if args.send and (not os.environ.get("TELEGRAM_BOT_TOKEN") or not os.environ.get("TELEGRAM_CHAT_ID")):
         raise ValueError("缺少Telegram設定，停止發送")
+    if args.send:
+        validate_bot(os.environ["TELEGRAM_BOT_TOKEN"], config.get("expected_bot_username", ""))
     result = scan(symbols, settings, rules, now, names=config.get("names", {}))
     print(json.dumps({"checked": len(result["checked"]), "unconfirmed": len(result["failures"]),
                       "triggered": len(result["events"]), "sending": args.send}, ensure_ascii=False))
