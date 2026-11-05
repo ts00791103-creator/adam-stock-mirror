@@ -178,3 +178,8 @@
 - 更新 tests/test_mobile_chart_gestures.py 的靜態驗證，commit ae5dbbd5ea5d77b3c1f4233dfa07dee28876c32e。
 - **待驗證**：CI 最新狀態、候選站實際畫面、預留右側空間是否過大。已儲存的舊 viewport 會優先恢復，可能需要手動調整圖表顯示範圍才能看見新預設。此階段尚未證明三波演算法完全正確，也未完成正式版。
 - 上下移動／繞圈依使用者要求暫緩，勿再要求測試；main、b3-speed-test 不變。
+
+## 2026-11-05｜第五階段：三波鏡像獨立顯示
+- 根據 2308 日K 截圖，三波線重疊不易辨識。mobile_chart.py 現為短波虛線(style=2)、中波點線(style=1)、長波實線(style=0)；三波鏡像各自標註 mirrorWave，圖表上方各波根數標籤可點擊切換該波鏡像的顯示/隱藏（含鍵盤 Enter/空白）。commit c0d2fe604cb7cf61114305b7df3a3e8bdc26acf8。
+- tests/test_mobile_chart_gestures.py 加入三波獨立顯示與線型的靜態測試。commit 5bcfb6dadf00bc224c3aa839e9aa5072746ae551。
+- 未改動鏡像價格公式；若三波算出相同價位，線條仍會在數學上重疊，可單獨切換檢查。最新 CI 與手機互動效果尚待確認。上下/繞圈暫緩，B3/main 不動。
