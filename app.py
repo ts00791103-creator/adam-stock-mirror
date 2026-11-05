@@ -1106,6 +1106,11 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                     for item in result["eps_rows"] for value in item["values"]
                 ]
                 st.dataframe(pd.DataFrame(eps_diagnostic_rows), use_container_width=True, hide_index=True)
+                with st.expander("查看 MOPS 原始表頭（辨識本季／累計欄位）", expanded=False):
+                    for table_no, header in result.get("headers", {}).items():
+                        st.write(f"原始表格 {table_no}｜欄名：", header["columns"])
+                        st.dataframe(pd.DataFrame(header["top_rows"]), use_container_width=True, hide_index=True)
+                st.caption("本階段只展示原始表頭，未經確認不會自動指定累計 EPS 或計算估價。")
                 st.warning("這些數字可能包含本期、去年同期及累計 EPS；尚未核對表頭及公告日，不會納入估價。")
             else:
                 st.warning(error)
