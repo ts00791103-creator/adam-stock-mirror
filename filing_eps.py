@@ -77,3 +77,49 @@ def historical_pe_from_filings(symbol, data, years=3):
             "eps_first":str(data["quarter_end"].iloc[0].date()),
             "eps_last":str(data["quarter_end"].iloc[-1].date()),
             "method":"使用 CSV 實際公告日（資料由使用者提供，未經官方驗證）"},None
+
+def parse_cumulative_eps_csv(upload, expected_symbol):
+    """Convert officially reported year-to-date EPS into standalone quarters.
+    Columns: symbol,quarter_end,announced_on,cumulative_eps.
+    All four quarters must be present for each converted full year; missing
+    preceding quarter is rejected rather than silently treating YTD as Q EPS.
+    """
+    try:
+        frame = pd.read_csv(io.BytesIO(upload), encoding="utf-8-sig")
+        needed = {"symbol", "quarter_end", "announced_on", "cumulative_eps"}
+        if not needed.issubset(frame.columns):
+            return None, "累計 EPS CSV 需包含 symbol,quarter_end,announced_on,cumulative_eps"
+        if not frame["symbol"].astype(str).str.strip().eq(str(expected_symbol).split(".")[0]).all():
+            return None, "股票代號不符"
+        frame["quarter_end"] = pd.to_datetime(frame["quarter_end"], errors="coerce")
+        frame["announced_on"] = pd.to_datetime(frame["announced_on"], errors="coerce")
+        frame["cumulative_eps"] = pd.to_numeric(frame["cumulative_eps"], errors="coerce")
+        if frame[["quarter_end","announced_on","cumulative_eps"]].isna().any().any():
+            return None, "日期或累計 EPS 有無效值"
+        if len(frame)<8 or len(frame)>120:
+            return None, "至少需 8 季、最多 120 季"
+        frame = frame.sort_values("quarter_end").reset_index(drop=True)
+        if not frame["quarter_end"].dt.is_quarter_end.all():
+            return None, "季度末日不正確"
+        if frame["quarter_end"].dt.to_period("Q").duplicated().any():
+            return None, "有重複季度"
+        if (frame["announced_on"] < frame["quarter_end"]).any() or (frame["announced_on"] > pd.Timestamp.now()).any():
+            return None, "公告日期早於季末或晚於今天"
+        periods = frame["quarter_end"].dt.to_period("Q").tolist()
+        if any(b.ordinal-a.ordinal!=1 for a,b in zip(periods[:-1],periods[1:])):
+            return None, "季度不連續，無法可靠換算單季 EPS"
+        quarters = []
+        for _, row in frame.iterrows():
+            quarter = int(row["quarter_end"].quarter)
+            if quarter==1:
+                quarters.append(float(row["cumulative_eps"]))
+            else:
+                prev = frame.loc[frame["quarter_end"] == row["quarter_end"] - pd.offsets.QuarterEnd(1)]
+                if len(prev)!=1:
+                    return None, "缺少同年度前一季累計 EPS"
+                quarters.append(float(row["cumulative_eps"])-float(prev.iloc[0]["cumulative_eps"]))
+        out = frame[["symbol","quarter_end","announced_on"]].copy()
+        out["eps"] = quarters
+        return parse_quarterly_eps_csv(out.to_csv(index=False).encode("utf-8-sig"), expected_symbol)
+    except Exception:
+        return None, "累計 EPS 換算失敗，請核對 CSV 格式"
