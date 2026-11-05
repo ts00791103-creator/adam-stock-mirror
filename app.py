@@ -982,9 +982,9 @@ st.caption("🧪 圖表元件檢查："
            + ("BOX-1125C 已載入" if "BOX-1125C" in _renderer_source else "舊版圖表元件仍在執行")
            + "｜手機圖表：" + ("開啟" if mobile_engine else "關閉"))
 
-auto_boxes = st.checkbox("測試自動箱型（箱頂／箱底／中線）", value=False)
-box_window = st.slider("箱型觀察根數", 10, 60, 20, disabled=not auto_boxes)
-box_width = st.slider("箱型最大振幅（%）", 3.0, 25.0, 12.0, 0.5, disabled=not auto_boxes)
+auto_boxes = st.checkbox("測試自動箱型（箱頂／箱底／中線）", value=True, key="b3_box_default_on_10_20")
+box_window = st.slider("箱型觀察根數", 10, 60, 10, disabled=not auto_boxes, key="b3_box_window_default_10")
+box_width = st.slider("箱型最大振幅（%）", 3.0, 25.0, 20.0, 0.5, disabled=not auto_boxes, key="b3_box_width_default_20")
 boll_period = st.number_input("布林均線週期", min_value=5, max_value=120, value=20, step=1, disabled=not show_bollinger)
 boll_std = st.number_input("標準差倍數", min_value=0.5, max_value=4.0, value=2.0, step=0.5, disabled=not show_bollinger)
 
