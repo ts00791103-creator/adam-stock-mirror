@@ -47,31 +47,38 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
     # Map EPS cells only when the source header explicitly identifies the
     # requested current-quarter and year-to-date periods. Never use positions
     # alone: MOPS can add/reorder columns between statement formats.
+    # Pandas read_html produces a MultiIndex for the MOPS two-level header.
+    # Inspect tuple levels directly; a stringified tuple must not be matched
+    # as one flat string (it can mix current and prior period labels).
     verified = []
     roc = year - 1911
     for candidate in candidates:
-        headers = table_headers[candidate["table"]]["columns"]
+        table = tables[candidate["table"] - 1]
         matches = {"quarter_eps": [], "cumulative_eps": []}
         for cell in candidate["values"]:
             index = cell["column"] - 1
-            if index >= len(headers):
+            if index >= len(table.columns):
                 continue
-            # MultiIndex headers are stringified tuples. Normalize whitespace
-            # and accept ROC or Gregorian years, padded or unpadded months.
-            label = re.sub(r"\\s+", "", headers[index])
-            label = label.replace("'", "").replace('"', "")
-            if "金額" not in label or "%" in label or "％" in label:
+            raw = table.columns[index]
+            levels = raw if isinstance(raw, tuple) else (raw,)
+            levels = [re.sub(r"\\s+", "", str(x)) for x in levels]
+            if not any("金額" in level for level in levels):
                 continue
-            year_pattern = rf"(?:{roc}|{year})年"
-            quarter_pattern = rf"{year_pattern}第0?{quarter}季"
-            end_month = quarter * 3
-            cumulative_pattern = (
-                rf"{year_pattern}0?1月0?1日至"
-                rf"(?:{roc}|{year})年0?{end_month}月(?:30|31)日"
+            if any("%" in level or "％" in level for level in levels):
+                continue
+            period_levels = [level for level in levels if "年" in level and ("季" in level or "月" in level)]
+            if len(period_levels) != 1:
+                continue
+            period = period_levels[0]
+            years = rf"(?:{roc}|{year})"
+            quarter_re = rf"(?<!\\d){years}年第0?{quarter}季"
+            cumulative_re = (
+                rf"(?<!\\d){years}年0?1月0?1日至"
+                rf"{years}年0?{quarter*3}月(?:30|31)日"
             )
-            if re.search(cumulative_pattern, label):
+            if re.search(cumulative_re, period):
                 matches["cumulative_eps"].append(cell["value"])
-            elif re.search(quarter_pattern, label):
+            elif re.search(quarter_re, period):
                 matches["quarter_eps"].append(cell["value"])
         if all(len(matches[k]) == 1 for k in matches):
             verified.append({k: matches[k][0] for k in matches})
