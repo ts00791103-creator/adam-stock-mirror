@@ -1087,14 +1087,22 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
             st.caption(f"季 EPS {auto_pe_result['eps_quarters']} 季｜有效樣本跨度 {auto_pe_result.get('coverage_days', 0)} 天；資料不足時歷史分位數可能偏誤。")
         else:
             st.warning(f"歷史 PE 無法計算：{pe_error}。改用手動倍數，不視為自動智慧估價。")
+    growth_reference = None
+    if valuation_enabled and market == "台灣股票／ETF" and symbol:
+        from valuation_engine import eps_growth_reference
+        growth_reference, growth_error = eps_growth_reference(symbol)
+        if growth_reference:
+            st.caption(f"📊 財報參考：近四季 EPS 年增率 {growth_reference['growth_pct']:+.1f}%｜最新季末 {growth_reference['quarter_end']}｜{growth_reference['source']}（不是未來預測）")
+        else:
+            st.caption(f"📊 無法取得 EPS 成長參考：{growth_error}")
     forecast_enabled = st.checkbox("加入未來 EPS 成長情境（非分析師預測）", value=False, key="b3_growth_on_v1")
-    forecast_growth = st.number_input("假設下一年度 EPS 成長率（%）", min_value=-80.0, max_value=150.0, value=10.0, step=5.0, key="b3_growth_pct_v1") if forecast_enabled else 0.0
+    forecast_growth = st.number_input("假設下一年度 EPS 成長率（%）", min_value=-80.0, max_value=150.0, value=float(round(max(-80, min(150, growth_reference["growth_pct"])), 1)) if growth_reference else 10.0, step=5.0, key="b3_growth_pct_v3") if forecast_enabled else 0.0
     forecast_discount = st.number_input("未來估價安全折扣（%）", min_value=0.0, max_value=60.0, value=20.0, step=5.0, key="b3_growth_discount_v1") if forecast_enabled else 0.0
     v1, v2, v3 = st.columns(3)
     cheap_pe = v1.number_input("便宜 PE", min_value=1.0, max_value=200.0, value=12.0, step=0.5, key="b3_cheap_pe_v1")
     fair_pe = v2.number_input("合理 PE", min_value=1.0, max_value=200.0, value=16.0, step=0.5, key="b3_fair_pe_v1")
     expensive_pe = v3.number_input("昂貴 PE", min_value=1.0, max_value=200.0, value=20.0, step=0.5, key="b3_expensive_pe_v1")
-    st.caption("參考模式僅借鑑價值投資的價格分區概念，並非孫慶龍本人公布的固定公式或建議價。倍數為示例預設值，須依產業與獲利調整。")
+    st.caption("自動模式採歷史 PE 分位數；無法取得時才使用手動倍數。這不是孫慶龍本人發布的公式或估價。")
 
 if st.button(
     "開始亞當鏡像分析",
@@ -1399,6 +1407,23 @@ if st.button(
             st.write(f"最新資料收盤價：{latest_price:,.2f}｜隱含 PE：{latest_price / eps_value:.2f} 倍｜估價區間：**{category}**")
             if auto_pe_result and (latest_price / eps_value < effective_pes[0] * 0.8 or latest_price / eps_value > effective_pes[2] * 1.2):
                 st.warning("目前隱含 PE 與歷史區間差距超過 20%；可能是獲利或市場評價結構改變，請勿直接把便宜價視為安全買點。")
+            from valuation_engine import valuation_quality, conservative_entry
+            quality, quality_reasons = valuation_quality(auto_pe_result, latest_price / eps_value, growth_reference)
+            st.markdown(f"#### 🛡️ 估值資料可信度：{quality}")
+            st.caption("依歷史樣本數、資料跨度、季 EPS、PE 分布與現價偏離程度評級；不代表預測準確率。")
+            if quality_reasons:
+                st.warning("評級原因：" + "；".join(quality_reasons))
+            safety_price = conservative_entry(eps_value, auto_pe_result, margin_pct=25)
+            if safety_price is not None:
+                st.metric("🛡️ 保守觀察進場參考價（非買進建議）", f"{safety_price:,.2f}")
+                st.caption("以歷史低檔 PE（20% 分位）與歷史中位 PE 再打 75 折，取較低者 × 近四季 EPS。此價格仍可能高於現價，不能據此判定低估。")
+            else:
+                st.info("缺乏可靠歷史 PE，暫不顯示保守進場參考價。")
+            try:
+                valuation_date = str(pd.Timestamp(df.index[-1]).date())
+            except Exception:
+                valuation_date = "日期未知"
+            st.caption(f"📅 股價資料日期：{valuation_date}｜價格：歷史 K 線資料｜EPS／季財報：Yahoo Finance｜歷史 PE：本程式依財報季末後 75 天近似可用日計算；非即時報價。")
             if forecast_enabled:
                 future_eps = eps_value * (1 + forecast_growth / 100)
                 st.markdown("#### 📈 下一年度 EPS 情境估價（自行假設，非市場共識預測）")
