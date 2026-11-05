@@ -21,10 +21,15 @@ def fetch_official_filing_candidates(stock_code, timeout=12):
                                 headers={"User-Agent": "Mozilla/5.0"})
         response.raise_for_status()
         frames = pd.read_html(io.StringIO(response.text))
-    except (requests.RequestException, ValueError, ImportError):
-        return [], "官方頁面未提供可讀取的公告表格（可能由 JavaScript 動態載入）"
+    except requests.RequestException:
+        return [], "證交所網站連線失敗，請稍後再試"
+    except (ValueError, ImportError):
+        return [], "官方頁面沒有可直接讀取的 HTML 表格；可能由 JavaScript 動態載入"
     found = []
+    report_tables = 0
     for frame in frames:
+        if any("財務報告書" in str(value) for value in frame.astype(str).to_numpy().flat):
+            report_tables += 1
         frame.columns = [" ".join(map(str, col)) if isinstance(col, tuple) else str(col)
                          for col in frame.columns]
         for _, row in frame.iterrows():
@@ -51,7 +56,9 @@ def fetch_official_filing_candidates(stock_code, timeout=12):
     unique = list({(r["季度"], r["公告日期時間"], r["公告主旨"]): r for r in found}.values())
     unique.sort(key=lambda r: (r["季度"], r["公告日期時間"]))
     if not unique:
-        return [], "官方頁面未提供可驗證的財報公告紀錄；不得推算公告日"
+        if report_tables == 0:
+            return [], "HTML 表格未包含財務報告書資料；可能需要官方動態資料接口"
+        return [], "有財報相關文字，但股票代號、季度或公告日期格式無法完整辨識；不得推算公告日"
     return unique, None
 
 
