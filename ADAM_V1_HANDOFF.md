@@ -243,3 +243,9 @@
 - 2330.TW：486 根日K，最後日期 2026-11-05，收盤 2240.00。
 - 2308.TW：486 根日K，最後日期 2026-11-05，收盤 1130.00。
 - 此結果確認真實 Yahoo 下載與資料品質檢查通過，但尚未驗證鏡像投影結果；兩年資料 486 根，不足長波參考設定 650 根，長波應顯示資料不足警示。下一步應使用較長 period（例如 5y）做短中長波實際鏡像測試。
+
+## 2026-11-05｜第十一階段：真實台股亞當鏡像驗證（待執行）
+- 已由使用者提供 GitHub 日誌確認第十階段真實行情 PASS（2330.TW、2308.TW，486 根，2026-11-05）。
+- 新增 scripts/live_tw_mirror_smoke.py，下載兩檔 5y 日K，需至少650根，透過 AST 執行 app.py 原始 find_pivots/future_index/internal_turns/mirror_wave，逐一測試短中長波的時間左右翻轉公式、錨定最新收盤、日期遞增、長度及有限數值。轉折不足時輸出 NO_PIVOTS，不視為鏡像成功。commit f954d490fb2b84eae99a9c70f697bdf49a2d5e6f。
+- 已將 Optional live Taiwan Adam mirror projection check (non-blocking) 加入既有 .github/workflows/v1-validation.yml，commit 94bb3252592cdf7b7fb02f0691bfa7f1f0736d70。
+- 本批尚未取得 GitHub CI 日誌。因 continue-on-error，主 workflow 綠色不等於鏡像真實測試 PASS，需檢視此步驟輸出。main/b3-speed-test 未動。
