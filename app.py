@@ -99,6 +99,24 @@ def audit_ohlc_data(df):
     return issues
 
 
+def raw_quote_summary(df):
+    """下載原始資料的整理前品質摘要；僅作揭露，不修補行情。"""
+    if df.empty:
+        return []
+    notes = []
+    if "Close" in df.columns:
+        close = pd.to_numeric(df["Close"], errors="coerce")
+        missing = int((~np.isfinite(close.to_numpy(dtype=float))).sum())
+        if missing:
+            notes.append(f"原始資料有 {missing} 根收盤價缺漏或非有限數值")
+    duplicates = int(df.index.duplicated(keep="last").sum())
+    if duplicates:
+        notes.append(f"原始資料有 {duplicates} 筆重複時間，保留最後一筆")
+    if not df.index.is_monotonic_increasing:
+        notes.append("原始資料時間未排序，已由舊到新整理")
+    return notes
+
+
 @st.cache_data(ttl=900)
 def get_data(symbol, period, interval):
     source_interval = "5m" if interval == "10m" else interval
@@ -117,6 +135,7 @@ def get_data(symbol, period, interval):
     if df.empty:
         return df
 
+    raw_notes = raw_quote_summary(df)
     df = df.dropna(subset=["Close"]).sort_index().copy()
     df.index = pd.to_datetime(df.index)
 
@@ -139,6 +158,7 @@ def get_data(symbol, period, interval):
             bars = bars.dropna(subset=["Open", "High", "Low", "Close"])
             parts.append(bars)
         df = pd.concat(parts).sort_index() if parts else df.iloc[0:0]
+    df.attrs["raw_quote_notes"] = raw_notes
     return df
 
 
@@ -1538,6 +1558,9 @@ if st.button(
     if df.empty:
         st.error("查無資料")
         st.stop()
+
+    for note in df.attrs.get("raw_quote_notes", []):
+        st.warning("原始行情資料提醒：" + note)
 
     quality_issues = audit_ohlc_data(df)
     if quality_issues:
