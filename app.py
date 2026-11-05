@@ -1292,6 +1292,30 @@ if st.button(
                     f"{latest['status']}（{df.index[latest['end']].strftime('%Y-%m-%d')} 結束）。"
                     "歷史箱型價位不視為當前有效支撐或壓力。"
                 )
+            st.markdown("#### 最近一次箱型突破後追蹤（測試版）")
+            from box_tracking import track_latest_breakout
+            tracked = track_latest_breakout(df, detected)
+            if tracked is None:
+                st.caption("目前沒有可追蹤的已突破箱型。")
+            else:
+                st.write(
+                    f"**{tracked['status']}**｜方向：{tracked['direction']}｜"
+                    f"突破日：{tracked['breakout_date']}｜突破收盤：{tracked['breakout_close']:,.2f}"
+                )
+                c1, c2, c3 = st.columns(3)
+                c1.metric("突破參考價", f"{tracked['breakout_level']:,.2f}")
+                c2.metric("最新收盤", f"{tracked['latest_close']:,.2f}")
+                c3.metric("等幅目標（推估）", f"{tracked['target']:,.2f}")
+                if tracked["reentered"]:
+                    st.warning(
+                        f"已在 {tracked['reentry_date']} 首次收回原箱內；"
+                        "原突破訊號視為失效，目標價不可當作有效交易訊號。"
+                    )
+                else:
+                    st.caption(
+                        "以收盤價判斷是否重新進入箱內；距突破價 1% 內提示回測／反彈測試。"
+                        "未確認成交量、盤中觸價或多日站穩，請勿視為保證有效突破。"
+                    )
             st.markdown("#### 歷史箱型紀錄（非目前有效價位）")
             st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
             st.caption("目標價為箱型等幅量測推估，並非保證達到；突破狀態以收盤價判斷。")
