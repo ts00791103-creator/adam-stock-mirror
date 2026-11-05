@@ -963,7 +963,8 @@ chart_type = st.radio(
     horizontal=True
 )
 
-mobile_engine = st.checkbox("測試版手機圖表（目前可能黑畫面）", value=False, help="目前預設使用穩定的 Plotly 圖表；待新版手機圖表修復後再開啟。")
+mobile_engine = False
+st.caption("目前使用 Plotly 穩定圖表；新版手機圖表暫停使用，以排除黑畫面。")
 
 chart_theme = st.radio(
     "圖表配色",
