@@ -111,6 +111,15 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
         "contains_captcha": any(x in body.lower() for x in ("captcha", "驗證碼")),
         "contains_redirect": any(x in body.lower() for x in ("location.href", "window.location")),
         "contains_error_marker": any(x in body.lower() for x in ("error", "查無資料", "系統忙碌")),
+        "has_form": "<form" in body.lower(),
+        "has_script": "<script" in body.lower(),
+        "has_meta_refresh": "http-equiv" in body.lower() and "refresh" in body.lower(),
+        "has_login_hint": any(x in body.lower() for x in ("login", "登入", "session")),
+        "has_access_denied_hint": any(x in body.lower() for x in ("access denied", "forbidden", "存取被拒")),
+        "has_mops_brand": any(x in body.lower() for x in ("公開資訊觀測站", "mops")),
+        "html_title": __import__("html").unescape(
+            re.search(r"<title[^>]*>(.*?)</title>", body, flags=re.I | re.S).group(1).strip()[:100]
+        ) if re.search(r"<title[^>]*>(.*?)</title>", body, flags=re.I | re.S) else None,
     }
     if not body.strip():
         return {"status": "empty", "message": "官方接口回傳空白內容", **diagnostic}
