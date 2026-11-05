@@ -209,3 +209,9 @@
 - app.py 在每個短/中/長波鏡像計算前，依 WAVES[name] 的 lookback (100/260/650 根) 與實際 len(df) 比較；不足時顯示警告，列出可用根數/參考根數，明示若有結果也僅是有限資料暫定鏡像。commit 213f14ddf968611be2873290d075d0ada8b2f1a9。
 - 新增 tests/test_wave_history_warning.py，靜態檢查警告在計算前、根數與訊息、三波設定不變。commit c43cabad2d5c06bfe84538b61e6c53d06dbe5bd9。
 - 目前沒有強制禁止不足 650 根的長波計算，僅明示警告；沒有更動原鏡像公式。最新 CI 尚待確認，真實市場歷史回放仍未執行。main/b3-speed-test 不變，上下移動繼續暫緩。
+
+## 2026-11-05｜第九階段：行情 OHLC 品質檢查
+- 使用者回報第八階段第二批 CI 綠色。
+- app.py 新增 audit_ohlc_data(df)；分析前檢查時間排序、重複時間、OHLC 缺欄、NaN/Inf、非正數價格、High/Low 與 Open/Close 的關係；若異常，顯示錯誤並停止分析，不自行猜測補價。commit 0f4b95b7232d84e30e1197f98671b629634704ec。
+- tests/test_market_data_quality.py 新增 7 項離線測試，包括品質閘門位置。commit 86a8dd8bd66f7faaedb436932ea2f13fd6db933c。最新 CI 尚待確認。
+- yfinance get_data 既有的排序、去重、dropna Close 行為保持不變；品質閘門在其後，因此不能檢出已被 get_data 丟棄的原始缺漏。真實行情回放尚未完成。main、b3-speed-test 不變。
