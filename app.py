@@ -964,7 +964,13 @@ chart_theme = st.radio(
     horizontal=True
 )
 
-show_bollinger = st.checkbox("顯示布林軌道（BOLL）", value=False)
+indicators = st.multiselect(
+    "K 線技術指標（可複選）",
+    ["BOLL", "MA", "EMA", "KD", "MACD", "RSI", "VOL"],
+    default=[],
+    help="MA／EMA 疊加在 K 線上；KD／MACD／RSI／VOL 顯示於下方。"
+)
+show_bollinger = "BOLL" in indicators
 boll_period = st.number_input("布林均線週期", min_value=5, max_value=120, value=20, step=1, disabled=not show_bollinger)
 boll_std = st.number_input("標準差倍數", min_value=0.5, max_value=4.0, value=2.0, step=0.5, disabled=not show_bollinger)
 
@@ -1139,7 +1145,7 @@ if st.button(
                 chart_type,
                 individual_zoom[w["name"]],
                 f"{symbol}｜{w['name']} A模式完整鏡像",
-                show_bollinger, boll_period, boll_std, chart_theme
+                show_bollinger, boll_period, boll_std, chart_theme, indicators=indicators
             )
 
             for date in roll_dates:
@@ -1154,7 +1160,7 @@ if st.button(
                 mobile_chart(
                     df, [w], individual_zoom[w["name"]],
                     f"{symbol}｜{w['name']} A模式完整鏡像",
-                    show_bollinger, boll_period, boll_std, chart_theme
+                    show_bollinger, boll_period, boll_std, chart_theme, indicators=indicators
                 )
             else:
                 st.plotly_chart(
