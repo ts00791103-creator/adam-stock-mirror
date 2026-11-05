@@ -1086,7 +1086,7 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                 st.warning("估價可信度提醒：" + "；".join(auto_pe_result["warnings"]))
             st.caption(f"季 EPS {auto_pe_result['eps_quarters']} 季（{auto_pe_result.get('eps_first', '未知')}～{auto_pe_result.get('eps_last', '未知')}）｜有效樣本跨度 {auto_pe_result.get('coverage_days', 0)} 天；資料不足時歷史分位數可能偏誤。")
         else:
-            st.warning(f"歷史 PE 無法計算：{pe_error}。改用手動倍數，不視為自動智慧估價。")
+            st.warning(f"歷史 PE 無法計算：{pe_error}。自動估價已暫停，不會改用固定倍數；如需自行試算，請取消勾選自動歷史 PE。")
     growth_reference = None
     if valuation_enabled and market == "台灣股票／ETF" and symbol:
         from valuation_engine import eps_growth_reference
@@ -1098,11 +1098,13 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
     forecast_enabled = st.checkbox("加入未來 EPS 成長情境（非分析師預測）", value=False, key="b3_growth_on_v1")
     forecast_growth = st.number_input("假設下一年度 EPS 成長率（%）", min_value=-80.0, max_value=150.0, value=float(round(max(-80, min(150, growth_reference["growth_pct"])), 1)) if growth_reference else 10.0, step=5.0, key="b3_growth_pct_v3") if forecast_enabled else 0.0
     forecast_discount = st.number_input("未來估價安全折扣（%）", min_value=0.0, max_value=60.0, value=20.0, step=5.0, key="b3_growth_discount_v1") if forecast_enabled else 0.0
+    if auto_pe_enabled:
+        st.caption("下方手動 PE 只在取消勾選自動模式後使用，不會作為自動模式的備援。")
     v1, v2, v3 = st.columns(3)
     cheap_pe = v1.number_input("便宜 PE", min_value=1.0, max_value=200.0, value=12.0, step=0.5, key="b3_cheap_pe_v1")
     fair_pe = v2.number_input("合理 PE", min_value=1.0, max_value=200.0, value=16.0, step=0.5, key="b3_fair_pe_v1")
     expensive_pe = v3.number_input("昂貴 PE", min_value=1.0, max_value=200.0, value=20.0, step=0.5, key="b3_expensive_pe_v1")
-    st.caption("自動模式採歷史 PE 分位數；無法取得時才使用手動倍數。這不是孫慶龍本人發布的公式或估價。")
+    st.caption("自動模式僅使用歷史 PE 分位數；資料不足時不顯示估價。取消勾選自動模式才使用下方手動 PE。這不是孫慶龍本人發布的公式或估價。")
 
 if st.button(
     "開始亞當鏡像分析",
@@ -1391,21 +1393,23 @@ if st.button(
         st.subheader("🧮 股票估價參考（測試版）")
         if eps_value <= 0:
             st.info("目前沒有有效 EPS，請切換手動輸入或確認資料來源。")
-        elif not auto_pe_result and not (cheap_pe < fair_pe < expensive_pe):
+        elif auto_pe_enabled and auto_pe_result is None:
+            st.warning("歷史 PE 資料不足或暫時無法取得：本次不顯示歷史估值與未來情境價格。請稍後重試，或取消自動模式後自行輸入 PE 試算。")
+        elif not auto_pe_enabled and not (cheap_pe < fair_pe < expensive_pe):
             st.warning("本益比需符合：便宜 PE ＜ 合理 PE ＜ 昂貴 PE。")
         else:
-            effective_pes = auto_pe_result["pes"] if auto_pe_result else (cheap_pe, fair_pe, expensive_pe)
+            effective_pes = auto_pe_result["pes"] if auto_pe_enabled else (cheap_pe, fair_pe, expensive_pe)
             cheap_price, fair_price, expensive_price = [eps_value * pe for pe in effective_pes]
             latest_price = float(df["Close"].iloc[-1])
-            quality_ok = bool(auto_pe_result and auto_pe_result["samples"] >= 250
+            quality_ok = bool(auto_pe_enabled and auto_pe_result and auto_pe_result["samples"] >= 250
                               and auto_pe_result.get("coverage_days", 0) >= 365
                               and auto_pe_result.get("eps_quarters", 0) >= 12
                               and not auto_pe_result.get("warnings"))
             p1, p2, p3 = st.columns(3)
-            p1.metric("🟢 歷史估值下緣（試算）" if not quality_ok else "🟢 便宜價（參考）", f"{cheap_price:,.2f}")
-            p2.metric("🟡 歷史估值中位（試算）" if not quality_ok else "🟡 合理價（參考）", f"{fair_price:,.2f}")
-            p3.metric("🔴 歷史估值上緣（試算）" if not quality_ok else "🔴 昂貴價（參考）", f"{expensive_price:,.2f}")
-            st.info("估值可信度：" + ("中（樣本門檻通過；仍需核對財報公告日）" if quality_ok else "低／未驗證（不提供買進訊號）"))
+            p1.metric(("🟢 歷史估值下緣（試算）" if auto_pe_enabled else "🟢 手動 PE 下緣（試算）") if not quality_ok else "🟢 便宜價（參考）", f"{cheap_price:,.2f}")
+            p2.metric(("🟡 歷史估值中位（試算）" if auto_pe_enabled else "🟡 手動 PE 中位（試算）") if not quality_ok else "🟡 合理價（參考）", f"{fair_price:,.2f}")
+            p3.metric(("🔴 歷史估值上緣（試算）" if auto_pe_enabled else "🔴 手動 PE 上緣（試算）") if not quality_ok else "🔴 昂貴價（參考）", f"{expensive_price:,.2f}")
+            st.info("估值可信度：" + ("手動情境（不提供買進訊號）" if not auto_pe_enabled else "中（樣本門檻通過；仍需核對財報公告日）" if quality_ok else "低／未驗證（不提供買進訊號）"))
             category = ("便宜區" if latest_price <= cheap_price else
                         "合理偏低區" if latest_price < fair_price else
                         "合理偏高區" if latest_price < expensive_price else "昂貴區")
@@ -1413,7 +1417,7 @@ if st.button(
             if auto_pe_result and (latest_price / eps_value < effective_pes[0] * 0.8 or latest_price / eps_value > effective_pes[2] * 1.2):
                 st.warning("目前隱含 PE 與歷史區間差距超過 20%；可能是獲利或市場評價結構改變，請勿直接把便宜價視為安全買點。")
             from valuation_engine import valuation_quality, conservative_entry
-            quality, quality_reasons = valuation_quality(auto_pe_result, latest_price / eps_value, growth_reference)
+            quality, quality_reasons = valuation_quality(auto_pe_result if auto_pe_enabled else None, latest_price / eps_value, growth_reference)
             st.markdown(f"#### 🛡️ 估值資料可信度：{quality}")
             st.caption("依歷史樣本數、資料跨度、季 EPS、PE 分布與現價偏離程度評級；不代表預測準確率。")
             if quality_reasons:
@@ -1432,6 +1436,8 @@ if st.button(
             if not quality_ok:
                 st.warning("歷史 EPS 樣本不足或估價未驗證：數字僅供試算，不提供安全進場價。")
             if forecast_enabled:
+                if not auto_pe_enabled:
+                    st.info("以下未來 EPS 情境使用自行設定的手動 PE，並非歷史 PE 模型。")
                 future_eps = eps_value * (1 + forecast_growth / 100)
                 st.markdown("#### 📈 下一年度 EPS 情境估價（自行假設，非市場共識預測）")
                 st.write(f"假設成長率 {forecast_growth:+.1f}%｜情境 EPS {future_eps:,.2f} 元｜安全折扣 {forecast_discount:.0f}%")
@@ -1449,7 +1455,7 @@ if st.button(
 
             st.caption(f"估價依據：EPS {eps_value:,.2f} × PE {effective_pes[0]:.1f}／{effective_pes[1]:.1f}／{effective_pes[2]:.1f}；"
                        f"EPS 期間／來源：{eps_period or '未填寫'}。"
-                       "自動 EPS 為近四季歷史值、非未來預估；PE 來自歷史分位數或手動設定，非即時報價、非保證價位，亦非孫慶龍本人發布的估價。")
+                       "自動 EPS 為近四季歷史值、非未來預估；PE 模式明確分開，不會自動回退固定倍數；非即時報價、非保證價位，亦非孫慶龍本人發布的估價。")
 
     show_live_candle(
         market, symbol, interval, df, waves,
