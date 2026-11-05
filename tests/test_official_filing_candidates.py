@@ -62,6 +62,22 @@ class OfficialCandidateTests(unittest.TestCase):
         self.assertIn("wwwc.twse.com.tw", rows[0]["官方來源網址"])
         self.assertEqual(getter.call_count, 2)
 
+    def test_roc_date_and_quarter_with_spaces(self):
+        frame = pd.DataFrame([
+            ["115/8/14 16:30", "2308", "台達電", "115 年 第 2 季 財務報告書"]
+        ])
+        class Response:
+            text = "<table></table>"
+            def raise_for_status(self):
+                pass
+        with patch("official_filing_candidates.requests.get", return_value=Response()), patch(
+            "official_filing_candidates.pd.read_html", return_value=[frame]
+        ):
+            rows, error = fetch_official_filing_candidates("2308")
+        self.assertIsNone(error)
+        self.assertEqual(rows[0]["季度"], "2026Q2")
+        self.assertEqual(rows[0]["公告日期時間"], "2026-08-14 16:30")
+
     def test_empty_javascript_page_fails_closed(self):
         with patch("official_filing_candidates.requests.get") as getter:
             getter.return_value.text = "<html>No server-side table</html>"
