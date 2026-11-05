@@ -6,10 +6,10 @@ import plotly.graph_objects as go
 from mobile_chart import mobile_chart
 
 
-def render_mobile_chart(*args, indicators=None):
+def render_mobile_chart(*args, indicators=None, auto_boxes=False, box_window=20, box_width=12.0):
     """Keep the chart usable while Streamlit Cloud refreshes the renderer module."""
     try:
-        return mobile_chart(*args, indicators=indicators)
+        return mobile_chart(*args, indicators=indicators, auto_boxes=auto_boxes, box_window=box_window, box_width=box_width)
     except TypeError as exc:
         if "unexpected keyword argument 'indicators'" not in str(exc):
             raise
@@ -983,6 +983,9 @@ indicators = st.multiselect(
     help="MA／EMA 疊加在 K 線上；KD／MACD／RSI／VOL 顯示於下方。"
 )
 show_bollinger = "BOLL" in indicators
+auto_boxes = st.checkbox("自動生成箱型（箱頂／箱底／中線）", value=False)
+box_window = st.slider("箱型整理觀察根數", 10, 60, 20, disabled=not auto_boxes)
+box_width = st.slider("箱型最大振幅（%）", 3.0, 25.0, 12.0, 0.5, disabled=not auto_boxes)
 boll_period = st.number_input("布林均線週期", min_value=5, max_value=120, value=20, step=1, disabled=not show_bollinger)
 boll_std = st.number_input("標準差倍數", min_value=0.5, max_value=4.0, value=2.0, step=0.5, disabled=not show_bollinger)
 
@@ -1172,7 +1175,7 @@ if st.button(
                 render_mobile_chart(
                     df, [w], individual_zoom[w["name"]],
                     f"{symbol}｜{w['name']} A模式完整鏡像",
-                    show_bollinger, boll_period, boll_std, chart_theme, indicators=indicators
+                    show_bollinger, boll_period, boll_std, chart_theme, indicators=indicators, auto_boxes=auto_boxes, box_window=box_window, box_width=box_width
                 )
             else:
                 st.plotly_chart(
@@ -1203,7 +1206,7 @@ if st.button(
         if mobile_engine:
             render_mobile_chart(
                 df, waves, zoom, f"{symbol}｜{mode}｜A模式完整鏡像",
-                show_bollinger, boll_period, boll_std, chart_theme, indicators=indicators
+                show_bollinger, boll_period, boll_std, chart_theme, indicators=indicators, auto_boxes=auto_boxes, box_window=box_window, box_width=box_width
             )
         else:
             st.plotly_chart(
