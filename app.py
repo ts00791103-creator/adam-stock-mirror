@@ -1132,6 +1132,39 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                 st.warning("這些數字可能包含本期、去年同期及累計 EPS；尚未核對表頭及公告日，不會納入估價。")
             else:
                 st.warning(error)
+    with st.expander("📚 MOPS 近五年 EPS 與 TTM 自動整理（測試版）", expanded=False):
+        st.caption("依序讀取最多 20 季官方財報；首次可能需要較長時間。只顯示可核對期間欄位的 EPS，尚未取得實際公告日，絕不混入歷史 PE。")
+        history_years = st.selectbox("抓取年數", [1, 2, 3, 4, 5], index=4, key="b3_mops_history_years")
+        @st.cache_data(ttl=86400, show_spinner=False)
+        def cached_mops_eps_history(stock_symbol, years):
+            from mops_history import fetch_mops_eps_history
+            return fetch_mops_eps_history(stock_symbol, years=years)
+        if st.button("自動抓取官方歷史 EPS", key="b3_mops_history_fetch"):
+            with st.spinner("正在逐季核對 MOPS 財報，請稍候…"):
+                try:
+                    history_rows, history_failures = cached_mops_eps_history(symbol, int(history_years))
+                    st.session_state["b3_mops_history_result"] = (symbol, history_years, history_rows, history_failures)
+                except Exception as exc:
+                    st.error(f"歷史資料讀取失敗：{type(exc).__name__}")
+        saved_history = st.session_state.get("b3_mops_history_result")
+        if saved_history and saved_history[0] == symbol and saved_history[1] == history_years:
+            _, _, history_rows, history_failures = saved_history
+            st.write(f"已核對 {len(history_rows)} 季；缺漏或異常 {len(history_failures)} 筆")
+            if history_rows:
+                history_table = pd.DataFrame([{
+                    "季度": x["quarter"], "單季 EPS": x["quarter_eps"],
+                    "當年累計 EPS": x["cumulative_eps"], "TTM EPS": x["ttm_eps"],
+                    "累計核對": "通過" if x["ytd_consistent"] is True else ("待核" if x["ytd_consistent"] is None else "異常"),
+                    "公告日期": "尚未核實"
+                } for x in history_rows])
+                st.dataframe(history_table, use_container_width=True, hide_index=True)
+                st.download_button("下載 EPS 檢查結果 CSV", history_table.to_csv(index=False).encode("utf-8-sig"),
+                                   file_name=f"{str(symbol).split('.')[0]}_mops_eps_review.csv",
+                                   mime="text/csv", key="b3_mops_history_csv")
+                st.warning("TTM 為四個連續且欄位已核對的季度 EPS 加總，僅供核對；財報公告日尚未確認，不能用於歷史估價。")
+            if history_failures:
+                with st.expander("查看讀取失敗／資料異常季度"):
+                    st.dataframe(pd.DataFrame(history_failures), use_container_width=True, hide_index=True)
     filing_format = st.radio("匯入 EPS 格式", ["單季 EPS", "年初至今累計 EPS（自動換算單季）"], horizontal=True, key="b3_eps_csv_format_v1")
     filing_upload = st.file_uploader("選用：匯入歷史季度 EPS CSV（含實際公告日）", type=["csv"], key="b3_filing_eps_csv_v1", help="單季格式欄位：symbol,quarter_end,announced_on,eps；累計格式欄位：symbol,quarter_end,announced_on,cumulative_eps。兩者都必須提供真實公告日。")
     st.caption("匯入資料僅用於本次試算，須自行核對公開資訊觀測站的公告日期與單季 EPS；尚未自動串接官方歷史財報。")
