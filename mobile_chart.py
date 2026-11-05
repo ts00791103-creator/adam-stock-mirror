@@ -216,6 +216,47 @@ else {
  chartElement.addEventListener('wheel',queueBoxDraw,{passive:true});
  chartElement.addEventListener('pointermove',queueBoxDraw,{passive:true});
  chartElement.addEventListener('touchmove',queueBoxDraw,{passive:true});
+ // Lightweight Charts v4 pans time horizontally but does not pan the price scale
+ // vertically on a one-finger touch. Move the shared price-scale margins explicitly.
+ // This keeps candles, indicators and box coordinates on the same price scale.
+ const defaultMargins={top:0.04,bottom:0.28};
+ const marginTotal=defaultMargins.top+defaultMargins.bottom;
+ let priceShift=0;
+ let touchStart=null;
+ const clamp=(value,low,high)=>Math.max(low,Math.min(high,value));
+ const applyPriceShift=()=>{
+   const top=clamp(defaultMargins.top+priceShift,0,marginTotal);
+   const bottom=marginTotal-top;
+   chart.priceScale('right').applyOptions({scaleMargins:{top,bottom}});
+   queueBoxDraw();
+ };
+ const priceStorageKey=data.viewportKey?'v1-price-shift-'+data.viewportKey:null;
+ try {
+   const stored=priceStorageKey?Number(sessionStorage.getItem(priceStorageKey)):NaN;
+   if(Number.isFinite(stored))priceShift=clamp(stored,-defaultMargins.top,defaultMargins.bottom);
+ }catch(e){}
+ applyPriceShift();
+ chartElement.addEventListener('touchstart',event=>{
+   if(event.touches.length!==1){touchStart=null;return;}
+   touchStart={x:event.touches[0].clientX,y:event.touches[0].clientY,shift:priceShift};
+ },{passive:true});
+ chartElement.addEventListener('touchmove',event=>{
+   if(!touchStart || event.touches.length!==1)return;
+   const dx=event.touches[0].clientX-touchStart.x;
+   const dy=event.touches[0].clientY-touchStart.y;
+   // Preserve ordinary horizontal drag; diagonal/circular gestures move both axes.
+   if(Math.abs(dy)<3 || Math.abs(dy)<Math.abs(dx)*0.3)return;
+   priceShift=clamp(touchStart.shift+dy/chartElement.clientHeight,
+     -defaultMargins.top,defaultMargins.bottom);
+   applyPriceShift();
+   if(priceStorageKey){
+     try{sessionStorage.setItem(priceStorageKey,String(priceShift));}catch(e){}
+   }
+ },{passive:true});
+ chartElement.addEventListener('touchend',event=>{
+   if(!event.touches.length)touchStart=null;
+ },{passive:true});
+ chartElement.addEventListener('touchcancel',()=>{touchStart=null;},{passive:true});
  queueBoxDraw();
  // Remember the visible logical range between Streamlit fragment redraws.
  // Never use the timestamp range: a new candle should not shift the user's view.
