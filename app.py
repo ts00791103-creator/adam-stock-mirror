@@ -1219,9 +1219,10 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                                 x == "no_matching_filing_table" for x in cross_df["表格判讀"]
                             ):
                                 st.warning("三個季度都未找到符合條件的公告表格，建議停止使用目前接口。")
+                                stock_code = str(symbol).split(".")[0]
                                 st.markdown(
-                                    "[改查證交所 2308 單一公司財務報告書資訊揭露]"
-                                    "(https://www.twse.com.tw/IIH2/zh/company/information.html?code=2308)"
+                                    f"[改查證交所 {stock_code} 單一公司財務報告書資訊揭露]"
+                                    f"(https://www.twse.com.tw/IIH2/zh/company/information.html?code={stock_code})"
                                 )
                             st.write("三季回應完全相同：", cross_result["all_ajax_responses_identical"])
                             st.info(cross_result["conclusion"])
