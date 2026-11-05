@@ -141,3 +141,9 @@
 - 手指單指垂直位移更新 priceShift；左右拖曳與原生雙指縮放保留；使用新 sessionStorage key v1-price-pan-v2- 避免舊版狀態干擾。mobile_chart.py commit b2e88c0a907edadae9f1a69106a7939f6c382980。
 - 更新 tests/test_mobile_chart_gestures.py 靜態檢查兩條錨點與新平移邏輯；commit a4da426eeed7e3a4fae4b1a643122afda65f3e94。
 - **未確認 CI／實機成功**；待候選站自動部署後測試 2308 日K 上下、斜向、繞圈、左右、雙指縮放、位置記憶。如仍無效，應改用可明確控制價格座標的自訂繪圖實作。
+
+## 2026-11-05｜第三次上下拖曳實機仍失敗，加入診斷按鈕
+- 使用者回報第三版 invisible autoscale anchors 仍無法上下拖曳。
+- 為區分 iOS 觸控事件與圖表價格軸移動問題，於 mobile_chart.py 新增 ↑ K線上移、↓ K線下移、垂直歸位三個明確按鈕，直接調整同一 priceShift；commit 1408f2a2318f017ba67e0d90d2ee9a78469f29a1。
+- 按鈕只是診斷/暫時控制，不代表單指上下拖曳已修好。CI 和手機效果均待驗證。
+- 若按鈕有效但手勢無效，問題偏向 iOS iframe/Lightweight Charts 觸控事件；若按鈕也無效，需替換價格軸平移機制，可能改用自訂 Canvas 圖表。
