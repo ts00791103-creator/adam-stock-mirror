@@ -932,6 +932,13 @@ def load_tw_symbols():
 
 # ===== 操作介面 =====
 
+if not PRODUCTION_MODE:
+    from screener_ui import show_screener
+    show_screener(load_tw_symbols())
+
+if "adam_stock_query" not in st.session_state:
+    st.session_state["adam_stock_query"] = "2308"
+
 market = st.selectbox(
     "選擇市場",
     ["台灣股票／ETF"] if PRODUCTION_MODE else list(MARKETS)
@@ -940,7 +947,7 @@ market = st.selectbox(
 if MARKETS[market] is None:
     query = st.text_input(
         "股票代號或中文名稱（例如：2330、台積電、台達電）",
-        "2308"
+        key="adam_stock_query"
     ).strip()
     stock_list = load_tw_symbols()
     matches = [
