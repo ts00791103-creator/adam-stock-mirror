@@ -288,6 +288,9 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
                 and not bool(re.search(r"(?<!\d)1\d{2}[/.-]\d{1,2}[/.-]\d{1,2}", text))
             ),
         })
+    # The legacy t163sb01 page is not an independently verified filing-date source.
+    # Even a table containing dates must remain unverified until its semantics
+    # and first-filing provenance are established.
     if not any(p["looks_like_result_table"] for p in table_profiles):
         return {"status": "query_form_only",
                 "message": "取得的表格未同時包含指定股票與公告日期，可能只是查詢表單；不可作為公告紀錄",
