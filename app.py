@@ -976,6 +976,12 @@ show_bollinger = st.checkbox("顯示布林軌道（BOLL）", value=True)
 ma_periods = st.multiselect("測試 MA 均線（可複選）", [5,10,20,60,120,240], default=[])
 ema_periods = st.multiselect("測試 EMA 均線（可複選）", [5,10,20,60,120,240], default=[])
 st.caption("🧪 箱型測試版本 BOX-1125B｜新版不顯示箱型價格標籤")
+import inspect
+_renderer_source = inspect.getsource(mobile_chart)
+st.caption("🧪 圖表元件檢查："
+           + ("BOX-1125C 已載入" if "BOX-1125C" in _renderer_source else "舊版圖表元件仍在執行")
+           + "｜手機圖表：" + ("開啟" if mobile_engine else "關閉"))
+
 auto_boxes = st.checkbox("測試自動箱型（箱頂／箱底／中線）", value=False)
 box_window = st.slider("箱型觀察根數", 10, 60, 20, disabled=not auto_boxes)
 box_width = st.slider("箱型最大振幅（%）", 3.0, 25.0, 12.0, 0.5, disabled=not auto_boxes)
