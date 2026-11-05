@@ -1179,6 +1179,7 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                         inspect_period = st.selectbox("診斷季度", failed_periods,
                                                       key="b3_eps_inspect_period")
                         if st.button("檢查這一季的 EPS 原始表頭", key="b3_eps_inspect_button"):
+                            import json
                             from mops_history import fetch_mops_quarter
                             period_to_check = pd.Period(inspect_period, freq="Q")
                             with st.spinner("正在讀取官方原始表頭…"):
