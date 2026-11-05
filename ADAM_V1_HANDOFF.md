@@ -237,3 +237,9 @@
 - 使用者手機截圖顯示 v1-live-quotes.yml「已手動禁用此工作流程」，且尚無運行，不能宣稱真實行情測試通過。
 - 為避免使用者在手機操作停用工作流程，已將 scripts/live_tw_quotes_smoke.py 加入既有 .github/workflows/v1-validation.yml 的最後一步，continue-on-error: true，timeout-minutes: 3。commit 6f26e2e87ec38085b742a0eca39fd1842c0d682c。
 - 注意：此步驟失敗不會使整體 workflow 紅色；必須檢查 Actions 中 Optional live Taiwan quote smoke check 的 PASS/FAIL 訊息，才能判斷真實資料是否驗證成功。main、b3-speed-test 未更動。
+
+## 2026-11-05｜第十階段真實行情驗證通過（使用者提供 GitHub Actions 日誌截圖）
+- GitHub Actions Optional live Taiwan quote smoke check 於 UTC 2026-11-05T11:06:55 執行，兩檔 PASS。
+- 2330.TW：486 根日K，最後日期 2026-11-05，收盤 2240.00。
+- 2308.TW：486 根日K，最後日期 2026-11-05，收盤 1130.00。
+- 此結果確認真實 Yahoo 下載與資料品質檢查通過，但尚未驗證鏡像投影結果；兩年資料 486 根，不足長波參考設定 650 根，長波應顯示資料不足警示。下一步應使用較長 period（例如 5y）做短中長波實際鏡像測試。
