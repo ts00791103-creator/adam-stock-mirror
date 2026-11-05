@@ -35,3 +35,7 @@ jobs:
         run: |
           echo "Checking real Yahoo daily bars for 2330.TW and 2308.TW"
           python scripts/live_tw_quotes_smoke.py
+      - name: Optional live Taiwan Adam mirror projection check (non-blocking)
+        continue-on-error: true
+        timeout-minutes: 3
+        run: python scripts/live_tw_mirror_smoke.py
