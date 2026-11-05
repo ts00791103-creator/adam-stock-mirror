@@ -263,3 +263,6 @@
 
 ## 2026-11-05 Phase 12 mobile source cards
 User confirmed CI green. app.py commit 4ae29818f9fc5f299add74ad40378f85b2269102 renders vertical wave source cards and expandable full table. Test commit f072e3b535256daf74c940d955fb17b61939a94e adds mobile presentation assertion. No changes to mirror math or chart controls. Next: release readiness checks. main and b3-speed-test remain unchanged.
+
+## Phase 13 release readiness guard (2026-11-05)
+Added tests/test_release_readiness.py (commit 472596e5e7a613a6e982b11ef0339233cb7682cc), checking critical functions, data-quality gate ordering, mobile source cards and caveat before chart, nonblocking live checks, and handoff existence. Await latest CI. This is a regression guard, not final acceptance or deployment. No main/b3-speed-test modifications.
