@@ -86,7 +86,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
             ("箱底", box["bottom"], "#52a9ff"),
             ("箱中線", box["mid"], "#7e98b6")
         ]:
-            series.append({"name": f"箱{n}{label} {value:,.2f}（{box['status']}）",
+            series.append({"name": "",
                            "color": color,
                            "points": _points([indexes[0], indexes[-1]], [value, value]),
                            "style": 1 if label == "箱中線" else 0})
