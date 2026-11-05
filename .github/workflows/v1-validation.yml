@@ -50,3 +50,9 @@ jobs:
         continue-on-error: true
         timeout-minutes: 3
         run: python scripts/live_market_smoke.py
+
+
+      - name: Read-only entry alert live diagnostic
+        continue-on-error: true
+        timeout-minutes: 3
+        run: python scripts/live_entry_alerts_smoke.py

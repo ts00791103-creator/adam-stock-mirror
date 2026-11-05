@@ -98,6 +98,20 @@ class DeliveryTests(unittest.TestCase):
 
 
 class EntryPreviewTests(unittest.TestCase):
+    def test_failed_download_is_not_reported_as_no_signal_or_secret_text(self):
+        source = "from entry_alerts_ui import show_entry_alerts\nshow_entry_alerts([('2330','台積電','上市')])"
+        with patch("entry_alerts_ui.screening_data", side_effect=RuntimeError("private-token-url")):
+            app = AppTest.from_string(source).run()
+            app.text_area[0].set_value("2330")
+            next(b for b in app.button if b.key == "entry_preview").click().run()
+            saved = app.session_state["entry_preview_result"]
+            self.assertEqual(saved[2], [])
+            self.assertEqual(saved[3][0]["階段"], "取得行情")
+            self.assertNotIn("private-token-url", str(saved))
+            self.assertTrue(any("尚無法確認" in i.value for i in app.info))
+            self.assertFalse(any("本次沒有條件成立" in i.value for i in app.info))
+            self.assertEqual(len(app.exception), 0)
+
     def test_guided_preview_does_not_send_and_invalidates_old_results(self):
         source = "from entry_alerts_ui import show_entry_alerts\nshow_entry_alerts([('2330','台積電','上市')])"
         with patch("entry_alerts_ui.screening_data", return_value=breakout()), patch("alert_delivery.send_telegram") as send:
@@ -136,3 +150,4 @@ class WorkerGuardTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 commit_checkpoint("state/alerts.json")
             git.assert_not_called()
+

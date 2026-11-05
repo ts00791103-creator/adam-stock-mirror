@@ -42,8 +42,10 @@ def show_entry_alerts(stock_list):
             events, checked = [], []
             progress = st.progress(0., text="開始試跑")
             for n, (symbol, code, name, exchange) in enumerate(items):
+                stage = "取得行情"
                 try:
                     data = screening_data(symbol).copy()
+                    stage = "整理已完成日K"
                     index = pd.to_datetime(data.index)
                     if index.tz is not None:
                         index = index.tz_convert("Asia/Taipei").tz_localize(None)
@@ -54,11 +56,17 @@ def show_entry_alerts(stock_list):
                     if data.empty:
                         raise ValueError("沒有已完成的日K")
                     day = str(data.index[-1].date())
+                    stage = "檢查行情與提醒條件"
                     found = evaluate_entry_alerts(data, symbol, day, settings, rules)
                     events.extend({**event, "名稱": name} for event in found)
                     checked.append({"股票": symbol, "名稱": name, "檢查日期": day, "符合提醒": len(found)})
-                except Exception:
-                    failures.append({"輸入": symbol, "原因": "行情無效或無法取得，本次未判定"})
+                except Exception as exc:
+                    # Never expose raw exception text, URLs, credentials or traceback.
+                    known = {"ValueError": "資料格式或品質未通過", "TypeError": "資料型態不相容",
+                             "KeyError": "缺少必要欄位", "IndexError": "資料筆數不足",
+                             "TimeoutError": "行情連線逾時", "ConnectionError": "行情連線失敗"}
+                    reason = known.get(type(exc).__name__, "處理失敗")
+                    failures.append({"輸入": symbol, "階段": stage, "原因": reason + "，本次未判定"})
                 progress.progress((n+1)/len(items), text=f"已檢查{n+1}/{len(items)}檔")
             progress.empty()
             st.session_state["entry_preview_result"] = (signature, events, checked, failures)
@@ -77,10 +85,13 @@ def show_entry_alerts(stock_list):
                 st.text(telegram_text(events[0]))
             st.download_button("下載本次提醒CSV", pd.DataFrame(events).to_csv(index=False).encode("utf-8-sig"),
                                file_name="adam_entry_alert_preview.csv", mime="text/csv", key="entry_csv")
-        else:
+        elif checked:
             st.info("本次沒有條件成立，不產生進場觀察提醒。")
+        else:
+            st.info("本次沒有股票完成判定，尚無法確認提醒條件是否成立。")
         with st.expander("逐檔檢查紀錄"):
             st.dataframe(pd.DataFrame(checked), hide_index=True)
         if failures:
             st.warning("以下股票沒有完成判定，不算成不符合。")
             st.dataframe(pd.DataFrame(failures), hide_index=True)
+
