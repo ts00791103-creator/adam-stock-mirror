@@ -73,6 +73,46 @@ def review_candidate_coverage(candidates, periods):
             for period in periods]
 
 
+def probe_discovered_mops_form(stock_code, year, quarter, timeout=12):
+    """Probe the observed legacy MOPS form action, without trusting its contents.
+
+    The action was observed on the query page; it is not yet verified as a
+    filing-announcement endpoint. Never return announcement dates from here.
+    """
+    code = str(stock_code).strip()
+    if not re.fullmatch(r"\d{4,5}", code):
+        return {"status": "invalid_stock"}
+    if not (isinstance(year, int) and 2000 <= year <= 2100
+            and isinstance(quarter, int) and 1 <= quarter <= 4):
+        return {"status": "invalid_period"}
+    endpoint = "https://mopsov.twse.com.tw/mops/web/ajax_t56sb31_q1"
+    payload = {"step": "1", "firstin": "1", "co_id": code,
+               "TYPEK": "all", "YEAR_SEASON": f"{year - 1911}{quarter:02d}"}
+    try:
+        response = requests.post(endpoint, data=payload, timeout=timeout,
+                                 headers={"User-Agent": "Mozilla/5.0",
+                                          "Referer": "https://mopsov.twse.com.tw/"})
+        response.raise_for_status()
+    except requests.RequestException:
+        return {"status": "connection_error", "message": "新路徑連線失敗"}
+    body = response.text or ""
+    try:
+        tables = pd.read_html(io.StringIO(body))
+    except (ValueError, ImportError):
+        tables = []
+    profiles = []
+    for idx, frame in enumerate(tables[:15]):
+        sample = " ".join(map(str, frame.astype(str).to_numpy().flat))
+        profiles.append({"表格": idx, "列數": len(frame), "欄數": len(frame.columns),
+                         "含股票代號": bool(re.search(r"(?<!\d)" + re.escape(code) + r"(?!\d)", sample)),
+                         "含公告日期字樣": any(k in sample for k in ("公告日期", "申報日期", "公告時間", "申報時間")),
+                         "含財報字樣": any(k in sample for k in ("財務報告", "財報"))})
+    return {"status": "diagnostic_only", "endpoint": "/mops/web/ajax_t56sb31_q1",
+            "http_status": response.status_code, "response_chars": len(body),
+            "table_count": len(tables), "table_profiles": profiles,
+            "message": "僅診斷回傳資料，不視為已核實公告日期"}
+
+
 def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
     """Probe historical MOPS financial-report announcement transport only.
 
