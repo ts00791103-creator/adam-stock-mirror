@@ -1,3 +1,9 @@
+## 排程實測進行中｜2026-11-06
+使用者授權繼續測試排程與推播並每階段保存。已部署有截止時間的獨立Temporary system schedule verification，預定台灣07:20與07:25（UTC11/5 23:20/23:25）真正schedule事件；GitHub可能延遲或漏排。截止台灣08:00後程式直接跳過發送。
+第一次用正式deliver_once與commit_checkpoint在state/scheduler_verification.json先持久化，再送明確系統測試訊息（非股票訊號）；第二次新runner讀回sent，應duplicate_skipped不再送。若pending/uncertain不重試、報錯。此實測不可冒稱下午14:47/18:17真實股票排程或真實訊號已驗收。
+開發程式提交31e7f614932ebefe180ad749eaba110ffa5676c7／CI42128248776成功；主程式137項測試，獨立包13項。私有驗證提交95dd3cf9f5f2d88153f91eadadeb54de48c6d4ba／CI42128253990的push驗證13項成功，verify工作因非schedule正確跳過。
+目前尚待真正定時觸發結果，不可宣稱排程成功。驗證後須移除臨時schedule，保留狀態與證據。原entry-alerts.yml正式時段未改。outputs/排程推播驗證_完整備份_95dd3cf.zip含17個Git blob逐一SHA一致，不含Secrets。outputs/排程推播驗證_階段紀錄.md保存接續點。
+
 ## Telegram啟用完成更新｜2026-11-06
 已完成唯一私人聊天配對，使用者明確同意將收件人ID存入私有GitHub專案加密設定並發送連線測試；TELEGRAM_CHAT_ID已儲存。test-message工作42072376429成功，使用者親自確認手機收到。
 背景配置enabled=true與Actions Variable ALERTS_ENABLED=true皆已啟用並讀回確認。追蹤名單已依使用者更新為六檔；個人名單與參數以私有專案alerts_config.json為準，不在公開交接列出。台灣平日14:47/18:17檢查，可能延遲或漏排。首次真正定時觸發、真實訊號推播與真實state push尚未驗證，不能宣稱已完成。
