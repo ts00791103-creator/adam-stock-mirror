@@ -1071,6 +1071,19 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
     else:
         eps_value = st.number_input("年度 EPS（元）", min_value=0.0, value=0.0, step=0.5, key="b3_eps_manual_v2")
         eps_period = st.text_input("EPS 年度／資料依據", value="", placeholder="例如：2027 年預估／公司法說", key="b3_eps_period_manual_v2")
+    if valuation_enabled and market == "台灣股票／ETF":
+        st.markdown("##### 🏛️ 證交所官方最新 EPS（資料核對）")
+        if st.button("查詢證交所最新財報 EPS", key="b3_twse_eps_check_v1"):
+            from twse_eps import fetch_twse_latest_eps
+            with st.spinner("查詢證交所官方財報中…"):
+                official_eps, official_error = fetch_twse_latest_eps(symbol)
+            if official_eps:
+                st.success(f"官方欄位：{official_eps['field']}｜EPS：{official_eps['eps']:.2f} 元")
+                st.caption(f"來源：{official_eps['source']}｜期間資訊：{official_eps['period']}")
+                st.warning(official_eps["note"])
+            else:
+                st.warning(official_error)
+        st.caption("這是官方最新財報查詢，不是完整歷史 EPS；尚未取得逐季公告日，不會把這筆資料混入歷史 PE 或直接當成 TTM。")
     filing_upload = st.file_uploader("選用：匯入歷史季度 EPS CSV（含實際公告日）", type=["csv"], key="b3_filing_eps_csv_v1", help="欄位：symbol,quarter_end,announced_on,eps；eps 必須是單季 EPS，不能直接填累計 EPS。")
     st.caption("匯入資料僅用於本次試算，須自行核對公開資訊觀測站的公告日期與單季 EPS；尚未自動串接官方歷史財報。")
     auto_pe_result = None
