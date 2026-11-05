@@ -1205,7 +1205,24 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                         cross_saved = st.session_state.get("b3_mops_cross_quarter_result")
                         if cross_saved and cross_saved[0] == str(symbol).split(".")[0]:
                             cross_result = cross_saved[1]
-                            st.dataframe(pd.DataFrame(cross_result["rows"]), hide_index=True)
+                            cross_df = pd.DataFrame(cross_result["rows"])
+                            priority_cols = ["季度", "符合條件候選表格數", "表格判讀",
+                                             "包含股票代號", "包含表格", "查詢狀態"]
+                            ordered_cols = [c for c in priority_cols if c in cross_df.columns]
+                            ordered_cols += [c for c in cross_df.columns if c not in ordered_cols]
+                            st.dataframe(cross_df[ordered_cols], hide_index=True, use_container_width=True)
+                            for _, cross_row in cross_df.iterrows():
+                                status = cross_row.get("表格判讀")
+                                count = cross_row.get("符合條件候選表格數")
+                                st.write(f"**{cross_row['季度']}**｜候選表格：{count if pd.notna(count) else '未取得'}｜判讀：{status or '未取得'}")
+                            if "表格判讀" in cross_df and all(
+                                x == "no_matching_filing_table" for x in cross_df["表格判讀"]
+                            ):
+                                st.warning("三個季度都未找到符合條件的公告表格，建議停止使用目前接口。")
+                                st.markdown(
+                                    "[改查證交所 2308 單一公司財務報告書資訊揭露]"
+                                    "(https://www.twse.com.tw/IIH2/zh/company/information.html?code=2308)"
+                                )
                             st.write("三季回應完全相同：", cross_result["all_ajax_responses_identical"])
                             st.info(cross_result["conclusion"])
                             st.caption("僅比較官方查詢回應；無法因此認定公告日期或解除歷史 PE 鎖定。")
