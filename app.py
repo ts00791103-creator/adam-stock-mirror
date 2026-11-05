@@ -1071,6 +1071,19 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
     else:
         eps_value = st.number_input("年度 EPS（元）", min_value=0.0, value=0.0, step=0.5, key="b3_eps_manual_v2")
         eps_period = st.text_input("EPS 年度／資料依據", value="", placeholder="例如：2027 年預估／公司法說", key="b3_eps_period_manual_v2")
+    auto_pe_result = None
+    auto_pe_enabled = st.checkbox("自動歷史本益比分位數（20%／50%／80%）", value=True, key="b3_auto_pe_v3")
+    if valuation_enabled and auto_pe_enabled and eps_value > 0 and market == "台灣股票／ETF":
+        from valuation_engine import historical_pe_bands
+        try:
+            auto_pe_result, pe_error = historical_pe_bands(symbol, years=3)
+        except Exception:
+            pe_error = "財務資料暫時不可用"
+        if auto_pe_result:
+            st.success("歷史 PE 分位數：" + "／".join(f"{p:.1f} 倍" for p in auto_pe_result["pes"]))
+            st.caption(f"樣本 {auto_pe_result['samples']} 日｜{auto_pe_result['start']}～{auto_pe_result['end']}｜{auto_pe_result['method']}")
+        else:
+            st.warning(f"歷史 PE 無法計算：{pe_error}。改用手動倍數，不視為自動智慧估價。")
     v1, v2, v3 = st.columns(3)
     cheap_pe = v1.number_input("便宜 PE", min_value=1.0, max_value=200.0, value=12.0, step=0.5, key="b3_cheap_pe_v1")
     fair_pe = v2.number_input("合理 PE", min_value=1.0, max_value=200.0, value=16.0, step=0.5, key="b3_fair_pe_v1")
@@ -1364,12 +1377,11 @@ if st.button(
         st.subheader("🧮 股票估價參考（測試版）")
         if eps_value <= 0:
             st.info("目前沒有有效 EPS，請切換手動輸入或確認資料來源。")
-        elif not (cheap_pe < fair_pe < expensive_pe):
+        elif not auto_pe_result and not (cheap_pe < fair_pe < expensive_pe):
             st.warning("本益比需符合：便宜 PE ＜ 合理 PE ＜ 昂貴 PE。")
         else:
-            cheap_price = eps_value * cheap_pe
-            fair_price = eps_value * fair_pe
-            expensive_price = eps_value * expensive_pe
+            effective_pes = auto_pe_result["pes"] if auto_pe_result else (cheap_pe, fair_pe, expensive_pe)
+            cheap_price, fair_price, expensive_price = [eps_value * pe for pe in effective_pes]
             p1, p2, p3 = st.columns(3)
             p1.metric("🟢 便宜價（參考）", f"{cheap_price:,.2f}")
             p2.metric("🟡 合理價（參考）", f"{fair_price:,.2f}")
@@ -1378,8 +1390,8 @@ if st.button(
             category = ("便宜區" if latest_price <= cheap_price else
                         "合理偏低區" if latest_price < fair_price else
                         "合理偏高區" if latest_price < expensive_price else "昂貴區")
-            st.write(f"最新資料收盤價：{latest_price:,.2f}｜估價區間：**{category}**")
-            st.caption(f"估價依據：EPS {eps_value:,.2f} × PE {cheap_pe:g}／{fair_pe:g}／{expensive_pe:g}；"
+            st.write(f"最新資料收盤價：{latest_price:,.2f}｜隱含 PE：{latest_price / eps_value:.2f} 倍｜估價區間：**{category}**")
+            st.caption(f"估價依據：EPS {eps_value:,.2f} × PE {effective_pes[0]:.1f}／{effective_pes[1]:.1f}／{effective_pes[2]:.1f}；"
                        f"EPS 期間／來源：{eps_period or '未填寫'}。"
                        "自動 EPS 為近四季歷史值、非未來預估；倍數為可調示例，非即時報價、非保證價位，亦非孫慶龍本人發布的估價。")
 
