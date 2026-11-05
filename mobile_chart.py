@@ -37,6 +37,15 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
             "open": float(row["Open"]), "high": float(row["High"]),
             "low": float(row["Low"]), "close": float(row["Close"])
         })
+    volumes = []
+    if "Volume" in plot_df.columns:
+        for t, row in plot_df.iterrows():
+            v = pd.to_numeric(row["Volume"], errors="coerce")
+            if pd.notna(v) and float(v) >= 0:
+                volumes.append({"time": int(pd.Timestamp(t).timestamp()), "value": float(v),
+                                "color": "#ef4444" if float(row["Close"]) >= float(row["Open"]) else "#22c55e"})
+    volume_ma5 = _points(plot_df.index, pd.to_numeric(df["Volume"], errors="coerce").rolling(5).mean().reindex(plot_df.index)) if "Volume" in df else []
+    volume_ma20 = _points(plot_df.index, pd.to_numeric(df["Volume"], errors="coerce").rolling(20).mean().reindex(plot_df.index)) if "Volume" in df else []
     series = []
     if show_bollinger and len(df) >= boll_period:
         mid = df["Close"].rolling(boll_period, min_periods=boll_period).mean()
@@ -107,14 +116,14 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
         unique = {p["time"]: p for p in line["points"]}
         line["points"] = sorted(unique.values(), key=lambda p: p["time"])
     bars = sorted({b["time"]: b for b in bars}.values(), key=lambda b: b["time"])
-    payload = json.dumps({"rendererVersion": "BOX-1125E", "bars": bars, "lines": series, "boxes": rectangles,
+    payload = json.dumps({"rendererVersion": "VOL-OHLC-1", "bars": bars, "lines": series, "boxes": rectangles, "volumes": volumes, "volumeMA5": volume_ma5, "volumeMA20": volume_ma20,
                           "count": view_count, "dark": dark,
                           "title": title, "viewportKey": viewport_key}, ensure_ascii=False).replace("</", "<\\/")
     html = """<!doctype html><html lang="zh-Hant"><head><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <style>html,body{margin:0;padding:0;overflow:hidden;background:BG;color:FG;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif}
-#heading{padding:8px 10px;font-size:14px;font-weight:600}#chart-wrap{position:relative;width:100%;height:480px}#chart{width:100%;height:480px;touch-action:pan-y}#box-overlay{position:absolute;inset:0;width:100%;height:480px;pointer-events:none;z-index:2}
+#heading{padding:8px 10px;font-size:14px;font-weight:600}#ohlc{padding:4px 10px;font-size:12px;min-height:20px;font-variant-numeric:tabular-nums}#chart-wrap{position:relative;width:100%;height:480px}#chart{width:100%;height:480px;touch-action:pan-y}#box-overlay{position:absolute;inset:0;width:100%;height:480px;pointer-events:none;z-index:2}
 #hint{font-size:12px;opacity:.8;padding:6px 10px}#error{color:#ff7777;padding:12px}</style></head>
-<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 BOX-1125E｜半透明矩形箱型</div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="hint">雙指縮放｜單指左右拖曳｜點選 K 棒查看價格</div><div id="error"></div>
+<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量</div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="hint">雙指縮放｜單指左右拖曳｜點選 K 棒查看價格</div><div id="error"></div>
 <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 const data=PAYLOAD;
@@ -139,6 +148,31 @@ else {
   wickUpColor:dark?'#ff2020':'#26a69a',wickDownColor:dark?'#00e000':'#ef5350'
  });
  candle.setData(data.bars);
+ const volume=chart.addHistogramSeries({priceScaleId:'volume',priceFormat:{type:'volume'},priceLineVisible:false,lastValueVisible:false});
+ volume.setData(data.volumes);
+ chart.priceScale('volume').applyOptions({scaleMargins:{top:0.79,bottom:0.02},visible:false});
+ chart.priceScale('right').applyOptions({scaleMargins:{top:0.05,bottom:0.27}});
+ for(const [points,color] of [[data.volumeMA5,'#ffca28'],[data.volumeMA20,'#42a5f5']]){
+   if(!points.length)continue;
+   const ma=chart.addLineSeries({priceScaleId:'volume',color,lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+   ma.setData(points);
+ }
+ const byTime=new Map(data.bars.map((b,i)=>[b.time,{...b,volume:data.volumes.find(v=>v.time===b.time)?.value,prev:i?data.bars[i-1].close:null}]));
+ const fmt=v=>Number.isFinite(v)?v.toLocaleString('zh-TW',{maximumFractionDigits:2}):'—';
+ const showBar=b=>{
+   if(!b)return;
+   const pct=b.prev?((b.close/b.prev-1)*100):null;
+   document.getElementById('ohlc').textContent=
+     new Date(b.time*1000).toLocaleDateString('zh-TW',{timeZone:'Asia/Taipei'})+
+     '  開 '+fmt(b.open)+'  高 '+fmt(b.high)+'  低 '+fmt(b.low)+
+     '  收 '+fmt(b.close)+'  漲跌 '+(pct===null?'—':pct.toFixed(2)+'%')+
+     '  量 '+fmt(b.volume);
+ };
+ showBar(data.bars[data.bars.length-1]);
+ chart.subscribeCrosshairMove(param=>{
+   if(!param.time)return;
+   showBar(byTime.get(typeof param.time==='number'?param.time:null));
+ });
  for(const line of data.lines){
   if(!line.points.length)continue;
   const l=chart.addLineSeries({color:line.color,lineWidth:line.style===2?3:(line.style===1?1:2),
@@ -209,4 +243,4 @@ else {
 </script></body></html>"""
     html = html.replace("BG", "#101010" if dark else "#ffffff").replace(
         "FG", "#ffffff" if dark else "#222222").replace("PAYLOAD", payload)
-    components.html(html, height=555, scrolling=False)
+    components.html(html, height=585, scrolling=False)
