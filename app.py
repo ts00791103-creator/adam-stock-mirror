@@ -5,6 +5,7 @@ import numpy as np
 import plotly.graph_objects as go
 from mobile_chart import mobile_chart
 from live_quote import show_personal_quote
+from live_candle import show_live_candle
 
 st.set_page_config(page_title="亞當理論 B3 Pro", layout="wide")
 st.title("亞當理論 B3 Pro｜A 模式左右鏡像")
@@ -1234,6 +1235,12 @@ if st.button(
                 config=config,
                 key="combined"
             )
+
+    show_live_candle(
+        market, symbol, interval, df, waves,
+        zoom if mode != "三波各自獨立放大" else "最近60根",
+        show_bollinger, boll_period, boll_std, chart_theme
+    )
 
     st.caption("亞當轉折點：點選或長按圖上的彩色圓點，可查看轉折日期與價位。")
     st.caption(
