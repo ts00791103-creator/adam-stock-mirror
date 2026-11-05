@@ -1090,9 +1090,13 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
         test_year = st.number_input("測試西元年度", min_value=2018, max_value=2026, value=2024, step=1, key="b3_mops_year_v1")
         test_quarter = st.selectbox("測試季度", [1,2,3,4], index=2, key="b3_mops_quarter_v1")
         if st.button("測試讀取 MOPS 歷史季報", key="b3_mops_probe_v1"):
-            from mops_history import fetch_mops_quarter
+            import importlib
+            import mops_history
+            importlib.invalidate_caches()
+            mops_history = importlib.reload(mops_history)
+            st.caption(f"實際解析模組：{getattr(mops_history, '__file__', '未知')}｜多欄解析：{'eps_row_count' in mops_history.fetch_mops_quarter.__code__.co_consts.__str__()}")
             with st.spinner("讀取官方歷史季報…"):
-                result, error = fetch_mops_quarter(symbol, int(test_year), int(test_quarter))
+                result, error = mops_history.fetch_mops_quarter(symbol, int(test_year), int(test_quarter))
             if result:
                 st.write(f"季度末：{result['quarter_end']}｜找到 {result['eps_row_count']} 列基本 EPS 候選資料")
                 eps_diagnostic_rows = [
