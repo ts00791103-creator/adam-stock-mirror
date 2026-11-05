@@ -121,6 +121,8 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
             re.search(r"<title[^>]*>(.*?)</title>", body, flags=re.I | re.S).group(1).strip()[:100]
         ) if re.search(r"<title[^>]*>(.*?)</title>", body, flags=re.I | re.S) else None,
     }
+    if diagnostic["has_script"] and not diagnostic["contains_table"] and not diagnostic["looks_like_json"]:
+        return {"status": "javascript_shell", "message": "官方端點回傳 JavaScript 網頁外殼，並非財報公告資料；需改用新版資料接口", "response_chars": len(body), **diagnostic}
     if not body.strip():
         return {"status": "empty", "message": "官方接口回傳空白內容", **diagnostic}
     try:
