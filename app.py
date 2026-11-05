@@ -1692,13 +1692,27 @@ if st.button(
 
     st.subheader("亞當鏡像｜歷史波段來源")
     source_rows = wave_source_rows(waves, interval)
-    st.dataframe(source_rows, use_container_width=True, hide_index=True)
+    # 手機優先：每波段各一張直向摘要，不必橫向捲動寬表格。
     for source in source_rows:
-        if source["與其他波段相同來源"] != "無":
-            st.info(
-                f"{source['波段']}與{source['與其他波段相同來源']}使用相同歷史轉折區間，"
-                "兩者鏡像並非獨立來源。"
+        with st.container(border=True):
+            st.markdown(
+                f"**{source['波段']}**｜鏡像情境終點 "
+                f"**{source['鏡像終點']:,.2f}**"
             )
+            st.caption(
+                f"歷史來源：{source['歷史起日']} → {source['歷史迄日']}"
+            )
+            st.caption(
+                f"歷史價格：{source['歷史起價']:,.2f} → "
+                f"{source['歷史迄價']:,.2f}"
+            )
+            if source["與其他波段相同來源"] != "無":
+                st.warning(
+                    f"與{source['與其他波段相同來源']}共用同一歷史區間，"
+                    "不是獨立鏡像訊號。"
+                )
+    with st.expander("查看完整波段來源表"):
+        st.dataframe(source_rows, use_container_width=True, hide_index=True)
     st.caption("鏡像終點僅為歷史時間左右翻轉的情境結果，不是未來價格預測。")
 
     config = {
