@@ -15,16 +15,30 @@ def fetch_official_filing_candidates(stock_code, timeout=12):
     code = str(stock_code).strip()
     if not re.fullmatch(r"\d{4,5}", code):
         return [], "股票代號格式錯誤"
-    url = f"https://www.twse.com.tw/IIH2/zh/company/information.html?code={code}"
-    try:
-        response = requests.get(url, timeout=timeout,
-                                headers={"User-Agent": "Mozilla/5.0"})
-        response.raise_for_status()
-        frames = pd.read_html(io.StringIO(response.text))
-    except requests.RequestException:
-        return [], "證交所網站連線失敗，請稍後再試"
-    except (ValueError, ImportError):
-        return [], "證交所資訊揭露頁沒有可直接讀取的 HTML 表格；需確認動態資料來源"
+    urls = [
+        f"https://www.twse.com.tw/IIH2/zh/company/information.html?code={code}",
+        f"https://wwwc.twse.com.tw/IIH2/zh/company/information.html?code={code}",
+    ]
+    frames = []
+    url = urls[0]
+    diagnostics = []
+    for candidate_url in urls:
+        try:
+            response = requests.get(candidate_url, timeout=timeout,
+                                    headers={"User-Agent": "Mozilla/5.0"})
+            response.raise_for_status()
+            candidate_frames = pd.read_html(io.StringIO(response.text))
+            if candidate_frames:
+                frames = candidate_frames
+                url = candidate_url
+                break
+            diagnostics.append("頁面未提供表格")
+        except requests.RequestException:
+            diagnostics.append("官方網站連線失敗")
+        except (ValueError, ImportError):
+            diagnostics.append("頁面沒有可直接讀取的 HTML 表格")
+    if not frames:
+        return [], "；".join(dict.fromkeys(diagnostics)) + "；尚未核實公告紀錄"
     found = []
     report_tables = 0
     for frame in frames:
