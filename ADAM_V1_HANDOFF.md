@@ -46,3 +46,12 @@
 - 已檢查原 B3 workflow：b3-tests.yml 和 b3-mops-tests.yml 主要限定 b3-speed-test；python-check.yml 限定 main/b3-speed-test。故另建 V1.0 專用 CI，不修改原有 workflow。
 - 注意：CI 檔案已提交，但此處尚未取得 GitHub Actions 執行結果，**不能宣稱測試通過**。
 - 下一步：查看 GitHub Actions 中 Adam V1.0 validation 的實際執行狀態和錯誤日誌；修正失敗測試，再進行演算法與資料來源檢查。
+
+## 2026-11-05｜CI 第 2 次失敗與修正
+- 使用者提供 GitHub Actions「Adam V1.0 validation #2」截圖：安裝依賴與語法檢查通過，30 tests 執行，errors=1。
+- 失敗案例：tests/test_filing_dates.py 的 test_valid_official_url_is_not_verified。
+- traceback：filing_dates.py 中 moment.date() <= quarter_end 發生 TypeError。
+- 原因：測試以 patch('filing_dates.date') 模擬當日日期，連帶攔截 date(year, month, day) 建立季末日期，使 quarter_end 變成 mock 物件。
+- 修正：filing_dates.py 改用 datetime(year, month, day).date() 建立季度結束日；保留 date.today() 可測試性及官方公告日保守驗證規則。
+- 修正 commit：151e4ad78a24e547a558a89164caff2c33d0ec57。
+- 尚未確認修正後 GitHub Actions 是否通過；下一步查看新 CI 結果。
