@@ -64,3 +64,10 @@
 - 新增 tests/test_box_theory.py：資料不足、上破、下破、箱體過寬等離線回歸測試。Commit: ebae4df57e940ef1ef5e201aca0d9ff5236cac8f。
 - 新測試提交後的 GitHub Actions 尚未確認，不能宣稱新測試已通過。
 - 下一步：確認新 CI 結果；為 mirror_wave 加入不依賴 Streamlit 的單元測試，檢查左右鏡像方向、價格起點、短中長波、轉折確認延遲與時間軸。
+
+## 2026-11-05｜箱型測試綠燈、鏡像測試新增
+- 使用者回報新增箱型測試後的最新 CI 顯示綠色；依使用者確認記錄，尚未直接取得該次 Actions job 日誌。
+- 新增 tests/test_mirror_wave.py，commit e585974e3b2954cc0128199cff976b128f73a6a4。
+- 使用 AST 只載入 app.py 中的純計算函式，不啟動 Streamlit UI；測試 A 模式左右翻轉（不倒置價格）、最新收盤價對齊、轉折不足保護、短中長波 span/lookback/門檻、轉折確認延遲與日K週末排除。
+- 新增測試後的 CI 結果仍待確認；不可宣稱已通過。
+- 下一步：查看 GitHub Actions 最新 Adam V1.0 validation；失敗則依日誌修正；通過後補充交易日曆與圖表整合測試。
