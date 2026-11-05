@@ -51,7 +51,7 @@ def send_telegram(event, token, chat_id):
         raise RuntimeError("Telegram送達狀態未確認；未自動重送，請至紀錄核對") from None
 
 
-def deliver_once(events, ledger, token, chat_id, *, checkpoint=lambda: None):
+def deliver_once(events, ledger, token, chat_id, *, checkpoint=lambda: None, transport=None):
     """Persist claim before POST; ambiguous failures never auto-retry."""
     results = []
     for event in events:
@@ -61,7 +61,7 @@ def deliver_once(events, ledger, token, chat_id, *, checkpoint=lambda: None):
         # If durable persistence fails, do NOT send anything.
         checkpoint()
         try:
-            send_telegram(event, token, chat_id)
+            (transport or send_telegram)(event, token, chat_id)
         except Exception:
             ledger.mark(event["提醒編號"], "uncertain")
             checkpoint()
@@ -71,3 +71,4 @@ def deliver_once(events, ledger, token, chat_id, *, checkpoint=lambda: None):
             checkpoint()
             results.append({"提醒編號": event["提醒編號"], "status": "sent"})
     return results
+
