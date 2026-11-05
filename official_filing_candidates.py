@@ -8,23 +8,23 @@ import re
 import requests
 import pandas as pd
 
-BASE = "https://www.twse.com.tw/IIH2/zh/company/information.html"
+BASE = "https://www.twse.com.tw/IIH2/zh/market/information.html"
 
 
 def fetch_official_filing_candidates(stock_code, timeout=12):
     code = str(stock_code).strip()
     if not re.fullmatch(r"\d{4,5}", code):
         return [], "股票代號格式錯誤"
-    url = f"{BASE}?code={code}"
+    url = BASE
     try:
-        response = requests.get(BASE, params={"code": code}, timeout=timeout,
+        response = requests.get(BASE, timeout=timeout,
                                 headers={"User-Agent": "Mozilla/5.0"})
         response.raise_for_status()
         frames = pd.read_html(io.StringIO(response.text))
     except requests.RequestException:
         return [], "證交所網站連線失敗，請稍後再試"
     except (ValueError, ImportError):
-        return [], "官方頁面沒有可直接讀取的 HTML 表格；可能由 JavaScript 動態載入"
+        return [], "證交所資訊揭露頁沒有可直接讀取的 HTML 表格；需確認動態資料來源"
     found = []
     report_tables = 0
     for frame in frames:
