@@ -95,7 +95,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
         unique = {p["time"]: p for p in line["points"]}
         line["points"] = sorted(unique.values(), key=lambda p: p["time"])
     bars = sorted({b["time"]: b for b in bars}.values(), key=lambda b: b["time"])
-    payload = json.dumps({"bars": bars, "lines": series,
+    payload = json.dumps({"rendererVersion": "BOX-1125C", "bars": bars, "lines": series,
                           "count": view_count, "dark": dark,
                           "title": title, "viewportKey": viewport_key}, ensure_ascii=False).replace("</", "<\\/")
     html = """<!doctype html><html lang="zh-Hant"><head><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -106,7 +106,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
 <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 const data=PAYLOAD;
-document.getElementById('heading').textContent=data.title;
+document.getElementById('heading').textContent=data.title+'｜'+data.rendererVersion;
 if(!window.LightweightCharts){document.getElementById('error').textContent='圖表元件載入失敗，請檢查網路或切回原本圖表。';}
 else {
  const dark=data.dark;
@@ -131,7 +131,7 @@ else {
   if(!line.points.length)continue;
   const l=chart.addLineSeries({color:line.color,lineWidth:line.style===2?3:(line.style===1?1:2),
    lineStyle:line.style===2?LightweightCharts.LineStyle.Dashed:(line.style===1?LightweightCharts.LineStyle.Dotted:LightweightCharts.LineStyle.Solid),
-   title:line.name,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+   title:line.name||'',priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
   l.setData(line.points);
  }
  // Remember the visible logical range between Streamlit fragment redraws.
