@@ -194,11 +194,32 @@ def fetch_mops_eps_history(symbol, years=5, end_period=None, fetcher=None, progr
     # Verify the year-to-date arithmetic only when all earlier quarters
     # are present; otherwise do not mistake a missing quarter for zero.
     by_period = {pd.Period(r["quarter"], freq="Q"): r for r in records}
+    # The five-year window may begin at Q4. Fetch only the preceding Q3
+    # as a reference for annual EPS minus nine-month YTD; do not add it
+    # to the requested result set or treat it as an announced filing date.
+    leading_q4 = periods[0]
+    leading_q3_ytd = None
+    if leading_q4.quarter == 4 and leading_q4 in by_period and by_period[leading_q4]["quarter_eps"] is None:
+        reference_period = leading_q4 - 1
+        try:
+            reference, reference_error = fetcher(symbol, reference_period.year, reference_period.quarter)
+            if (not reference_error and reference and reference.get("column_verified")
+                    and reference.get("verified_eps")
+                    and reference["verified_eps"].get("cumulative_eps") is not None):
+                leading_q3_ytd = float(reference["verified_eps"]["cumulative_eps"])
+            else:
+                failures.append({"quarter": str(leading_q4),
+                                 "reason": "缺少起始季度之前的 Q3 累計 EPS，無法換算 Q4"})
+        except Exception:
+            failures.append({"quarter": str(leading_q4),
+                             "reason": "補查起始季度之前的 Q3 失敗，無法換算 Q4"})
     for period, row in by_period.items():
         if period.quarter == 4 and row["quarter_eps"] is None:
             prior = by_period.get(period - 1)
             if prior is not None:
                 row["quarter_eps"] = round(row["cumulative_eps"] - prior["cumulative_eps"], 4)
+            elif period == leading_q4 and leading_q3_ytd is not None:
+                row["quarter_eps"] = round(row["cumulative_eps"] - leading_q3_ytd, 4)
         if row["quarter_eps"] is None:
             row["ytd_consistent"] = None
         elif period.quarter == 1:
@@ -207,6 +228,9 @@ def fetch_mops_eps_history(symbol, years=5, end_period=None, fetcher=None, progr
             prior = period - 1
             if prior in by_period and prior.year == period.year:
                 expected = row["cumulative_eps"] - by_period[prior]["cumulative_eps"]
+                row["ytd_consistent"] = abs(expected - row["quarter_eps"]) <= 0.05
+            elif period == leading_q4 and leading_q3_ytd is not None:
+                expected = row["cumulative_eps"] - leading_q3_ytd
                 row["ytd_consistent"] = abs(expected - row["quarter_eps"]) <= 0.05
             else:
                 row["ytd_consistent"] = None
