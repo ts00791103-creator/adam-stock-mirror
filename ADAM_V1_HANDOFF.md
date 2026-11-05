@@ -232,3 +232,8 @@
 - 新增 scripts/live_tw_quotes_smoke.py，下載 2330.TW 與 2308.TW 近兩年日K，逐一驗證 OHLC、日期順序、重複、有限值、價格合理關係、至少100根，輸出日期與收盤。commit 9aba0525e3166383c25c7b974bf6c0d193896748。
 - 新增獨立手動觸發 workflow .github/workflows/v1-live-quotes.yml，與既有 v1-validation.yml 離線測試分離，避免網路故障讓離線測試變紅。commit 46e506d3b0d072e41bb6f5fac82521ea0119fc3a。
 - 尚未執行 live workflow，不能宣稱真實行情已驗收；注意 GitHub workflow_dispatch 若工作流程尚未存在於 default branch，Actions UI 可能無法提供手動執行按鈕。切勿為此直接修改 main，應先評估替代方式。main/b3-speed-test 未動。
+
+## 2026-11-05｜真實行情工作流程停用的替代驗證
+- 使用者手機截圖顯示 v1-live-quotes.yml「已手動禁用此工作流程」，且尚無運行，不能宣稱真實行情測試通過。
+- 為避免使用者在手機操作停用工作流程，已將 scripts/live_tw_quotes_smoke.py 加入既有 .github/workflows/v1-validation.yml 的最後一步，continue-on-error: true，timeout-minutes: 3。commit 6f26e2e87ec38085b742a0eca39fd1842c0d682c。
+- 注意：此步驟失敗不會使整體 workflow 紅色；必須檢查 Actions 中 Optional live Taiwan quote smoke check 的 PASS/FAIL 訊息，才能判斷真實資料是否驗證成功。main、b3-speed-test 未更動。
