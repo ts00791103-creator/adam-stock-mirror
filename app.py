@@ -1133,7 +1133,7 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
             else:
                 st.warning(error)
     with st.expander("📚 MOPS 近五年 EPS 與 TTM 自動整理（測試版）", expanded=False):
-        st.caption("依序讀取最多 20 季官方財報；首次可能需要較長時間。只顯示可核對期間欄位的 EPS，尚未取得實際公告日，絕不混入歷史 PE。")
+        st.caption("依序讀取最多 20 季官方財報；首次可能需要較長時間。只顯示可核對期間欄位的 EPS，尚未取得實際公告日，絕不混入歷史 PE。官方連線若失敗，可能顯示缺漏。")
         history_years = st.selectbox("抓取年數", [1, 2, 3, 4, 5], index=4, key="b3_mops_history_years")
         @st.cache_data(ttl=86400, show_spinner=False)
         def cached_mops_quarter(stock_symbol, year, quarter):
@@ -1161,6 +1161,7 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                     "季度": x["quarter"], "單季 EPS": x["quarter_eps"],
                     "當年累計 EPS": x["cumulative_eps"], "TTM EPS": x["ttm_eps"],
                     "累計核對": "通過" if x["ytd_consistent"] is True else ("待核" if x["ytd_consistent"] is None else "異常"),
+                    "TTM 狀態": x["ttm_status"],
                     "公告日期": "尚未核實"
                 } for x in history_rows])
                 st.dataframe(history_table, use_container_width=True, hide_index=True)
