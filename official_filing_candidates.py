@@ -100,6 +100,42 @@ def probe_discovered_mops_form(stock_code, year, quarter, timeout=12):
         tables = pd.read_html(io.StringIO(body))
     except (ValueError, ImportError):
         tables = []
+    # Diagnose non-tabular responses without returning raw HTML or user data.
+    import hashlib
+    from html.parser import HTMLParser
+    class _SafeResponseParser(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.title = []
+            self.in_title = False
+            self.forms = []
+        def handle_starttag(self, tag, attrs):
+            if tag == "title":
+                self.in_title = True
+            if tag == "form":
+                attrs = dict(attrs)
+                self.forms.append(str(attrs.get("method", "GET")).upper()[:8])
+        def handle_endtag(self, tag):
+            if tag == "title":
+                self.in_title = False
+        def handle_data(self, data):
+            if self.in_title:
+                self.title.append(data[:100])
+    parser = _SafeResponseParser()
+    parser.feed(body)
+    response_diagnostic = {
+        "content_type": response.headers.get("Content-Type", "").split(";")[0],
+        "html_title": " ".join(parser.title)[:100] or None,
+        "looks_like_json": body.lstrip().startswith(("{", "[")),
+        "looks_like_html": "<html" in body.lower(),
+        "contains_table": "<table" in body.lower(),
+        "contains_script": "<script" in body.lower(),
+        "contains_captcha": any(x in body.lower() for x in ("captcha", "驗證碼")),
+        "contains_no_data": any(x in body for x in ("查無資料", "無資料", "沒有符合")),
+        "contains_parameter_error": any(x in body.lower() for x in ("參數錯誤", "參數有誤", "invalid parameter")),
+        "form_methods": parser.forms[:10],
+        "response_sha256_prefix": hashlib.sha256(body.encode("utf-8")).hexdigest()[:12],
+    }
     profiles = []
     for idx, frame in enumerate(tables[:15]):
         sample = " ".join(map(str, frame.astype(str).to_numpy().flat))
@@ -110,6 +146,7 @@ def probe_discovered_mops_form(stock_code, year, quarter, timeout=12):
     return {"status": "diagnostic_only", "endpoint": "/mops/web/ajax_t56sb31_q1",
             "http_status": response.status_code, "response_chars": len(body),
             "table_count": len(tables), "table_profiles": profiles,
+            "response_diagnostic": response_diagnostic,
             "message": "僅診斷回傳資料，不視為已核實公告日期"}
 
 
