@@ -1196,11 +1196,18 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                         st.caption("以最新已取得的季度為測試目標，僅檢查官方介接是否回傳可解析的表格；不會把財報期間當作公告日。")
                         st.markdown("[官方公開資訊觀測站－財務報告公告](https://mops.twse.com.tw/mops/#/web/t163sb01)")
                         if st.button("檢查 MOPS 財報公告接口", key="b3_mops_announcement_probe"):
-                            from official_filing_candidates import probe_mops_financial_announcement
+                            import importlib
+                            import official_filing_candidates as filing_module
+                            filing_module = importlib.reload(filing_module)
                             latest_period = pd.Period(history_rows[-1]["quarter"], freq="Q")
-                            with st.spinner("正在檢查官方接口…"):
-                                probe_result = probe_mops_financial_announcement(
-                                    str(symbol).split(".")[0], latest_period.year, latest_period.quarter)
+                            if not hasattr(filing_module, "probe_mops_financial_announcement"):
+                                probe_result = {"status": "module_version_mismatch",
+                                                "message": "部署中的官方公告模組版本不一致；請重新啟動 Streamlit App",
+                                                "module_path": str(getattr(filing_module, "__file__", "unknown"))}
+                            else:
+                                with st.spinner("正在檢查官方接口…"):
+                                    probe_result = filing_module.probe_mops_financial_announcement(
+                                        str(symbol).split(".")[0], latest_period.year, latest_period.quarter)
                             st.session_state["b3_mops_announcement_probe_result"] = (
                                 str(symbol).split(".")[0], str(latest_period), probe_result)
                         probe_saved = st.session_state.get("b3_mops_announcement_probe_result")
