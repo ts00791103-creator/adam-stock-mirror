@@ -20,7 +20,7 @@ def load_points():
 class MobileChartDataTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.points = load_points()
+        cls.points = staticmethod(load_points())
 
     def test_timestamps_and_values(self):
         index = pd.to_datetime(["2026-11-02", "2026-11-03"])
