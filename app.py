@@ -71,6 +71,34 @@ ZOOMS = [
 ]
 
 
+def audit_ohlc_data(df):
+    """回報行情資料品質；不自行猜測或修補價格。"""
+    issues = []
+    if df.empty:
+        return issues
+    if not df.index.is_monotonic_increasing:
+        issues.append("時間順序未由舊到新")
+    if df.index.has_duplicates:
+        issues.append("存在重複時間")
+    columns = ("Open", "High", "Low", "Close")
+    missing = [col for col in columns if col not in df.columns]
+    if missing:
+        issues.append("缺少 OHLC 欄位：" + "、".join(missing))
+        return issues
+    prices = df.loc[:, list(columns)].apply(pd.to_numeric, errors="coerce")
+    invalid = ~np.isfinite(prices.to_numpy(dtype=float))
+    if invalid.any():
+        issues.append(f"存在 {int(invalid.any(axis=1).sum())} 根價格缺漏或非有限數值 K 線")
+    nonpositive = (prices <= 0).any(axis=1)
+    if nonpositive.any():
+        issues.append(f"存在 {int(nonpositive.sum())} 根非正數價格 K 線")
+    bad_high = prices["High"] < prices[["Open", "Low", "Close"]].max(axis=1)
+    bad_low = prices["Low"] > prices[["Open", "High", "Close"]].min(axis=1)
+    if (bad_high | bad_low).any():
+        issues.append(f"存在 {int((bad_high | bad_low).sum())} 根高低價關係異常 K 線")
+    return issues
+
+
 @st.cache_data(ttl=900)
 def get_data(symbol, period, interval):
     source_interval = "5m" if interval == "10m" else interval
@@ -1509,6 +1537,11 @@ if st.button(
 
     if df.empty:
         st.error("查無資料")
+        st.stop()
+
+    quality_issues = audit_ohlc_data(df)
+    if quality_issues:
+        st.error("行情資料品質異常，已停止鏡像分析：" + "；".join(quality_issues))
         st.stop()
 
     if roll_dates:
