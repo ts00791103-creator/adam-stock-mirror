@@ -65,7 +65,8 @@ def live_candle_fragment(symbol, interval, df, waves, zoom, show_bollinger, boll
         st.caption(f"試算 K 棒｜成交時間：{dt:%Y-%m-%d %H:%M:%S}（台灣）｜每 10 秒查詢")
         st.warning("試算中：僅依最新成交價更新收盤與可見高低，無完整逐筆成交量；亞當鏡像仍採原歷史資料，不重新計算。")
         mobile_chart(preview, waves, zoom, f"{symbol}｜即時 K 棒預覽（非正式 OHLC）",
-                     show_bollinger, boll_period, boll_std, theme)
+                     show_bollinger, boll_period, boll_std, theme,
+                     viewport_key=f"live-{symbol}-{interval}-{zoom}")
     except ValueError as exc:
         st.info(str(exc))
     except Exception:
