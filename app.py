@@ -1071,16 +1071,24 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
     else:
         eps_value = st.number_input("年度 EPS（元）", min_value=0.0, value=0.0, step=0.5, key="b3_eps_manual_v2")
         eps_period = st.text_input("EPS 年度／資料依據", value="", placeholder="例如：2027 年預估／公司法說", key="b3_eps_period_manual_v2")
+    filing_upload = st.file_uploader("選用：匯入歷史季度 EPS CSV（含實際公告日）", type=["csv"], key="b3_filing_eps_csv_v1", help="欄位：symbol,quarter_end,announced_on,eps；eps 必須是單季 EPS，不能直接填累計 EPS。")
+    st.caption("匯入資料僅用於本次試算，須自行核對公開資訊觀測站的公告日期與單季 EPS；尚未自動串接官方歷史財報。")
     auto_pe_result = None
     auto_pe_enabled = st.checkbox("自動歷史本益比分位數（20%／50%／80%）", value=True, key="b3_auto_pe_v3")
     if valuation_enabled and auto_pe_enabled and eps_value > 0 and market == "台灣股票／ETF":
-        from valuation_engine import historical_pe_bands
         try:
-            auto_pe_result, pe_error = historical_pe_bands(symbol, years=3)
+            if filing_upload is not None:
+                from filing_eps import parse_quarterly_eps_csv, historical_pe_from_filings
+                filing_data, pe_error = parse_quarterly_eps_csv(filing_upload.getvalue(), symbol)
+                if filing_data is not None:
+                    auto_pe_result, pe_error = historical_pe_from_filings(symbol, filing_data, years=3)
+            else:
+                from valuation_engine import historical_pe_bands
+                auto_pe_result, pe_error = historical_pe_bands(symbol, years=3)
         except Exception:
-            pe_error = "財務資料暫時不可用"
+            pe_error = "財務資料或股價來源暫時不可用"
         if auto_pe_result:
-            st.success("歷史 PE 分位數：" + "／".join(f"{p:.1f} 倍" for p in auto_pe_result["pes"]))
+            st.success(("公告日 CSV 歷史 PE：" if filing_upload is not None else "Yahoo 歷史 PE：") + "／".join(f"{p:.1f} 倍" for p in auto_pe_result["pes"]))
             st.caption(f"樣本 {auto_pe_result['samples']} 日｜{auto_pe_result['start']}～{auto_pe_result['end']}｜{auto_pe_result['method']}")
             if auto_pe_result.get("warnings"):
                 st.warning("估價可信度提醒：" + "；".join(auto_pe_result["warnings"]))
