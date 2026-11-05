@@ -84,6 +84,20 @@ class TestMopsHistory(unittest.TestCase):
         self.assertIsNone(rows[-1]["ttm_eps"])
         self.assertEqual(failures, [])
 
+    def test_progress_reports_each_quarter(self):
+        calls = []
+        def fake(symbol, year, quarter):
+            return None, "unavailable"
+        def progress(done, total, period):
+            calls.append((done, total, period))
+        rows, failures = mops_history.fetch_mops_eps_history(
+            "2308", years=1, end_period="2025Q4",
+            fetcher=fake, progress=progress)
+        self.assertEqual(rows, [])
+        self.assertEqual(len(failures), 4)
+        self.assertEqual(calls[0], (1, 4, "2025Q1"))
+        self.assertEqual(calls[-1], (4, 4, "2025Q4"))
+
     def test_ttm_requires_four_consecutive_quarters(self):
         def fake(symbol, year, quarter):
             period = pd.Period(year=year, quarter=quarter, freq="Q")
