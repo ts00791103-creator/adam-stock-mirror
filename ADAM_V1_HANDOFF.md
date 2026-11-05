@@ -278,3 +278,13 @@ User confirmed first batch CI green. README is minimal, requirements.txt contain
 - 圖表版本統一為 V1-UI-1105，移除以 BOX-1125C 字串猜測新舊元件的錯誤診斷。操作說明依手機圖表／Plotly 分流。iframe 高度 720，預留手機標題與三波切換換行空間。
 - 上下手勢仍沿用原本有限視覺平移，未完成價格軸平移；雙指觸控未實機驗證。沒有新增上下按鈕。
 - 本機沒有可執行 Python，已檢查內嵌 JavaScript 語法；Python 編譯及離線測試需以本次提交的 CI 結果為準。main、b3-speed-test 不修改，不合併、不正式發布。
+
+## 2026-11-05｜價格軸平移階段（V1-PAN-1105）
+- 使用者授權依規劃持續開發，正式發布前由使用者測試；要求定期備份。本機 outputs/亞當鏡像V1_進度備份.md 與本階段修改 ZIP 可接續工作，GitHub 提交保存遠端版本。
+- 第一批 V1-UI-1105 已由使用者 Reboot 後驗證：V1.0 標題、來源卡片、2308 日K中長波重複警示、週K -420/-995.5 提示、390px 卡片換行均正常。第一批 CI run 42026405282 全部成功。
+- 本階段移除 mobile_chart.py 的 translate3d 整圖平移，新增 chart_price_pan.js 控制器，用 autoscaleInfoProvider 平移所有股價序列可視價格範圍，不改變行情或鏡像值。成交量保留獨立刻度，箱型依 priceToCoordinate 重畫。
+- 滑鼠與單指使用相同控制器；雙指時取消單指狀態，保留原生 pinch。滑鼠雙擊右側價格軸可還原。原始股票／鏡像公式不變，未新增上下按鈕。
+- Node 8 項行為測試本機通過；兩段內嵌 JavaScript 語法通過。CI 新增 Run chart price pan behavior tests。既有觸控靜態測試已更新為價格軸機制。
+- 以合成行情瀏覽器實測向下100px、向上200px、左右拖曳、滾輪縮放、雙擊軸還原皆有效；K線/箱型同步，量能區域固定，未出現 console error/warn。這不是實際股票或手機多指驗收。
+- 待續：核對本次 CI 成功；候選站載入 V1-PAN-1105 後，用 2330/2308 真實行情複測，再由使用者實機雙指驗收。不要把尚未驗收的手機手勢宣稱完成。
+- main/b3-speed-test 不修改；不合併、不正式發布。

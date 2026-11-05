@@ -1,11 +1,12 @@
 """Mobile financial chart renderer (TradingView Lightweight Charts v4)."""
 import json
 import math
+from pathlib import Path
 import pandas as pd
 import streamlit.components.v1 as components
 from box_theory import detect_boxes
 
-RENDERER_VERSION = "V1-UI-1105"
+RENDERER_VERSION = "V1-PAN-1105"
 
 
 def _points(index, values):
@@ -133,6 +134,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
 #mirror-summary{font-size:12px;padding:5px 10px;display:flex;flex-wrap:wrap;gap:10px}#hint{font-size:12px;opacity:.8;padding:6px 10px}#error{color:#ff7777;padding:12px}</style></head>
 <body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量｜成交量資料：Yahoo Finance（台股單位：張）</div><div id="mirror-summary"></div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="error"></div>
 <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
+<script>PAN_SCRIPT</script>
 <script>
 const data=PAYLOAD;
 document.getElementById('heading').textContent=data.title+'｜'+data.rendererVersion;
@@ -164,6 +166,31 @@ else {
    item.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
    summary.appendChild(item);
  }
+ const priceSeries=[];
+ let candle=null;
+ const panStorageKey=data.viewportKey?'v1-price-offset-'+data.viewportKey:null;
+ let initialOffset=0;
+ try {
+   const stored=panStorageKey?Number(sessionStorage.getItem(panStorageKey)):NaN;
+   if(Number.isFinite(stored))initialOffset=stored;
+ }catch(e){}
+ const pricePan=createAdamPricePan({
+   initialOffset,
+   readPricePerPixel:()=>{
+     if(!candle)return null;
+     const top=candle.coordinateToPrice(0),next=candle.coordinateToPrice(1);
+     return Number.isFinite(top)&&Number.isFinite(next)?top-next:null;
+   },
+   onChange:()=>{
+     for(const series of priceSeries)series.applyOptions({autoscaleInfoProvider:pricePan.autoscaleInfo});
+     queueBoxDraw();
+   }
+ });
+ const persistPan=()=>{
+   if(panStorageKey){
+     try{sessionStorage.setItem(panStorageKey,String(pricePan.offset));}catch(e){}
+   }
+ };
  const chart=LightweightCharts.createChart(document.getElementById('chart'),{
   width:document.getElementById('chart').clientWidth,height:480,
   layout:{background:{type:'solid',color:dark?'#101010':'#ffffff'},textColor:dark?'#eeeeee':'#333333'},
@@ -175,11 +202,13 @@ else {
   handleScale:{mouseWheel:true,pinch:true,axisPressedMouseMove:false},
   crosshair:{mode:LightweightCharts.CrosshairMode.Normal}
  });
- const candle=chart.addCandlestickSeries({
+ candle=chart.addCandlestickSeries({
+  autoscaleInfoProvider:pricePan.autoscaleInfo,
   upColor:dark?'#ff2020':'#26a69a',downColor:dark?'#00e000':'#ef5350',
   borderUpColor:dark?'#ff2020':'#26a69a',borderDownColor:dark?'#00e000':'#ef5350',
   wickUpColor:dark?'#ff2020':'#26a69a',wickDownColor:dark?'#00e000':'#ef5350'
  });
+ priceSeries.push(candle);
  candle.setData(data.bars);
  const volume=chart.addHistogramSeries({priceScaleId:'volume',priceFormat:{type:'volume'},priceLineVisible:false,lastValueVisible:false});
  volume.setData(data.volumes);
@@ -210,7 +239,9 @@ else {
   if(!line.points.length)continue;
   const l=chart.addLineSeries({color:line.color,lineWidth:line.style===2?3:(line.style===1?1:2),
    lineStyle:line.style===2?LightweightCharts.LineStyle.Dashed:(line.style===1?LightweightCharts.LineStyle.Dotted:LightweightCharts.LineStyle.Solid),
-   title:line.name||'',priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+   title:line.name||'',priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false,
+   autoscaleInfoProvider:pricePan.autoscaleInfo});
+  priceSeries.push(l);
   l.setData(line.points);
   if(line.mirrorWave){
     if(!waveSeries[line.mirrorWave])waveSeries[line.mirrorWave]=[];
@@ -252,46 +283,44 @@ else {
  chartElement.addEventListener('wheel',queueBoxDraw,{passive:true});
  chartElement.addEventListener('pointermove',queueBoxDraw,{passive:true});
  chartElement.addEventListener('touchmove',queueBoxDraw,{passive:true});
- // Touch gestures: native Lightweight Charts keeps horizontal time pan and pinch.
- // Vertical movement translates chart and overlay together within a bounded range.
+ // Native horizontal pan and pinch stay enabled. Only price ranges shift vertically.
  const chartWrap=document.getElementById('chart-wrap');
- chartWrap.style.overflow='hidden';
- let panY=0;
- let touchStart=null;
- const clamp=(value,low,high)=>Math.max(low,Math.min(high,value));
- const panStorageKey=data.viewportKey?'v1-visual-pan-y-'+data.viewportKey:null;
- const applyPanY=()=>{
-   const transform='translate3d(0,'+panY+'px,0)';
-   chartElement.style.transform=transform;
-   overlay.style.transform=transform;
+ const inPlot=(x,y)=>{
+   const rect=chartWrap.getBoundingClientRect();
+   return x>=rect.left && x<rect.left+chart.timeScale().width()
+     && y>=rect.top && y<rect.top+chartElement.clientHeight-chart.timeScale().height();
  };
- const persistPan=()=>{
-   if(panStorageKey){
-     try{sessionStorage.setItem(panStorageKey,String(panY));}catch(e){}
-   }
- };
- try {
-   const stored=panStorageKey?Number(sessionStorage.getItem(panStorageKey)):NaN;
-   if(Number.isFinite(stored))panY=clamp(stored,-120,120);
- }catch(e){}
- applyPanY();
- // Capture at the wrapper so gestures on the chart's internal canvases are seen.
+ let mouseDragging=false;
+ chartWrap.addEventListener('pointerdown',event=>{
+   if(event.pointerType!=='mouse'||event.button!==0||!inPlot(event.clientX,event.clientY))return;
+   mouseDragging=pricePan.begin(event.clientX,event.clientY);
+ },{capture:true,passive:true});
+ window.addEventListener('pointermove',event=>{
+   if(mouseDragging && event.pointerType==='mouse')pricePan.move(event.clientX,event.clientY);
+ },{passive:true});
+ const endMouse=()=>{if(mouseDragging){mouseDragging=false;pricePan.end();persistPan();}};
+ window.addEventListener('pointerup',endMouse,{passive:true});
+ window.addEventListener('pointercancel',endMouse,{passive:true});
+ window.addEventListener('blur',endMouse);
  chartWrap.addEventListener('touchstart',event=>{
-   if(event.touches.length!==1){touchStart=null;return;}
-   touchStart={y:event.touches[0].clientY,pan:panY};
+   pricePan.end();
+   if(event.touches.length!==1)return;
+   const touch=event.touches[0];
+   if(inPlot(touch.clientX,touch.clientY))pricePan.begin(touch.clientX,touch.clientY);
  },{capture:true,passive:true});
  chartWrap.addEventListener('touchmove',event=>{
-   if(!touchStart || event.touches.length!==1)return;
-   const dy=event.touches[0].clientY-touchStart.y;
-   if(Math.abs(dy)<2)return;
-   panY=clamp(touchStart.pan+dy,-120,120);
-   applyPanY();
+   if(event.touches.length!==1){pricePan.end();return;}
+   pricePan.move(event.touches[0].clientX,event.touches[0].clientY);
  },{capture:true,passive:true});
- chartWrap.addEventListener('touchend',event=>{
-   if(!event.touches.length){touchStart=null;persistPan();}
- },{capture:true,passive:true});
- chartWrap.addEventListener('touchcancel',()=>{
-   touchStart=null;persistPan();
+ const endTouch=()=>{pricePan.end();persistPan();};
+ chartWrap.addEventListener('touchend',endTouch,{capture:true,passive:true});
+ chartWrap.addEventListener('touchcancel',endTouch,{capture:true,passive:true});
+ // Double-click the right price axis to restore the automatic vertical range.
+ chartWrap.addEventListener('dblclick',event=>{
+   const rect=chartWrap.getBoundingClientRect();
+   if(event.clientX-rect.left>=chart.timeScale().width()){
+     pricePan.reset();persistPan();queueBoxDraw();
+   }
  },{capture:true,passive:true});
  queueBoxDraw();
  // Remember the visible logical range between Streamlit fragment redraws.
@@ -320,6 +349,8 @@ else {
 }
 </script></body></html>"""
     html = html.replace("BG", "#101010" if dark else "#ffffff").replace(
-        "FG", "#ffffff" if dark else "#222222").replace("PAYLOAD", payload)
+        "FG", "#ffffff" if dark else "#222222").replace(
+        "PAN_SCRIPT", Path(__file__).with_name("chart_price_pan.js").read_text(encoding="utf-8")
+    ).replace("PAYLOAD", payload)
     # Leave room for wrapped headings and three wave toggles on narrow phones.
     components.html(html, height=720, scrolling=False)

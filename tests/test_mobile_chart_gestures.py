@@ -15,10 +15,11 @@ class MobileChartGestureConfigurationTests(unittest.TestCase):
         self.assertIn("touch-action:none", self.source)
 
     def test_vertical_price_scale_pan_is_wired(self):
-        self.assertIn("chartElement.style.transform=transform", self.source)
-        self.assertIn("overlay.style.transform=transform", self.source)
-        self.assertIn("touchStart.pan+dy", self.source)
-        self.assertIn("v1-visual-pan-y-", self.source)
+        self.assertIn("autoscaleInfoProvider:pricePan.autoscaleInfo", self.source)
+        self.assertIn("candle.coordinateToPrice(0)", self.source)
+        self.assertIn("v1-price-offset-", self.source)
+        self.assertNotIn("style.transform", self.source)
+        self.assertIn('with_name("chart_price_pan.js")', self.source)
 
     def test_buttons_removed_and_wrapper_captures_touch(self):
         self.assertNotIn('id="price-up"', self.source)
@@ -27,8 +28,13 @@ class MobileChartGestureConfigurationTests(unittest.TestCase):
         self.assertIn("capture:true,passive:true", self.source)
 
     def test_multitouch_keeps_pinch_zoom(self):
-        self.assertIn("if(event.touches.length!==1){touchStart=null;return;}", self.source)
+        self.assertIn("if(event.touches.length!==1){pricePan.end();return;}", self.source)
         self.assertIn("pinch:true", self.source)
+
+    def test_mouse_pan_and_axis_reset_are_wired(self):
+        self.assertIn("chartWrap.addEventListener('pointerdown'", self.source)
+        self.assertIn("window.addEventListener('pointerup',endMouse", self.source)
+        self.assertIn("pricePan.reset();persistPan();queueBoxDraw();", self.source)
 
     def test_mirror_wave_horizons_and_future_room(self):
         self.assertIn('"mirrorSummary": mirror_summary', self.source)
