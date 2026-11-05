@@ -85,7 +85,7 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
     if not (isinstance(year, int) and 2000 <= year <= 2100
             and isinstance(quarter, int) and 1 <= quarter <= 4):
         return {"status": "invalid_period", "message": "季度格式錯誤"}
-    url = "https://mops.twse.com.tw/mops/web/ajax_t163sb01"
+    url = "https://mopsov.twse.com.tw/mops/web/ajax_t163sb01"
     payload = {"encodeURIComponent": 1, "step": 1, "firstin": 1,
                "off": 1, "queryName": "co_id", "inpuType": "co_id",
                "TYPEK": "all", "isnew": "false", "co_id": code,
@@ -93,7 +93,7 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
     try:
         response = requests.post(url, data=payload, timeout=timeout,
                                  headers={"User-Agent": "Mozilla/5.0",
-                                          "Referer": "https://mops.twse.com.tw/"})
+                                          "Referer": "https://mopsov.twse.com.tw/"})
         response.raise_for_status()
     except requests.RequestException:
         return {"status": "connection_error", "message": "MOPS 財報公告介接連線失敗"}
@@ -122,7 +122,7 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
         ) if re.search(r"<title[^>]*>(.*?)</title>", body, flags=re.I | re.S) else None,
     }
     if diagnostic["has_script"] and not diagnostic["contains_table"] and not diagnostic["looks_like_json"]:
-        return {"status": "javascript_shell", "message": "官方端點回傳 JavaScript 網頁外殼，並非財報公告資料；需改用新版資料接口", "response_chars": len(body), **diagnostic}
+        return {"status": "javascript_shell", "message": "官方端點回傳 JavaScript 網頁外殼，並非財報公告資料", "response_chars": len(body), **diagnostic}
     if not body.strip():
         return {"status": "empty", "message": "官方接口回傳空白內容", **diagnostic}
     try:
