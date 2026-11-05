@@ -129,7 +129,7 @@ def probe_mops_history(symbol, years=3):
         else: failures.append(f"{period}: {err}")
     return rows, failures
 
-def fetch_mops_eps_history(symbol, years=5, end_period=None):
+def fetch_mops_eps_history(symbol, years=5, end_period=None, fetcher=None, progress=None):
     """Fetch verified period-labelled EPS; never infer filing dates.
 
     Returns quarter rows with independently verified current-quarter and YTD
@@ -141,8 +141,11 @@ def fetch_mops_eps_history(symbol, years=5, end_period=None):
     end = pd.Period(end_period, freq="Q") if end_period else pd.Timestamp.now().to_period("Q") - 1
     periods = pd.period_range(end=end, periods=years * 4, freq="Q")
     records, failures = [], []
-    for period in periods:
-        result, error = fetch_mops_quarter(symbol, period.year, period.quarter)
+    fetcher = fetcher or fetch_mops_quarter
+    for count, period in enumerate(periods, start=1):
+        result, error = fetcher(symbol, period.year, period.quarter)
+        if progress is not None:
+            progress(count, len(periods), str(period))
         if error or not result or not result.get("column_verified"):
             failures.append({"quarter": str(period), "reason": error or "EPS 欄位無法唯一核對"})
             continue
