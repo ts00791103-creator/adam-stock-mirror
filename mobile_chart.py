@@ -6,7 +6,7 @@ import pandas as pd
 import streamlit.components.v1 as components
 from box_theory import detect_boxes
 
-RENDERER_VERSION = "V1-PAN-1105"
+RENDERER_VERSION = "V1-READ-1105"
 
 
 def _points(index, values):
@@ -230,18 +230,21 @@ else {
      '  收 '+fmt(b.close)+'  漲跌 '+(pct===null?'—':pct.toFixed(2)+'%')+
      '  量 '+fmt(b.volume)+' '+data.volumeUnit;
  };
- showBar(data.bars[data.bars.length-1]);
+ showBar(byTime.get(data.bars[data.bars.length-1]?.time));
  chart.subscribeCrosshairMove(param=>{
    if(!param.time)return;
    showBar(byTime.get(typeof param.time==='number'?param.time:null));
  });
+ const namedLines=[];
+ const compactLabels=()=>document.getElementById('chart').clientWidth<600;
  for(const line of data.lines){
   if(!line.points.length)continue;
   const l=chart.addLineSeries({color:line.color,lineWidth:line.style===2?3:(line.style===1?1:2),
    lineStyle:line.style===2?LightweightCharts.LineStyle.Dashed:(line.style===1?LightweightCharts.LineStyle.Dotted:LightweightCharts.LineStyle.Solid),
-   title:line.name||'',priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false,
+   title:compactLabels()?'':(line.name||''),priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false,
    autoscaleInfoProvider:pricePan.autoscaleInfo});
   priceSeries.push(l);
+  namedLines.push({series:l,title:line.name||''});
   l.setData(line.points);
   if(line.mirrorWave){
     if(!waveSeries[line.mirrorWave])waveSeries[line.mirrorWave]=[];
@@ -344,7 +347,16 @@ else {
      try {sessionStorage.setItem(storageKey,JSON.stringify({from:range.from,to:range.to}));}catch(e){}
    },150);
  });
- const resize=new ResizeObserver(()=>{chart.applyOptions({width:document.getElementById('chart').clientWidth});queueBoxDraw();});
+ let lastCompact=compactLabels();
+ const resize=new ResizeObserver(()=>{
+   chart.applyOptions({width:document.getElementById('chart').clientWidth});
+   const compact=compactLabels();
+   if(compact!==lastCompact){
+     lastCompact=compact;
+     for(const line of namedLines)line.series.applyOptions({title:compact?'':line.title});
+   }
+   queueBoxDraw();
+ });
  resize.observe(document.getElementById('chart'));
 }
 </script></body></html>"""
