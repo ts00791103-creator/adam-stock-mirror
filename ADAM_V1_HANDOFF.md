@@ -38,3 +38,11 @@
 
 ## 新對話交接指令（直接貼給 ChatGPT）
 請繼續開發我的 GitHub 專案 ts00791103-creator/adam-stock-mirror。先讀取 release/v1.0-development 分支的 ADAM_V1_HANDOFF.md，依裡面的進度接續，保留 main 與 b3-speed-test 不動。先檢查程式與測試，任何程式修改都只在 V1.0 開發分支進行，逐階段更新交接紀錄，不能把未測試的功能說成已完成。我的目標是繁體中文亞當鏡像股票分析正式版 V1.0。
+
+## 2026-11-05｜V1.0 CI 建立紀錄
+- 已在 release/v1.0-development 新增 .github/workflows/v1-validation.yml。
+- Commit: 8923ba0234f6406518dd1fa6fb8d869eb4efa8a5。
+- push / PR（目標為 V1.0 分支）與手動觸發，Python 3.11，安裝 requirements.txt 及解析依賴，compileall，unittest discover。
+- 已檢查原 B3 workflow：b3-tests.yml 和 b3-mops-tests.yml 主要限定 b3-speed-test；python-check.yml 限定 main/b3-speed-test。故另建 V1.0 專用 CI，不修改原有 workflow。
+- 注意：CI 檔案已提交，但此處尚未取得 GitHub Actions 執行結果，**不能宣稱測試通過**。
+- 下一步：查看 GitHub Actions 中 Adam V1.0 validation 的實際執行狀態和錯誤日誌；修正失敗測試，再進行演算法與資料來源檢查。
