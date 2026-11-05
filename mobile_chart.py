@@ -18,7 +18,7 @@ def _points(index, values):
 
 
 def mobile_chart(df, waves, zoom, title, show_bollinger=False,
-                 boll_period=20, boll_std=2.0, chart_theme="券商深色"):
+                 boll_period=20, boll_std=2.0, chart_theme="券商深色", viewport_key=None):
     """Render mobile-friendly pinch zoom; no effect on Adam calculations."""
     dark = chart_theme == "券商深色"
     if zoom == "全部歷史與鏡像":
@@ -56,15 +56,6 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
                        "color": wave["color"],
                        "points": _points(wave["times"], wave["projection"]),
                        "style": 2})
-    for wave in waves:
-        previous = wave.get("previous_mirror")
-        if previous:
-            series.append({
-                "name": wave["name"] + "上一版鏡像",
-                "color": wave["color"],
-                "points": _points(previous["times"], previous["projection"]),
-                "style": 1
-            })
     # Lightweight Charts requires monotonically increasing unique timestamps.
     for line in series:
         unique = {p["time"]: p for p in line["points"]}
@@ -72,7 +63,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
     bars = sorted({b["time"]: b for b in bars}.values(), key=lambda b: b["time"])
     payload = json.dumps({"bars": bars, "lines": series,
                           "count": view_count, "dark": dark,
-                          "title": title}, ensure_ascii=False).replace("</", "<\\/")
+                          "title": title, "viewportKey": viewport_key}, ensure_ascii=False).replace("</", "<\\/")
     html = """<!doctype html><html lang="zh-Hant"><head><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <style>html,body{margin:0;padding:0;overflow:hidden;background:BG;color:FG;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif}
 #heading{padding:8px 10px;font-size:14px;font-weight:600}#chart{width:100%;height:480px;touch-action:pan-y}
@@ -104,16 +95,32 @@ else {
  candle.setData(data.bars);
  for(const line of data.lines){
   if(!line.points.length)continue;
-  const l=chart.addLineSeries({color:line.color,lineWidth:line.style===2?3:(line.style===1?1:2),
-   lineStyle:line.style===2?LightweightCharts.LineStyle.Dashed:(line.style===1?LightweightCharts.LineStyle.Dotted:LightweightCharts.LineStyle.Solid),
+  const l=chart.addLineSeries({color:line.color,lineWidth:line.style===2?3:2,
+   lineStyle:line.style===2?LightweightCharts.LineStyle.Dashed:LightweightCharts.LineStyle.Solid,
    title:line.name,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
   l.setData(line.points);
  }
- if(data.bars.length){
-  const count=Math.min(data.count,data.bars.length);
-  chart.timeScale().setVisibleLogicalRange({from:Math.max(0,data.bars.length-count),
-   to:data.bars.length+Math.min(5,Math.max(1,Math.floor(count/4)))});
+ // Remember the visible logical range between Streamlit fragment redraws.
+ // Never use the timestamp range: a new candle should not shift the user's view.
+ let storageKey=data.viewportKey?'b3pro-viewport-'+data.viewportKey:null;
+ let saved=null;
+ try { if(storageKey) saved=JSON.parse(sessionStorage.getItem(storageKey)||'null'); } catch(e) {}
+ if(saved && Number.isFinite(saved.from) && Number.isFinite(saved.to) && saved.to>saved.from){
+   try { chart.timeScale().setVisibleLogicalRange(saved); } catch(e) { saved=null; }
  }
+ if(!saved && data.bars.length){
+   const count=Math.min(data.count,data.bars.length);
+   chart.timeScale().setVisibleLogicalRange({from:Math.max(0,data.bars.length-count),
+    to:data.bars.length+Math.min(5,Math.max(1,Math.floor(count/4)))});
+ }
+ let persistTimer=null;
+ chart.timeScale().subscribeVisibleLogicalRangeChange(range=>{
+   if(!storageKey || !range || !Number.isFinite(range.from) || !Number.isFinite(range.to))return;
+   clearTimeout(persistTimer);
+   persistTimer=setTimeout(()=>{
+     try {sessionStorage.setItem(storageKey,JSON.stringify({from:range.from,to:range.to}));}catch(e){}
+   },150);
+ });
  const resize=new ResizeObserver(()=>chart.applyOptions({width:document.getElementById('chart').clientWidth}));
  resize.observe(document.getElementById('chart'));
 }
