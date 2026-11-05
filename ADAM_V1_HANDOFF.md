@@ -79,3 +79,11 @@
 - 靜態檢查發現手機圖表 handleScroll 設定 vertTouchDrag:false，且提示文字為「單指左右拖曳」；使用者要求的上下左右移動尚未獲得實機驗證。不可宣稱已完成。
 - 時間軸：future_index 的日 K 只排除週末，未排除交易所休市日；週 K、月 K、分 K 尚需實際市場行事曆驗證。
 - 新增測試的 CI 結果待確認；下一步視結果修正，並規劃交易時段與圖表操作驗收。
+
+## 2026-11-05｜手機圖表測試錯誤修正
+- 使用者提供 GitHub Actions 錯誤截圖：Run offline regression tests，Ran 42 tests，FAILED(errors=3)。
+- 三項錯誤：test_empty_series、test_invalid_values_are_excluded、test_timestamps_and_values，均因 TypeError: _points() takes 2 positional arguments ...。
+- 原因：tests/test_mobile_chart_data.py 的 setUpClass 將純函式直接存成類別屬性 cls.points，使用 self.points 呼叫時被 Python descriptor 自動綁定 self，造成額外參數。
+- 修正：改成 cls.points = staticmethod(load_points())，避免綁定；未修改 mobile_chart.py 正式功能。
+- 修正 commit：868521143f0b6637b733dd8f5946ec65ed540ca6。
+- 修正後 GitHub Actions 尚待驗證，不可宣稱已通過。
