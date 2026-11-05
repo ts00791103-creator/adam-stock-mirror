@@ -131,6 +131,40 @@ class MirrorWaveTests(unittest.TestCase):
         self.assertLess(settings["短波"][1], settings["中波"][1])
         self.assertLess(settings["中波"][1], settings["長波"][1])
 
+
+    def test_real_pivots_alternate_and_exceed_threshold(self):
+        # Repeated highs/lows and small pullbacks should not create extra swings.
+        prices = [100, 101, 103, 106, 110, 110, 108, 103, 95, 90, 90,
+                  92, 97, 104, 112, 120, 120, 118, 110, 101, 95, 92, 90]
+        pivots = self.calc["find_pivots"](prices, 2, 0.05)
+        self.assertGreaterEqual(len(pivots), 3)
+        self.assertEqual([kind for _, kind in pivots[:3]], ["高", "低", "高"])
+        self.assertEqual([prices[i] for i, _ in pivots[:3]], [110, 90, 120])
+        for (i, kind), (j, next_kind) in zip(pivots, pivots[1:]):
+            self.assertNotEqual(kind, next_kind)
+            self.assertGreaterEqual(abs(prices[j] - prices[i]) / max(abs(prices[i]), 1e-9), 0.05)
+
+    def test_real_pivots_ignore_small_reversals(self):
+        prices = [100, 102, 105, 110, 108, 106, 109, 112, 110, 107,
+                  100, 95, 90, 92, 95, 100, 105, 110, 115]
+        pivots = self.calc["find_pivots"](prices, 2, 0.05)
+        self.assertTrue(all(pivots[i][1] != pivots[i+1][1] for i in range(len(pivots)-1)))
+        # The small pullback after 110 must not be accepted as a full reversal.
+        self.assertNotIn((5, "低"), pivots)
+
+    def test_actual_pivots_feed_mirror_without_mocking(self):
+        prices = [100, 102, 105, 110, 120, 115, 108, 100, 90, 95,
+                  105, 115, 130, 125, 115, 100, 85, 90, 100, 110,
+                  125, 120, 105, 95, 90, 92, 94, 96, 98, 100]
+        frame = pd.DataFrame({"Close": prices}, index=pd.bdate_range("2026-09-01", periods=len(prices)))
+        result = self.calc["mirror_wave"](frame, "短波", 3, "1d")
+        self.assertIsNotNone(result)
+        self.assertEqual(result["projection"][0], frame["Close"].iloc[-1])
+        self.assertEqual(result["segment"].tolist()[::-1][0], result["segment"].iloc[-1] if hasattr(result["segment"], "iloc") else result["segment"][-1])
+        expected = frame["Close"].iloc[-1] + result["segment"][::-1] - result["segment"][-1]
+        np.testing.assert_allclose(result["projection"], expected)
+        self.assertEqual(len(result["times"]), len(result["projection"]))
+
     def test_daily_future_index_excludes_weekends(self):
         future = self.calc["future_index"](pd.Timestamp("2026-11-06"), 2, "1d")
         self.assertEqual([str(x.date()) for x in future], ["2026-11-09", "2026-11-10"])
