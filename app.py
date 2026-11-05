@@ -1195,6 +1195,19 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                     with st.expander("🔬 MOPS 財報公告接口診斷（不會改動估價）", expanded=False):
                         st.caption("以最新已取得的季度為測試目標，僅檢查官方介接是否回傳可解析的表格；不會把財報期間當作公告日。")
                         st.markdown("[官方公開資訊觀測站－財務報告公告](https://mops.twse.com.tw/mops/#/web/t163sb01)")
+                        if st.button("測試新發現的 MOPS 表單提交路徑", key="b3_mops_discovered_form_probe"):
+                            from official_filing_candidates import probe_discovered_mops_form
+                            latest_period = pd.Period(history_rows[-1]["quarter"], freq="Q")
+                            with st.spinner("正在測試表單提交路徑…"):
+                                discovered_result = probe_discovered_mops_form(
+                                    str(symbol).split(".")[0], latest_period.year, latest_period.quarter)
+                            st.session_state["b3_mops_discovered_form_result"] = (
+                                str(symbol).split(".")[0], str(latest_period), discovered_result)
+                        discovered_saved = st.session_state.get("b3_mops_discovered_form_result")
+                        if discovered_saved and discovered_saved[0] == str(symbol).split(".")[0]:
+                            st.write("新路徑測試季度：", discovered_saved[1])
+                            st.json(discovered_saved[2])
+                            st.caption("僅測試表單路徑是否能回傳資料，不會解鎖歷史 PE。")
                         if st.button("檢查 MOPS 財報公告接口", key="b3_mops_announcement_probe"):
                             import importlib
                             import official_filing_candidates as filing_module
