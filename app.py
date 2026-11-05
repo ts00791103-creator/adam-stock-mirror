@@ -1619,6 +1619,12 @@ if st.button(
     quality_issues = audit_ohlc_data(df)
     if quality_issues:
         st.error("行情資料品質異常，已停止鏡像分析：" + "；".join(quality_issues))
+        from quote_quality import invalid_price_rows
+        invalid_rows = invalid_price_rows(df)
+        if invalid_rows:
+            st.caption("異常行情明細（最多列20根）：以下保留資料來源數值，未推測哪一個價格正確。")
+            st.dataframe(pd.DataFrame(invalid_rows), hide_index=True)
+        st.info("可將「歷史資料長度」縮短後重新分析，或稍後重試。縮短期間可能無法涵蓋完整中、長波，請保留資料不足提示；系統不會自動刪除異常K線或改寫價格。")
         st.stop()
 
     if roll_dates:
