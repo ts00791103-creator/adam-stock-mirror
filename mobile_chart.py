@@ -18,7 +18,7 @@ def _points(index, values):
 
 
 def mobile_chart(df, waves, zoom, title, show_bollinger=False,
-                 boll_period=20, boll_std=2.0, chart_theme="券商深色", viewport_key=None):
+                 boll_period=20, boll_std=2.0, chart_theme="券商深色", viewport_key=None, ma_periods=None, ema_periods=None):
     """Render mobile-friendly pinch zoom; no effect on Adam calculations."""
     dark = chart_theme == "券商深色"
     if zoom == "全部歷史與鏡像":
@@ -47,6 +47,16 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
         ]:
             series.append({"name": name, "color": color,
                            "points": _points(plot_df.index, values.reindex(plot_df.index))})
+    close = df["Close"].astype(float)
+    for kind, periods in (("MA", ma_periods or []), ("EMA", ema_periods or [])):
+        for period in periods:
+            if kind == "MA":
+                values = close.rolling(period, min_periods=period).mean()
+            else:
+                values = close.ewm(span=period, adjust=False, min_periods=period).mean()
+            palette = {5:"#ffca28",10:"#29b6f6",20:"#ab47bc",60:"#66bb6a",120:"#ef5350",240:"#b0bec5"}
+            series.append({"name":f"{kind}{period}", "color":palette.get(period,"#ffffff"),
+                           "points":_points(plot_df.index,values.reindex(plot_df.index))})
     for wave in waves:
         series.append({"name": wave["name"] + "歷史波段",
                        "color": wave["color"],
