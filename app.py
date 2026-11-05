@@ -964,7 +964,7 @@ chart_type = st.radio(
     horizontal=True
 )
 
-mobile_engine = st.checkbox("測試手機雙指縮放圖表（新版）", value=False, help="僅測試版提供，取消勾選即回原本 Plotly 圖表。")
+mobile_engine = st.checkbox("測試手機雙指縮放圖表（新版）", value=True, key="b3_mobile_engine_box1125", help="測試版預設開啟；取消勾選可回原本 Plotly 圖表。")
 
 chart_theme = st.radio(
     "圖表配色",
