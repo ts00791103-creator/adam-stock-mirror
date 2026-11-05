@@ -1214,6 +1214,17 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                         if probe_saved and probe_saved[0] == str(symbol).split(".")[0]:
                             st.write("測試季度：", probe_saved[1])
                             probe_data = probe_saved[2]
+                            status = probe_data.get("status", "unknown")
+                            if status == "query_form_only":
+                                st.error("目前取得的是查詢介面，不是台達電的財報公告結果。請勿用此資料計算歷史 PE。")
+                            elif status == "tables_unverified":
+                                st.warning("取得表格，但公告日期尚未核實。")
+                            elif status == "javascript_shell":
+                                st.warning("官方回傳 JavaScript 頁面，尚未取得公告資料。")
+                            if "input_field_names" in probe_data or "form_targets" in probe_data:
+                                st.markdown("**官方查詢表單結構（診斷用途）**")
+                                st.write("欄位名稱：", ", ".join(probe_data.get("input_field_names", [])) or "無")
+                                st.write("提交目標：", probe_data.get("form_targets", []))
                             if probe_data.get("table_profiles"):
                                 profiles = pd.DataFrame(probe_data["table_profiles"])
                                 profiles = profiles.rename(columns={
