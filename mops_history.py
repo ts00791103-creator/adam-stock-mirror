@@ -84,6 +84,10 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
                 matches["cumulative_eps"].append(cell["value"])
             elif re.fullmatch(quarter_re, period):
                 matches["quarter_eps"].append(cell["value"])
+        # Q1 year-to-date equals Q1 EPS by definition. Some MOPS Q1
+        # statements publish only a single quarter-period EPS column.
+        if quarter == 1 and len(matches["quarter_eps"]) == 1 and not matches["cumulative_eps"]:
+            matches["cumulative_eps"] = list(matches["quarter_eps"])
         if all(len(matches[k]) == 1 for k in matches):
             verified.append({k: matches[k][0] for k in matches})
     verified_eps = verified[0] if len(verified) == 1 else None
