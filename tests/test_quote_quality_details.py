@@ -3,11 +3,19 @@ from unittest.mock import patch
 from pathlib import Path
 import numpy as np
 import pandas as pd
+import streamlit as st
 from streamlit.testing.v1 import AppTest
 from quote_quality import invalid_price_rows
 
 
 class QuoteQualityDetailsTests(unittest.TestCase):
+    def setUp(self):
+        # Other AppTests exercise the same download cache with synthetic valid bars.
+        st.cache_data.clear()
+
+    def tearDown(self):
+        st.cache_data.clear()
+
     def test_exact_6148_anomalies_explained_without_mutating_source(self):
         frame = pd.DataFrame({"Open": [10.05, 10.5, 13.45], "High": [10.05, 10.5, 13.55],
                               "Low": [9.94, 10.1, 13.3], "Close": [10.2, 10.6, 13.7]},
