@@ -975,6 +975,9 @@ chart_theme = st.radio(
 show_bollinger = st.checkbox("顯示布林軌道（BOLL）", value=True)
 ma_periods = st.multiselect("測試 MA 均線（可複選）", [5,10,20,60,120,240], default=[])
 ema_periods = st.multiselect("測試 EMA 均線（可複選）", [5,10,20,60,120,240], default=[])
+auto_boxes = st.checkbox("測試自動箱型（箱頂／箱底／中線）", value=False)
+box_window = st.slider("箱型觀察根數", 10, 60, 20, disabled=not auto_boxes)
+box_width = st.slider("箱型最大振幅（%）", 3.0, 25.0, 12.0, 0.5, disabled=not auto_boxes)
 boll_period = st.number_input("布林均線週期", min_value=5, max_value=120, value=20, step=1, disabled=not show_bollinger)
 boll_std = st.number_input("標準差倍數", min_value=0.5, max_value=4.0, value=2.0, step=0.5, disabled=not show_bollinger)
 
@@ -1183,7 +1186,8 @@ if st.button(
                 individual_zoom[w["name"]],
                 f"{symbol}｜{w['name']} A模式完整鏡像",
                 show_bollinger, boll_period, boll_std, chart_theme,
-                ma_periods=ma_periods, ema_periods=ema_periods
+                ma_periods=ma_periods, ema_periods=ema_periods,
+                    auto_boxes=auto_boxes, box_window=box_window, box_width=box_width
             )
 
             for date in roll_dates:
@@ -1199,7 +1203,8 @@ if st.button(
                     df, [w], individual_zoom[w["name"]],
                     f"{symbol}｜{w['name']} A模式完整鏡像",
                     show_bollinger, boll_period, boll_std, chart_theme,
-                    ma_periods=ma_periods, ema_periods=ema_periods
+                    ma_periods=ma_periods, ema_periods=ema_periods,
+                    auto_boxes=auto_boxes, box_window=box_window, box_width=box_width
                 )
             else:
                 st.plotly_chart(
