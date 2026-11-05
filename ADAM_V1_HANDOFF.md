@@ -193,3 +193,8 @@
 - tests/test_mirror_wave.py 新增五項測試：上漲歷史波段反轉成下跌鏡像、最新收盤價錨定、最後兩個已確認轉折點選取、平坦歷史波段保持平坦、短中長波參數與歷史長度獨立。commit a79365440bcc8943fcbc538301b87064de17142f。
 - 原 mirror_wave 算法未修改；測試使用 Mock pivots，能驗證映射與接續，但不能取代真實資料轉折點品質檢驗。GitHub Actions 結果尚未確認。
 - 使用者已驗收長波點選隱藏成功。上下/繞圈暫緩。main、b3-speed-test 不動。
+
+## 2026-11-05｜第七階段：實際轉折點選取測試
+- 使用者回報第六階段 GitHub Actions 綠色。
+- tests/test_mirror_wave.py 新增 3 項不以 Mock 取代轉折點的測試：實際高低點交替與最小幅度、過小回檔過濾、使用 find_pivots 真實輸出餵入 mirror_wave 並核對鏡像價格/時間軸。commit 98fbc8728fd6cf6938682dc8b076a2c3c1cd889c。
+- 這些是人工合成的已知價序列，非外部市場行情；下一步應驗證真實股票數據與長波歷史窗口。此批 CI 尚待確認。沒有改動生產演算法、main 或 b3-speed-test。
