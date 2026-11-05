@@ -4,6 +4,18 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 from mobile_chart import mobile_chart
+
+
+def render_mobile_chart(*args, indicators=None):
+    """Keep the chart usable while Streamlit Cloud refreshes the renderer module."""
+    try:
+        return mobile_chart(*args, indicators=indicators)
+    except TypeError as exc:
+        if "unexpected keyword argument 'indicators'" not in str(exc):
+            raise
+        st.info("技術指標圖表模組正在更新，暫時顯示原本的 K 線與亞當鏡像。請重新整理頁面。")
+        return mobile_chart(*args)
+
 from live_quote import show_personal_quote
 from live_candle import show_live_candle
 from futures_api_test import show_futures_api_test
@@ -1157,7 +1169,7 @@ if st.button(
                 )
 
             if mobile_engine:
-                mobile_chart(
+                render_mobile_chart(
                     df, [w], individual_zoom[w["name"]],
                     f"{symbol}｜{w['name']} A模式完整鏡像",
                     show_bollinger, boll_period, boll_std, chart_theme, indicators=indicators
@@ -1189,7 +1201,7 @@ if st.button(
             )
 
         if mobile_engine:
-            mobile_chart(
+            render_mobile_chart(
                 df, waves, zoom, f"{symbol}｜{mode}｜A模式完整鏡像",
                 show_bollinger, boll_period, boll_std, chart_theme, indicators=indicators
             )
