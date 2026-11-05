@@ -82,6 +82,24 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
                 matches["quarter_eps"].append(cell["value"])
         if all(len(matches[k]) == 1 for k in matches):
             verified.append({k: matches[k][0] for k in matches})
+    # Diagnostic: show the exact unflattened header levels attached to each
+    # EPS value, plus classification, without treating candidates as verified.
+    eps_header_diagnostics = []
+    for candidate in candidates[:15]:
+        table = tables[candidate["table"] - 1]
+        for cell in candidate["values"]:
+            idx = cell["column"] - 1
+            if idx >= len(table.columns):
+                continue
+            raw = table.columns[idx]
+            levels = [str(x) for x in (raw if isinstance(raw, tuple) else (raw,))]
+            eps_header_diagnostics.append({
+                "table": candidate["table"], "column": cell["column"],
+                "value": cell["value"], "header_levels": levels,
+                "contains_amount": any("金額" in x for x in levels),
+                "contains_percent": any("%" in x or "％" in x for x in levels),
+                "period_text": " | ".join(x for x in levels if "年" in x),
+            })
     verified_eps = verified[0] if len(verified) == 1 else None
     if not candidates:
         return None, "找不到可辨識的基本 EPS 數值，請確認 MOPS 是否回傳完整損益表"
@@ -92,7 +110,8 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
             "headers": {str(x["table"]): table_headers[x["table"]] for x in candidates[:15]},
             "source": URL, "filing_date_verified": False,
             "column_verified": verified_eps is not None,
-            "verified_eps": verified_eps}, None
+            "verified_eps": verified_eps,
+            "eps_header_diagnostics": eps_header_diagnostics}, None
 
 def probe_mops_history(symbol, years=3):
     now = pd.Timestamp.now()
