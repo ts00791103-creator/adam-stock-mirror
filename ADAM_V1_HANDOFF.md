@@ -99,3 +99,10 @@
 - 新增 tests/test_mobile_chart_gestures.py，靜態檢查雙軸拖曳設定、觸控事件及 sessionStorage 視窗記憶；commit 939ac9729cec8bc8a0a3c7a7e43f0f2cab715874。
 - 此為 V1.0 分支設定修改，沒有部署到 B3；靜態測試不等於實機操作驗收，且 touch-action:none 可能影響頁面手勢滾動，須在候選站手機實測。
 - 新增測試的 CI 結果待確認；下一步依 GitHub Actions 狀態處理，之後安排獨立候選版部署及實機手勢驗收。
+
+## 2026-11-05｜候選站部署準備
+- 使用者回報最新 GitHub CI 為綠色。
+- 已確認 requirements.txt 為 Streamlit/yfinance/pandas/numpy/plotly，app.py 為主程式；README.md 只有簡短專案描述；沒有 .streamlit/config.toml（非部署必要）。
+- 新增 V1_DEPLOY_GUIDE.md，記錄 Streamlit Community Cloud 第二個獨立 App 的 repository/branch/app.py 設定、候選站建議名稱與手機驗收清單。Commit b77476421e9fc9a43533acf205fcfb36c02e0775。
+- **尚未實際部署候選網站**，候選 URL 未確認。部署需要在使用者 Streamlit 帳號建立獨立 App；不能宣稱已上線。
+- 下一步：使用者建立第二個 Streamlit App 後提供實際 URL，再驗收並修正；絕不覆蓋 B3。
