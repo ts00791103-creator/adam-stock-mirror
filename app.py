@@ -1048,6 +1048,10 @@ with c2:
         )
 
 
+if not PRODUCTION_MODE:
+    from wave_settings import show_wave_settings
+    WAVES = show_wave_settings(interval)
+
 mode = st.radio(
     "顯示模式",
     [
@@ -2095,3 +2099,4 @@ if st.button(
         "日期僅為估算，未完整處理休市日、"
         "分K交易時段與期貨換月。"
     )
+
