@@ -98,6 +98,26 @@ def review_candidate_coverage(candidates, periods):
     return summary
 
 
+
+def summarize_filing_coverage(candidates, periods):
+    """Coverage is candidate visibility, never verified filing-date coverage."""
+    review = review_candidate_coverage(candidates, periods)
+    total = len(review)
+    present = sum(row["候選公告筆數"] > 0 for row in review)
+    ambiguous = sum(row["候選公告筆數"] > 1 for row in review)
+    missing = [row["季度"] for row in review if row["候選公告筆數"] == 0]
+    return {
+        "requested_quarters": total,
+        "quarters_with_candidates": present,
+        "quarters_missing_candidates": total - present,
+        "quarters_with_multiple_candidates": ambiguous,
+        "candidate_coverage_percent": round(present * 100 / total, 1) if total else 0.0,
+        "verified_filing_quarters": 0,
+        "missing_quarters": missing,
+        "historical_pe_unlocked": False,
+    }
+
+
 def probe_discovered_mops_form(stock_code, year, quarter, timeout=12):
     """Probe the observed legacy MOPS form action, without trusting its contents.
 
