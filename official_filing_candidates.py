@@ -63,14 +63,25 @@ def fetch_official_filing_candidates(stock_code, timeout=12):
 
 
 def review_candidate_coverage(candidates, periods):
+    """Report visible candidates without certifying historical filing dates."""
     grouped = {}
     for row in candidates:
-        grouped.setdefault(row["季度"], []).append(row)
-    return [{"季度": period, "候選公告筆數": len(grouped.get(period, [])),
-             "狀態": ("無公告紀錄" if period not in grouped else
-                     "多筆公告，須辨識初次申報及更正" if len(grouped[period]) > 1 else
-                     "單筆候選，仍須核對是否為初次財報申報")}
-            for period in periods]
+        grouped.setdefault(row['季度'], []).append(row)
+    summary = []
+    for period in periods:
+        records = grouped.get(period, [])
+        dates = sorted(str(r['公告日期時間']) for r in records if r.get('公告日期時間'))
+        count = len(records)
+        summary.append({
+            '季度': period,
+            '候選公告筆數': count,
+            '頁面可見最早公告（未核實）': dates[0] if dates else None,
+            '狀態': ('頁面未提供紀錄，不能推定未公告' if not count else
+                     '多筆公告，須辨識首次申報與更正' if count > 1 else
+                     '單筆候選，須核對是否首次申報'),
+            '可用於歷史PE': False,
+        })
+    return summary
 
 
 def probe_discovered_mops_form(stock_code, year, quarter, timeout=12):
