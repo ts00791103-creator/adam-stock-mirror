@@ -159,6 +159,28 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
     parser.feed(body)
     diagnostic["form_count"] = parser.forms
     diagnostic["input_field_names"] = sorted(parser.names)[:40]
+    # Read only static form action/method and option field names; no field values
+    # or raw HTML are exposed. This helps identify whether an actual submit route exists.
+    class _Forms(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.forms = []
+        def handle_starttag(self, tag, attrs):
+            if tag != "form":
+                return
+            data = dict(attrs)
+            action = data.get("action", "")
+            # Do not expose full URLs or embedded query strings.
+            from urllib.parse import urlparse
+            parsed = urlparse(action)
+            self.forms.append({
+                "method": str(data.get("method", "get")).upper()[:8],
+                "action_path": parsed.path[:120],
+                "action_host": parsed.hostname,
+            })
+    form_parser = _Forms()
+    form_parser.feed(body)
+    diagnostic["form_targets"] = form_parser.forms[:10]
     table_profiles = []
     for idx, frame in enumerate(frames[:25]):
         values = frame.astype(str)
