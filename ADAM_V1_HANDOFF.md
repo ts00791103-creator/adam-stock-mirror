@@ -266,3 +266,6 @@ User confirmed CI green. app.py commit 4ae29818f9fc5f299add74ad40378f85b2269102 
 
 ## Phase 13 release readiness guard (2026-11-05)
 Added tests/test_release_readiness.py (commit 472596e5e7a613a6e982b11ef0339233cb7682cc), checking critical functions, data-quality gate ordering, mobile source cards and caveat before chart, nonblocking live checks, and handoff existence. Await latest CI. This is a regression guard, not final acceptance or deployment. No main/b3-speed-test modifications.
+
+## 2026-11-05 Phase 13 second batch: release audit
+User confirmed first batch CI green. README is minimal, requirements.txt contains streamlit/yfinance/pandas/numpy/plotly; no .streamlit/config.toml, Procfile or runtime.txt found (these are not necessarily required for Streamlit Cloud). Added V1_RELEASE_CHECKLIST.md commit 5b1c374582358108cc31419dc377f9961fe2f812 with verified test milestones, deployment prerequisites, manual mobile/desktop checks and no-main-change rule. No release or merge performed. Await actual deployment URL and manual acceptance before release.
