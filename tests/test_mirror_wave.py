@@ -77,6 +77,60 @@ class MirrorWaveTests(unittest.TestCase):
         pivots = self.calc["find_pivots"](values, 2, 0)
         self.assertTrue(all(i < len(values) - 2 for i, _ in pivots))
 
+
+    def test_rising_leg_reverses_to_falling_projection(self):
+        import types
+        ns = dict(self.calc)
+        ns["find_pivots"] = Mock(return_value=[(4, "低"), (7, "高")])
+        ns["internal_turns"] = Mock(return_value=[])
+        fn = types.FunctionType(self.calc["mirror_wave"].__code__, ns)
+        result = fn(self.frame, "短波", 3, "1d")
+        self.assertEqual(result["segment"].tolist(), [90, 95, 100, 110])
+        self.assertEqual(result["projection"].tolist(), [118, 108, 103, 98])
+        self.assertEqual((result["high_i"], result["low_i"]), (0, 3))
+
+    def test_projection_anchors_to_latest_close(self):
+        import types
+        ns = dict(self.calc)
+        ns["find_pivots"] = Mock(return_value=[(2, "高"), (4, "低")])
+        ns["internal_turns"] = Mock(return_value=[])
+        fn = types.FunctionType(self.calc["mirror_wave"].__code__, ns)
+        changed = self.frame.copy()
+        changed.iloc[-1, 0] = 135
+        result = fn(changed, "短波", 3, "1d")
+        self.assertEqual(result["projection"].tolist(), [135, 150, 165])
+        self.assertEqual(result["times"][0], changed.index[-1])
+
+    def test_last_two_pivots_determine_mirror_leg(self):
+        import types
+        ns = dict(self.calc)
+        ns["find_pivots"] = Mock(return_value=[(1, "低"), (2, "高"), (4, "低"), (7, "高")])
+        ns["internal_turns"] = Mock(return_value=[])
+        fn = types.FunctionType(self.calc["mirror_wave"].__code__, ns)
+        result = fn(self.frame, "中波", 3, "1d")
+        self.assertEqual((result["start"], result["end"]), (4, 7))
+        self.assertEqual(result["segment"].tolist(), [90, 95, 100, 110])
+
+    def test_flat_historical_leg_stays_flat(self):
+        import types
+        ns = dict(self.calc)
+        ns["find_pivots"] = Mock(return_value=[(2, "高"), (4, "低")])
+        ns["internal_turns"] = Mock(return_value=[])
+        fn = types.FunctionType(self.calc["mirror_wave"].__code__, ns)
+        flat = self.frame.copy()
+        flat.iloc[2:5, 0] = 100
+        result = fn(flat, "長波", 3, "1d")
+        self.assertEqual(result["projection"].tolist(), [118, 118, 118])
+
+    def test_wave_configurations_are_distinct(self):
+        settings = self.calc["WAVES"]
+        self.assertEqual(set(settings), {"短波", "中波", "長波"})
+        self.assertEqual(len(set(settings.values())), 3)
+        self.assertLess(settings["短波"][0], settings["中波"][0])
+        self.assertLess(settings["中波"][0], settings["長波"][0])
+        self.assertLess(settings["短波"][1], settings["中波"][1])
+        self.assertLess(settings["中波"][1], settings["長波"][1])
+
     def test_daily_future_index_excludes_weekends(self):
         future = self.calc["future_index"](pd.Timestamp("2026-11-06"), 2, "1d")
         self.assertEqual([str(x.date()) for x in future], ["2026-11-09", "2026-11-10"])
