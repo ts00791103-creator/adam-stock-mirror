@@ -123,6 +123,15 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
     }
     if diagnostic["has_script"] and not diagnostic["contains_table"] and not diagnostic["looks_like_json"]:
         return {"status": "javascript_shell", "message": "官方端點回傳 JavaScript 網頁外殼，並非財報公告資料", "response_chars": len(body), **diagnostic}
+    if diagnostic["contains_table"]:
+        # The legacy endpoint can return its query form as 11 HTML tables.
+        # Do not interpret those tables as announcement records.
+        if not re.search(r"(?<!\\d)" + re.escape(code) + r"(?!\\d)", body):
+            diagnostic["response_has_requested_stock"] = False
+        else:
+            diagnostic["response_has_requested_stock"] = True
+    else:
+        diagnostic["response_has_requested_stock"] = False
     if not body.strip():
         return {"status": "empty", "message": "官方接口回傳空白內容", **diagnostic}
     try:
@@ -155,6 +164,11 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
                 and not bool(re.search(r"(?<!\\d)1\\d{2}[/.-]\\d{1,2}[/.-]\\d{1,2}", text))
             ),
         })
+    if not any(p["looks_like_result_table"] for p in table_profiles):
+        return {"status": "query_form_only",
+                "message": "取得的表格未同時包含指定股票與公告日期，可能只是查詢表單；不可作為公告紀錄",
+                "table_count": len(frames), "table_profiles": table_profiles,
+                "response_chars": len(body), **diagnostic}
     return {"status": "tables_unverified", "message": "取得 HTML 表格，但尚未驗證公告日期欄位",
             "table_count": len(frames),
             "table_profiles": table_profiles,
