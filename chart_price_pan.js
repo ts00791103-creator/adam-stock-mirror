@@ -21,13 +21,14 @@
         const step = readPricePerPixel();
         if (![x, y, step].every(Number.isFinite) || step <= 0) return false;
         // Capture the starting scale: recalculating it on every move causes drift.
-        drag = {y, offset, step};
+        drag = {y, offset, step, active: false};
         return true;
       },
       move(x, y) {
         if (!drag || ![x, y].every(Number.isFinite)) return false;
         const dy = y - drag.y;
-        if (Math.abs(dy) < 4) return false;
+        if (!drag.active && Math.abs(dy) < 4) return false;
+        drag.active = true;
         return setOffset(drag.offset + dy * drag.step);
       },
       end() { drag = null; },

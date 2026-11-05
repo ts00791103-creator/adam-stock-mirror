@@ -284,7 +284,7 @@ User confirmed first batch CI green. README is minimal, requirements.txt contain
 - 第一批 V1-UI-1105 已由使用者 Reboot 後驗證：V1.0 標題、來源卡片、2308 日K中長波重複警示、週K -420/-995.5 提示、390px 卡片換行均正常。第一批 CI run 42026405282 全部成功。
 - 本階段移除 mobile_chart.py 的 translate3d 整圖平移，新增 chart_price_pan.js 控制器，用 autoscaleInfoProvider 平移所有股價序列可視價格範圍，不改變行情或鏡像值。成交量保留獨立刻度，箱型依 priceToCoordinate 重畫。
 - 滑鼠與單指使用相同控制器；雙指時取消單指狀態，保留原生 pinch。滑鼠雙擊右側價格軸可還原。原始股票／鏡像公式不變，未新增上下按鈕。
-- Node 8 項行為測試本機通過；兩段內嵌 JavaScript 語法通過。CI 新增 Run chart price pan behavior tests。既有觸控靜態測試已更新為價格軸機制。
+- Node 9 項行為測試本機通過（含往返原點恢復原始範圍，避免起始防抖閾值留下殘餘偏移）；兩段內嵌 JavaScript 語法通過。CI 新增 Run chart price pan behavior tests。既有觸控靜態測試已更新為價格軸機制。
 - 以合成行情瀏覽器實測向下100px、向上200px、左右拖曳、滾輪縮放、雙擊軸還原皆有效；K線/箱型同步，量能區域固定，未出現 console error/warn。這不是實際股票或手機多指驗收。
 - 待續：核對本次 CI 成功；候選站載入 V1-PAN-1105 後，用 2330/2308 真實行情複測，再由使用者實機雙指驗收。不要把尚未驗收的手機手勢宣稱完成。
 - main/b3-speed-test 不修改；不合併、不正式發布。

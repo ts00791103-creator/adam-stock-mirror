@@ -26,6 +26,11 @@ test('horizontal motion and small jitter leave price scale unchanged', () => {
   pan.begin(100, 100); pan.move(300, 100); pan.move(400, 103);
   assert.equal(pan.offset, 0); assert.deepEqual(changes, []);
 });
+test('returning to the drag origin restores the starting range', () => {
+  const {pan} = controller(2, 30);
+  pan.begin(100, 100); pan.move(100, 150); pan.move(100, 101); pan.move(100, 100);
+  assert.equal(pan.offset, 30);
+});
 test('cancel before multitouch prevents stale one-finger panning', () => {
   const {pan} = controller();
   pan.begin(0, 0); pan.move(0, 20); pan.end(); pan.move(0, 100);
