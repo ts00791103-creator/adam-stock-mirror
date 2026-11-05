@@ -1188,6 +1188,55 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                                    file_name=f"{str(symbol).split('.')[0]}_mops_eps_review.csv",
                                    mime="text/csv", key="b3_mops_history_csv")
                 st.warning("TTM 為四個連續且欄位已核對的季度 EPS 加總，僅供核對；財報公告日尚未確認，不能用於歷史估價。")
+                with st.expander("📅 下一階段：官方公告日逐季核實", expanded=False):
+                    st.caption("證交所財務報告書資訊揭露頁可查公告日期時間；法定截止日、董事會預定日與財報期間結束日，都不能當成實際公告日。")
+                    st.markdown("[開啟證交所資訊揭露／財務報告書](https://www.twse.com.tw/IIH2/zh/market/information.html)")
+                    st.info("目前尚未取得可逐季對應、可驗證來源的 20 筆公告日期，歷史 PE 回測維持鎖定。")
+                    filing_template = pd.DataFrame([{
+                        "股票代號": str(symbol).split(".")[0],
+                        "季度": x["quarter"],
+                        "公告日期": "",
+                        "官方來源網址": "",
+                    } for x in history_rows])
+                    st.download_button("下載公告日核對範本 CSV",
+                                       filing_template.to_csv(index=False).encode("utf-8-sig"),
+                                       file_name=f"{str(symbol).split('.')[0]}_filing_dates_template.csv",
+                                       mime="text/csv", key="b3_filing_date_template")
+                    filing_upload = st.file_uploader("上傳已核實公告日 CSV（僅作核對，不會自動啟用估價）",
+                                                     type=["csv"], key="b3_filing_dates_upload")
+                    if filing_upload is not None:
+                        try:
+                            date_table = pd.read_csv(filing_upload, dtype=str).fillna("")
+                            required = {"股票代號", "季度", "公告日期", "官方來源網址"}
+                            if not required.issubset(date_table.columns):
+                                st.error("CSV 缺少必要欄位，請使用下載範本。")
+                            else:
+                                matched = []
+                                valid_periods = {x["quarter"] for x in history_rows}
+                                for _, date_row in date_table.iterrows():
+                                    quarter = str(date_row["季度"]).strip()
+                                    code = str(date_row["股票代號"]).strip()
+                                    date_str = str(date_row["公告日期"]).strip()
+                                    source_url = str(date_row["官方來源網址"]).strip()
+                                    status = "待核實"
+                                    if code != str(symbol).split(".")[0] or quarter not in valid_periods:
+                                        status = "股票代號或季度不符"
+                                    elif date_str and source_url.startswith("https://"):
+                                        try:
+                                            parsed = pd.Timestamp(date_str)
+                                            if parsed.date() > pd.Period(quarter, freq="Q").end_time.date():
+                                                status = "待人工查證來源與公告日"
+                                            else:
+                                                status = "公告日不得早於季度結束日"
+                                        except Exception:
+                                            status = "公告日期格式錯誤"
+                                    matched.append({"季度": quarter, "公告日期": date_str,
+                                                    "官方來源網址": source_url, "狀態": status})
+                                st.dataframe(pd.DataFrame(matched), use_container_width=True, hide_index=True)
+                                st.warning("上傳資料僅供逐季人工查證；網址存在不代表已查證，尚不會進入歷史 PE。")
+                        except Exception as exc:
+                            st.error(f"公告日 CSV 讀取失敗：{type(exc).__name__}")
+
             if history_failures:
                 with st.expander("查看讀取失敗／資料異常季度"):
                     st.dataframe(pd.DataFrame(history_failures), use_container_width=True, hide_index=True)
