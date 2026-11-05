@@ -124,7 +124,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
 <style>html,body{margin:0;padding:0;overflow:hidden;background:BG;color:FG;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif}
 #heading{padding:8px 10px;font-size:14px;font-weight:600}#ohlc{padding:4px 10px;font-size:12px;min-height:20px;font-variant-numeric:tabular-nums}#chart-wrap{position:relative;width:100%;height:480px}#chart{width:100%;height:480px;touch-action:none}#box-overlay{position:absolute;inset:0;width:100%;height:480px;pointer-events:none;z-index:2}
 #hint{font-size:12px;opacity:.8;padding:6px 10px}#error{color:#ff7777;padding:12px}</style></head>
-<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量｜成交量資料：Yahoo Finance（台股單位：張）</div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="hint">雙指縮放｜單指上下左右拖曳｜點選 K 棒查看價格</div><div id="error"></div>
+<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量｜成交量資料：Yahoo Finance（台股單位：張）</div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="hint">雙指縮放｜左右拖曳｜上下按鈕測試價格軸</div><div id="price-pan-controls" style="display:flex;gap:8px;padding:4px 10px"><button type="button" id="price-up" style="padding:7px 16px">↑ K 線上移</button><button type="button" id="price-down" style="padding:7px 16px">↓ K 線下移</button><button type="button" id="price-reset" style="padding:7px 16px">垂直歸位</button></div><div id="error"></div>
 <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 const data=PAYLOAD;
@@ -249,6 +249,18 @@ else {
    if(Number.isFinite(stored))priceShift=clamp(stored,-1,1);
  }catch(e){}
  applyPriceShift();
+ // Explicit controls diagnose whether the price scale can move independently
+ // of the embedded iOS touch-event handling.
+ const movePrice=(step)=>{
+   priceShift=clamp(priceShift+step,-1,1);
+   applyPriceShift();
+   if(priceStorageKey){
+     try{sessionStorage.setItem(priceStorageKey,String(priceShift));}catch(e){}
+   }
+ };
+ document.getElementById('price-up').addEventListener('click',()=>movePrice(-0.12));
+ document.getElementById('price-down').addEventListener('click',()=>movePrice(0.12));
+ document.getElementById('price-reset').addEventListener('click',()=>movePrice(-priceShift));
  chartElement.addEventListener('touchstart',event=>{
    if(event.touches.length!==1){touchStart=null;return;}
    touchStart={x:event.touches[0].clientX,y:event.touches[0].clientY,shift:priceShift};
@@ -297,4 +309,4 @@ else {
 </script></body></html>"""
     html = html.replace("BG", "#101010" if dark else "#ffffff").replace(
         "FG", "#ffffff" if dark else "#222222").replace("PAYLOAD", payload)
-    components.html(html, height=585, scrolling=False)
+    components.html(html, height=635, scrolling=False)
