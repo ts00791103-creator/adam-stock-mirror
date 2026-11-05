@@ -178,6 +178,25 @@ class OfficialCandidateTests(unittest.TestCase):
         self.assertEqual(result["rows"][1]["查詢狀態"], "probe_error")
         self.assertEqual(result["verified_filing_dates"], 0)
 
+    def test_filing_coverage_counts_missing_and_ambiguous_quarters(self):
+        from official_filing_candidates import summarize_filing_coverage
+        rows = [
+            {"季度": "2025Q4", "公告日期時間": "2026-03-01 09:00"},
+            {"季度": "2025Q4", "公告日期時間": "2026-03-02 09:00"},
+            {"季度": "2026Q1", "公告日期時間": "2026-05-10 09:00"},
+        ]
+        result = summarize_filing_coverage(
+            rows, ["2025Q4", "2026Q1", "2026Q2"]
+        )
+        self.assertEqual(result["requested_quarters"], 3)
+        self.assertEqual(result["quarters_with_candidates"], 2)
+        self.assertEqual(result["quarters_missing_candidates"], 1)
+        self.assertEqual(result["quarters_with_multiple_candidates"], 1)
+        self.assertEqual(result["missing_quarters"], ["2026Q2"])
+        self.assertEqual(result["candidate_coverage_percent"], 66.7)
+        self.assertEqual(result["verified_filing_quarters"], 0)
+        self.assertFalse(result["historical_pe_unlocked"])
+
     def test_duplicate_reports_are_not_verified(self):
         rows = [{"季度": "2025Q4"}, {"季度": "2025Q4"}]
         review = review_candidate_coverage(rows, ["2025Q4", "2026Q1"])
