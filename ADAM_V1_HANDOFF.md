@@ -135,3 +135,9 @@
 - 使用者在候選站再次測試後回報：左右可移動，上下仍然不行。上一版透過 scaleMargins 做垂直平移的方法未達驗收標準，不應宣稱修好。
 - 下一階段需要採用可真正控制價格座標/價格軸可視範圍的圖表架構，並實機驗證上下、斜向、繞圈、縮放與記憶；不可再僅修改 vertTouchDrag 或 margins 後宣稱完成。
 - 目前 B3/main 保持不變，候選版尚未驗收完成。
+
+## 2026-11-05｜第三次手機垂直平移修正（待 CI／實機驗收）
+- 原本 scaleMargins 平移實機無效，改採 Lightweight Charts v4 同一右側價格軸上的兩條透明 line series，透過 setData 更新上下 autoscale 錨點，讓價格與座標對應可移動。此法會影響 autoscale 顯示範圍，需檢查指標/鏡像/箱型不被過度壓縮。
+- 手指單指垂直位移更新 priceShift；左右拖曳與原生雙指縮放保留；使用新 sessionStorage key v1-price-pan-v2- 避免舊版狀態干擾。mobile_chart.py commit b2e88c0a907edadae9f1a69106a7939f6c382980。
+- 更新 tests/test_mobile_chart_gestures.py 靜態檢查兩條錨點與新平移邏輯；commit a4da426eeed7e3a4fae4b1a643122afda65f3e94。
+- **未確認 CI／實機成功**；待候選站自動部署後測試 2308 日K 上下、斜向、繞圈、左右、雙指縮放、位置記憶。如仍無效，應改用可明確控制價格座標的自訂繪圖實作。
