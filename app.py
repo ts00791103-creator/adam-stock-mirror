@@ -1546,6 +1546,15 @@ if st.button(
     waves = []
 
     for name in names:
+        required_bars = WAVES[name][1]
+        available_bars = len(df)
+        if available_bars < required_bars:
+            st.warning(
+                f"⚠️ {name}歷史資料不足：目前 {available_bars} 根／"
+                f"參考設定 {required_bars} 根。"
+                "鏡像若能計算，僅代表有限資料下的暫定結果，"
+                "不可視為完整波段；建議選擇更長歷史期間。"
+            )
         result = mirror_wave(
             df,
             name,
