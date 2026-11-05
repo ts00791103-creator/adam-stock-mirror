@@ -192,9 +192,10 @@ else {
  chart.timeScale().subscribeVisibleTimeRangeChange(drawBoxes);
  chart.timeScale().subscribeVisibleLogicalRangeChange(drawBoxes);
  requestAnimationFrame(drawBoxes);
- const resize=new ResizeObserver(()=>{drawBoxes();});
- resize.observe(document.getElementById('chart'));
- const resize=new ResizeObserver(()=>chart.applyOptions({width:document.getElementById('chart').clientWidth}));
+ const resize=new ResizeObserver(()=>{
+  chart.applyOptions({width:document.getElementById('chart').clientWidth});
+  requestAnimationFrame(drawBoxes);
+ });
  resize.observe(document.getElementById('chart'));
 }
 </script></body></html>"""
