@@ -166,3 +166,9 @@
 - mobile_chart.py 改在 chart-wrap 捕捉 touchstart/move/end（capture:true），垂直觸控位移套用 chartElement 與 box-overlay 同步 translate3d；原生左右時間軸拖曳及 pinch 保留。commit 3f0737f2d0a19bba7fd7177e1bcea1f76254ffaf。
 - 更新 tests/test_mobile_chart_gestures.py 對應新實作及無按鈕檢查。commit 071a1e2b85d48f3b457f87560138bd7996519784。
 - **尚未確認 CI 和手機實測**；視覺平移是有限範圍且會移動價格軸標籤，仍非正式價格軸重算。若手機仍無法上下移動，需改用不同圖表引擎或自訂畫布。不得宣稱完成。
+
+## 2026-11-05｜依使用者要求暫停上下平移，進入鏡像正確性／介面整理階段
+- 使用者明確要求暫時不做上下移動，直接下一階段。不要再要求使用者測試上下／繞圈；該功能保留為未完成事項。
+- app.py 首頁名稱改為「亞當鏡像分析 V1.0｜候選測試版」，並於最上方新增提示：鏡像是歷史路徑反向排列情境，非即時行情／價格預測；未來日期僅示意，尚未完整排除休市與盤中休市。
+- 修改 commits c3d73757f9c47c84548a4c9d4290a5709b828f0f、e372d1d08bc389a67f4ad5290a811991c7be422d（後者修正前者文字換行造成的 Python 語法問題）。
+- 尚未確認 GitHub Actions 最新 CI；正式鏡像演算法、交易日曆與財務估價仍待後續核驗。B3/main 保持不變。
