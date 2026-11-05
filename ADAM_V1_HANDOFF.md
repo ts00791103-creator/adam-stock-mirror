@@ -1,3 +1,9 @@
+## Telegram啟用完成更新｜2026-11-06
+已完成唯一私人聊天配對，使用者明確同意將收件人ID存入私有GitHub專案加密設定並發送連線測試；TELEGRAM_CHAT_ID已儲存。test-message工作42072376429成功，使用者親自確認手機收到。
+背景配置enabled=true與Actions Variable ALERTS_ENABLED=true皆已啟用並讀回確認。追蹤名單已依使用者更新為六檔；個人名單與參數以私有專案alerts_config.json為準，不在公開交接列出。台灣平日14:47/18:17檢查，可能延遲或漏排。首次真正定時觸發、真實訊號推播與真實state push尚未驗證，不能宣稱已完成。
+私有專案e1df345ca7fbbc2f0a7f24267f2505ac93f2416a為六檔配置版本；SETUP_STATUS.md已保存收訊、啟用與待驗證紀錄。網站與背景名單分開，修改網站不自動更新背景。
+本機outputs/Telegram背景提醒_六檔設定備份_e1df345.zip，13個Git blob逐一SHA比對一致，不含Secrets。手機已完成連線測試，不需重新設定Token或重新配對。
+
 ## Telegram設定進度更新｜2026-11-06
 使用者已儲存TELEGRAM_BOT_TOKEN，網頁顯示Repository secret added；check-bot工作42071328128／job127399735010成功，11項測試通過，程式確認Token屬於預期@adam_mirror_007_bot。未讀取Token值，未送真訊息。
 目前等待使用者在手機私人機器人傳送本對話提供的/start配對碼，回覆已傳送後才執行find-chat。配對碼只在本對話／本次執行狀態，未寫公開交接。若新對話遺失配對碼，可重新產生並請本人重傳。Token不需重設。ChatID仍未設定、排程推播仍關閉。
