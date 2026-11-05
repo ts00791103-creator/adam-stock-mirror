@@ -62,6 +62,28 @@ class OfficialCandidateTests(unittest.TestCase):
         self.assertIn("wwwc.twse.com.tw", rows[0]["官方來源網址"])
         self.assertEqual(getter.call_count, 2)
 
+    def test_both_hosts_contribute_distinct_quarters_without_duplicate(self):
+        from unittest.mock import Mock
+        primary = pd.DataFrame([
+            ["115/08/14 16:30", "2308", "台達電", "115年第2季財務報告書"]
+        ])
+        secondary = pd.DataFrame([
+            ["115/08/14 16:30", "2308", "台達電", "115年第2季財務報告書"],
+            ["115/05/14 16:30", "2308", "台達電", "115年第1季財務報告書"],
+        ])
+        response = Mock()
+        response.raise_for_status.return_value = None
+        response.text = "<table></table>"
+        with patch("official_filing_candidates.requests.get", return_value=response) as getter, patch(
+            "official_filing_candidates.pd.read_html", side_effect=[[primary], [secondary]]
+        ):
+            rows, error = fetch_official_filing_candidates("2308")
+        self.assertIsNone(error)
+        self.assertEqual([row["季度"] for row in rows], ["2026Q1", "2026Q2"])
+        self.assertEqual(len(rows), 2)
+        self.assertIn("www.twse.com.tw", rows[1]["官方來源網址"])
+        self.assertEqual(getter.call_count, 2)
+
     def test_roc_date_and_quarter_with_spaces(self):
         frame = pd.DataFrame([
             ["115/8/14 16:30", "2308", "台達電", "115 年 第 2 季 財務報告書"]
