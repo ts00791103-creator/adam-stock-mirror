@@ -6,7 +6,7 @@ import pandas as pd
 import streamlit.components.v1 as components
 from box_theory import detect_boxes
 
-RENDERER_VERSION = "V1-READ-1105"
+RENDERER_VERSION = "V1.0.0"
 
 
 def _points(index, values):
