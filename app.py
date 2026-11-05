@@ -1396,15 +1396,15 @@ if st.button(
         else:
             effective_pes = auto_pe_result["pes"] if auto_pe_result else (cheap_pe, fair_pe, expensive_pe)
             cheap_price, fair_price, expensive_price = [eps_value * pe for pe in effective_pes]
-            p1, p2, p3 = st.columns(3)
-            p1.metric("🟢 歷史估值下緣（試算）" if not quality_ok else "🟢 便宜價（參考）", f"{cheap_price:,.2f}")
-            p2.metric("🟡 歷史估值中位（試算）" if not quality_ok else "🟡 合理價（參考）", f"{fair_price:,.2f}")
-            p3.metric("🔴 歷史估值上緣（試算）" if not quality_ok else "🔴 昂貴價（參考）", f"{expensive_price:,.2f}")
             latest_price = float(df["Close"].iloc[-1])
             quality_ok = bool(auto_pe_result and auto_pe_result["samples"] >= 250
                               and auto_pe_result.get("coverage_days", 0) >= 365
                               and auto_pe_result.get("eps_quarters", 0) >= 12
                               and not auto_pe_result.get("warnings"))
+            p1, p2, p3 = st.columns(3)
+            p1.metric("🟢 歷史估值下緣（試算）" if not quality_ok else "🟢 便宜價（參考）", f"{cheap_price:,.2f}")
+            p2.metric("🟡 歷史估值中位（試算）" if not quality_ok else "🟡 合理價（參考）", f"{fair_price:,.2f}")
+            p3.metric("🔴 歷史估值上緣（試算）" if not quality_ok else "🔴 昂貴價（參考）", f"{expensive_price:,.2f}")
             st.info("估值可信度：" + ("中（樣本門檻通過；仍需核對財報公告日）" if quality_ok else "低／未驗證（不提供買進訊號）"))
             category = ("便宜區" if latest_price <= cheap_price else
                         "合理偏低區" if latest_price < fair_price else
@@ -1418,7 +1418,7 @@ if st.button(
             st.caption("依歷史樣本數、資料跨度、季 EPS、PE 分布與現價偏離程度評級；不代表預測準確率。")
             if quality_reasons:
                 st.warning("評級原因：" + "；".join(quality_reasons))
-            safety_price = conservative_entry(eps_value, auto_pe_result, margin_pct=25)
+            safety_price = conservative_entry(eps_value, auto_pe_result, margin_pct=25) if quality_ok else None
             if safety_price is not None:
                 st.metric("🛡️ 保守觀察進場參考價（非買進建議）", f"{safety_price:,.2f}")
                 st.caption("以歷史低檔 PE（20% 分位）與歷史中位 PE 再打 75 折，取較低者 × 近四季 EPS。此價格仍可能高於現價，不能據此判定低估。")
