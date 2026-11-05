@@ -37,15 +37,16 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
             "open": float(row["Open"]), "high": float(row["High"]),
             "low": float(row["Low"]), "close": float(row["Close"])
         })
+    volume_unit = "口" if str(title).upper().find("TX") >= 0 and "台指" in str(title) else "張"
     volumes = []
     if "Volume" in plot_df.columns:
         for t, row in plot_df.iterrows():
             v = pd.to_numeric(row["Volume"], errors="coerce")
             if pd.notna(v) and float(v) >= 0:
-                volumes.append({"time": int(pd.Timestamp(t).timestamp()), "value": float(v),
+                volumes.append({"time": int(pd.Timestamp(t).timestamp()), "value": float(v) / (1000 if volume_unit == "張" else 1),
                                 "color": "#ef4444" if float(row["Close"]) >= float(row["Open"]) else "#22c55e"})
-    volume_ma5 = _points(plot_df.index, pd.to_numeric(df["Volume"], errors="coerce").rolling(5).mean().reindex(plot_df.index)) if "Volume" in df else []
-    volume_ma20 = _points(plot_df.index, pd.to_numeric(df["Volume"], errors="coerce").rolling(20).mean().reindex(plot_df.index)) if "Volume" in df else []
+    volume_ma5 = _points(plot_df.index, pd.to_numeric(df["Volume"], errors="coerce").rolling(5).mean().reindex(plot_df.index) / (1000 if volume_unit == "張" else 1)) if "Volume" in df else []
+    volume_ma20 = _points(plot_df.index, pd.to_numeric(df["Volume"], errors="coerce").rolling(20).mean().reindex(plot_df.index) / (1000 if volume_unit == "張" else 1)) if "Volume" in df else []
     series = []
     if show_bollinger and len(df) >= boll_period:
         mid = df["Close"].rolling(boll_period, min_periods=boll_period).mean()
@@ -116,7 +117,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
         unique = {p["time"]: p for p in line["points"]}
         line["points"] = sorted(unique.values(), key=lambda p: p["time"])
     bars = sorted({b["time"]: b for b in bars}.values(), key=lambda b: b["time"])
-    payload = json.dumps({"rendererVersion": "VOL-OHLC-1", "bars": bars, "lines": series, "boxes": rectangles, "volumes": volumes, "volumeMA5": volume_ma5, "volumeMA20": volume_ma20,
+    payload = json.dumps({"rendererVersion": "VOL-OHLC-1", "bars": bars, "lines": series, "boxes": rectangles, "volumes": volumes, "volumeMA5": volume_ma5, "volumeMA20": volume_ma20, "volumeUnit": volume_unit,
                           "count": view_count, "dark": dark,
                           "title": title, "viewportKey": viewport_key}, ensure_ascii=False).replace("</", "<\\/")
     html = """<!doctype html><html lang="zh-Hant"><head><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -166,7 +167,7 @@ else {
      new Date(b.time*1000).toLocaleDateString('zh-TW',{timeZone:'Asia/Taipei'})+
      '  開 '+fmt(b.open)+'  高 '+fmt(b.high)+'  低 '+fmt(b.low)+
      '  收 '+fmt(b.close)+'  漲跌 '+(pct===null?'—':pct.toFixed(2)+'%')+
-     '  量 '+fmt(b.volume);
+     '  量 '+fmt(b.volume)+' '+data.volumeUnit;
  };
  showBar(data.bars[data.bars.length-1]);
  chart.subscribeCrosshairMove(param=>{
