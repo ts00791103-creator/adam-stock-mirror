@@ -69,6 +69,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
             series.append({"name":f"{kind}{period}", "color":palette.get(period,"#ffffff"),
                            "points":_points(plot_df.index,values.reindex(plot_df.index))})
     mirror_summary = []
+    mirror_styles = {"短波": 2, "中波": 1, "長波": 0}
     for wave in waves:
         mirror_summary.append({"name": wave["name"], "color": wave["color"],
                                "bars": max(0, len(wave["projection"]) - 1)})
@@ -79,7 +80,8 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
         series.append({"name": wave["name"] + "左右鏡像",
                        "color": wave["color"],
                        "points": _points(wave["times"], wave["projection"]),
-                       "style": 2})
+                       "style": mirror_styles.get(wave["name"], 2),
+                       "mirrorWave": wave["name"]})
     for wave in waves:
         previous = wave.get("previous_mirror")
         if previous:
@@ -136,10 +138,27 @@ if(!window.LightweightCharts){document.getElementById('error').textContent='圖�
 else {
  const dark=data.dark;
  const summary=document.getElementById('mirror-summary');
+ const waveSeries={};
+ const waveVisibility={};
  for(const wave of data.mirrorSummary||[]){
    const item=document.createElement('span');
+   waveVisibility[wave.name]=true;
    item.style.color=wave.color;
-   item.textContent=wave.name+'鏡像：'+wave.bars+'根';
+   item.style.cursor='pointer';
+   item.style.border='1px solid '+wave.color;
+   item.style.borderRadius='5px';
+   item.style.padding='4px 7px';
+   item.textContent=wave.name+'鏡像：'+wave.bars+'根（顯示）';
+   item.setAttribute('role','button');
+   item.setAttribute('tabindex','0');
+   const toggle=()=>{
+     waveVisibility[wave.name]=!waveVisibility[wave.name];
+     for(const series of waveSeries[wave.name]||[])series.applyOptions({visible:waveVisibility[wave.name]});
+     item.style.opacity=waveVisibility[wave.name]?'1':'0.4';
+     item.textContent=wave.name+'鏡像：'+wave.bars+'根（'+(waveVisibility[wave.name]?'顯示':'隱藏')+'）';
+   };
+   item.addEventListener('click',toggle);
+   item.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
    summary.appendChild(item);
  }
  const chart=LightweightCharts.createChart(document.getElementById('chart'),{
@@ -190,6 +209,10 @@ else {
    lineStyle:line.style===2?LightweightCharts.LineStyle.Dashed:(line.style===1?LightweightCharts.LineStyle.Dotted:LightweightCharts.LineStyle.Solid),
    title:line.name||'',priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
   l.setData(line.points);
+  if(line.mirrorWave){
+    if(!waveSeries[line.mirrorWave])waveSeries[line.mirrorWave]=[];
+    waveSeries[line.mirrorWave].push(l);
+  }
  }
  // Draw translucent rectangles on a pointer-transparent SVG; never intercept chart gestures.
  const overlay=document.getElementById('box-overlay');
