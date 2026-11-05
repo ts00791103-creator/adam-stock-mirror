@@ -1039,6 +1039,19 @@ st.info(
 
 # ===== 開始分析 =====
 
+# 估價測試功能：使用者提供 EPS 與倍數，不假稱為任何分析師的專屬公式。
+with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", expanded=False):
+    valuation_enabled = st.checkbox("啟用估價", value=False, key="b3_valuation_enabled_v1")
+    valuation_mode = st.radio("估價模式", ["參考價值投資分區（可調參數）", "自訂本益比"], horizontal=True, key="b3_valuation_mode_v1")
+    eps_value = st.number_input("預估每股盈餘 EPS（元）", min_value=0.0, value=0.0, step=0.5, key="b3_eps_v1",
+                                help="請填入自行確認的年度預估 EPS；0 表示尚未提供，不產生估價。")
+    eps_period = st.text_input("EPS 年度／資料依據", value="", placeholder="例如：2027 年預估／公司法說", key="b3_eps_period_v1")
+    v1, v2, v3 = st.columns(3)
+    cheap_pe = v1.number_input("便宜 PE", min_value=1.0, max_value=200.0, value=12.0, step=0.5, key="b3_cheap_pe_v1")
+    fair_pe = v2.number_input("合理 PE", min_value=1.0, max_value=200.0, value=16.0, step=0.5, key="b3_fair_pe_v1")
+    expensive_pe = v3.number_input("昂貴 PE", min_value=1.0, max_value=200.0, value=20.0, step=0.5, key="b3_expensive_pe_v1")
+    st.caption("參考模式僅借鑑價值投資的價格分區概念，並非孫慶龍本人公布的固定公式或建議價。倍數為示例預設值，須依產業與獲利調整。")
+
 if st.button(
     "開始亞當鏡像分析",
     type="primary"
@@ -1321,6 +1334,29 @@ if st.button(
             st.caption("目標價為箱型等幅量測推估，並非保證達到；突破狀態以收盤價判斷。")
         else:
             st.info("目前參數下沒有符合條件的整理箱型，可調整觀察根數或最大振幅。")
+
+    if valuation_enabled:
+        st.subheader("🧮 股票估價參考（測試版）")
+        if eps_value <= 0:
+            st.info("請先輸入大於 0 的年度預估 EPS，才能計算價格。")
+        elif not (cheap_pe < fair_pe < expensive_pe):
+            st.warning("本益比需符合：便宜 PE ＜ 合理 PE ＜ 昂貴 PE。")
+        else:
+            cheap_price = eps_value * cheap_pe
+            fair_price = eps_value * fair_pe
+            expensive_price = eps_value * expensive_pe
+            p1, p2, p3 = st.columns(3)
+            p1.metric("🟢 便宜價（參考）", f"{cheap_price:,.2f}")
+            p2.metric("🟡 合理價（參考）", f"{fair_price:,.2f}")
+            p3.metric("🔴 昂貴價（參考）", f"{expensive_price:,.2f}")
+            latest_price = float(df["Close"].iloc[-1])
+            category = ("便宜區" if latest_price <= cheap_price else
+                        "合理偏低區" if latest_price < fair_price else
+                        "合理偏高區" if latest_price < expensive_price else "昂貴區")
+            st.write(f"最新資料收盤價：{latest_price:,.2f}｜估價區間：**{category}**")
+            st.caption(f"估價依據：EPS {eps_value:,.2f} × PE {cheap_pe:g}／{fair_pe:g}／{expensive_pe:g}；"
+                       f"EPS 期間／來源：{eps_period or '未填寫'}。"
+                       "非即時報價、非保證價位，亦非孫慶龍本人發布的估價。")
 
     show_live_candle(
         market, symbol, interval, df, waves,
