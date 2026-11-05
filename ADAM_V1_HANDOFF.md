@@ -55,3 +55,12 @@
 - 修正：filing_dates.py 改用 datetime(year, month, day).date() 建立季度結束日；保留 date.today() 可測試性及官方公告日保守驗證規則。
 - 修正 commit：151e4ad78a24e547a558a89164caff2c33d0ec57。
 - 尚未確認修正後 GitHub Actions 是否通過；下一步查看新 CI 結果。
+
+## 2026-11-05｜CI 通過、開始核心演算法驗證
+- 使用者提供 GitHub Actions 截圖：Adam V1.0 validation #3（39秒）與 #4（30秒）均為綠色通過。此前 #1、#2 失敗。
+- 已閱讀 app.py 第 374–550 行的 find_pivots、future_index、mirror_wave。現行 A 模式為反轉已確認波段的收盤價序列，並平移至最新收盤價作為鏡像起點。
+- 已確認 find_pivots 需要左右 span 根 K 棒才能確認轉折，因此最近幾根 K 棒的轉折有確認延遲；這是後續介面必須清楚提示的特性。
+- 注意 future_index 對日K使用工作日、週K固定7天、月K月初、分K固定時間間隔，尚未考慮台股休市日與盤中休息，投影日期應標示「示意」而非真實交易時段。
+- 新增 tests/test_box_theory.py：資料不足、上破、下破、箱體過寬等離線回歸測試。Commit: ebae4df57e940ef1ef5e201aca0d9ff5236cac8f。
+- 新測試提交後的 GitHub Actions 尚未確認，不能宣稱新測試已通過。
+- 下一步：確認新 CI 結果；為 mirror_wave 加入不依賴 Streamlit 的單元測試，檢查左右鏡像方向、價格起點、短中長波、轉折確認延遲與時間軸。
