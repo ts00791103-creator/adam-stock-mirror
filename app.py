@@ -1082,8 +1082,14 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
         if auto_pe_result:
             st.success("歷史 PE 分位數：" + "／".join(f"{p:.1f} 倍" for p in auto_pe_result["pes"]))
             st.caption(f"樣本 {auto_pe_result['samples']} 日｜{auto_pe_result['start']}～{auto_pe_result['end']}｜{auto_pe_result['method']}")
+            if auto_pe_result.get("warnings"):
+                st.warning("估價可信度提醒：" + "；".join(auto_pe_result["warnings"]))
+            st.caption(f"季 EPS {auto_pe_result['eps_quarters']} 季｜有效樣本跨度 {auto_pe_result.get('coverage_days', 0)} 天；資料不足時歷史分位數可能偏誤。")
         else:
             st.warning(f"歷史 PE 無法計算：{pe_error}。改用手動倍數，不視為自動智慧估價。")
+    forecast_enabled = st.checkbox("加入未來 EPS 成長情境（非分析師預測）", value=False, key="b3_growth_on_v1")
+    forecast_growth = st.number_input("假設下一年度 EPS 成長率（%）", min_value=-80.0, max_value=150.0, value=10.0, step=5.0, key="b3_growth_pct_v1") if forecast_enabled else 0.0
+    forecast_discount = st.number_input("未來估價安全折扣（%）", min_value=0.0, max_value=60.0, value=20.0, step=5.0, key="b3_growth_discount_v1") if forecast_enabled else 0.0
     v1, v2, v3 = st.columns(3)
     cheap_pe = v1.number_input("便宜 PE", min_value=1.0, max_value=200.0, value=12.0, step=0.5, key="b3_cheap_pe_v1")
     fair_pe = v2.number_input("合理 PE", min_value=1.0, max_value=200.0, value=16.0, step=0.5, key="b3_fair_pe_v1")
@@ -1391,9 +1397,27 @@ if st.button(
                         "合理偏低區" if latest_price < fair_price else
                         "合理偏高區" if latest_price < expensive_price else "昂貴區")
             st.write(f"最新資料收盤價：{latest_price:,.2f}｜隱含 PE：{latest_price / eps_value:.2f} 倍｜估價區間：**{category}**")
+            if auto_pe_result and (latest_price / eps_value < effective_pes[0] * 0.8 or latest_price / eps_value > effective_pes[2] * 1.2):
+                st.warning("目前隱含 PE 與歷史區間差距超過 20%；可能是獲利或市場評價結構改變，請勿直接把便宜價視為安全買點。")
+            if forecast_enabled:
+                future_eps = eps_value * (1 + forecast_growth / 100)
+                st.markdown("#### 📈 下一年度 EPS 情境估價（自行假設，非市場共識預測）")
+                st.write(f"假設成長率 {forecast_growth:+.1f}%｜情境 EPS {future_eps:,.2f} 元｜安全折扣 {forecast_discount:.0f}%")
+                if future_eps > 0:
+                    future_prices = [future_eps * pe * (1 - forecast_discount / 100) for pe in effective_pes]
+                    c1, c2, c3 = st.columns(3)
+                    c1.metric("🟢 情境便宜價", f"{future_prices[0]:,.2f}")
+                    c2.metric("🟡 情境合理價", f"{future_prices[1]:,.2f}")
+                    c3.metric("🔴 情境昂貴價", f"{future_prices[2]:,.2f}")
+                    gap = abs(future_prices[1] - fair_price) / fair_price * 100 if fair_price else 0
+                    if gap > 30:
+                        st.warning(f"歷史合理價與未來情境合理價差距 {gap:.1f}%，估價不確定性高。")
+                else:
+                    st.warning("情境 EPS 不可小於或等於零。")
+
             st.caption(f"估價依據：EPS {eps_value:,.2f} × PE {effective_pes[0]:.1f}／{effective_pes[1]:.1f}／{effective_pes[2]:.1f}；"
                        f"EPS 期間／來源：{eps_period or '未填寫'}。"
-                       "自動 EPS 為近四季歷史值、非未來預估；倍數為可調示例，非即時報價、非保證價位，亦非孫慶龍本人發布的估價。")
+                       "自動 EPS 為近四季歷史值、非未來預估；PE 來自歷史分位數或手動設定，非即時報價、非保證價位，亦非孫慶龍本人發布的估價。")
 
     show_live_candle(
         market, symbol, interval, df, waves,
