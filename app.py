@@ -975,8 +975,8 @@ chart_theme = st.radio(
 indicators = st.multiselect(
     "K 線技術指標（可複選）",
     ["BOLL", "MA", "EMA", "KD", "MACD", "RSI", "VOL"],
-    default=[],
-    help="MA／EMA 疊加在 K 線上；KD／MACD／RSI／VOL 顯示於下方。"
+    default=["BOLL"],
+    help="BOLL 預設開啟；其他指標的新版繪圖暫停，待手機圖表修復後恢復。"
 )
 show_bollinger = "BOLL" in indicators
 auto_boxes = st.checkbox("自動生成箱型（測試中，暫停顯示）", value=False, disabled=True)
