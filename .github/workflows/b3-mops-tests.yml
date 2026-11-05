@@ -4,7 +4,10 @@ on:
     branches: [b3-speed-test]
     paths:
       - 'mops_history.py'
+      - 'filing_dates.py'
+      - 'app.py'
       - 'tests/test_mops_history.py'
+      - 'tests/test_filing_dates.py'
       - '.github/workflows/b3-mops-tests.yml'
   workflow_dispatch:
 jobs:
@@ -18,5 +21,7 @@ jobs:
           python-version: '3.11'
       - name: Install test dependencies
         run: python -m pip install pandas requests
-      - name: Run offline MOPS regression tests
-        run: python -m unittest discover -s tests -p 'test_mops_history.py' -v
+      - name: Check Python syntax
+        run: python -m compileall -q app.py mops_history.py filing_dates.py tests
+      - name: Run all offline regression tests
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
