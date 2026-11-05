@@ -188,7 +188,7 @@ def classify_filing_response_html(html, stock_code, year, quarter):
         has_code = bool(re.search(r"(?<!\d)" + re.escape(code) + r"(?!\d)", content))
         has_period = any(marker in content for marker in quarter_markers)
         has_filing = any(x in content for x in ("財務報告", "財報", "申報", "公告"))
-        has_date = bool(re.search(r"(?:20\\d{2}|1\\d{2})[/-]\\d{1,2}[/-]\\d{1,2}", content))
+        has_date = bool(re.search(r"(?:20\d{2}|1\d{2})[/-]\d{1,2}[/-]\d{1,2}", content))
         results.append({"has_stock_code": has_code, "has_period": has_period,
                         "has_filing_keyword": has_filing, "has_date_pattern": has_date})
     candidates = [x for x in results if all(x.values())]
