@@ -130,7 +130,23 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
     except (ValueError, ImportError):
         return {"status": "unparsed", "message": "官方接口有回應，但不是可直接解析的 HTML 表格",
                 "response_chars": len(body), **diagnostic}
+    table_profiles = []
+    for idx, frame in enumerate(frames[:25]):
+        values = frame.astype(str)
+        sample = " ".join(str(x) for x in values.to_numpy().flat)
+        headers = " ".join(str(x) for x in frame.columns)
+        text = headers + " " + sample
+        table_profiles.append({
+            "index": idx,
+            "rows": len(frame),
+            "columns": len(frame.columns),
+            "has_stock_code": code in text,
+            "has_filing_keyword": any(k in text for k in ("財務報告", "財報公告", "申報日期", "公告日期")),
+            "has_date_keyword": any(k in text for k in ("日期", "時間", "公告", "申報")),
+            "has_roc_date_pattern": bool(re.search(r"(?<!\\d)1\\d{2}[/.-]\\d{1,2}[/.-]\\d{1,2}", text)),
+            "header_labels": [str(x)[:65] for x in frame.columns[:8]],
+        })
     return {"status": "tables_unverified", "message": "取得 HTML 表格，但尚未驗證公告日期欄位",
             "table_count": len(frames),
-            "table_headers": [list(map(str, frame.columns))[:12] for frame in frames[:3]],
+            "table_profiles": table_profiles,
             "response_chars": len(body), **diagnostic}
