@@ -45,8 +45,8 @@ def fetch_official_filing_candidates(stock_code, timeout=12):
                 joined = " ".join(cells)
                 if "財務報告書" not in joined or not re.search(r"(?<!\d)" + re.escape(code) + r"(?!\d)", joined):
                     continue
-                quarter_match = re.search(r"(\d{3})年第?([1-4])季財務報告書", joined)
-                time_match = re.search(r"(\d{3})/(\d{2})/(\d{2})\s+(\d{2}):(\d{2})", joined)
+                quarter_match = re.search(r"(\d{3})\s*年\s*第?\s*([1-4])\s*季\s*財務報告書", joined)
+                time_match = re.search(r"(?<!\d)(\d{3})\s*/\s*(\d{1,2})\s*/\s*(\d{1,2})\s+(\d{1,2}):(\d{2})(?!\d)", joined)
                 if not quarter_match or not time_match:
                     continue
                 year = int(quarter_match.group(1)) + 1911
