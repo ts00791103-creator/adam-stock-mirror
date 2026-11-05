@@ -36,6 +36,7 @@ jobs:
         run: |
           node tests/test_chart_price_pan.cjs
           node tests/test_chart_render.cjs
+          node deploy/fallback-scheduler/test_worker.mjs
       - name: Optional live Taiwan quote smoke check (non-blocking)
         continue-on-error: true
         timeout-minutes: 3
