@@ -1223,6 +1223,8 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                                     "has_date_keyword": "日期關鍵字",
                                     "has_roc_date_pattern": "民國日期格式",
                                     "header_labels": "原始欄名",
+                                    "looks_like_result_table": "疑似公告結果",
+                                    "likely_ui_table": "疑似查詢介面",
                                 })
                                 st.dataframe(profiles, use_container_width=True, hide_index=True)
                                 st.caption("勾選表示偵測到關鍵字，並不代表公告日已經核實。")
