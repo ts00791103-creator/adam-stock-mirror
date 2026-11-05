@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 from mobile_chart import mobile_chart
+from live_quote import show_personal_quote
 
 st.set_page_config(page_title="亞當理論 B3 Pro", layout="wide")
 st.title("亞當理論 B3 Pro｜A 模式左右鏡像")
@@ -1014,6 +1015,8 @@ if mode == "三波各自獨立放大":
             ZOOMS,
             index=4
         )
+
+show_personal_quote(market, symbol)
 
 st.info(
     "未來鏡像保留全部 K 棒；"
