@@ -126,7 +126,7 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
     if diagnostic["contains_table"]:
         # The legacy endpoint can return its query form as 11 HTML tables.
         # Do not interpret those tables as announcement records.
-        if not re.search(r"(?<!\\d)" + re.escape(code) + r"(?!\\d)", body):
+        if not re.search(r"(?<!\d)" + re.escape(code) + r"(?!\d)", body):
             diagnostic["response_has_requested_stock"] = False
         else:
             diagnostic["response_has_requested_stock"] = True
@@ -152,7 +152,7 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
             "has_stock_code": code in text,
             "has_filing_keyword": any(k in text for k in ("財務報告", "財報公告", "申報日期", "公告日期")),
             "has_date_keyword": any(k in text for k in ("日期", "時間", "公告", "申報")),
-            "has_roc_date_pattern": bool(re.search(r"(?<!\\d)1\\d{2}[/.-]\\d{1,2}[/.-]\\d{1,2}", text)),
+            "has_roc_date_pattern": bool(re.search(r"(?<!\d)1\d{2}[/.-]\d{1,2}[/.-]\d{1,2}", text)),
             "header_labels": [str(x)[:65] for x in frame.columns[:8]],
             "looks_like_result_table": (
                 code in text
@@ -161,7 +161,7 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
             ),
             "likely_ui_table": (
                 code not in text
-                and not bool(re.search(r"(?<!\\d)1\\d{2}[/.-]\\d{1,2}[/.-]\\d{1,2}", text))
+                and not bool(re.search(r"(?<!\d)1\d{2}[/.-]\d{1,2}[/.-]\d{1,2}", text))
             ),
         })
     if not any(p["looks_like_result_table"] for p in table_profiles):
