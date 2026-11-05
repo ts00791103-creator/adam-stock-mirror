@@ -3,6 +3,7 @@ import json
 import math
 import pandas as pd
 import streamlit.components.v1 as components
+from box_theory import detect_boxes
 
 
 def _points(index, values):
@@ -18,7 +19,7 @@ def _points(index, values):
 
 
 def mobile_chart(df, waves, zoom, title, show_bollinger=False,
-                 boll_period=20, boll_std=2.0, chart_theme="券商深色", viewport_key=None, ma_periods=None, ema_periods=None):
+                 boll_period=20, boll_std=2.0, chart_theme="券商深色", viewport_key=None, ma_periods=None, ema_periods=None, auto_boxes=False, box_window=20, box_width=12.0):
     """Render mobile-friendly pinch zoom; no effect on Adam calculations."""
     dark = chart_theme == "券商深色"
     if zoom == "全部歷史與鏡像":
@@ -75,6 +76,20 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
                 "points": _points(previous["times"], previous["projection"]),
                 "style": 1
             })
+    boxes = detect_boxes(df, box_window, box_width) if auto_boxes else []
+    for n, box in enumerate(boxes, 1):
+        indexes = df.index[box["start"]:box["end"]+1]
+        if len(indexes) < 2:
+            continue
+        for label, value, color in [
+            ("箱頂", box["top"], "#52a9ff"),
+            ("箱底", box["bottom"], "#52a9ff"),
+            ("箱中線", box["mid"], "#7e98b6")
+        ]:
+            series.append({"name": f"箱{n}{label} {value:,.2f}（{box['status']}）",
+                           "color": color,
+                           "points": _points([indexes[0], indexes[-1]], [value, value]),
+                           "style": 1 if label == "箱中線" else 0})
     # Lightweight Charts requires monotonically increasing unique timestamps.
     for line in series:
         unique = {p["time"]: p for p in line["points"]}
