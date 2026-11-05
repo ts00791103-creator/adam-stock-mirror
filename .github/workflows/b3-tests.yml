@@ -1,0 +1,20 @@
+name: B3 candidate filing tests
+on:
+  push:
+    branches: [b3-speed-test]
+  workflow_dispatch:
+jobs:
+  filing-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install test dependencies
+        run: python -m pip install pandas requests lxml html5lib beautifulsoup4
+      - name: Run official filing tests
+        run: python -m unittest discover -s tests -p 'test_official_filing_candidates.py' -v
