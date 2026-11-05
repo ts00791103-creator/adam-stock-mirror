@@ -1211,6 +1211,7 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                             if not required.issubset(date_table.columns):
                                 st.error("CSV 缺少必要欄位，請使用下載範本。")
                             else:
+                                from filing_dates import inspect_filing_date
                                 matched = []
                                 valid_periods = {x["quarter"] for x in history_rows}
                                 for _, date_row in date_table.iterrows():
@@ -1218,18 +1219,11 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                                     code = str(date_row["股票代號"]).strip()
                                     date_str = str(date_row["公告日期"]).strip()
                                     source_url = str(date_row["官方來源網址"]).strip()
-                                    status = "待核實"
-                                    if code != str(symbol).split(".")[0] or quarter not in valid_periods:
-                                        status = "股票代號或季度不符"
-                                    elif date_str and source_url.startswith("https://"):
-                                        try:
-                                            parsed = pd.Timestamp(date_str)
-                                            if parsed.date() > pd.Period(quarter, freq="Q").end_time.date():
-                                                status = "待人工查證來源與公告日"
-                                            else:
-                                                status = "公告日不得早於季度結束日"
-                                        except Exception:
-                                            status = "公告日期格式錯誤"
+                                    status = inspect_filing_date(
+                                        code, quarter, date_str, source_url,
+                                        str(symbol).split(".")[0])
+                                    if quarter not in valid_periods:
+                                        status = "季度不在目前核對範圍"
                                     matched.append({"季度": quarter, "公告日期": date_str,
                                                     "官方來源網址": source_url, "狀態": status})
                                 st.dataframe(pd.DataFrame(matched), use_container_width=True, hide_index=True)
