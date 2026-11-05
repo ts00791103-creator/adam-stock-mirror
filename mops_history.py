@@ -60,7 +60,7 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
             if idx >= len(table.columns):
                 continue
             raw = table.columns[idx]
-            levels = [re.sub(r"\\s+", "", str(x)) for x in
+            levels = [re.sub(r"\s+", "", str(x)) for x in
                       (raw if isinstance(raw, tuple) else (raw,))]
             # MOPS places the statement title, period, and amount in separate
             # MultiIndex levels. The title mentions the current quarter even
@@ -70,7 +70,7 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
             if any("%" in x or "％" in x for x in levels):
                 continue
             detail = [x for x in levels if "年" in x and
-                      ("至" in x or re.search(r"年第\\d+季", x))]
+                      ("至" in x or re.search(r"年第\d+季", x))]
             # Remove the shared report title; only specific period labels count.
             detail = [x for x in detail if "單位" not in x and "民國" not in x]
             if len(detail) != 1:
