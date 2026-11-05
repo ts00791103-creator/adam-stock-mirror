@@ -27,7 +27,8 @@ class ProductionEntryTests(unittest.TestCase):
         self.assertNotIn("啟用估價", checkbox_labels)
         self.assertFalse(any("測試" in label for label in checkbox_labels))
         panels = [item.label for item in app.expander]
-        self.assertFalse(any("估價" in label or "即時" in label for label in panels))
+        self.assertFalse(any("估價" in label for label in panels))
+        self.assertIn("個人即時價格", panels)
         self.assertEqual(len(app.multiselect), 0)
 
     def test_production_analysis_uses_the_same_core_pipeline(self):

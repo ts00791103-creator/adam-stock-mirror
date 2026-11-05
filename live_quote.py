@@ -2,6 +2,7 @@
 import re
 import hmac
 import json
+import math
 import urllib.request
 import urllib.error
 from datetime import datetime
@@ -35,8 +36,7 @@ def _format_trade_time(microseconds):
         return "成交時間無法解析"
 
 
-@st.fragment(run_every="10s")
-def _quote_fragment(symbol, api_key):
+def _render_quote(symbol, api_key):
     try:
         quote = _fetch_quote(symbol, api_key)
         last_trade = quote.get("lastTrade") or {}
@@ -46,8 +46,15 @@ def _quote_fragment(symbol, api_key):
         if price is None:
             st.info("目前沒有實際成交資料（可能尚未開盤或無成交）。")
             return
+        price = float(price)
+        if not math.isfinite(price) or price <= 0:
+            st.warning("行情回傳無效成交價，本次不顯示價格。")
+            return
         previous = quote.get("previousClose")
-        change = float(price) - float(previous) if previous else None
+        previous = float(previous) if previous is not None else None
+        if previous is not None and (not math.isfinite(previous) or previous <= 0):
+            previous = None
+        change = float(price) - previous if previous else None
         percent = change / float(previous) * 100 if change is not None else None
         a, b, c = st.columns(3)
         a.metric("最新成交價", f"{float(price):,.2f}")
@@ -71,14 +78,20 @@ def _quote_fragment(symbol, api_key):
         st.warning("即時行情連線失敗，請確認金鑰、網路與權限。歷史 K 線不受影響。")
 
 
-def show_personal_quote(market, symbol):
+@st.fragment(run_every="10s")
+def _quote_fragment(symbol, api_key):
+    _render_quote(symbol, api_key)
+
+
+def show_personal_quote(market, symbol, production=False):
     if market != "台灣股票／ETF":
         return
     stock_id = str(symbol).split(".")[0]
     if not re.fullmatch(r"[0-9]{4,6}[A-Za-z]?", stock_id):
         return
-    with st.expander("個人即時價格（測試版）", expanded=False):
+    with st.expander("個人即時價格" if production else "個人即時價格（測試版）", expanded=False):
         st.caption("僅報價面板自動更新；原本歷史 K 線與亞當鏡像不會被改寫。")
+        st.caption(f"目前報價股票：{stock_id}。選股使用歷史日K，這裡的報價不會改變篩選結果。")
         key = _secret("FUGLE_API_KEY")
         password = _secret("LIVE_QUOTE_PASSWORD")
         if not key or not password:
@@ -89,5 +102,11 @@ def show_personal_quote(market, symbol):
             if entered:
                 st.error("密碼不正確")
             return
-        if st.checkbox("啟用每 10 秒更新", value=False, key="live_quote_enabled"):
+        enabled = st.checkbox("啟用每 10 秒更新", value=False, key="live_quote_enabled")
+        refresh = st.button("查詢一次最新成交價", key="live_quote_refresh")
+        if enabled:
             _quote_fragment(stock_id, key)
+        elif refresh:
+            _render_quote(stock_id, key)
+        else:
+            st.caption("尚未查詢報價。可單次查詢，或啟用每10秒更新；休市時顯示的是最近成交。")

@@ -1127,8 +1127,7 @@ if mode == "三波各自獨立放大":
             index=4
         )
 
-if not PRODUCTION_MODE:
-    show_personal_quote(market, symbol)
+show_personal_quote(market, symbol, production=PRODUCTION_MODE)
 
 st.info(
     "未來鏡像保留全部 K 棒；"
