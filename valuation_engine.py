@@ -59,3 +59,66 @@ def historical_pe_bands(symbol, years=3):
     return {"pes": q, "samples": len(recent), "coverage_days": coverage_days, "warnings": warnings, "spread": spread, "start": str(latest_date - pd.DateOffset(years=years))[:10],
             "end": str(latest_date)[:10], "eps_quarters": len(eps),
             "method": "季 EPS 累計四季；季末後75天視為可用（非實際公告日）"}, None
+
+def eps_growth_reference(symbol):
+    """YoY change in latest reported trailing-four-quarter EPS, not a forecast."""
+    try:
+        income = yf.Ticker(symbol).quarterly_income_stmt
+        row = next((n for n in ("Diluted EPS", "Basic EPS") if n in income.index), None)
+        if row is None:
+            return None, "找不到季 EPS"
+        eps = pd.to_numeric(income.loc[row], errors="coerce").dropna()
+        eps.index = pd.to_datetime(eps.index)
+        eps = eps.sort_index()
+        if len(eps) < 8:
+            return None, "不足八季 EPS，無法計算近四季年增率"
+        recent = float(eps.iloc[-4:].sum())
+        prior = float(eps.iloc[-8:-4].sum())
+        if recent <= 0 or prior <= 0:
+            return None, "歷史 EPS 非正值，成長率不適用"
+        return {"growth_pct": (recent / prior - 1) * 100,
+                "recent_ttm": recent, "prior_ttm": prior,
+                "quarter_end": str(eps.index[-1].date()),
+                "source": "Yahoo Finance quarterly_income_stmt；近四季與前四季比較"}, None
+    except Exception:
+        return None, "季 EPS 來源暫時不可用"
+
+
+def valuation_quality(pe_result, current_pe, growth_result=None):
+    """Explainable heuristic quality rating; not predictive accuracy."""
+    reasons = []
+    if pe_result is None:
+        return "低", ["歷史本益比資料不可用"]
+    score = 0
+    if pe_result["samples"] >= 250:
+        score += 1
+    else:
+        reasons.append("歷史樣本少於 250 個交易日")
+    if pe_result["coverage_days"] >= 730:
+        score += 1
+    else:
+        reasons.append("有效樣本跨度少於兩年")
+    if pe_result["eps_quarters"] >= 12:
+        score += 1
+    else:
+        reasons.append("季 EPS 少於 12 季")
+    if 0.15 <= pe_result["spread"] <= 1.0:
+        score += 1
+    else:
+        reasons.append("本益比分布過窄或過寬")
+    low, _, high = pe_result["pes"]
+    if low * 0.8 <= current_pe <= high * 1.2:
+        score += 1
+    else:
+        reasons.append("目前 PE 明顯偏離歷史分布")
+    if growth_result is None:
+        reasons.append("缺少可核對的 EPS 年增率")
+    return ("高" if score == 5 and growth_result else "中" if score >= 3 else "低"), reasons
+
+
+def conservative_entry(eps, pe_result, margin_pct=25):
+    """Conservative reference only: lower of historical 20th PE and median PE discounted."""
+    if eps <= 0 or pe_result is None:
+        return None
+    low, median, _ = pe_result["pes"]
+    return eps * min(low, median * (1 - margin_pct / 100))
