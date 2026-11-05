@@ -68,7 +68,10 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
             palette = {5:"#ffca28",10:"#29b6f6",20:"#ab47bc",60:"#66bb6a",120:"#ef5350",240:"#b0bec5"}
             series.append({"name":f"{kind}{period}", "color":palette.get(period,"#ffffff"),
                            "points":_points(plot_df.index,values.reindex(plot_df.index))})
+    mirror_summary = []
     for wave in waves:
+        mirror_summary.append({"name": wave["name"], "color": wave["color"],
+                               "bars": max(0, len(wave["projection"]) - 1)})
         series.append({"name": wave["name"] + "歷史波段",
                        "color": wave["color"],
                        "points": _points(wave["recent"].index[wave["start"]:wave["end"]+1],
@@ -119,12 +122,12 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
     bars = sorted({b["time"]: b for b in bars}.values(), key=lambda b: b["time"])
     payload = json.dumps({"rendererVersion": "VOL-OHLC-1", "bars": bars, "lines": series, "boxes": rectangles, "volumes": volumes, "volumeMA5": volume_ma5, "volumeMA20": volume_ma20, "volumeUnit": volume_unit,
                           "count": view_count, "dark": dark,
-                          "title": title, "viewportKey": viewport_key}, ensure_ascii=False).replace("</", "<\\/")
+                          "title": title, "viewportKey": viewport_key, "mirrorSummary": mirror_summary}, ensure_ascii=False).replace("</", "<\\/")
     html = """<!doctype html><html lang="zh-Hant"><head><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <style>html,body{margin:0;padding:0;overflow:hidden;background:BG;color:FG;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif}
 #heading{padding:8px 10px;font-size:14px;font-weight:600}#ohlc{padding:4px 10px;font-size:12px;min-height:20px;font-variant-numeric:tabular-nums}#chart-wrap{position:relative;width:100%;height:480px}#chart{width:100%;height:480px;touch-action:none}#box-overlay{position:absolute;inset:0;width:100%;height:480px;pointer-events:none;z-index:2}
-#hint{font-size:12px;opacity:.8;padding:6px 10px}#error{color:#ff7777;padding:12px}</style></head>
-<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量｜成交量資料：Yahoo Finance（台股單位：張）</div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="error"></div>
+#mirror-summary{font-size:12px;padding:5px 10px;display:flex;flex-wrap:wrap;gap:10px}#hint{font-size:12px;opacity:.8;padding:6px 10px}#error{color:#ff7777;padding:12px}</style></head>
+<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量｜成交量資料：Yahoo Finance（台股單位：張）</div><div id="mirror-summary"></div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="error"></div>
 <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 const data=PAYLOAD;
@@ -132,11 +135,18 @@ document.getElementById('heading').textContent=data.title+'｜'+data.rendererVer
 if(!window.LightweightCharts){document.getElementById('error').textContent='圖表元件載入失敗，請檢查網路或切回原本圖表。';}
 else {
  const dark=data.dark;
+ const summary=document.getElementById('mirror-summary');
+ for(const wave of data.mirrorSummary||[]){
+   const item=document.createElement('span');
+   item.style.color=wave.color;
+   item.textContent=wave.name+'鏡像：'+wave.bars+'根';
+   summary.appendChild(item);
+ }
  const chart=LightweightCharts.createChart(document.getElementById('chart'),{
   width:document.getElementById('chart').clientWidth,height:480,
   layout:{background:{type:'solid',color:dark?'#101010':'#ffffff'},textColor:dark?'#eeeeee':'#333333'},
   grid:{vertLines:{color:dark?'#242424':'#eeeeee'},horzLines:{color:dark?'#353535':'#eeeeee'}},
-  timeScale:{timeVisible:true,secondsVisible:false,rightOffset:5,barSpacing:9,
+  timeScale:{timeVisible:true,secondsVisible:false,rightOffset:Math.min(80,Math.max(12,...(data.mirrorSummary||[]).map(w=>w.bars))),barSpacing:9,
     fixLeftEdge:false,lockVisibleTimeRangeOnResize:true},
   rightPriceScale:{borderColor:dark?'#555555':'#cccccc'},
   handleScroll:{mouseWheel:true,pressedMouseMove:true,horzTouchDrag:true,vertTouchDrag:true},
@@ -269,7 +279,7 @@ else {
  if(!saved && data.bars.length){
    const count=Math.min(data.count,data.bars.length);
    chart.timeScale().setVisibleLogicalRange({from:Math.max(0,data.bars.length-count),
-    to:data.bars.length+Math.min(5,Math.max(1,Math.floor(count/4)))});
+    to:data.bars.length+Math.min(80,Math.max(12,...(data.mirrorSummary||[]).map(w=>w.bars)))});
  }
  let persistTimer=null;
  chart.timeScale().subscribeVisibleLogicalRangeChange(range=>{
@@ -285,4 +295,4 @@ else {
 </script></body></html>"""
     html = html.replace("BG", "#101010" if dark else "#ffffff").replace(
         "FG", "#ffffff" if dark else "#222222").replace("PAYLOAD", payload)
-    components.html(html, height=585, scrolling=False)
+    components.html(html, height=610, scrolling=False)
