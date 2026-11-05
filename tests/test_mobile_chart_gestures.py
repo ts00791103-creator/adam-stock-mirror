@@ -36,6 +36,12 @@ class MobileChartGestureConfigurationTests(unittest.TestCase):
         self.assertIn("Math.min(80,Math.max(12", self.source)
         self.assertIn("data.mirrorSummary||[]", self.source)
 
+    def test_independent_mirror_wave_visibility(self):
+        self.assertIn('mirror_styles = {"短波": 2, "中波": 1, "長波": 0}', self.source)
+        self.assertIn('"mirrorWave": wave["name"]', self.source)
+        self.assertIn('series.applyOptions({visible:waveVisibility[wave.name]})', self.source)
+        self.assertIn("item.addEventListener('click',toggle)", self.source)
+
     def test_viewport_persistence_is_preserved(self):
         self.assertIn("setVisibleLogicalRange(saved)", self.source)
         self.assertIn("sessionStorage.setItem(storageKey", self.source)
