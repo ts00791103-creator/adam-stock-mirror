@@ -80,6 +80,11 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
             quarter_re = rf"^{years}年第0?{quarter}季$"
             ytd_re = (rf"^{years}年0?1月0?1日至"
                       rf"{years}年0?{quarter*3}月(?:30|31)日$")
+            # Q4 audited annual statements use "114年度" rather than
+            # "114年01月01日至114年12月31日".
+            if quarter == 4 and re.fullmatch(rf"^{years}年度$", period):
+                matches["cumulative_eps"].append(cell["value"])
+                continue
             if re.fullmatch(ytd_re, period):
                 matches["cumulative_eps"].append(cell["value"])
             elif re.fullmatch(quarter_re, period):
@@ -90,7 +95,9 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
             matches["cumulative_eps"] = list(matches["quarter_eps"])
         if quarter == 1 and len(matches["cumulative_eps"]) == 1 and not matches["quarter_eps"]:
             matches["quarter_eps"] = list(matches["cumulative_eps"])
-        if all(len(matches[k]) == 1 for k in matches):
+        if quarter == 4 and len(matches["cumulative_eps"]) == 1 and not matches["quarter_eps"]:
+            verified.append({"quarter_eps": None, "cumulative_eps": matches["cumulative_eps"][0]})
+        elif all(len(matches[k]) == 1 for k in matches):
             verified.append({k: matches[k][0] for k in matches})
     # Distinct MOPS EPS tables can repeat the same basic EPS values.
     # Accept duplicates only when every verified table agrees exactly.
