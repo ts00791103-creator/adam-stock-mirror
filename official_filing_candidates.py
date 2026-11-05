@@ -196,6 +196,36 @@ def probe_session_backed_filing_query(stock_code, year, quarter, timeout=12, ses
             "message": "同一工作階段的官方查詢診斷；尚未核實財報首次申報日，不可解鎖歷史 PE"}
 
 
+def compare_filing_quarters(stock_code, periods=((2026, 3), (2025, 4), (2024, 4)),
+                            timeout=12, probe=None):
+    """Compare recent and old quarters without treating diagnostics as filings.
+
+    A successful HTTP response does not establish that a report was filed.
+    Inject probe for offline tests; failures are isolated per quarter.
+    """
+    worker = probe if probe is not None else probe_session_backed_filing_query
+    rows = []
+    for year, quarter in periods:
+        period = f"{year}Q{quarter}"
+        try:
+            result = worker(stock_code, year, quarter, timeout=timeout)
+        except Exception:
+            result = {"status": "probe_error"}
+        ajax = result.get("ajax_result") or {}
+        rows.append({"季度": period, "查詢狀態": result.get("status", "unknown"),
+                     "回應字元數": ajax.get("chars"),
+                     "包含表格": ajax.get("has_table"),
+                     "包含股票代號": ajax.get("has_stock_code"),
+                     "回應指紋": ajax.get("sha256_prefix"),
+                     "公告日期已核實": False})
+    fingerprints = [row["回應指紋"] for row in rows if row["回應指紋"]]
+    same = len(fingerprints) == len(rows) and len(set(fingerprints)) == 1
+    return {"rows": rows, "all_ajax_responses_identical": same,
+            "conclusion": ("三個季度回應完全相同，疑似取得通用查詢頁或未依季度查詢"
+                           if same else "各季度回應不同或部分失敗；仍須驗證資料內容及首次申報時間"),
+            "verified_filing_dates": 0}
+
+
 def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
     """Probe historical MOPS financial-report announcement transport only.
 
