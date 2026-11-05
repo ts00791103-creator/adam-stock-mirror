@@ -1252,6 +1252,31 @@ if st.button(
                 key="combined"
             )
 
+    if auto_boxes:
+        from box_theory import detect_boxes
+        detected = detect_boxes(df, window=box_window, max_width_pct=box_width, max_boxes=5)
+        st.subheader("自動箱型突破目標分析（測試版）")
+        if detected:
+            rows = []
+            for n, box in enumerate(detected, 1):
+                top, bottom = float(box["top"]), float(box["bottom"])
+                height = top - bottom
+                rows.append({
+                    "箱型": f"箱{n}",
+                    "開始": df.index[box["start"]].strftime("%Y-%m-%d"),
+                    "結束": df.index[box["end"]].strftime("%Y-%m-%d"),
+                    "狀態": box["status"],
+                    "箱頂壓力": round(top, 2),
+                    "箱底支撐": round(bottom, 2),
+                    "箱型高度": round(height, 2),
+                    "上突破目標": round(top + height, 2),
+                    "下跌破目標": round(bottom - height, 2),
+                })
+            st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+            st.caption("目標價為箱型等幅量測推估，並非保證達到；突破狀態以收盤價判斷。")
+        else:
+            st.info("目前參數下沒有符合條件的整理箱型，可調整觀察根數或最大振幅。")
+
     show_live_candle(
         market, symbol, interval, df, waves,
         zoom if mode != "三波各自獨立放大" else "最近60根",
