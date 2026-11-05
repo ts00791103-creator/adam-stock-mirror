@@ -1083,12 +1083,19 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                 if filing_data is not None:
                     auto_pe_result, pe_error = historical_pe_from_filings(symbol, filing_data, years=3)
             else:
-                from valuation_engine import historical_pe_bands
-                auto_pe_result, pe_error = historical_pe_bands(symbol, years=3)
+                if str(symbol).endswith(".TW"):
+                    from twse_pe import official_twse_pe
+                    @st.cache_data(ttl=86400, show_spinner=False)
+                    def cached_twse_pe(stock_symbol):
+                        return official_twse_pe(stock_symbol, years=3)
+                    auto_pe_result, pe_error = cached_twse_pe(symbol)
+                else:
+                    from valuation_engine import historical_pe_bands
+                    auto_pe_result, pe_error = historical_pe_bands(symbol, years=3)
         except Exception:
             pe_error = "財務資料或股價來源暫時不可用"
         if auto_pe_result:
-            st.success(("公告日 CSV 歷史 PE：" if filing_upload is not None else "Yahoo 歷史 PE：") + "／".join(f"{p:.1f} 倍" for p in auto_pe_result["pes"]))
+            st.success(("公告日 CSV 歷史 PE：" if filing_upload is not None else "證交所官方歷史 PE：" if str(symbol).endswith(".TW") else "Yahoo 歷史 PE：") + "／".join(f"{p:.1f} 倍" for p in auto_pe_result["pes"]))
             st.caption(f"樣本 {auto_pe_result['samples']} 日｜{auto_pe_result['start']}～{auto_pe_result['end']}｜{auto_pe_result['method']}")
             if auto_pe_result.get("warnings"):
                 st.warning("估價可信度提醒：" + "；".join(auto_pe_result["warnings"]))
@@ -1409,9 +1416,10 @@ if st.button(
             effective_pes = auto_pe_result["pes"] if auto_pe_enabled else (cheap_pe, fair_pe, expensive_pe)
             cheap_price, fair_price, expensive_price = [eps_value * pe for pe in effective_pes]
             latest_price = float(df["Close"].iloc[-1])
+            official_pe_mode = bool(auto_pe_enabled and filing_upload is None and str(symbol).endswith(".TW"))
             quality_ok = bool(auto_pe_enabled and auto_pe_result and auto_pe_result["samples"] >= 250
                               and auto_pe_result.get("coverage_days", 0) >= 365
-                              and auto_pe_result.get("eps_quarters", 0) >= 12
+                              and (official_pe_mode or auto_pe_result.get("eps_quarters", 0) >= 12)
                               and not auto_pe_result.get("warnings"))
             p1, p2, p3 = st.columns(3)
             p1.metric(("🟢 歷史估值下緣（試算）" if auto_pe_enabled else "🟢 手動 PE 下緣（試算）") if not quality_ok else "🟢 便宜價（參考）", f"{cheap_price:,.2f}")
@@ -1440,7 +1448,7 @@ if st.button(
                 valuation_date = str(pd.Timestamp(df.index[-1]).date())
             except Exception:
                 valuation_date = "日期未知"
-            st.caption(f"📅 股價資料日期：{valuation_date}｜價格：歷史 K 線資料｜EPS／季財報：Yahoo Finance｜歷史 PE：本程式依財報季末後 75 天近似可用日計算；非即時報價。")
+            st.caption(f"📅 股價資料日期：{valuation_date}｜價格：歷史 K 線資料｜EPS：Yahoo Finance 或手動輸入｜歷史 PE：{auto_pe_result['method'] if auto_pe_result else '未取得'}；非即時報價。")
             if not quality_ok:
                 st.warning("歷史 EPS 樣本不足或估價未驗證：數字僅供試算，不提供安全進場價。")
             if forecast_enabled:
