@@ -65,6 +65,21 @@ class OfficialCandidateTests(unittest.TestCase):
         self.assertEqual(client.post.call_count, 1)
         self.assertNotIn("公告日期", result)
 
+    def test_filing_table_classifier_requires_all_signals(self):
+        from official_filing_candidates import classify_filing_response_html
+        html = "<table><tr><td>2308 台達電 115年第3季 財務報告 公告 115/11/03</td></tr></table>"
+        result = classify_filing_response_html(html, "2308", 2026, 3)
+        self.assertEqual(result["candidate_table_count"], 1)
+        self.assertIsNone(result["verified_filing_date"])
+        self.assertEqual(result["classification"], "possible_filing_table_unverified")
+
+    def test_filing_table_classifier_rejects_generic_query_table(self):
+        from official_filing_candidates import classify_filing_response_html
+        html = "<table><tr><td>財務報告 查詢 2308</td></tr></table>"
+        result = classify_filing_response_html(html, "2308", 2026, 3)
+        self.assertEqual(result["candidate_table_count"], 0)
+        self.assertEqual(result["classification"], "no_matching_filing_table")
+
     def test_three_quarter_identical_responses_stay_unverified(self):
         from official_filing_candidates import compare_filing_quarters
         def probe(stock_code, year, quarter, timeout=12):
