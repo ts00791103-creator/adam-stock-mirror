@@ -78,6 +78,24 @@ class OfficialCandidateTests(unittest.TestCase):
         self.assertEqual(rows[0]["季度"], "2026Q2")
         self.assertEqual(rows[0]["公告日期時間"], "2026-08-14 16:30")
 
+    def test_rejects_filing_before_quarter_end_and_future(self):
+        frame = pd.DataFrame([
+            ["115/06/15 16:30", "2308", "台達電", "115年第2季財務報告書"],
+            ["119/08/14 16:30", "2308", "台達電", "115年第2季財務報告書"],
+            ["115/08/14 16:30", "2308", "台達電", "115年第2季財務報告書"],
+        ])
+        class Response:
+            text = "<table></table>"
+            def raise_for_status(self):
+                pass
+        with patch("official_filing_candidates.requests.get", return_value=Response()), patch(
+            "official_filing_candidates.pd.read_html", return_value=[frame]
+        ):
+            rows, error = fetch_official_filing_candidates("2308")
+        self.assertIsNone(error)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["公告日期時間"], "2026-08-14 16:30")
+
     def test_empty_javascript_page_fails_closed(self):
         with patch("official_filing_candidates.requests.get") as getter:
             getter.return_value.text = "<html>No server-side table</html>"
