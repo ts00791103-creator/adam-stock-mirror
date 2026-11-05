@@ -178,4 +178,8 @@ def fetch_mops_eps_history(symbol, years=5, end_period=None, fetcher=None, progr
             row["ttm_eps"] = round(sum(w["quarter_eps"] for w in window), 4)
         else:
             row["ttm_eps"] = None
+        # EPS is published rounded to cents, so YTD arithmetic can differ
+        # slightly. Keep the tolerance check explicit and traceable.
+        row["ttm_status"] = ("已核對四季" if row["ttm_eps"] is not None
+                             else "缺少季度或累計核對未完成")
     return records, failures
