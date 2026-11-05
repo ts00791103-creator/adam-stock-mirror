@@ -1319,7 +1319,21 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                         if candidates:
                             st.write(f"找到 {len(candidates)} 筆公告候選紀錄（非已核實公告日）")
                             st.dataframe(pd.DataFrame(candidates), use_container_width=True, hide_index=True)
-                        coverage = review_candidate_coverage(candidates, [x["quarter"] for x in history_rows])
+                        from official_filing_candidates import summarize_filing_coverage
+                        periods_to_check = [x["quarter"] for x in history_rows]
+                        summary = summarize_filing_coverage(candidates, periods_to_check)
+                        st.write(
+                            f"**公告候選涵蓋率：{summary['quarters_with_candidates']}/{summary['requested_quarters']} 季 "
+                            f"({summary['candidate_coverage_percent']}%)**"
+                        )
+                        st.caption(
+                            f"缺漏 {summary['quarters_missing_candidates']} 季；"
+                            f"多筆候選 {summary['quarters_with_multiple_candidates']} 季；"
+                            "已核實首次申報日期 0 季（歷史 PE 維持鎖定）。"
+                        )
+                        if summary["missing_quarters"]:
+                            st.write("**尚無公告候選的季度：**", "、".join(summary["missing_quarters"]))
+                        coverage = review_candidate_coverage(candidates, periods_to_check)
                         st.dataframe(pd.DataFrame(coverage), use_container_width=True, hide_index=True)
                         st.caption("缺漏、重複、補正公告都不會自動填入歷史 PE；必須核對首次有效申報與原始紀錄。")
                     filing_template = pd.DataFrame([{
