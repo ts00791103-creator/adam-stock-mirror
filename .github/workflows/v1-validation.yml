@@ -56,3 +56,17 @@ jobs:
         continue-on-error: true
         timeout-minutes: 3
         run: python scripts/live_entry_alerts_smoke.py
+
+  worker-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: deploy/alerts-worker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements.txt
+      - run: python -m unittest discover -s tests -p 'test_*.py' -v

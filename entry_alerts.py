@@ -8,6 +8,13 @@ from box_theory import detect_boxes
 from quote_quality import invalid_price_rows
 
 
+class EntryDataError(ValueError):
+    """Controlled explanation containing public OHLC evidence only."""
+    def __init__(self, records):
+        super().__init__("行情品質異常，未產生提醒")
+        self.records = records
+
+
 @dataclass(frozen=True)
 class AlertSettings:
     box_window: int = 20
@@ -51,7 +58,10 @@ def evaluate_entry_alerts(frame, symbol, as_of, settings=None, rules=("箱底反
     if str(data.index[-1].date()) != str(as_of):
         raise ValueError("行情不是指定日期，未產生提醒")
     data[required] = data[required].apply(pd.to_numeric, errors="coerce")
-    if invalid_price_rows(data) or not np.isfinite(data.Volume.to_numpy(dtype=float)).all() or (data.Volume < 0).any():
+    bad_prices = invalid_price_rows(data)
+    if bad_prices:
+        raise EntryDataError(bad_prices)
+    if not np.isfinite(data.Volume.to_numpy(dtype=float)).all() or (data.Volume < 0).any():
         raise ValueError("行情品質異常，未產生提醒")
     # The box and volume baseline must exist BEFORE the signal candle.
     prior = data.iloc[:-1]
@@ -93,3 +103,4 @@ def telegram_text(event):
             f"既有箱底／箱頂：{event['既有箱底']:,.2f}／{event['既有箱頂']:,.2f}\n"
             f"原因：{event['觸發原因']}\n編號：{event['提醒編號']}\n"
             "條件到達提醒，不代表保證上漲；非自動下單。")
+

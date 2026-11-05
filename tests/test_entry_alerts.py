@@ -98,6 +98,21 @@ class DeliveryTests(unittest.TestCase):
 
 
 class EntryPreviewTests(unittest.TestCase):
+    def test_missing_latest_close_is_explained_without_using_previous_day(self):
+        source = "from entry_alerts_ui import show_entry_alerts\nshow_entry_alerts([('2330','台積電','上市')])"
+        data = breakout()
+        data.iloc[-1, data.columns.get_loc("Close")] = float("nan")
+        with patch("entry_alerts_ui.screening_data", return_value=data), patch("alert_delivery.send_telegram") as send:
+            app = AppTest.from_string(source).run()
+            app.text_area[0].set_value("2330")
+            next(b for b in app.button if b.key == "entry_preview").click().run()
+            saved = app.session_state["entry_preview_result"]
+            self.assertEqual(saved[1:3], ([], []))
+            self.assertIn("收盤價缺漏", saved[3][0]["原因"])
+            self.assertIn(str(data.index[-1].date()), saved[3][0]["異常日期（最多20根）"])
+            self.assertEqual(len(app.exception), 0)
+            send.assert_not_called()
+
     def test_failed_download_is_not_reported_as_no_signal_or_secret_text(self):
         source = "from entry_alerts_ui import show_entry_alerts\nshow_entry_alerts([('2330','台積電','上市')])"
         with patch("entry_alerts_ui.screening_data", side_effect=RuntimeError("private-token-url")):

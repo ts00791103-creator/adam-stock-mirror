@@ -3,7 +3,7 @@ from dataclasses import asdict
 import json
 import pandas as pd
 import streamlit as st
-from entry_alerts import AlertSettings, evaluate_entry_alerts, telegram_text
+from entry_alerts import AlertSettings, EntryDataError, evaluate_entry_alerts, telegram_text
 from stock_screener import resolve_watchlist
 from screener_ui import screening_data
 
@@ -60,6 +60,15 @@ def show_entry_alerts(stock_list):
                     found = evaluate_entry_alerts(data, symbol, day, settings, rules)
                     events.extend({**event, "名稱": name} for event in found)
                     checked.append({"股票": symbol, "名稱": name, "檢查日期": day, "符合提醒": len(found)})
+                except EntryDataError as exc:
+                    dates = "、".join(dict.fromkeys(r["日期／時間"][:10] for r in exc.records))
+                    fields = []
+                    for field in ("開盤", "最高", "最低", "收盤"):
+                        if any(pd.isna(r[field]) for r in exc.records):
+                            fields.append(field + "價缺漏")
+                    reason = "、".join(fields) or "價格高低不一致或含無效數值"
+                    failures.append({"輸入": symbol, "階段": stage, "異常日期（最多20根）": dates,
+                                     "原因": reason + "，本次未判定；不補值、不使用前一日替代"})
                 except Exception as exc:
                     # Never expose raw exception text, URLs, credentials or traceback.
                     known = {"ValueError": "資料格式或品質未通過", "TypeError": "資料型態不相容",
