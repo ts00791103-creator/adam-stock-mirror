@@ -92,6 +92,10 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
             matches["quarter_eps"] = list(matches["cumulative_eps"])
         if all(len(matches[k]) == 1 for k in matches):
             verified.append({k: matches[k][0] for k in matches})
+    # Distinct MOPS EPS tables can repeat the same basic EPS values.
+    # Accept duplicates only when every verified table agrees exactly.
+    if len(verified) > 1 and all(v == verified[0] for v in verified[1:]):
+        verified = [verified[0]]
     verified_eps = verified[0] if len(verified) == 1 else None
     # Q4 annual reports may expose full-year YTD but no standalone Q4.
     # Return YTD only; a later step may derive Q4 from verified Q3 YTD.
@@ -112,7 +116,7 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
                         matches.append(cell["value"])
             if len(matches) == 1:
                 ytd_only.append(matches[0])
-        if len(ytd_only) == 1:
+        if ytd_only and all(abs(x - ytd_only[0]) < 0.00001 for x in ytd_only):
             verified_eps = {"quarter_eps": None, "cumulative_eps": ytd_only[0]}
     eps_header_diagnostics = []
     for candidate in candidates[:15]:
