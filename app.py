@@ -1213,7 +1213,23 @@ with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", 
                         probe_saved = st.session_state.get("b3_mops_announcement_probe_result")
                         if probe_saved and probe_saved[0] == str(symbol).split(".")[0]:
                             st.write("測試季度：", probe_saved[1])
-                            st.json(probe_saved[2])
+                            probe_data = probe_saved[2]
+                            if probe_data.get("table_profiles"):
+                                profiles = pd.DataFrame(probe_data["table_profiles"])
+                                profiles = profiles.rename(columns={
+                                    "index": "表格編號", "rows": "列數", "columns": "欄數",
+                                    "has_stock_code": "包含股票代號",
+                                    "has_filing_keyword": "財報關鍵字",
+                                    "has_date_keyword": "日期關鍵字",
+                                    "has_roc_date_pattern": "民國日期格式",
+                                    "header_labels": "原始欄名",
+                                })
+                                st.dataframe(profiles, use_container_width=True, hide_index=True)
+                                st.caption("勾選表示偵測到關鍵字，並不代表公告日已經核實。")
+                                with st.expander("查看原始診斷 JSON"):
+                                    st.json(probe_data)
+                            else:
+                                st.json(probe_data)
                             st.warning("此處僅測試接口與表格結構；尚未驗證公告日，歷史 PE 不會解鎖。")
                     if st.button("自動查詢證交所財報公告候選紀錄", key="b3_official_filing_fetch"):
                         from official_filing_candidates import fetch_official_filing_candidates, review_candidate_coverage
