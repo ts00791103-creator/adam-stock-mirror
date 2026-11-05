@@ -263,6 +263,30 @@ def probe_mops_financial_announcement(stock_code, year, quarter, timeout=12):
     form_parser = _Forms()
     form_parser.feed(body)
     diagnostic["form_targets"] = form_parser.forms[:10]
+    # Expose only non-sensitive query defaults from the observed official form.
+    # These are evidence for the request schema, NOT evidence of a filing date.
+    class _QueryDefaults(HTMLParser):
+        allowed = {"co_id", "YEAR_SEASON", "TYPEK", "step", "firstin",
+                   "CID", "DTYPE", "RID", "SKEY", "kind"}
+        def __init__(self):
+            super().__init__()
+            self.defaults = {}
+        def handle_starttag(self, tag, attrs):
+            if tag != "input":
+                return
+            attrs = dict(attrs)
+            name = attrs.get("name")
+            if name not in self.allowed:
+                return
+            value = str(attrs.get("value", ""))
+            # SKEY/RID may be session-specific: never expose their values.
+            if name in {"SKEY", "RID"}:
+                self.defaults[name] = "[隱藏]"
+            elif re.fullmatch(r"[A-Za-z0-9_\\-]{0,30}", value):
+                self.defaults[name] = value
+    defaults_parser = _QueryDefaults()
+    defaults_parser.feed(body)
+    diagnostic["safe_form_defaults"] = defaults_parser.defaults
     table_profiles = []
     for idx, frame in enumerate(frames[:25]):
         values = frame.astype(str)
