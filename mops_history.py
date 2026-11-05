@@ -56,34 +56,37 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
         table = tables[candidate["table"] - 1]
         matches = {"quarter_eps": [], "cumulative_eps": []}
         for cell in candidate["values"]:
-            index = cell["column"] - 1
-            if index >= len(table.columns):
+            idx = cell["column"] - 1
+            if idx >= len(table.columns):
                 continue
-            raw = table.columns[index]
-            levels = raw if isinstance(raw, tuple) else (raw,)
-            levels = [re.sub(r"\\s+", "", str(x)) for x in levels]
-            if not any("金額" in level for level in levels):
+            raw = table.columns[idx]
+            levels = [re.sub(r"\\s+", "", str(x)) for x in
+                      (raw if isinstance(raw, tuple) else (raw,))]
+            # MOPS places the statement title, period, and amount in separate
+            # MultiIndex levels. The title mentions the current quarter even
+            # for last year's comparison; match the specific period level.
+            if not any("金額" in x for x in levels):
                 continue
-            if any("%" in level or "％" in level for level in levels):
+            if any("%" in x or "％" in x for x in levels):
                 continue
-            period_levels = [level for level in levels if "年" in level and ("季" in level or "月" in level)]
-            if len(period_levels) != 1:
+            detail = [x for x in levels if "年" in x and
+                      ("至" in x or re.search(r"年第\\d+季", x))]
+            # Remove the shared report title; only specific period labels count.
+            detail = [x for x in detail if "單位" not in x and "民國" not in x]
+            if len(detail) != 1:
                 continue
-            period = period_levels[0]
+            period = detail[0]
             years = rf"(?:{roc}|{year})"
-            quarter_re = rf"(?<!\\d){years}年第0?{quarter}季"
-            cumulative_re = (
-                rf"(?<!\\d){years}年0?1月0?1日至"
-                rf"{years}年0?{quarter*3}月(?:30|31)日"
-            )
-            if re.search(cumulative_re, period):
+            quarter_re = rf"^{years}年第0?{quarter}季$"
+            ytd_re = (rf"^{years}年0?1月0?1日至"
+                      rf"{years}年0?{quarter*3}月(?:30|31)日$")
+            if re.fullmatch(ytd_re, period):
                 matches["cumulative_eps"].append(cell["value"])
-            elif re.search(quarter_re, period):
+            elif re.fullmatch(quarter_re, period):
                 matches["quarter_eps"].append(cell["value"])
         if all(len(matches[k]) == 1 for k in matches):
             verified.append({k: matches[k][0] for k in matches})
-    # Diagnostic: show the exact unflattened header levels attached to each
-    # EPS value, plus classification, without treating candidates as verified.
+    verified_eps = verified[0] if len(verified) == 1 else None
     eps_header_diagnostics = []
     for candidate in candidates[:15]:
         table = tables[candidate["table"] - 1]
@@ -100,7 +103,6 @@ def fetch_mops_quarter(symbol, year, quarter, timeout=12):
                 "contains_percent": any("%" in x or "％" in x for x in levels),
                 "period_text": " | ".join(x for x in levels if "年" in x),
             })
-    verified_eps = verified[0] if len(verified) == 1 else None
     if not candidates:
         return None, "找不到可辨識的基本 EPS 數值，請確認 MOPS 是否回傳完整損益表"
     # Do not guess which column represents current-year cumulative EPS.
