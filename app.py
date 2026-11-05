@@ -1272,6 +1272,27 @@ if st.button(
                     "上突破目標": round(top + height, 2),
                     "下跌破目標": round(bottom - height, 2),
                 })
+            # An active box must contain the most recent candle and remain unbroken.
+            active = next((b for b in reversed(detected)
+                           if b["status"] == "整理中" and b["end"] == len(df) - 1), None)
+            st.markdown("#### 最新有效箱型")
+            if active is not None:
+                top = float(active["top"])
+                bottom = float(active["bottom"])
+                height = top - bottom
+                st.success(
+                    f"目前仍在箱內整理｜支撐 {bottom:,.2f}｜壓力 {top:,.2f}｜"
+                    f"上破量測 {top + height:,.2f}｜下破量測 {bottom - height:,.2f}"
+                )
+                st.caption("最新收盤仍在箱內；上、下目標須等待收盤有效突破後再作參考。")
+            else:
+                latest = detected[-1]
+                st.info(
+                    f"目前沒有仍有效的整理箱型。最近一個歷史箱型："
+                    f"{latest['status']}（{df.index[latest['end']].strftime('%Y-%m-%d')} 結束）。"
+                    "歷史箱型價位不視為當前有效支撐或壓力。"
+                )
+            st.markdown("#### 歷史箱型紀錄（非目前有效價位）")
             st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
             st.caption("目標價為箱型等幅量測推估，並非保證達到；突破狀態以收盤價判斷。")
         else:
