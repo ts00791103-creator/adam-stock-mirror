@@ -65,6 +65,31 @@ class OfficialCandidateTests(unittest.TestCase):
         self.assertEqual(client.post.call_count, 1)
         self.assertNotIn("公告日期", result)
 
+    def test_three_quarter_identical_responses_stay_unverified(self):
+        from official_filing_candidates import compare_filing_quarters
+        def probe(stock_code, year, quarter, timeout=12):
+            return {"status": "session_diagnostic_only",
+                    "ajax_result": {"chars": 2517, "has_table": False,
+                                    "has_stock_code": False, "sha256_prefix": "same123"}}
+        result = compare_filing_quarters("2308", probe=probe)
+        self.assertEqual(len(result["rows"]), 3)
+        self.assertTrue(result["all_ajax_responses_identical"])
+        self.assertEqual(result["verified_filing_dates"], 0)
+        self.assertEqual([r["季度"] for r in result["rows"]],
+                         ["2026Q3", "2025Q4", "2024Q4"])
+
+    def test_three_quarter_probe_error_is_isolated(self):
+        from official_filing_candidates import compare_filing_quarters
+        def probe(stock_code, year, quarter, timeout=12):
+            if year == 2025:
+                raise RuntimeError("network")
+            return {"status": "session_diagnostic_only",
+                    "ajax_result": {"sha256_prefix": str(year)}}
+        result = compare_filing_quarters("2308", probe=probe)
+        self.assertFalse(result["all_ajax_responses_identical"])
+        self.assertEqual(result["rows"][1]["查詢狀態"], "probe_error")
+        self.assertEqual(result["verified_filing_dates"], 0)
+
     def test_duplicate_reports_are_not_verified(self):
         rows = [{"季度": "2025Q4"}, {"季度": "2025Q4"}]
         review = review_candidate_coverage(rows, ["2025Q4", "2026Q1"])
