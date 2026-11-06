@@ -1,3 +1,10 @@
+## 最終驗證更新｜2026-11-06 08:00台灣時間
+本輪已觀察07:20至08:00，GitHub API沒有任何event=schedule紀錄；自動排程與自動推播未通過驗證。根因未確定，不宣稱永遠無法執行；也不能以尚未開盤解釋無schedule，因臨時系統測試不依賴行情。
+已移除臨時scheduler-verification.yml的schedule並改名Archived，原程式硬截止08:00防晚到訊息；私有清理提交aa2bf38798c46b10a5a356827fcbeab04ee2eae5，已讀回確認無schedule。保留正式entry-alerts.yml原14:47/18:17、六檔與啟用開關，但正式下午排程尚未驗收，不代表可靠性已通過。
+通過證據：先前手動連線訊息本人收訊；42129294532真實Git存儲與全新runner去重，telegram_calls=0；本輪沒有新增Telegram訊息或股票訊號。Python3.11/3.14各137項、背景包13項、備援Node8項模擬測試通過。手機尺寸模擬仍列未驗證。
+備援修正提案已備妥但未部署：原開發提交789d6fa9fb62e72fe3625c5568f85d86710d3dd7／deploy/fallback-scheduler；Cloudflare Cron擬台灣14:57/18:27補查，dispatch原GitHub工作，沿用去重與行情品質。DISPATCH_ENABLED=false、crons空；需要本人確認新服務及只限提醒repo的Actions寫入憑證，沒有建帳號／接受條款／部署／付費。Cloudflare真實Cron與推播未驗證，不能以8項mock宣稱成功。
+本機outputs/排程推播驗證_最終結果.md、階段紀錄、21檔逐一SHA一致的存儲通過完整ZIP、備援未部署審閱包及雲端分項結果截圖已保存。私有VERIFICATION_REPORT.md保存完整結果。接續時優先查正式schedule是否後來出現，再按使用者選擇引導備援；不要重設TelegramToken或重新配對。
+
 ## 排程驗證接續更新｜2026-11-06 07:31台灣時間
 獨立存儲跨工作實測42129294532通過：write成功持久化、全新read runner讀回後duplicate_skipped，兩次Telegram呼叫均0。這是假傳輸的存儲測試，不能稱真實推播送達。
 臨時自動驗證原07:20／07:25未出現schedule工作；UI已確認啟用，官方狀態Actions正常，根因未確定。現已改為每5分鐘短期重查，私有提交c0a09a15c71c5315a97bb00da3723599691d3ea9；scripts/verify_scheduler.py仍以台灣08:00（UTC11/6 00:00）硬截止，同一事件最多一則明確的系統測試。尚未取得任何真正schedule執行證據。

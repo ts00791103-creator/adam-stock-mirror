@@ -1,17 +1,18 @@
-# 排程與推播驗證｜第二階段
-
-2026-11-06 台灣約07:28。獨立存儲驗證42129294532成功：write工作使用正式deliver_once與commit_checkpoint，將測試狀態推送至私有repo；全新read runner成功讀回並duplicate_skipped。兩次均telegram_calls=0，此測試sent只是假傳輸狀態，不能當作實際訊息送達。測試狀態獨立state/storage_verification.json，正式股票紀錄未污染。
-
-第一階段程式測試：主程式137項、獨立包13項通過；17檔完整備份逐一Git blob SHA核對一致。
-
-自動排程：07:20、07:25預定臨時驗證，截至07:28仍未出現schedule工作；UI確認工作啟用。尚未驗證真正schedule或由schedule引發Telegram推播。GitHub可能延遲／漏排。原正式14:47／18:17與六檔配置維持啟用。
-
-臨時系統測試程式截止台灣08:00；完成觀察後移除臨時schedule，保留證據。不得手動觸發冒充schedule成功。
-
-## 排程驗證接續更新｜2026-11-06 07:31台灣時間
-獨立存儲跨工作實測42129294532通過：write成功持久化、全新read runner讀回後duplicate_skipped，兩次Telegram呼叫均0。這是假傳輸的存儲測試，不能稱真實推播送達。
-臨時自動驗證原07:20／07:25未出現schedule工作；UI已確認啟用，官方狀態Actions正常，根因未確定。現已改為每5分鐘短期重查，私有提交c0a09a15c71c5315a97bb00da3723599691d3ea9；scripts/verify_scheduler.py仍以台灣08:00（UTC11/6 00:00）硬截止，同一事件最多一則明確的系統測試。尚未取得任何真正schedule執行證據。
-不要手動dispatch冒稱schedule成功。觀察完成後必須移除臨時scheduler-verification.yml中的schedule，保留正式entry-alerts.yml的14:47/18:17。若到截止仍無紀錄，明確列未通過／待查，不能說排程正常。
-私人收件人與Token已設定且先前手機測試通過，不需重新配對或讀Secrets。手機尺寸模擬新頁仍1280x720，已reset關閉，手機測試依然未通過。
-本機outputs/排程推播驗證_階段紀錄.md、第二階段結果.md及17檔完整備份已保存；私有VERIFICATION_REPORT.md保留分項結果。原網站main/B3/正式站未改。
-
+# 排程與推播驗證結果｜2026-11-06 08:00（台灣）
+## 已通過
+- 手機本人先前確認手動連線訊息送達（42072376429）。
+- 正式deliver_once與commit_checkpoint真實Git保存；新runner讀回後duplicate_skipped：42129294532，兩次telegram_calls=0。
+- 主程式Python3.11/3.14各137項、背景包13項，備援模擬8項通過。
+## 未通過
+本次07:20至08:00定時觀察，GitHub API沒有任何event=schedule紀錄。原兩個指定時間、每5分鐘重查及一次UI停用再啟用後皆未取得自動觸發證據。不能稱自動排程或自動推播已正常；根因仍未確定，也不能斷言永遠不會執行。
+這是無須股票行情的系統驗證，未開盤不能解釋沒有schedule紀錄。沒有以手動dispatch或push驗證冒充自動排程成功。本輪沒有新增Telegram訊息或真實股票訊號。
+## 已清理與保留
+臨時scheduler-verification.yml已移除schedule並改名Archived；其原程式硬截止08:00，晚到的驗證也不能發送訊息。保留手動驗證入口與歷史結果。
+正式entry-alerts.yml保持台灣平日14:47／18:17、六檔名單與啟用開關；下午真實日K與原正式排程尚待驗證。這不等於已認定正式排程可靠。
+state/storage_verification.json是假傳輸的獨立測試紀錄，不是實際Telegram送達紀錄。正式股票state沒有污染。
+## 備援修正方案（未部署）
+deploy/fallback-scheduler（原網站release/v1.0-development提交789d6fa9fb62e72fe3625c5568f85d86710d3dd7）已準備：Cloudflare Cron在原時段晚10分鐘dispatch既有GitHub工作，沿用既有行情品質、時段、去重與序列執行。
+8項離線模擬通過，不代表Cloudflare真實部署、Cron或手機推播通過。預設DISPATCH_ENABLED=false、crons空。需要本人確認新服務與只限提醒repo的Actions寫入憑證；未建立帳號、未接受條款、未部署或付費。
+## 保存
+outputs/排程推播驗證_存儲驗證通過完整備份.zip：21個Git blob逐一SHA一致。
+outputs/備援排程_未部署審閱包.zip；階段紀錄與分項結果均保存。不含Token、私人收件人ID或聊天內容。
