@@ -1,3 +1,12 @@
+## Cloudflare程式部署階段｜2026-11-06
+本人已登入Cloudflare。已建立Worker adam-mirror-backup-scheduler，先部署Hello World再用Quick Edit換成GitHub中已測試的備援worker.mjs內容（雲端檔名worker.js）；透過編輯器Ctrl+A/C複製比對，完整原始碼字串一致，已部署版本b9d3f9c1。其後已保存DISPATCH_ENABLED=false並讀回確認；沒有Cron、沒有GITHUB_ACTIONS_TOKEN，不能宣稱備援已啟用或驗證成功。
+Cloudflare帳戶ID、信箱、任何預覽token或金鑰均不寫公開交接。Dashboard建立的相容性日期目前2026-11-06，初始workers.dev路由存在，程式fetch固定404；尚未另外驗證外部HTTP或關閉路由。部署來源圖outputs/Cloudflare備援_程式已部署尚未啟用.jpg。
+CUA編輯器注意：iframe為quick-edit-workers子網域。div角色textbox不能直接fill/press，且原視窗iframe尺寸小數會阻擋座標；用viewport設1280x800後，iframe x0/y104/w768/h696，native座標click編輯區後pressKey(null,Control_L+a)與paste(null,source)成功。Ctrl+A/C並clipboard.readText比對原始碼true；部署後已resetviewport。勿讀取所有iframe完整src，預覽frame網址可能含暫時憑證；曾讀到後已reload更新預覽，沒保存或重述該值。
+## 目前等待本人GitHub身分驗證
+Cloudflare tab6停在新增環境變數對話框，Name GITHUB_ACTIONS_TOKEN、秘密已勾、值空白，已markHandoff；不要關閉或截圖本人輸入中的Secret。
+GitHub setupTab為tab4，開官方fine-grained token預填表單：name adam-mirror-cloudflare-backup、owner本人、expires_in=30、actions=write（尚未選定repo，尚未建立Token）。GitHub要求sudo Confirm access，已選email並按Verify via email，等本人在GitHub填驗證碼並回覆。不要讀郵件、讀驗證碼或讓本人貼對話；驗證後先不要按Generate token。
+驗證完成後，必須將Repository access選Only select repositories且只選adam-mirror-alerts，Actions read/write，其他僅強制Metadata read，30日有效；先具體呈現範圍，再由本人完成Generate token及把值直接貼Cloudflare Secret。金鑰不得經過對話、原始碼、公開變數、備份或日誌。仍需真正Cloudflare Cron→GitHub→手機及去重驗收，才可稱備援成功。
+
 ## Cloudflare備援啟動交接｜2026-11-06
 使用者明確選擇「加入備援，請引導設定」，同意新增Cloudflare備援服務範圍及討論只限提醒專案的Actions權限金鑰。備援仍未部署、未建立新金鑰、未授予新權限。
 已開啟Cloudflare https://dash.cloudflare.com/ ，轉到/login；目前未登入。CUA瀏覽器2、cloudflareTab為tab6，已markHandoff供本人登入或註冊。登入／註冊頁提示繼續即同意Cloudflare條款，交由本人完成，不代按接受、驗證碼或建立新密碼。本人登入後再接續Workers設定。
