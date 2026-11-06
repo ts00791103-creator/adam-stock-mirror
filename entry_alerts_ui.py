@@ -10,7 +10,7 @@ from screener_ui import screening_data
 
 def show_entry_alerts(stock_list):
     with st.expander("進場觀察提醒｜三步試跑", expanded=False):
-        st.info("目前是試跑預覽，尚未啟用Telegram背景推播。網站關閉後的自動通知需完成獨立排程與機器人設定。")
+        st.info("這裡只做提醒條件預覽，不會發送訊息，也不會變更背景服務的追蹤名單與條件。Telegram自動通知由獨立背景服務執行；本頁不會讀取其啟用狀態。")
         text = st.text_area("① 選擇追蹤股票（最多30檔，逗號或換行分隔）", "2330,2308,2317,2454", key="entry_watchlist")
         rules = st.multiselect("② 選擇提醒條件", ["箱底反彈", "箱頂突破"], default=["箱底反彈", "箱頂突破"], key="entry_rules")
         st.caption("箱底反彈：前收盤靠近既有箱底，本日上漲且收高於開盤，並仍在箱內。箱頂突破：收盤超過既有箱頂且放量，超出過多則不提醒。箱型與均量只使用訊號日前資料。")
