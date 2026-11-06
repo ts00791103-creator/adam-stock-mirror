@@ -1,3 +1,8 @@
+## Cloudflare備援啟動交接｜2026-11-06
+使用者明確選擇「加入備援，請引導設定」，同意新增Cloudflare備援服務範圍及討論只限提醒專案的Actions權限金鑰。備援仍未部署、未建立新金鑰、未授予新權限。
+已開啟Cloudflare https://dash.cloudflare.com/ ，轉到/login；目前未登入。CUA瀏覽器2、cloudflareTab為tab6，已markHandoff供本人登入或註冊。登入／註冊頁提示繼續即同意Cloudflare條款，交由本人完成，不代按接受、驗證碼或建立新密碼。本人登入後再接續Workers設定。
+原Telegram連線與收件人已驗證，不需重設或再讀Secrets。下一步依備援README引導建立受限GitHub Actions Token，新增敏感權限仍需在實際操作時本人確認／完成；金鑰只填Cloudflare加密Secret，不貼對話。
+
 ## 最終驗證更新｜2026-11-06 08:00台灣時間
 本輪已觀察07:20至08:00，GitHub API沒有任何event=schedule紀錄；自動排程與自動推播未通過驗證。根因未確定，不宣稱永遠無法執行；也不能以尚未開盤解釋無schedule，因臨時系統測試不依賴行情。
 已移除臨時scheduler-verification.yml的schedule並改名Archived，原程式硬截止08:00防晚到訊息；私有清理提交aa2bf38798c46b10a5a356827fcbeab04ee2eae5，已讀回確認無schedule。保留正式entry-alerts.yml原14:47/18:17、六檔與啟用開關，但正式下午排程尚未驗收，不代表可靠性已通過。
