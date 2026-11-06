@@ -1575,6 +1575,10 @@ if not PRODUCTION_MODE:
         expensive_pe = v3.number_input("昂貴 PE", min_value=1.0, max_value=200.0, value=20.0, step=0.5, key="b3_expensive_pe_v1")
         st.caption("自動模式僅使用歷史 PE 分位數；資料不足時不顯示估價。取消勾選自動模式才使用下方手動 PE。這不是孫慶龍本人發布的公式或估價。")
 
+if not PRODUCTION_MODE:
+    sr_show = st.checkbox("顯示關鍵壓力與支撐點", value=True, key="sr_show")
+    sr_window = st.selectbox("支撐壓力觀察根數", [60, 120, 250], index=1, key="sr_lookback", disabled=not sr_show)
+
 if st.button(
     "開始亞當鏡像分析",
     type="primary"
@@ -1633,9 +1637,9 @@ if st.button(
         st.info("可將「歷史資料長度」縮短後重新分析，或稍後重試。縮短期間可能無法涵蓋完整中、長波，請保留資料不足提示；系統不會自動刪除異常K線或改寫價格。")
         st.stop()
 
-    if not PRODUCTION_MODE:
+    if not PRODUCTION_MODE and sr_show:
         from support_resistance import show_key_levels
-        show_key_levels(df, symbol, interval)
+        show_key_levels(df, symbol, interval, sr_window)
 
     if roll_dates:
         dates_text = "、".join(
