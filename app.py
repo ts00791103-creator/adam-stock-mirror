@@ -1633,6 +1633,10 @@ if st.button(
         st.info("可將「歷史資料長度」縮短後重新分析，或稍後重試。縮短期間可能無法涵蓋完整中、長波，請保留資料不足提示；系統不會自動刪除異常K線或改寫價格。")
         st.stop()
 
+    if not PRODUCTION_MODE:
+        from support_resistance import show_key_levels
+        show_key_levels(df, symbol, interval)
+
     if roll_dates:
         dates_text = "、".join(
             pd.Timestamp(x).strftime("%Y-%m-%d")
