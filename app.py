@@ -1584,6 +1584,15 @@ with (st.sidebar if not PRODUCTION_MODE else nullcontext()):
         sr_show = st.checkbox("顯示關鍵壓力與支撐點", value=True, key="sr_show")
         sr_window = st.selectbox("支撐壓力觀察根數", [60, 120, 250], index=1, key="sr_lookback", disabled=not sr_show)
 
+        vp_show = st.checkbox("顯示成交量集中區（估算）", value=True, key="vp_show")
+        with st.expander("成交量分布估算設定"):
+            vp_window = st.selectbox("分布觀察根數（不含訊號K線）", [20, 60, 120, 250], index=1, key="vp_window")
+            vp_bins = st.selectbox("價位格數", [20, 40, 80], index=1, key="vp_bins")
+            vp_area = st.slider("價值區涵蓋量（%）", 50, 95, 70, key="vp_area")
+            vp_buffer = st.number_input("價值區突破確認幅度（%）", min_value=0., max_value=5., value=.5, step=.1, key="vp_buffer")
+            vp_ratio = st.number_input("價值區突破最低量比", min_value=1., max_value=5., value=1.5, step=.1, key="vp_ratio")
+            st.caption("使用K線高低價均分成交量；非逐筆價量、未分日夜盤。")
+
 if (st.sidebar if not PRODUCTION_MODE else st).button(
     "開始亞當鏡像分析",
     type="primary", use_container_width=True
@@ -1641,6 +1650,10 @@ if (st.sidebar if not PRODUCTION_MODE else st).button(
             st.dataframe(pd.DataFrame(invalid_rows), hide_index=True)
         st.info("可將「歷史資料長度」縮短後重新分析，或稍後重試。縮短期間可能無法涵蓋完整中、長波，請保留資料不足提示；系統不會自動刪除異常K線或改寫價格。")
         st.stop()
+
+    if not PRODUCTION_MODE and vp_show:
+        from volume_profile_estimate import show_volume_profile
+        show_volume_profile(df, symbol, interval, vp_window, vp_bins, vp_area, vp_buffer, vp_ratio)
 
     if not PRODUCTION_MODE and sr_show:
         from support_resistance import show_key_levels
