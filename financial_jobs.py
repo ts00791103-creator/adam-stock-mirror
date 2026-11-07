@@ -7,12 +7,42 @@ from time import monotonic
 _pool = ThreadPoolExecutor(max_workers=4, thread_name_prefix="official-financial")
 _lock = Lock()
 _jobs = {}
+_quarter_cache = {}
+
+
+def verified_quarter(symbol, year, quarter, fetcher=None, deadline=None):
+    """Retain verified successes, never cache failures; retry transient reads once."""
+    from mops_history import fetch_mops_quarter
+    key = (symbol, year, quarter)
+    with _lock:
+        cached = _quarter_cache.get(key)
+        if cached and monotonic()-cached[0] < 21600:
+            return cached[1], None
+    error = "官方季度資料無法核對"
+    for _ in range(2):
+        remaining = deadline-monotonic() if deadline is not None else 8
+        if remaining <= 0:
+            return None, "本次來源讀取時間已達上限；已核對季度保留，更新可補查缺季"
+        try:
+            result, error = (fetcher or fetch_mops_quarter)(symbol, year, quarter, timeout=min(8, remaining))
+        except Exception:
+            result, error = None, "官方季度來源暫時不可用"
+        if result is not None and result.get("column_verified"):
+            with _lock:
+                _quarter_cache[key] = (monotonic(), result)
+                if len(_quarter_cache) > 512:
+                    oldest = min(_quarter_cache, key=lambda k: _quarter_cache[k][0])
+                    del _quarter_cache[oldest]
+            return result, None
+    return None, error or "官方季度 EPS 欄位無法唯一核對"
 
 
 def _growth(symbol):
     from mops_history import fetch_mops_eps_history
     from auto_fundamentals import eps_growth
-    rows, failures = fetch_mops_eps_history(symbol, years=3)
+    deadline = monotonic()+90
+    rows, failures = fetch_mops_eps_history(symbol, years=3,
+        fetcher=lambda s,y,q: verified_quarter(s,y,q,deadline=deadline))
     return eps_growth(rows), failures
 
 
