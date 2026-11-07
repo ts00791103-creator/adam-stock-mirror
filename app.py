@@ -9,13 +9,12 @@ from live_candle import show_live_candle
 
 PRODUCTION_MODE = bool(globals().get("PRODUCTION_MODE", False))
 st.set_page_config(page_title="亞當鏡像分析 V1.0" if PRODUCTION_MODE else "亞當鏡像分析 V1.0 候選版", layout="wide")
-if not PRODUCTION_MODE:
-    from studio_layout import apply_studio_layout
-    apply_studio_layout(st)
+from studio_layout import apply_studio_layout
+apply_studio_layout(st, production=PRODUCTION_MODE)
 st.title("亞當鏡像分析 V1.0" if PRODUCTION_MODE else "亞當鏡像股票分析")
 st.caption("A 模式左右鏡像｜短、中、長三波｜歷史路徑情境分析")
 if PRODUCTION_MODE:
-    st.caption("V1.0.1｜自選名單選股・個人即時報價｜鏡像使用歷史行情")
+    st.caption("V1.0.2｜支撐壓力・成交量集中區估算・個人即時報價")
 st.info("鏡像右側為歷史路徑反向排列的情境示意，並非即時行情或未來價格預測；未來日期為示意刻度，未完整排除台股休市日及盤中休市時段。")
 
 MARKETS = {
@@ -948,7 +947,7 @@ if "adam_stock_query" not in st.session_state:
     st.session_state["adam_stock_query"] = "2308"
 
 from contextlib import nullcontext
-with (st.sidebar if not PRODUCTION_MODE else nullcontext()):
+with st.sidebar:
     market = st.selectbox(
         "選擇市場",
         ["台灣股票／ETF"] if PRODUCTION_MODE else list(MARKETS)
@@ -1580,20 +1579,19 @@ with (st.sidebar if not PRODUCTION_MODE else nullcontext()):
             expensive_pe = v3.number_input("昂貴 PE", min_value=1.0, max_value=200.0, value=20.0, step=0.5, key="b3_expensive_pe_v1")
             st.caption("自動模式僅使用歷史 PE 分位數；資料不足時不顯示估價。取消勾選自動模式才使用下方手動 PE。這不是孫慶龍本人發布的公式或估價。")
 
-    if not PRODUCTION_MODE:
-        sr_show = st.checkbox("顯示關鍵壓力與支撐點", value=True, key="sr_show")
-        sr_window = st.selectbox("支撐壓力觀察根數", [60, 120, 250], index=1, key="sr_lookback", disabled=not sr_show)
+    sr_show = st.checkbox("顯示關鍵壓力與支撐點", value=True, key="sr_show")
+    sr_window = st.selectbox("支撐壓力觀察根數", [60, 120, 250], index=1, key="sr_lookback", disabled=not sr_show)
 
-        vp_show = st.checkbox("顯示成交量集中區（估算）", value=True, key="vp_show")
-        with st.expander("成交量分布估算設定"):
-            vp_window = st.selectbox("分布觀察根數（不含訊號K線）", [20, 60, 120, 250], index=1, key="vp_window")
-            vp_bins = st.selectbox("價位格數", [20, 40, 80], index=1, key="vp_bins")
-            vp_area = st.slider("價值區涵蓋量（%）", 50, 95, 70, key="vp_area")
-            vp_buffer = st.number_input("價值區突破確認幅度（%）", min_value=0., max_value=5., value=.5, step=.1, key="vp_buffer")
-            vp_ratio = st.number_input("價值區突破最低量比", min_value=1., max_value=5., value=1.5, step=.1, key="vp_ratio")
-            st.caption("使用K線高低價均分成交量；非逐筆價量、未分日夜盤。")
+    vp_show = st.checkbox("顯示成交量集中區（估算）", value=True, key="vp_show")
+    with st.expander("成交量分布估算設定"):
+        vp_window = st.selectbox("分布觀察根數（不含訊號K線）", [20, 60, 120, 250], index=1, key="vp_window")
+        vp_bins = st.selectbox("價位格數", [20, 40, 80], index=1, key="vp_bins")
+        vp_area = st.slider("價值區涵蓋量（%）", 50, 95, 70, key="vp_area")
+        vp_buffer = st.number_input("價值區突破確認幅度（%）", min_value=0., max_value=5., value=.5, step=.1, key="vp_buffer")
+        vp_ratio = st.number_input("價值區突破最低量比", min_value=1., max_value=5., value=1.5, step=.1, key="vp_ratio")
+        st.caption("使用K線高低價均分成交量；非逐筆價量、未分日夜盤。")
 
-if (st.sidebar if not PRODUCTION_MODE else st).button(
+if st.sidebar.button(
     "開始亞當鏡像分析",
     type="primary", use_container_width=True
 ):
@@ -1651,13 +1649,13 @@ if (st.sidebar if not PRODUCTION_MODE else st).button(
         st.info("可將「歷史資料長度」縮短後重新分析，或稍後重試。縮短期間可能無法涵蓋完整中、長波，請保留資料不足提示；系統不會自動刪除異常K線或改寫價格。")
         st.stop()
 
-    if not PRODUCTION_MODE and vp_show:
+    if vp_show:
         from volume_profile_estimate import show_volume_profile
         show_volume_profile(df, symbol, interval, vp_window, vp_bins, vp_area, vp_buffer, vp_ratio)
 
-    if not PRODUCTION_MODE and sr_show:
+    if sr_show:
         from support_resistance import show_key_levels
-        show_key_levels(df, symbol, interval, sr_window)
+        show_key_levels(df, symbol, interval, sr_window, production=PRODUCTION_MODE)
 
     if roll_dates:
         dates_text = "、".join(

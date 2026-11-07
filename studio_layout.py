@@ -1,5 +1,5 @@
 """Presentation only: historical calculations and live quotes stay separate."""
-def apply_studio_layout(st):
+def apply_studio_layout(st, production=False):
     st.markdown("""
     <style>
     .stApp {background:#0e191e;color:#dce5e7}
@@ -24,7 +24,8 @@ def apply_studio_layout(st):
     .studio-brand {color:#d6ad62;font-size:.85rem;letter-spacing:.15em;margin-bottom:.6rem}
     @media(max-width:640px) {.block-container{padding:1rem}h1{font-size:1.65rem!important}}
     </style>
-    <div class="studio-brand">亞當鏡像 · 台股走勢分析工作室｜候選測試版</div>
     """, unsafe_allow_html=True)
+    edition = "正式版 V1.0.2" if production else "候選測試版"
+    st.markdown(f'<div class="studio-brand">亞當鏡像 · 台股走勢分析工作室｜{edition}</div>', unsafe_allow_html=True)
     st.sidebar.markdown("### 分析標的與圖表")
     st.sidebar.caption("輸入股票 → 選擇週期 → 開始分析。手機請展開左上角側欄。")

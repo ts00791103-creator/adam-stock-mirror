@@ -48,10 +48,10 @@ def key_levels(frame, lookback=120, wing=3, tolerance_pct=0.8, limit=3):
     return chosen
 
 
-def show_key_levels(frame, symbol, interval, window=120):
+def show_key_levels(frame, symbol, interval, window=120, production=False):
     import streamlit as st
     import plotly.graph_objects as go
-    with st.expander("關鍵壓力與支撐點（測試版）", expanded=True):
+    with st.expander("關鍵壓力與支撐點" if production else "關鍵壓力與支撐點（測試版）", expanded=True):
         st.caption("使用歷史高低轉折，需右側3根K線確認；每組價差最多0.8%。來源數是轉折數，不是觸價次數或勝率。")
         try:
             levels = key_levels(frame, lookback=window)

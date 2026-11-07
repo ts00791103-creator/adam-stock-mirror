@@ -30,6 +30,9 @@ class ProductionEntryTests(unittest.TestCase):
         self.assertFalse(any("估價" in label for label in panels))
         self.assertIn("個人即時價格", panels)
         self.assertIn("自選名單選股", panels)
+        self.assertIn("顯示關鍵壓力與支撐點", checkbox_labels)
+        self.assertIn("顯示成交量集中區（估算）", checkbox_labels)
+        self.assertIn("成交量分布估算設定", panels)
         self.assertEqual(len(app.multiselect), 0)
 
     def test_production_analysis_uses_the_same_core_pipeline(self):
@@ -47,6 +50,9 @@ class ProductionEntryTests(unittest.TestCase):
         self.assertIn("亞當鏡像｜歷史波段來源", headings)
         self.assertIn("自動箱型突破目標分析", headings)
         self.assertFalse(any("估價" in heading for heading in headings))
+        panels = [item.label for item in app.expander]
+        self.assertIn("關鍵壓力與支撐點", panels)
+        self.assertIn("成交量集中區｜POC與價值區（估算版）", panels)
 
     def test_production_watchlist_can_screen_and_select_stock(self):
         frame = pd.DataFrame({"Open": 100., "High": 110., "Low": 100.,
