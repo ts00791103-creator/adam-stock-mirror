@@ -33,3 +33,23 @@ class ProductionBoxReleaseTests(ProductionFinancialReleaseTests):
         staged = (ROOT/"production_box_preview.py").read_text(encoding="utf-8")
         expected = ROOT/"release-preview"/"v1.0.5"/"app.py"
         self.assertEqual(staged,"PRODUCTION_MODE = True\n"+expected.read_text(encoding="utf-8"))
+
+    def test_switching_stocks_retains_analysis_control_and_symbol_results(self):
+        import numpy as np
+        import pandas as pd
+        close=100+np.sin(np.arange(700)/12)*15+np.arange(700)*.01
+        frame=pd.DataFrame({"Open":close-1,"High":close+2,"Low":close-2,
+                            "Close":close,"Volume":1000000},
+                           index=pd.bdate_range("2023-01-02",periods=700))
+        with patch("urllib.request.urlopen",side_effect=OSError("offline")), \
+             patch("yfinance.download",return_value=frame):
+            app=self.make_app().run()
+            for code in ("2330","2308","2330"):
+                app.text_input(key="adam_stock_query").set_value(code).run()
+                self.assertEqual(len(app.exception),0)
+                buttons=[b for b in app.button if b.label=="開始亞當鏡像分析"]
+                self.assertEqual(len(buttons),1)
+                buttons[0].click().run()
+                self.assertEqual(len(app.exception),0)
+                self.assertTrue(any(code+".TW" in item.value for item in app.caption))
+                self.assertEqual(sum(b.label=="開始亞當鏡像分析" for b in app.button),1)

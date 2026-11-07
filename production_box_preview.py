@@ -1605,13 +1605,16 @@ with st.sidebar:
         vp_ratio = st.number_input("價值區突破最低量比", min_value=1., max_value=5., value=1.5, step=.1, key="vp_ratio")
         st.caption("使用K線高低價均分成交量；非逐筆價量、未分日夜盤。")
 
+# Keep the analysis control before the periodically refreshed financial fragment.
+# Its sidebar subtree must not own or clear the following analysis button.
+analysis_requested = st.sidebar.button(
+    "開始亞當鏡像分析",
+    type="primary", use_container_width=True
+)
 from auto_fundamentals import render_auto_fundamentals
 render_auto_fundamentals(st.sidebar, symbol, market)
 
-if st.sidebar.button(
-    "開始亞當鏡像分析",
-    type="primary", use_container_width=True
-):
+if analysis_requested:
     if not symbol:
         st.error("請輸入商品代碼")
         st.stop()
