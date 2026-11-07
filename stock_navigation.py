@@ -15,6 +15,7 @@ def queue_analysis(state, row):
     if not re.fullmatch(r"[0-9]{4,6}\.(TW|TWO)",symbol):
         raise ValueError("無法確認個股代號與上市／上櫃市場")
     state["adam_stock_query"]=symbol.split(".")[0]
+    state["analysis_jump_top"]=True
     state["stock_analysis_request"]={"symbol":symbol,"name":str(row.get("名稱","")),
                                     "screen_date":str(row.get("資料日期") or row.get("官方行情日期") or "")}
 
@@ -52,6 +53,7 @@ def preserve_scanner_inputs(state):
 
 def return_to_results():
     st.session_state["analysis_page_open"]=False
+    st.session_state["results_jump_top"]=True
 
 
 def stock_result_table(frame, rows, key, production=False):
@@ -79,3 +81,14 @@ def stock_result_table(frame, rows, key, production=False):
                       args=(st.session_state,row),use_container_width=True)
         if len(snapshot)>30:
             st.caption("逐檔按鈕顯示前30檔，其餘股票可直接點選表格列。")
+
+def scroll_main_to_top():
+    import streamlit.components.v1 as components
+    components.html("""<script>
+    const main = window.parent.document.querySelector('[data-testid="stMain"]');
+    if (main) {
+        const move = () => main.scrollTo({top: 0, behavior: "auto"});
+        requestAnimationFrame(move);
+        setTimeout(move, 250);
+    }
+    </script>""",height=0,scrolling=False)

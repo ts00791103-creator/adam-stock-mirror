@@ -934,7 +934,7 @@ def load_tw_symbols():
 
 # ===== 操作介面 =====
 
-from stock_navigation import consume_request, preserve_scanner_inputs, reset_stock_pricing, return_to_results
+from stock_navigation import consume_request, preserve_scanner_inputs, reset_stock_pricing, return_to_results, scroll_main_to_top
 navigation_request = consume_request(st.session_state) if not PRODUCTION_MODE else None
 analysis_page = bool(not PRODUCTION_MODE and st.session_state.get("analysis_page_open"))
 if analysis_page:
@@ -1646,6 +1646,7 @@ analysis_clicked = st.sidebar.button(
 )
 if analysis_clicked and not PRODUCTION_MODE:
     st.session_state["analysis_page_open"] = True
+    st.session_state["analysis_jump_top"] = True
     st.session_state["analysis_context"] = {"symbol":symbol}
     st.rerun()
 if analysis_clicked or analysis_page:
@@ -2183,3 +2184,6 @@ if analysis_clicked or analysis_page:
     )
 
 
+
+if not PRODUCTION_MODE and (st.session_state.pop("analysis_jump_top", False) or st.session_state.pop("results_jump_top", False)):
+    scroll_main_to_top()
