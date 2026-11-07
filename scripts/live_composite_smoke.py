@@ -1,6 +1,8 @@
 """Read-only live acceptance on two named stocks; not a whole-market ranking."""
 import json
 from pathlib import Path
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import yfinance as yf
 from market_universe import fetch_universe, history_as_of
 from chip_sources import fetch_institution, fetch_margin
