@@ -7,6 +7,7 @@ from full_market_ui import official_snapshot
 from market_universe import history_as_of
 from composite_strategy import combine_factors, rank_rows, margin_decliners, price_factors
 from chip_sources import fetch_institution, fetch_margin
+from stock_navigation import stock_result_table, queue_analysis
 
 
 @st.cache_data(ttl=900,show_spinner=False)
@@ -134,11 +135,11 @@ def show_composite_strategy():
             display=[r for r in display if r["Yahoo代號"] in allowed]
         if display:
             columns=["名次","代號","名稱","市場","綜合分","近低反彈%","量比","法人占比%","法人合計（張）","外資（張）","投信（張）","自營商（張）","融資日增減（張）","融資5日增減（張）","收盤","收盤漲跌%","資料日期"]
-            st.dataframe(pd.DataFrame(display[:20])[columns].round(2),hide_index=True)
+            stock_result_table(pd.DataFrame(display[:20])[columns].round(2),display[:20],"composite_results")
             choice=st.selectbox("綜合排名帶入個股",[r["Yahoo代號"] for r in display[:20]],key="rank_choice")
             if st.button("查看這檔的亞當鏡像",key="rank_use"):
-                st.session_state["adam_stock_query"]=choice.split(".")[0]
-                st.success("已帶入側欄，請按「開始亞當鏡像分析」。")
+                queue_analysis(st.session_state,next(r for r in display if r["Yahoo代號"]==choice))
+                st.rerun()
         elif cursor: st.info("目前結果沒有資料完整且符合顯示條件的股票，請查看未判定項目。")
         if ranked:
             audit=pd.DataFrame(ranked)
@@ -151,6 +152,6 @@ def show_composite_strategy():
         for label,period in (("融資1日減少排行",1),("融資5日減少排行",5)):
             with st.expander(label):
                 drops=margin_decliners(state["rows"],period)
-                if drops: st.dataframe(pd.DataFrame(drops).head(50),hide_index=True)
+                if drops: stock_result_table(pd.DataFrame(drops).head(50),drops[:50],f"margin_results_{period}")
                 else: st.info("已檢查股票尚無可確認的減少項目；缺資料不當成零。")
         st.caption("本次進度只保留本瀏覽器工作階段，請下載CSV保存。綜合分只做觀察排序，需再核對箱型、支撐壓力與風險；不自動下單、不新增推播。")

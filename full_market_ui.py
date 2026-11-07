@@ -4,6 +4,7 @@ import streamlit as st
 from market_universe import fetch_universe, shortlist, history_as_of
 from screener_ui import screening_data
 from stock_screener import screen_frame
+from stock_navigation import stock_result_table, queue_analysis
 
 
 @st.cache_data(ttl=900, show_spinner=False)
@@ -65,7 +66,7 @@ def show_full_market(production=False):
         st.write(f"初選 {total} 檔｜已檢查 {cursor} 檔｜待檢查 {total-cursor} 檔")
         if candidates:
             with st.expander("查看初選股票（尚未驗證20日均量與箱型）"):
-                st.dataframe(pd.DataFrame(candidates), hide_index=True)
+                stock_result_table(pd.DataFrame(candidates),candidates,"market_first_results",production)
                 st.download_button("下載初選CSV", pd.DataFrame(candidates).to_csv(index=False).encode("utf-8-sig"),
                                    file_name="adam_market_shortlist.csv", mime="text/csv", key="market_first_csv")
         else:
@@ -94,19 +95,22 @@ def show_full_market(production=False):
         elif total:
             st.success(f"本次初選名單已處理完：有效複選{len(state['checked'])}檔、符合{len(matched)}檔、無法判定{len(state['failed'])}檔。")
         if matched:
-            st.dataframe(pd.DataFrame(matched), hide_index=True)
+            stock_result_table(pd.DataFrame(matched),matched,"market_results",production)
             symbols = [r["Yahoo代號"] for r in matched]
             selected = st.selectbox("全市場結果帶入個股", symbols,
                                     format_func=lambda symbol: next(f"{r['代號']} {r['名稱']}（{r['市場']}）" for r in matched if r["Yahoo代號"] == symbol), key="market_choice")
             st.caption("選股以官方行情日期及一年日K複選；下方個股分析會依你選擇的期間重新讀取最新行情，日期與箱型可能不同。請核對兩邊日期與箱型參數。")
             if st.button("帶入這檔股票查看鏡像", key="market_use"):
                 st.session_state["adam_stock_query"] = selected.split(".")[0]
+                if not production:
+                    queue_analysis(st.session_state, next(r for r in matched if r["Yahoo代號"]==selected))
+                    st.rerun()
                 st.success("已帶入下方個股查詢，請按「開始亞當鏡像分析」。")
         elif cursor:
             st.info("目前已檢查的股票沒有符合者；待檢查或無法判定項目不算不符合。")
         if state["checked"]:
             with st.expander("查看已檢查的有效行情（含未符合）"):
-                st.dataframe(pd.DataFrame(state["checked"]), hide_index=True)
+                stock_result_table(pd.DataFrame(state["checked"]),state["checked"],"market_checked_results",production)
             st.download_button("下載已檢查結果CSV", pd.DataFrame(state["checked"]).to_csv(index=False).encode("utf-8-sig"),
                                file_name="adam_market_checked.csv", mime="text/csv", key="market_checked_csv")
         if state["failed"]:

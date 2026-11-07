@@ -934,22 +934,31 @@ def load_tw_symbols():
 
 # ===== 操作介面 =====
 
-if not PRODUCTION_MODE:
-    from entry_alerts_ui import show_entry_alerts
-    show_entry_alerts(load_tw_symbols())
+from stock_navigation import consume_request, preserve_scanner_inputs, reset_stock_pricing, return_to_results
+navigation_request = consume_request(st.session_state) if not PRODUCTION_MODE else None
+analysis_page = bool(not PRODUCTION_MODE and st.session_state.get("analysis_page_open"))
+if analysis_page:
+    preserve_scanner_inputs(st.session_state)
+    context = st.session_state.get("analysis_context", {})
+    st.button("← 返回選股結果", key="analysis_back", on_click=return_to_results)
+    analysis_heading_slot = st.container()
+else:
+    if not PRODUCTION_MODE:
+        from entry_alerts_ui import show_entry_alerts
+        show_entry_alerts(load_tw_symbols())
 
-if PRODUCTION_MODE:
-    st.subheader("尋找股票")
-    st.caption("全台股選股與自選名單在這裡；查詢單一股票，請展開左上角側欄輸入代號或中文名稱。")
-from full_market_ui import show_full_market
-show_full_market(production=PRODUCTION_MODE)
+    if PRODUCTION_MODE:
+        st.subheader("尋找股票")
+        st.caption("全台股選股與自選名單在這裡；查詢單一股票，請展開左上角側欄輸入代號或中文名稱。")
+    from full_market_ui import show_full_market
+    show_full_market(production=PRODUCTION_MODE)
 
-if not PRODUCTION_MODE:
-    from composite_strategy_ui import show_composite_strategy
-    show_composite_strategy()
+    if not PRODUCTION_MODE:
+        from composite_strategy_ui import show_composite_strategy
+        show_composite_strategy()
 
-from screener_ui import show_screener
-show_screener(load_tw_symbols(), production=PRODUCTION_MODE)
+    from screener_ui import show_screener
+    show_screener(load_tw_symbols(), production=PRODUCTION_MODE)
 
 if "adam_stock_query" not in st.session_state:
     st.session_state["adam_stock_query"] = "2308"
@@ -958,7 +967,7 @@ from contextlib import nullcontext
 with st.sidebar:
     market = st.selectbox(
         "選擇市場",
-        ["台灣股票／ETF"] if PRODUCTION_MODE else list(MARKETS)
+        ["台灣股票／ETF"] if PRODUCTION_MODE else list(MARKETS), key="adam_market"
     )
 
     if MARKETS[market] is None:
@@ -974,14 +983,16 @@ with st.sidebar:
         if matches:
             choices = matches[:100]
             labels = [f"{code} {name}（{ex}）" for code, name, ex in choices]
-            chosen = st.selectbox("選擇股票／ETF", range(len(choices)),
+            requested_symbol = st.session_state.get("analysis_context", {}).get("symbol","")
+            chosen_index = next((i for i,r in enumerate(choices) if r[0]+(".TW" if r[2]=="上市" else ".TWO")==requested_symbol),0)
+            chosen = st.selectbox("選擇股票／ETF", range(len(choices)), index=chosen_index,
                                   format_func=lambda i: labels[i])
             code, stock_name, exchange = choices[chosen]
             symbol = code + (".TW" if exchange == "上市" else ".TWO")
             st.caption(f"目前選擇：{code} {stock_name}｜{exchange}")
         elif query.isdigit():
             exchange = st.radio("查無名稱對照，請選擇交易市場", ["上市", "上櫃"],
-                                horizontal=True)
+                                index=1 if st.session_state.get("analysis_context",{}).get("symbol")==query+".TWO" else 0, horizontal=True)
             symbol = query + (".TW" if exchange == "上市" else ".TWO")
             st.caption("目前使用股票代號查詢；中文名稱資料可能暫時無法取得。")
         else:
@@ -1025,6 +1036,13 @@ with st.sidebar:
         symbol = MARKETS[market]
 
 
+    if not PRODUCTION_MODE and symbol:
+        reset_stock_pricing(st.session_state, symbol)
+        if analysis_page:
+            st.session_state["analysis_context"] = {**st.session_state.get("analysis_context",{}), "symbol":symbol}
+            with analysis_heading_slot:
+                st.subheader("個股分析｜" + symbol)
+                st.caption("線型、箱型與估價均使用目前個股；分析讀取目前所選週期的最新歷史資料，可能與選股資料日不同。")
     c1, c2 = st.columns(2)
 
     with c1:
@@ -1176,7 +1194,7 @@ with st.sidebar:
             valuation_enabled = st.checkbox("啟用估價", value=False, key="b3_valuation_enabled_v1")
             valuation_mode = st.radio("估價模式", ["參考價值投資分區（可調參數）", "自訂本益比"], horizontal=True, key="b3_valuation_mode_v1")
             from valuation_io import bounded_fetch
-            valuation_load_requested = st.button("讀取／更新估價資料", key="valuation_load", disabled=not valuation_enabled)
+            valuation_load_requested = st.button("讀取／更新估價資料", key="valuation_load", disabled=not valuation_enabled) or bool(navigation_request)
             st.caption("勾選不會自動連線。先按「讀取／更新估價資料」，再按「開始亞當鏡像分析」；估價缺資料不影響一般股價與鏡像。")
             eps_cache = st.session_state.setdefault("valuation_eps_cache", {})
             pe_cache = st.session_state.setdefault("valuation_pe_cache", {})
@@ -1620,10 +1638,15 @@ with st.sidebar:
 from auto_fundamentals import render_auto_fundamentals
 render_auto_fundamentals(st.sidebar, symbol, market)
 
-if st.sidebar.button(
+analysis_clicked = st.sidebar.button(
     "開始亞當鏡像分析",
     type="primary", use_container_width=True
-):
+)
+if analysis_clicked and not PRODUCTION_MODE:
+    st.session_state["analysis_page_open"] = True
+    st.session_state["analysis_context"] = {"symbol":symbol}
+    st.rerun()
+if analysis_clicked or analysis_page:
     if not symbol:
         st.error("請輸入商品代碼")
         st.stop()
@@ -1677,6 +1700,8 @@ if st.sidebar.button(
             st.dataframe(pd.DataFrame(invalid_rows), hide_index=True)
         st.info("可將「歷史資料長度」縮短後重新分析，或稍後重試。縮短期間可能無法涵蓋完整中、長波，請保留資料不足提示；系統不會自動刪除異常K線或改寫價格。")
         st.stop()
+
+    valuation_result_slot = st.container()
 
     if vp_show:
         from volume_profile_estimate import show_volume_profile
@@ -1962,74 +1987,76 @@ if st.sidebar.button(
         else:
             st.info("目前參數下沒有符合條件的整理箱型，可調整觀察根數或最大振幅。")
 
-    if valuation_enabled:
-        st.subheader("🧮 股票估價參考（測試版）")
-        if eps_value <= 0:
-            st.info("目前沒有有效 EPS，請切換手動輸入或確認資料來源。")
-        elif auto_pe_enabled and auto_pe_result is None:
-            st.warning("歷史 PE 資料不足或暫時無法取得：本次不顯示歷史估值與未來情境價格。請稍後重試，或取消自動模式後自行輸入 PE 試算。")
-        elif not auto_pe_enabled and not (cheap_pe < fair_pe < expensive_pe):
-            st.warning("本益比需符合：便宜 PE ＜ 合理 PE ＜ 昂貴 PE。")
-        else:
-            effective_pes = auto_pe_result["pes"] if auto_pe_enabled else (cheap_pe, fair_pe, expensive_pe)
-            cheap_price, fair_price, expensive_price = [eps_value * pe for pe in effective_pes]
-            latest_price = float(df["Close"].iloc[-1])
-            official_pe_mode = bool(auto_pe_enabled and filing_upload is None and str(symbol).endswith(".TW"))
-            quality_ok = bool(auto_pe_enabled and auto_pe_result and auto_pe_result["samples"] >= 250
-                              and auto_pe_result.get("coverage_days", 0) >= 365
-                              and (official_pe_mode or auto_pe_result.get("eps_quarters", 0) >= 12)
-                              and not auto_pe_result.get("warnings"))
-            p1, p2, p3 = st.columns(3)
-            p1.metric(("🟢 歷史估值下緣（試算）" if auto_pe_enabled else "🟢 手動 PE 下緣（試算）") if not quality_ok else "🟢 便宜價（參考）", f"{cheap_price:,.2f}")
-            p2.metric(("🟡 歷史估值中位（試算）" if auto_pe_enabled else "🟡 手動 PE 中位（試算）") if not quality_ok else "🟡 合理價（參考）", f"{fair_price:,.2f}")
-            p3.metric(("🔴 歷史估值上緣（試算）" if auto_pe_enabled else "🔴 手動 PE 上緣（試算）") if not quality_ok else "🔴 昂貴價（參考）", f"{expensive_price:,.2f}")
-            st.info("估值可信度：" + ("手動情境（不提供買進訊號）" if not auto_pe_enabled else "中（樣本門檻通過；仍需核對財報公告日）" if quality_ok else "低／未驗證（不提供買進訊號）"))
-            category = ("便宜區" if latest_price <= cheap_price else
-                        "合理偏低區" if latest_price < fair_price else
-                        "合理偏高區" if latest_price < expensive_price else "昂貴區")
-            st.write(f"最新資料收盤價：{latest_price:,.2f}｜隱含 PE：{latest_price / eps_value:.2f} 倍｜估價區間：**{category if quality_ok else '未判定（低可信度）'}**")
-            if auto_pe_result and (latest_price / eps_value < effective_pes[0] * 0.8 or latest_price / eps_value > effective_pes[2] * 1.2):
-                st.warning("目前隱含 PE 與歷史區間差距超過 20%；可能是獲利或市場評價結構改變，請勿直接把便宜價視為安全買點。")
-            from valuation_engine import valuation_quality, conservative_entry
-            quality, quality_reasons = valuation_quality(auto_pe_result if auto_pe_enabled else None, latest_price / eps_value, growth_reference)
-            st.markdown(f"#### 🛡️ 估值資料可信度：{quality}")
-            st.caption("依歷史樣本數、資料跨度、季 EPS、PE 分布與現價偏離程度評級；不代表預測準確率。")
-            if quality_reasons:
-                st.warning("評級原因：" + "；".join(quality_reasons))
-            safety_price = conservative_entry(eps_value, auto_pe_result, margin_pct=25) if quality_ok else None
-            if safety_price is not None:
-                st.metric("🛡️ 保守觀察進場參考價（非買進建議）", f"{safety_price:,.2f}")
-                st.caption("以歷史低檔 PE（20% 分位）與歷史中位 PE 再打 75 折，取較低者 × 近四季 EPS。此價格仍可能高於現價，不能據此判定低估。")
+    with valuation_result_slot:
+        if valuation_enabled:
+            st.subheader("🧮 股票估價參考（測試版）")
+            st.caption(f"估價標的：{symbol}｜使用該股EPS與歷史PE；缺資料不沿用其他股票")
+            if eps_value <= 0:
+                st.info("目前沒有有效 EPS，請切換手動輸入或確認資料來源。")
+            elif auto_pe_enabled and auto_pe_result is None:
+                st.warning("歷史 PE 資料不足或暫時無法取得：本次不顯示歷史估值與未來情境價格。請稍後重試，或取消自動模式後自行輸入 PE 試算。")
+            elif not auto_pe_enabled and not (cheap_pe < fair_pe < expensive_pe):
+                st.warning("本益比需符合：便宜 PE ＜ 合理 PE ＜ 昂貴 PE。")
             else:
-                st.info("缺乏可靠歷史 PE，暫不顯示保守進場參考價。")
-            try:
-                valuation_date = str(pd.Timestamp(df.index[-1]).date())
-            except Exception:
-                valuation_date = "日期未知"
-            st.caption(f"📅 股價資料日期：{valuation_date}｜價格：歷史 K 線資料｜EPS：Yahoo Finance 或手動輸入｜歷史 PE：{auto_pe_result['method'] if auto_pe_result else '未取得'}；非即時報價。")
-            if not quality_ok:
-                st.warning("歷史 EPS 樣本不足或估價未驗證：數字僅供試算，不提供安全進場價。")
-            if forecast_enabled:
-                if not auto_pe_enabled:
-                    st.info("以下未來 EPS 情境使用自行設定的手動 PE，並非歷史 PE 模型。")
-                future_eps = eps_value * (1 + forecast_growth / 100)
-                st.markdown("#### 📈 下一年度 EPS 情境估價（自行假設，非市場共識預測）")
-                st.write(f"假設成長率 {forecast_growth:+.1f}%｜情境 EPS {future_eps:,.2f} 元｜安全折扣 {forecast_discount:.0f}%")
-                if future_eps > 0:
-                    future_prices = [future_eps * pe * (1 - forecast_discount / 100) for pe in effective_pes]
-                    c1, c2, c3 = st.columns(3)
-                    c1.metric("🟢 情境便宜價", f"{future_prices[0]:,.2f}")
-                    c2.metric("🟡 情境合理價", f"{future_prices[1]:,.2f}")
-                    c3.metric("🔴 情境昂貴價", f"{future_prices[2]:,.2f}")
-                    gap = abs(future_prices[1] - fair_price) / fair_price * 100 if fair_price else 0
-                    if gap > 30:
-                        st.warning(f"歷史合理價與未來情境合理價差距 {gap:.1f}%，估價不確定性高。")
+                effective_pes = auto_pe_result["pes"] if auto_pe_enabled else (cheap_pe, fair_pe, expensive_pe)
+                cheap_price, fair_price, expensive_price = [eps_value * pe for pe in effective_pes]
+                latest_price = float(df["Close"].iloc[-1])
+                official_pe_mode = bool(auto_pe_enabled and filing_upload is None and str(symbol).endswith(".TW"))
+                quality_ok = bool(auto_pe_enabled and auto_pe_result and auto_pe_result["samples"] >= 250
+                                  and auto_pe_result.get("coverage_days", 0) >= 365
+                                  and (official_pe_mode or auto_pe_result.get("eps_quarters", 0) >= 12)
+                                  and not auto_pe_result.get("warnings"))
+                p1, p2, p3 = st.columns(3)
+                p1.metric(("🟢 歷史估值下緣（試算）" if auto_pe_enabled else "🟢 手動 PE 下緣（試算）") if not quality_ok else "🟢 便宜價（參考）", f"{cheap_price:,.2f}")
+                p2.metric(("🟡 歷史估值中位（試算）" if auto_pe_enabled else "🟡 手動 PE 中位（試算）") if not quality_ok else "🟡 合理價（參考）", f"{fair_price:,.2f}")
+                p3.metric(("🔴 歷史估值上緣（試算）" if auto_pe_enabled else "🔴 手動 PE 上緣（試算）") if not quality_ok else "🔴 昂貴價（參考）", f"{expensive_price:,.2f}")
+                st.info("估值可信度：" + ("手動情境（不提供買進訊號）" if not auto_pe_enabled else "中（樣本門檻通過；仍需核對財報公告日）" if quality_ok else "低／未驗證（不提供買進訊號）"))
+                category = ("便宜區" if latest_price <= cheap_price else
+                            "合理偏低區" if latest_price < fair_price else
+                            "合理偏高區" if latest_price < expensive_price else "昂貴區")
+                st.write(f"最新資料收盤價：{latest_price:,.2f}｜隱含 PE：{latest_price / eps_value:.2f} 倍｜估價區間：**{category if quality_ok else '未判定（低可信度）'}**")
+                if auto_pe_result and (latest_price / eps_value < effective_pes[0] * 0.8 or latest_price / eps_value > effective_pes[2] * 1.2):
+                    st.warning("目前隱含 PE 與歷史區間差距超過 20%；可能是獲利或市場評價結構改變，請勿直接把便宜價視為安全買點。")
+                from valuation_engine import valuation_quality, conservative_entry
+                quality, quality_reasons = valuation_quality(auto_pe_result if auto_pe_enabled else None, latest_price / eps_value, growth_reference)
+                st.markdown(f"#### 🛡️ 估值資料可信度：{quality}")
+                st.caption("依歷史樣本數、資料跨度、季 EPS、PE 分布與現價偏離程度評級；不代表預測準確率。")
+                if quality_reasons:
+                    st.warning("評級原因：" + "；".join(quality_reasons))
+                safety_price = conservative_entry(eps_value, auto_pe_result, margin_pct=25) if quality_ok else None
+                if safety_price is not None:
+                    st.metric("🛡️ 保守觀察進場參考價（非買進建議）", f"{safety_price:,.2f}")
+                    st.caption("以歷史低檔 PE（20% 分位）與歷史中位 PE 再打 75 折，取較低者 × 近四季 EPS。此價格仍可能高於現價，不能據此判定低估。")
                 else:
-                    st.warning("情境 EPS 不可小於或等於零。")
+                    st.info("缺乏可靠歷史 PE，暫不顯示保守進場參考價。")
+                try:
+                    valuation_date = str(pd.Timestamp(df.index[-1]).date())
+                except Exception:
+                    valuation_date = "日期未知"
+                st.caption(f"📅 股價資料日期：{valuation_date}｜價格：歷史 K 線資料｜EPS：Yahoo Finance 或手動輸入｜歷史 PE：{auto_pe_result['method'] if auto_pe_result else '未取得'}；非即時報價。")
+                if not quality_ok:
+                    st.warning("歷史 EPS 樣本不足或估價未驗證：數字僅供試算，不提供安全進場價。")
+                if forecast_enabled:
+                    if not auto_pe_enabled:
+                        st.info("以下未來 EPS 情境使用自行設定的手動 PE，並非歷史 PE 模型。")
+                    future_eps = eps_value * (1 + forecast_growth / 100)
+                    st.markdown("#### 📈 下一年度 EPS 情境估價（自行假設，非市場共識預測）")
+                    st.write(f"假設成長率 {forecast_growth:+.1f}%｜情境 EPS {future_eps:,.2f} 元｜安全折扣 {forecast_discount:.0f}%")
+                    if future_eps > 0:
+                        future_prices = [future_eps * pe * (1 - forecast_discount / 100) for pe in effective_pes]
+                        c1, c2, c3 = st.columns(3)
+                        c1.metric("🟢 情境便宜價", f"{future_prices[0]:,.2f}")
+                        c2.metric("🟡 情境合理價", f"{future_prices[1]:,.2f}")
+                        c3.metric("🔴 情境昂貴價", f"{future_prices[2]:,.2f}")
+                        gap = abs(future_prices[1] - fair_price) / fair_price * 100 if fair_price else 0
+                        if gap > 30:
+                            st.warning(f"歷史合理價與未來情境合理價差距 {gap:.1f}%，估價不確定性高。")
+                    else:
+                        st.warning("情境 EPS 不可小於或等於零。")
 
-            st.caption(f"估價依據：EPS {eps_value:,.2f} × PE {effective_pes[0]:.1f}／{effective_pes[1]:.1f}／{effective_pes[2]:.1f}；"
-                       f"EPS 期間／來源：{eps_period or '未填寫'}。"
-                       "自動 EPS 為近四季歷史值、非未來預估；PE 模式明確分開，不會自動回退固定倍數；非即時報價、非保證價位，亦非孫慶龍本人發布的估價。")
+                st.caption(f"估價依據：EPS {eps_value:,.2f} × PE {effective_pes[0]:.1f}／{effective_pes[1]:.1f}／{effective_pes[2]:.1f}；"
+                           f"EPS 期間／來源：{eps_period or '未填寫'}。"
+                           "自動 EPS 為近四季歷史值、非未來預估；PE 模式明確分開，不會自動回退固定倍數；非即時報價、非保證價位，亦非孫慶龍本人發布的估價。")
 
     if not PRODUCTION_MODE:
         show_live_candle(

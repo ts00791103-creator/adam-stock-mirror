@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 import yfinance as yf
 from stock_screener import resolve_watchlist, screen_frame
+from stock_navigation import stock_result_table, queue_analysis
 
 
 @st.cache_data(ttl=900, show_spinner=False)
@@ -62,17 +63,20 @@ def show_screener(stock_list, production=False):
         matched = [r for r in rows if r["符合"]]
         st.caption(f"執行時間（台灣）：{timestamp}｜有效行情 {len(rows)} 檔｜符合 {len(matched)} 檔｜無法處理 {len(failures)} 筆。請查看各檔資料日期，舊日期可能來自休市、停牌或資料延遲。")
         if matched:
-            st.dataframe(pd.DataFrame(matched), hide_index=True, use_container_width=True)
+            stock_result_table(pd.DataFrame(matched),matched,"screen_results",production)
             choice = st.selectbox("帶入個股分析", [r["代號"] for r in matched],
                                   format_func=lambda code: next(f"{r['代號']} {r['名稱']}" for r in matched if r["代號"] == code), key="screen_choice")
             if st.button("使用這檔股票", key="screen_use"):
                 st.session_state["adam_stock_query"] = choice
+                if not production:
+                    queue_analysis(st.session_state, next(r for r in matched if r["代號"]==choice))
+                    st.rerun()
                 st.success("已帶入下方股票查詢；請選擇日K／週K後按「開始亞當鏡像分析」。")
         else:
             st.info("本次沒有符合條件的股票；無法取得行情的股票不計為不符合。")
         if rows:
             with st.expander("查看所有有效行情（含未符合）"):
-                st.dataframe(pd.DataFrame(rows), hide_index=True)
+                stock_result_table(pd.DataFrame(rows),rows,"screen_all_results",production)
             st.download_button("下載本次完整篩選CSV", pd.DataFrame(rows).to_csv(index=False).encode("utf-8-sig"),
                                file_name="adam_watchlist_screen.csv", mime="text/csv", key="screen_csv")
         if failures:
