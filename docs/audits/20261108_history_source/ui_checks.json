@@ -1,0 +1,56 @@
+{
+  "candidate": "https://adam-v1-candidate.streamlit.app/",
+  "core_code_commit": "1be91c0eb206341b63a876738dd9001655c9101f",
+  "final_display_code_commit": "6945dc8e5aff46645aa8465b362ed245d20e78c3",
+  "checks": [
+    {
+      "case": "8358.TWO 2018-06",
+      "before_invalid": 1,
+      "proposals": 1,
+      "after_invalid": 0,
+      "after_official_difference_days": 0,
+      "observed": "candidate latest difference metrics"
+    },
+    {
+      "case": "2924.TWO 2021-12",
+      "before_invalid": 2,
+      "proposals": 2,
+      "after_invalid": 0,
+      "after_official_difference_days": 0,
+      "extra_unverified_dates": 16,
+      "incomplete_warning": true
+    },
+    {
+      "case": "3095.TWO 2021-12",
+      "before_invalid": 0,
+      "proposals": 0,
+      "after_invalid": 0,
+      "after_official_difference_days": 22,
+      "after_official_difference_fields": 88,
+      "incomplete_warning": true,
+      "no_basis_mixing": true
+    },
+    {
+      "case": "2330.TW 2026-11",
+      "before_invalid": 0,
+      "proposals": 0,
+      "after_invalid": 0,
+      "after_official_difference_days": 0,
+      "normal_data_unchanged": true
+    }
+  ],
+  "final_display": {
+    "case": "8358.TWO 2018-06",
+    "date": "2018-06-28",
+    "original_close": 37,
+    "official_close": 40,
+    "preview_close": 40,
+    "chinese_four_column_table": true
+  },
+  "mobile": {
+    "width": 390,
+    "scrollWidth": 390,
+    "restored": true
+  },
+  "production_unchanged": true
+}

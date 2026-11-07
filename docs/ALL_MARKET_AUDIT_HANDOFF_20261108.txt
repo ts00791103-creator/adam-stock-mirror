@@ -38,3 +38,6 @@ D. 官方歷史複核：https://www.tpex.org.tw/zh-tw/mainboard/trading/info/sto
 正式完整原始碼備份：outputs/亞當_正式版完整原始碼_V1.0.7_20261108.zip（142個ZIP項目）。
 正式站程式、本輪main與b3-speed-test均未修改；本輪新增測試程式與文件只在release/v1.0-development。
 下一階段重點是473/744檔歷史資料來源處理，不是宣稱全市場均能正常畫圖。
+
+
+後續進度（2026-11-08）：官方歷史來源驗證第一階段已完成候選站與251項回歸；只做逐月修正預覽，未更新正式站，473/744檔尚未全部修復。請接讀 docs/OFFICIAL_HISTORY_PHASE1_20261108.txt；原始/官方/修正證據與UI驗收在 docs/audits/20261108_history_source/。

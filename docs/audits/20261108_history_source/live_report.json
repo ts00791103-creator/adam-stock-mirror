@@ -1,0 +1,1032 @@
+[
+  {
+    "symbol": "8358.TWO",
+    "month": "2018-06",
+    "status": "compared; preview only, not whole-history repair",
+    "official_bars": 20,
+    "source_bars": 20,
+    "before_invalid_dates": [
+      "2018-06-28"
+    ],
+    "after_invalid_dates": [],
+    "proposals": [
+      {
+        "symbol": "8358.TWO",
+        "date": "2018-06-28",
+        "original_close": 37,
+        "official_close": 40,
+        "applied_close": 40,
+        "float_alignment_delta": 0,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "0369e20caeeee6e32cdc305ce09ae961a9b50dfb261ad2d032c8eb6f41479369"
+      }
+    ],
+    "evidence": {
+      "symbol": "8358.TWO",
+      "month": "2018-06",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "8358",
+        "date": "2018/06/01",
+        "response": "json"
+      },
+      "payload_sha256": "0369e20caeeee6e32cdc305ce09ae961a9b50dfb261ad2d032c8eb6f41479369",
+      "parsed_frame_sha256": "f7858ec8e2aaded2fb2a2334f046acaa196afc24dc350783bfc8926fa458da0b",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-07T23:31:39.199506+00:00"
+    },
+    "source_missing_official_dates": [],
+    "source_extra_unverified_dates": [],
+    "dated_differences": [
+      {
+        "date": "2018-06-28",
+        "field": "Close",
+        "official": 40,
+        "source": 37,
+        "preview": 40
+      }
+    ]
+  },
+  {
+    "symbol": "2924.TWO",
+    "month": "2021-12",
+    "status": "compared; preview only, not whole-history repair",
+    "official_bars": 6,
+    "source_bars": 22,
+    "before_invalid_dates": [
+      "2021-12-01",
+      "2021-12-03"
+    ],
+    "after_invalid_dates": [],
+    "proposals": [
+      {
+        "symbol": "2924.TWO",
+        "date": "2021-12-01",
+        "original_close": 18.700000762939453,
+        "official_close": 17.1,
+        "applied_close": 17.100000381469727,
+        "float_alignment_delta": 3.8146972514141453e-7,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "9e0972d6bd5ca95cbb7c143737939a07df63d84f366412fa472bc7d2cfffee75"
+      },
+      {
+        "symbol": "2924.TWO",
+        "date": "2021-12-03",
+        "original_close": 17.399999618530273,
+        "official_close": 17.9,
+        "applied_close": 17.899999618530273,
+        "float_alignment_delta": -3.8146972514141453e-7,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "9e0972d6bd5ca95cbb7c143737939a07df63d84f366412fa472bc7d2cfffee75"
+      }
+    ],
+    "evidence": {
+      "symbol": "2924.TWO",
+      "month": "2021-12",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "2924",
+        "date": "2021/12/01",
+        "response": "json"
+      },
+      "payload_sha256": "9e0972d6bd5ca95cbb7c143737939a07df63d84f366412fa472bc7d2cfffee75",
+      "parsed_frame_sha256": "24a3e6cf3669acac721b447a04c4fd3dbd99feac6bea7af4d02f394879041139",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [
+        {
+          "date": "2021-12-02",
+          "raw": {
+            "Date": "110/12/02",
+            "Volume": "0",
+            "Turnover": "0",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        },
+        {
+          "date": "2021-12-07",
+          "raw": {
+            "Date": "110/12/07",
+            "Volume": "0",
+            "Turnover": "0",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        },
+        {
+          "date": "2021-12-08",
+          "raw": {
+            "Date": "110/12/08",
+            "Volume": "0",
+            "Turnover": "0",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        },
+        {
+          "date": "2021-12-09",
+          "raw": {
+            "Date": "110/12/09",
+            "Volume": "0",
+            "Turnover": "0",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        },
+        {
+          "date": "2021-12-10",
+          "raw": {
+            "Date": "110/12/10",
+            "Volume": "0",
+            "Turnover": "0",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        },
+        {
+          "date": "2021-12-14",
+          "raw": {
+            "Date": "110/12/14",
+            "Volume": "0",
+            "Turnover": "0",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        },
+        {
+          "date": "2021-12-16",
+          "raw": {
+            "Date": "110/12/16",
+            "Volume": "0",
+            "Turnover": "7",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        },
+        {
+          "date": "2021-12-17",
+          "raw": {
+            "Date": "110/12/17",
+            "Volume": "0",
+            "Turnover": "0",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        },
+        {
+          "date": "2021-12-20",
+          "raw": {
+            "Date": "110/12/20",
+            "Volume": "0",
+            "Turnover": "0",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        },
+        {
+          "date": "2021-12-21",
+          "raw": {
+            "Date": "110/12/21",
+            "Volume": "0",
+            "Turnover": "0",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        },
+        {
+          "date": "2021-12-23",
+          "raw": {
+            "Date": "110/12/23",
+            "Volume": "0",
+            "Turnover": "0",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        },
+        {
+          "date": "2021-12-24",
+          "raw": {
+            "Date": "110/12/24",
+            "Volume": "0",
+            "Turnover": "0",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        },
+        {
+          "date": "2021-12-27",
+          "raw": {
+            "Date": "110/12/27",
+            "Volume": "0",
+            "Turnover": "0",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        },
+        {
+          "date": "2021-12-28",
+          "raw": {
+            "Date": "110/12/28",
+            "Volume": "0",
+            "Turnover": "0",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        },
+        {
+          "date": "2021-12-29",
+          "raw": {
+            "Date": "110/12/29",
+            "Volume": "0",
+            "Turnover": "0",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        },
+        {
+          "date": "2021-12-30",
+          "raw": {
+            "Date": "110/12/30",
+            "Volume": "0",
+            "Turnover": "0",
+            "Open": "--",
+            "High": "--",
+            "Low": "--",
+            "Close": "--"
+          },
+          "reason": "官方當日未提供一般交易 OHLC；未造出K線"
+        }
+      ],
+      "bars": 6,
+      "retrieved_at_utc": "2026-11-07T23:31:41.998350+00:00"
+    },
+    "source_missing_official_dates": [],
+    "source_extra_unverified_dates": [
+      "2021-12-02",
+      "2021-12-07",
+      "2021-12-08",
+      "2021-12-09",
+      "2021-12-10",
+      "2021-12-14",
+      "2021-12-16",
+      "2021-12-17",
+      "2021-12-20",
+      "2021-12-21",
+      "2021-12-23",
+      "2021-12-24",
+      "2021-12-27",
+      "2021-12-28",
+      "2021-12-29",
+      "2021-12-30"
+    ],
+    "dated_differences": [
+      {
+        "date": "2021-12-01",
+        "field": "Close",
+        "official": 17.1,
+        "source": 18.700000762939453,
+        "preview": 17.100000381469727
+      },
+      {
+        "date": "2021-12-03",
+        "field": "Close",
+        "official": 17.9,
+        "source": 17.399999618530273,
+        "preview": 17.899999618530273
+      }
+    ]
+  },
+  {
+    "symbol": "3095.TWO",
+    "month": "2021-12",
+    "status": "compared; preview only, not whole-history repair",
+    "official_bars": 22,
+    "source_bars": 22,
+    "before_invalid_dates": [],
+    "after_invalid_dates": [],
+    "proposals": [],
+    "evidence": {
+      "symbol": "3095.TWO",
+      "month": "2021-12",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3095",
+        "date": "2021/12/01",
+        "response": "json"
+      },
+      "payload_sha256": "493d33675154e0cdd33f063ba24dacbd02191778b3de050e8f9a8f73010e4cdf",
+      "parsed_frame_sha256": "f1107c3c4a46066eec48117fb6eb98ffa1be7c637062f636018eb326fb18a413",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-07T23:31:42.521821+00:00"
+    },
+    "source_missing_official_dates": [],
+    "source_extra_unverified_dates": [],
+    "dated_differences": [
+      {
+        "date": "2021-12-01",
+        "field": "Open",
+        "official": 3.01,
+        "source": 32.892173767089844,
+        "preview": 32.892173767089844
+      },
+      {
+        "date": "2021-12-01",
+        "field": "High",
+        "official": 3.05,
+        "source": 33.32927703857422,
+        "preview": 33.32927703857422
+      },
+      {
+        "date": "2021-12-01",
+        "field": "Low",
+        "official": 2.99,
+        "source": 32.67361831665039,
+        "preview": 32.67361831665039
+      },
+      {
+        "date": "2021-12-01",
+        "field": "Close",
+        "official": 3.01,
+        "source": 32.892173767089844,
+        "preview": 32.892173767089844
+      },
+      {
+        "date": "2021-12-02",
+        "field": "Open",
+        "official": 3.01,
+        "source": 32.892173767089844,
+        "preview": 32.892173767089844
+      },
+      {
+        "date": "2021-12-02",
+        "field": "High",
+        "official": 3.01,
+        "source": 32.892173767089844,
+        "preview": 32.892173767089844
+      },
+      {
+        "date": "2021-12-02",
+        "field": "Low",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-02",
+        "field": "Close",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-03",
+        "field": "Open",
+        "official": 3.03,
+        "source": 33.11072540283203,
+        "preview": 33.11072540283203
+      },
+      {
+        "date": "2021-12-03",
+        "field": "High",
+        "official": 3.03,
+        "source": 33.11072540283203,
+        "preview": 33.11072540283203
+      },
+      {
+        "date": "2021-12-03",
+        "field": "Low",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-03",
+        "field": "Close",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-06",
+        "field": "Open",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-06",
+        "field": "High",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-06",
+        "field": "Low",
+        "official": 2.96,
+        "source": 32.34579086303711,
+        "preview": 32.34579086303711
+      },
+      {
+        "date": "2021-12-06",
+        "field": "Close",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-07",
+        "field": "Open",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-07",
+        "field": "High",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-07",
+        "field": "Low",
+        "official": 2.96,
+        "source": 32.34579086303711,
+        "preview": 32.34579086303711
+      },
+      {
+        "date": "2021-12-07",
+        "field": "Close",
+        "official": 2.96,
+        "source": 32.34579086303711,
+        "preview": 32.34579086303711
+      },
+      {
+        "date": "2021-12-08",
+        "field": "Open",
+        "official": 2.96,
+        "source": 32.34579086303711,
+        "preview": 32.34579086303711
+      },
+      {
+        "date": "2021-12-08",
+        "field": "High",
+        "official": 2.99,
+        "source": 32.67361831665039,
+        "preview": 32.67361831665039
+      },
+      {
+        "date": "2021-12-08",
+        "field": "Low",
+        "official": 2.96,
+        "source": 32.34579086303711,
+        "preview": 32.34579086303711
+      },
+      {
+        "date": "2021-12-08",
+        "field": "Close",
+        "official": 2.99,
+        "source": 32.67361831665039,
+        "preview": 32.67361831665039
+      },
+      {
+        "date": "2021-12-09",
+        "field": "Open",
+        "official": 2.99,
+        "source": 32.67361831665039,
+        "preview": 32.67361831665039
+      },
+      {
+        "date": "2021-12-09",
+        "field": "High",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-09",
+        "field": "Low",
+        "official": 2.97,
+        "source": 32.4550666809082,
+        "preview": 32.4550666809082
+      },
+      {
+        "date": "2021-12-09",
+        "field": "Close",
+        "official": 2.99,
+        "source": 32.67361831665039,
+        "preview": 32.67361831665039
+      },
+      {
+        "date": "2021-12-10",
+        "field": "Open",
+        "official": 2.97,
+        "source": 32.4550666809082,
+        "preview": 32.4550666809082
+      },
+      {
+        "date": "2021-12-10",
+        "field": "High",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-10",
+        "field": "Low",
+        "official": 2.97,
+        "source": 32.4550666809082,
+        "preview": 32.4550666809082
+      },
+      {
+        "date": "2021-12-10",
+        "field": "Close",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-13",
+        "field": "Open",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-13",
+        "field": "High",
+        "official": 3.01,
+        "source": 32.892173767089844,
+        "preview": 32.892173767089844
+      },
+      {
+        "date": "2021-12-13",
+        "field": "Low",
+        "official": 2.99,
+        "source": 32.67361831665039,
+        "preview": 32.67361831665039
+      },
+      {
+        "date": "2021-12-13",
+        "field": "Close",
+        "official": 2.99,
+        "source": 32.67361831665039,
+        "preview": 32.67361831665039
+      },
+      {
+        "date": "2021-12-14",
+        "field": "Open",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-14",
+        "field": "High",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-14",
+        "field": "Low",
+        "official": 2.93,
+        "source": 32.01796340942383,
+        "preview": 32.01796340942383
+      },
+      {
+        "date": "2021-12-14",
+        "field": "Close",
+        "official": 2.99,
+        "source": 32.67361831665039,
+        "preview": 32.67361831665039
+      },
+      {
+        "date": "2021-12-15",
+        "field": "Open",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-15",
+        "field": "High",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-15",
+        "field": "Low",
+        "official": 2.96,
+        "source": 32.34579086303711,
+        "preview": 32.34579086303711
+      },
+      {
+        "date": "2021-12-15",
+        "field": "Close",
+        "official": 2.96,
+        "source": 32.34579086303711,
+        "preview": 32.34579086303711
+      },
+      {
+        "date": "2021-12-16",
+        "field": "Open",
+        "official": 2.96,
+        "source": 32.34579086303711,
+        "preview": 32.34579086303711
+      },
+      {
+        "date": "2021-12-16",
+        "field": "High",
+        "official": 2.99,
+        "source": 32.67361831665039,
+        "preview": 32.67361831665039
+      },
+      {
+        "date": "2021-12-16",
+        "field": "Low",
+        "official": 2.94,
+        "source": 32.12723922729492,
+        "preview": 32.12723922729492
+      },
+      {
+        "date": "2021-12-16",
+        "field": "Close",
+        "official": 2.94,
+        "source": 32.12723922729492,
+        "preview": 32.12723922729492
+      },
+      {
+        "date": "2021-12-17",
+        "field": "Open",
+        "official": 2.94,
+        "source": 32.12723922729492,
+        "preview": 32.12723922729492
+      },
+      {
+        "date": "2021-12-17",
+        "field": "High",
+        "official": 2.98,
+        "source": 32.5643424987793,
+        "preview": 32.5643424987793
+      },
+      {
+        "date": "2021-12-17",
+        "field": "Low",
+        "official": 2.91,
+        "source": 31.799409866333008,
+        "preview": 31.799409866333008
+      },
+      {
+        "date": "2021-12-17",
+        "field": "Close",
+        "official": 2.98,
+        "source": 32.5643424987793,
+        "preview": 32.5643424987793
+      },
+      {
+        "date": "2021-12-20",
+        "field": "Open",
+        "official": 2.98,
+        "source": 32.5643424987793,
+        "preview": 32.5643424987793
+      },
+      {
+        "date": "2021-12-20",
+        "field": "High",
+        "official": 2.98,
+        "source": 32.5643424987793,
+        "preview": 32.5643424987793
+      },
+      {
+        "date": "2021-12-20",
+        "field": "Low",
+        "official": 2.94,
+        "source": 32.12723922729492,
+        "preview": 32.12723922729492
+      },
+      {
+        "date": "2021-12-20",
+        "field": "Close",
+        "official": 2.94,
+        "source": 32.12723922729492,
+        "preview": 32.12723922729492
+      },
+      {
+        "date": "2021-12-21",
+        "field": "Open",
+        "official": 2.94,
+        "source": 32.12723922729492,
+        "preview": 32.12723922729492
+      },
+      {
+        "date": "2021-12-21",
+        "field": "High",
+        "official": 2.95,
+        "source": 32.236515045166016,
+        "preview": 32.236515045166016
+      },
+      {
+        "date": "2021-12-21",
+        "field": "Low",
+        "official": 2.92,
+        "source": 31.9086856842041,
+        "preview": 31.9086856842041
+      },
+      {
+        "date": "2021-12-21",
+        "field": "Close",
+        "official": 2.95,
+        "source": 32.236515045166016,
+        "preview": 32.236515045166016
+      },
+      {
+        "date": "2021-12-22",
+        "field": "Open",
+        "official": 2.95,
+        "source": 32.236515045166016,
+        "preview": 32.236515045166016
+      },
+      {
+        "date": "2021-12-22",
+        "field": "High",
+        "official": 3.01,
+        "source": 32.892173767089844,
+        "preview": 32.892173767089844
+      },
+      {
+        "date": "2021-12-22",
+        "field": "Low",
+        "official": 2.95,
+        "source": 32.236515045166016,
+        "preview": 32.236515045166016
+      },
+      {
+        "date": "2021-12-22",
+        "field": "Close",
+        "official": 3.01,
+        "source": 32.892173767089844,
+        "preview": 32.892173767089844
+      },
+      {
+        "date": "2021-12-23",
+        "field": "Open",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-23",
+        "field": "High",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-23",
+        "field": "Low",
+        "official": 2.92,
+        "source": 31.9086856842041,
+        "preview": 31.9086856842041
+      },
+      {
+        "date": "2021-12-23",
+        "field": "Close",
+        "official": 2.92,
+        "source": 31.9086856842041,
+        "preview": 31.9086856842041
+      },
+      {
+        "date": "2021-12-24",
+        "field": "Open",
+        "official": 2.92,
+        "source": 31.9086856842041,
+        "preview": 31.9086856842041
+      },
+      {
+        "date": "2021-12-24",
+        "field": "High",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-24",
+        "field": "Low",
+        "official": 2.92,
+        "source": 31.9086856842041,
+        "preview": 31.9086856842041
+      },
+      {
+        "date": "2021-12-24",
+        "field": "Close",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-27",
+        "field": "Open",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-27",
+        "field": "High",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-27",
+        "field": "Low",
+        "official": 2.95,
+        "source": 32.236515045166016,
+        "preview": 32.236515045166016
+      },
+      {
+        "date": "2021-12-27",
+        "field": "Close",
+        "official": 2.95,
+        "source": 32.236515045166016,
+        "preview": 32.236515045166016
+      },
+      {
+        "date": "2021-12-28",
+        "field": "Open",
+        "official": 2.95,
+        "source": 32.236515045166016,
+        "preview": 32.236515045166016
+      },
+      {
+        "date": "2021-12-28",
+        "field": "High",
+        "official": 3,
+        "source": 32.782894134521484,
+        "preview": 32.782894134521484
+      },
+      {
+        "date": "2021-12-28",
+        "field": "Low",
+        "official": 2.95,
+        "source": 32.236515045166016,
+        "preview": 32.236515045166016
+      },
+      {
+        "date": "2021-12-28",
+        "field": "Close",
+        "official": 2.95,
+        "source": 32.236515045166016,
+        "preview": 32.236515045166016
+      },
+      {
+        "date": "2021-12-29",
+        "field": "Open",
+        "official": 2.96,
+        "source": 32.34579086303711,
+        "preview": 32.34579086303711
+      },
+      {
+        "date": "2021-12-29",
+        "field": "High",
+        "official": 2.99,
+        "source": 32.67361831665039,
+        "preview": 32.67361831665039
+      },
+      {
+        "date": "2021-12-29",
+        "field": "Low",
+        "official": 2.95,
+        "source": 32.236515045166016,
+        "preview": 32.236515045166016
+      },
+      {
+        "date": "2021-12-29",
+        "field": "Close",
+        "official": 2.95,
+        "source": 32.236515045166016,
+        "preview": 32.236515045166016
+      },
+      {
+        "date": "2021-12-30",
+        "field": "Open",
+        "official": 2.97,
+        "source": 32.4550666809082,
+        "preview": 32.4550666809082
+      },
+      {
+        "date": "2021-12-30",
+        "field": "High",
+        "official": 3.24,
+        "source": 35.4055290222168,
+        "preview": 35.4055290222168
+      },
+      {
+        "date": "2021-12-30",
+        "field": "Low",
+        "official": 2.97,
+        "source": 32.4550666809082,
+        "preview": 32.4550666809082
+      },
+      {
+        "date": "2021-12-30",
+        "field": "Close",
+        "official": 3.24,
+        "source": 35.4055290222168,
+        "preview": 35.4055290222168
+      }
+    ]
+  },
+  {
+    "symbol": "2330.TW",
+    "month": "2026-11",
+    "status": "compared; preview only, not whole-history repair",
+    "official_bars": 5,
+    "source_bars": 5,
+    "before_invalid_dates": [],
+    "after_invalid_dates": [],
+    "proposals": [],
+    "evidence": {
+      "symbol": "2330.TW",
+      "month": "2026-11",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20261101",
+        "response": "json"
+      },
+      "payload_sha256": "d1d2cdddf07ec067e29a6d5c66f4c6d70a555dd052a5573982f3c46f1322b625",
+      "parsed_frame_sha256": "d025d296e24e4593fa4edbafebe95e3aae8992f0de44145f87977b9a8d3cd2fa",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 5,
+      "retrieved_at_utc": "2026-11-07T23:31:44.182339+00:00"
+    },
+    "source_missing_official_dates": [],
+    "source_extra_unverified_dates": [],
+    "dated_differences": []
+  }
+]
