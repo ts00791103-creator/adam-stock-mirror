@@ -22,6 +22,7 @@ def show_official_history_preview():
         with st.form("hsrc_query_form"):
             selected = st.selectbox("選擇歷史異常驗證案例", list(CASES), key="hsrc_case")
             submitted = st.form_submit_button("核對官方月份與修正預覽")
+        st.caption("切換案例後請按核對；下方標題顯示實際查詢的股票與月份。")
         if submitted:
             symbol, month = CASES[selected]
             try:
@@ -52,7 +53,13 @@ def show_official_history_preview():
             st.warning("本月仍有價格或日期待核對，不能當成資料已修復。整段價格基準不同者不會直接混補。")
         st.warning("只處理原收盤超出高低範圍、且同日官方開高低均吻合的情況。原本看似正常但與官方不同的價格不自動改寫；此月份通過不代表整段歷史已修復。")
         if ledger:
-            st.dataframe(pd.DataFrame(ledger), hide_index=True, width="stretch")
+            display_rows = [{"日期": r["date"], "原始收盤": r["original_close"],
+                             "官方收盤": r["official_close"], "預覽收盤": r["applied_close"]}
+                            for r in ledger]
+            st.dataframe(pd.DataFrame(display_rows), hide_index=True, width="stretch",
+                         column_config={name: st.column_config.NumberColumn(format="%.2f")
+                                        for name in ("原始收盤", "官方收盤", "預覽收盤")})
+            st.caption("原始資料保留；完整來源證據與每筆修正紀錄可在下方下載。")
         st.caption("官方價格基準：未復權原始價。" + evidence["volume_precision"] + "；此預覽不計算量比或交易訊號。")
         view = st.radio("驗證圖表", ["官方原始日K", "收盤修正預覽"], horizontal=True, key="hsrc_chart_view")
         frame = official if view == "官方原始日K" else repaired
