@@ -1154,7 +1154,6 @@ with st.sidebar:
 
     # ===== 開始分析 =====
 
-    @st.cache_data(ttl=21600, show_spinner=False)
     def fetch_auto_eps(ticker_symbol):
         """Yahoo trailingEps is historical TTM, not an analyst forecast."""
         try:
@@ -1172,13 +1171,23 @@ with st.sidebar:
         with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", expanded=False):
             valuation_enabled = st.checkbox("啟用估價", value=False, key="b3_valuation_enabled_v1")
             valuation_mode = st.radio("估價模式", ["參考價值投資分區（可調參數）", "自訂本益比"], horizontal=True, key="b3_valuation_mode_v1")
+            from valuation_io import bounded_fetch
+            valuation_load_requested = st.button("讀取／更新估價資料", key="valuation_load", disabled=not valuation_enabled)
+            st.caption("勾選不會自動連線。先按「讀取／更新估價資料」，再按「開始亞當鏡像分析」；估價缺資料不影響一般股價與鏡像。")
+            eps_cache = st.session_state.setdefault("valuation_eps_cache", {})
+            pe_cache = st.session_state.setdefault("valuation_pe_cache", {})
+            growth_cache = st.session_state.setdefault("valuation_growth_cache", {})
             eps_source_mode = st.radio("EPS 取得方式", ["自動抓取近四季 EPS", "手動輸入 EPS"], horizontal=True, key="b3_eps_source_v2")
             if eps_source_mode == "自動抓取近四季 EPS":
                 if valuation_enabled and market == "台灣股票／ETF" and symbol:
-                    eps_value, eps_period = fetch_auto_eps(symbol)
+                    if valuation_load_requested:
+                        with st.spinner("讀取近四季 EPS（最多等待8秒）…"):
+                            eps_cache[symbol] = bounded_fetch(("eps", symbol), lambda: fetch_auto_eps(symbol), timeout_seconds=8)
+                    eps_value, eps_period = eps_cache.get(symbol, (None, "尚未讀取估價資料"))
+
                     if eps_value is None:
                         eps_value = 0.0
-                        st.warning("目前抓不到有效的近四季 EPS，請切換手動輸入。")
+                        st.info(f"{eps_period}；可按讀取按鈕重試，或切換手動輸入。")
                     else:
                         st.success(f"已取得近四季 EPS：{eps_value:,.2f} 元｜來源：{eps_period}")
                 else:
@@ -1536,26 +1545,32 @@ with st.sidebar:
             st.caption("匯入資料僅用於本次試算，須自行核對公開資訊觀測站的公告日期與單季 EPS；尚未自動串接官方歷史財報。")
             auto_pe_result = None
             auto_pe_enabled = st.checkbox("自動歷史本益比分位數（20%／50%／80%）", value=True, key="b3_auto_pe_v3")
+            import hashlib
+            filing_digest = hashlib.sha256(filing_upload.getvalue()).hexdigest() if filing_upload is not None else ""
+            pe_key = (symbol, filing_format, filing_digest)
             if valuation_enabled and auto_pe_enabled and eps_value > 0 and market == "台灣股票／ETF":
-                try:
-                    if filing_upload is not None:
-                        from filing_eps import parse_quarterly_eps_csv, parse_cumulative_eps_csv, historical_pe_from_filings
-                        parser = parse_cumulative_eps_csv if filing_format.startswith("年初") else parse_quarterly_eps_csv
-                        filing_data, pe_error = parser(filing_upload.getvalue(), symbol)
-                        if filing_data is not None:
-                            auto_pe_result, pe_error = historical_pe_from_filings(symbol, filing_data, years=3)
-                    else:
-                        if str(symbol).endswith(".TW"):
+                auto_pe_result, pe_error = pe_cache.get(pe_key, (None, "尚未讀取歷史 PE，請按「讀取／更新估價資料」"))
+                if valuation_load_requested:
+                    auto_pe_result = None
+                    try:
+                        if filing_upload is not None:
+                            from filing_eps import parse_quarterly_eps_csv, parse_cumulative_eps_csv, historical_pe_from_filings
+                            parser = parse_cumulative_eps_csv if filing_format.startswith("年初") else parse_quarterly_eps_csv
+                            filing_data, pe_error = parser(filing_upload.getvalue(), symbol)
+                            if filing_data is not None:
+                                with st.spinner("讀取歷史估價資料（最多等待15秒）…"):
+                                    auto_pe_result, pe_error = bounded_fetch(("filing_pe", pe_key), lambda: historical_pe_from_filings(symbol, filing_data, years=3), timeout_seconds=15)
+                        elif str(symbol).endswith(".TW"):
                             from twse_pe import official_twse_pe
-                            @st.cache_data(ttl=86400, show_spinner=False)
-                            def cached_twse_pe(stock_symbol):
-                                return official_twse_pe(stock_symbol, years=3)
-                            auto_pe_result, pe_error = cached_twse_pe(symbol)
+                            with st.spinner("讀取證交所歷史 PE（最多等待15秒）…"):
+                                auto_pe_result, pe_error = bounded_fetch(("twse_pe", symbol), lambda: official_twse_pe(symbol, years=3), timeout_seconds=15)
                         else:
                             from valuation_engine import historical_pe_bands
-                            auto_pe_result, pe_error = historical_pe_bands(symbol, years=3)
-                except Exception:
-                    pe_error = "財務資料或股價來源暫時不可用"
+                            with st.spinner("讀取歷史 PE（最多等待15秒）…"):
+                                auto_pe_result, pe_error = bounded_fetch(("yahoo_pe", symbol), lambda: historical_pe_bands(symbol, years=3), timeout_seconds=15)
+                    except Exception:
+                        auto_pe_result, pe_error = None, "財務資料或股價來源暫時不可用"
+                    pe_cache[pe_key] = (auto_pe_result, pe_error)
                 if auto_pe_result:
                     st.success(("公告日 CSV 歷史 PE：" if filing_upload is not None else "證交所官方歷史 PE：" if str(symbol).endswith(".TW") else "Yahoo 歷史 PE：") + "／".join(f"{p:.1f} 倍" for p in auto_pe_result["pes"]))
                     st.caption(f"樣本 {auto_pe_result['samples']} 日｜{auto_pe_result['start']}～{auto_pe_result['end']}｜{auto_pe_result['method']}")
@@ -1567,7 +1582,10 @@ with st.sidebar:
             growth_reference = None
             if valuation_enabled and market == "台灣股票／ETF" and symbol:
                 from valuation_engine import eps_growth_reference
-                growth_reference, growth_error = eps_growth_reference(symbol)
+                if valuation_load_requested and st.session_state.get("b3_growth_on_v1", False):
+                    growth_cache[symbol] = bounded_fetch(("growth", symbol), lambda: eps_growth_reference(symbol), timeout_seconds=8)
+                growth_reference, growth_error = growth_cache.get(symbol, (None, "尚未讀取；如需成長情境，勾選後再按讀取估價資料"))
+
                 if growth_reference:
                     st.caption(f"📊 財報參考：近四季 EPS 年增率 {growth_reference['growth_pct']:+.1f}%｜最新季末 {growth_reference['quarter_end']}｜{growth_reference['source']}（不是未來預測）")
                 else:

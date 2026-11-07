@@ -1,5 +1,6 @@
 """Official TWSE historical daily P/E ratios (BWIBBU); listed stocks only."""
 import datetime as dt
+import time
 import requests
 import pandas as pd
 
@@ -9,16 +10,24 @@ def official_twse_pe(symbol, years=3):
         return None, "證交所歷史 PE 僅支援上市股票（.TW）"
     today = pd.Timestamp.now(tz="Asia/Taipei").normalize().tz_localize(None)
     rows = []
+    deadline = time.monotonic() + 14
+    failures = 0
+    completed = 0
     session = requests.Session()
     session.headers.update({"User-Agent":"Mozilla/5.0 (compatible; AdamStockResearch/1.0)"})
     for offset in range(years*12+1):
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            return None, "歷史 PE 讀取超時，月份尚未讀取完整；不使用部分月份估價"
         month = today.to_period("M")-offset
         date = f"{month.year}{month.month:02d}01"
         try:
             response = session.get("https://www.twse.com.tw/exchangeReport/BWIBBU",
-                                   params={"response":"json","date":date,"stockNo":code}, timeout=7)
+                                   params={"response":"json","date":date,"stockNo":code}, timeout=min(5, max(.1, remaining / 2)))
             response.raise_for_status()
             body = response.json()
+            completed += 1
+            failures = 0
             fields = body.get("fields",[])
             data = body.get("data",[])
             pe_index = next((i for i,f in enumerate(fields) if "本益比" in f),None)
@@ -35,7 +44,11 @@ def official_twse_pe(symbol, years=3):
                 if 0<pe<=200 and day<=today:
                     rows.append((day,pe))
         except (requests.RequestException, ValueError, TypeError, KeyError):
-            continue
+            failures += 1
+            if failures >= 2:
+                return None, "證交所歷史 PE 連續讀取失敗；請稍後重試，不使用部分月份估價"
+    if completed != years*12+1:
+        return None, "歷史 PE 有月份連線失敗，不使用不完整資料估價"
     if not rows:
         return None, "證交所目前未回傳可用歷史 PE（可能是 API 暫時無法連線或非上市股票）"
     series = pd.Series({d:p for d,p in rows}).sort_index()
