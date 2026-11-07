@@ -1,0 +1,22 @@
+亞當正式版 V1.0.2 發布紀錄 — 2026-11-07（台北）
+使用者明確要求「先上一份正式版然後製作成QR碼」，授權本次正式分支發布；未修改main/B3。
+正式網址：https://adam-mirror-v1.streamlit.app/
+正式分支：release/v1.0-production；入口production_app.py。
+正式提交：2368d2148f0a742529f7adce8b2406b270a8d994
+開發驗證提交：86fc9862d05a945b7eb1b25ac8215101717f184c
+兩者tree一致：5734a6b0d390d28a3ed704358aad417eeda191bd
+回復點：2369c3cc74e875e80e393f174e52924d4f67dd96，保留完整GitHub提交；本機舊正式版目錄另壓縮outputs/亞當_正式版更新前備份_2369c3c.zip。
+回復程序：取回復點tree，以目前正式分支為parent建立回復提交，再以expected_sha更新正式分支並重啟，不強制改寫歷史。
+本次發布：正式啟用已測試的關鍵壓力支撐、OHLCV成交量分布估算POC/VAL/VAH及CSV、深色側欄版面與完整價格顯示；版本標示V1.0.2。
+保留正式模式隔離：不啟用候選估價、提醒試跑、全市場分批實驗面板或盤中K線測試。即時指數未串接，Telegram六檔名單與服務未變。
+測試：GitHub Actions 42325584105 三個job（Python3.11、3.14、worker）全部success；正式入口測試增加對新控制項及分析面板的檢查，未新增依實作鏡射的樣式測試。
+正式站初次開啟因閒置休眠，已用喚醒按鈕啟動。頁面實際顯示「正式版V1.0.2」。
+線上2308日K：2026-11-06，POC1804.06、VAL1592.62、VAH1965.75，支撐壓力與鏡像正常顯示，未觀察程式例外。
+線上2330週K：週期2026-11-02，POC2396.12、VAL1673.50、VAH2590.00，支撐壓力與鏡像正常顯示；週K日期為週起始日。
+正式390x844手機模擬：指標三卡直排，數字完整，每卡scrollWidth=clientWidth279；文檔scrollWidth390=viewport390；已還原測試尺寸。實機觸控仍待驗收。
+個人報價面板可見；本次未輸入個人報價密碼或重新驗證金鑰報價，不聲稱已測新即時數據。
+QR：outputs/亞當鏡像正式版_QR.png（444x444）及SVG，內容僅正式網址、不含密碼或Token。用qrcode-generator產生、獨立jsQR解碼比對網址完全一致。
+QR來源：https://github.com/kazuhikoarase/qrcode-generator （MIT）；解碼來源https://github.com/cozmo/jsQR （Apache-2.0）。套件僅供本機製圖驗證，不加入網站執行依賴。
+截圖：outputs/正式版V1.0.2_分析驗收_20261107.png、正式版V1.0.2_手機驗收_20261107.png。
+本機本輪來源備份：work/production-v1-0-2（關鍵來源、QR工具、發布資訊與驗收紀錄）；完整程式以GitHub tree及提交為準。
+main核對9d11d224e7e49ddec40988e3d782828b48fe0edd；B3核對0239e3c374297a1d312a773ccdadb553946a1f1b，皆未變。

@@ -12,8 +12,8 @@ def official_snapshot(exchanges):
     return results, errors, pd.Timestamp.now(tz="Asia/Taipei").strftime("%Y-%m-%d %H:%M:%S")
 
 
-def show_full_market():
-    with st.expander("全台股選股（分批測試）"):
+def show_full_market(production=False):
+    with st.expander("全台股選股（上市＋上櫃）" if production else "全台股選股（分批測試）"):
         st.caption("官方公司名單中的上市／上櫃四碼股票；不含ETF、權證、興櫃。先讀每日行情初選，再分批讀歷史日K。不是即時全市場掃描，也不依鏡像終點排名。")
         scope = st.selectbox("市場範圍", ["上市＋上櫃", "上市", "上櫃"], key="market_scope")
         a, b = st.columns(2)
