@@ -14,7 +14,7 @@ def box_layers(df, short_window=10, large_window=60, max_width_pct=20.0, history
                        if b["status"] == "整理中" and b["end"] == len(df)-1), None)
         overview.append({"name": name, "window": window, "active": active,
                          "history": boxes, "color": PALETTE[rank]})
-        selected = boxes[-3:] if history else ([active] if active else [])
+        selected = boxes[-5:] if history else ([active] if active else [])
         for box in selected:
             confirmed = box["start"] + window - 1
             # A box is knowable only once its formation window is complete.
@@ -36,7 +36,9 @@ def box_layers(df, short_window=10, large_window=60, max_width_pct=20.0, history
             same["label"] += "／" + layer["label"]
         else:
             merged.append(layer)
-    return merged, overview
+    # A shared cap across horizons keeps the newest five distinct boxes.
+    newest=sorted(merged,key=lambda b:(b["end"],b["confirmed"],b["start"]),reverse=True)[:5]
+    return sorted(newest,key=lambda b:(b["end"],b["confirmed"],b["start"])), overview
 
 
 def chart_box_payload(df, **options):
@@ -76,7 +78,7 @@ def add_plotly_boxes(fig, df, **options):
 def show_box_overview(df, interval_name="", **options):
     import pandas as pd
     import streamlit as st
-    _, overview = box_layers(df, **options)
+    visible_layers, overview = box_layers(df, **options)
     st.subheader("大小區間箱型｜目前有效狀態")
     rows = []
     for item in overview:
@@ -91,17 +93,17 @@ def show_box_overview(df, interval_name="", **options):
                "箱頂／底在形成時固定；收盤越界即上破／下破。突破當根起須重新累積完整觀察根數，才形成新箱。盤中K線狀態仍可能變動。"
                "歷史框不代表目前有效支撐；跌破後轉壓力仍須另行確認回測。")
 
+    st.caption("圖上大小區間合計最多顯示最新5個箱型；更早的框不繪製。預設僅畫目前有效箱型，開啟歷史框後才顯示歷史紀錄。")
     if options.get("history"):
         with st.expander("大小區間歷史箱型｜形成與突破紀錄", expanded=False):
             history_rows = []
-            for item in overview:
-                for b in item["history"][-3:]:
-                    break_i = b["end"]+1 if b["status"] != "整理中" else None
-                    history_rows.append({
-                        "區間": f'{item["name"]} {item["window"]}根',
-                        "形成日": str(df.index[b["start"]+item["window"]-1].date()),
-                        "狀態": b["status"], "上緣": b["top"], "下緣": b["bottom"],
-                        "突破日": str(df.index[break_i].date()) if break_i is not None else "—"})
+            for b in visible_layers:
+                break_i = b["break_index"]
+                history_rows.append({
+                    "區間": b["label"],
+                    "形成日": str(df.index[b["confirmed"]].date()),
+                    "狀態": b["status"], "上緣": b["top"], "下緣": b["bottom"],
+                    "突破日": str(df.index[break_i].date()) if break_i is not None else "—"})
             if history_rows:
                 st.dataframe(pd.DataFrame(history_rows),use_container_width=True,hide_index=True)
             else:
