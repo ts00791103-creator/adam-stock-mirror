@@ -36,7 +36,7 @@ class ValuationQueryTests(unittest.TestCase):
 
     def test_manual_valuation_does_not_require_live_valuation_sources(self):
         with patch("urllib.request.urlopen", side_effect=OSError("offline")), \
-             patch("yfinance.Ticker", side_effect=AssertionError("unexpected valuation I/O")), \
+             patch("yfinance.Ticker", side_effect=AssertionError("unexpected valuation I/O")) as ticker, \
              patch("yfinance.download", return_value=self.frame()):
             app = AppTest.from_file(str(ROOT/"app.py"), default_timeout=45).run()
             app.checkbox(key="b3_valuation_enabled_v1").check().run()
