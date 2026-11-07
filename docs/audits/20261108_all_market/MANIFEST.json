@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-08",
+  "production_commit": "6ef07921465a9b4f50a2dce8c4c71935ef10b6be",
+  "summary": {
+    "expected": 1990,
+    "recorded": 1990,
+    "missing": [],
+    "status_counts": {
+      "dated OHLC matched": 1964,
+      "official unavailable": 26
+    },
+    "navigation_logic_pass": 1990,
+    "ten_year_quality_blocked": 744,
+    "five_year_quality_blocked": 473,
+    "browser_ui_tested_by_this_run": 0
+  },
+  "files": [
+    {
+      "csv": "part-0.csv",
+      "csv_rows": 249,
+      "csv_bytes": 38236,
+      "raw": "shard-0.jsonl.gz",
+      "raw_bytes": 38341
+    },
+    {
+      "csv": "part-1.csv",
+      "csv_rows": 249,
+      "csv_bytes": 38233,
+      "raw": "shard-1.jsonl.gz",
+      "raw_bytes": 36543
+    },
+    {
+      "csv": "part-2.csv",
+      "csv_rows": 249,
+      "csv_bytes": 38217,
+      "raw": "shard-2.jsonl.gz",
+      "raw_bytes": 37702
+    },
+    {
+      "csv": "part-3.csv",
+      "csv_rows": 249,
+      "csv_bytes": 38135,
+      "raw": "shard-3.jsonl.gz",
+      "raw_bytes": 36797
+    },
+    {
+      "csv": "part-4.csv",
+      "csv_rows": 249,
+      "csv_bytes": 38236,
+      "raw": "shard-4.jsonl.gz",
+      "raw_bytes": 38309
+    },
+    {
+      "csv": "part-5.csv",
+      "csv_rows": 249,
+      "csv_bytes": 38460,
+      "raw": "shard-5.jsonl.gz",
+      "raw_bytes": 35979
+    },
+    {
+      "csv": "part-6.csv",
+      "csv_rows": 248,
+      "csv_bytes": 38047,
+      "raw": "shard-6.jsonl.gz",
+      "raw_bytes": 35885
+    },
+    {
+      "csv": "part-7.csv",
+      "csv_rows": 248,
+      "csv_bytes": 38021,
+      "raw": "shard-7.jsonl.gz",
+      "raw_bytes": 36438
+    }
+  ],
+  "readme": "Combine all 8 part-*.csv by code+market, keeping only the first header. Raw gzip files each contain one original checkpointed JSONL shard with detailed anomalous bars. UI acceptance is separate from navigation state logic."
+}

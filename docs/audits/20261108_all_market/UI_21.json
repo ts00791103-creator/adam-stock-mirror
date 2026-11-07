@@ -1,0 +1,240 @@
+{
+  "date": "2026-11-08",
+  "version": "V1.0.7",
+  "site": "https://adam-mirror-v1.streamlit.app/",
+  "unique": 21,
+  "chart_pass": 19,
+  "history_quality_blocked": 2,
+  "results": [
+    {
+      "symbol": "2330.TW",
+      "expected_close": 2135,
+      "heading_ok": true,
+      "price_ok": true,
+      "loaded_bars": 1212,
+      "date": "2026-11-06",
+      "ui_status": "chart opened"
+    },
+    {
+      "symbol": "2308.TW",
+      "name": "台達電",
+      "expected_close": 1055,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：2308.TW｜最新資料：2026-11-06｜收盤價：1,055.00",
+      "history_label": "- generic: 已載入 1212 根｜2021-11-08 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "2509.TW",
+      "name": "全坤建",
+      "expected_close": 12.5,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：2509.TW｜最新資料：2026-11-06｜收盤價：12.50",
+      "history_label": "- generic: 已載入 1212 根｜2021-11-08 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "6405.TW",
+      "name": "悅城",
+      "expected_close": 30.5,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：6405.TW｜最新資料：2026-11-06｜收盤價：30.50",
+      "history_label": "- generic: 已載入 1212 根｜2021-11-08 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "6695.TW",
+      "name": "芯鼎",
+      "expected_close": 46,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：6695.TW｜最新資料：2026-11-06｜收盤價：46.00",
+      "history_label": "- generic: 已載入 1212 根｜2021-11-08 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "6756.TW",
+      "name": "威鋒電子",
+      "expected_close": 97.2,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：6756.TW｜最新資料：2026-11-06｜收盤價：97.20",
+      "history_label": "- generic: 已載入 1212 根｜2021-11-08 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "5515.TW",
+      "name": "建國",
+      "expected_close": 46.9,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：5515.TW｜最新資料：2026-11-06｜收盤價：46.90",
+      "history_label": "- generic: 已載入 1212 根｜2021-11-08 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "4770.TW",
+      "name": "上品",
+      "expected_close": 260,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：4770.TW｜最新資料：2026-11-06｜收盤價：260.00",
+      "history_label": "- generic: 已載入 1212 根｜2021-11-08 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "8358.TWO",
+      "name": "金居",
+      "expected_close": 303,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：8358.TWO｜最新資料：2026-11-06｜收盤價：303.00",
+      "history_label": "- generic: 已載入 1212 根｜2021-11-08 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "8240.TWO",
+      "name": "華宏",
+      "expected_close": 42.65,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：8240.TWO｜最新資料：2026-11-06｜收盤價：42.65",
+      "history_label": "- generic: 已載入 1212 根｜2021-11-08 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "7767.TWO",
+      "name": "仁大資訊",
+      "expected_close": 47.35,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：7767.TWO｜最新資料：2026-11-06｜收盤價：47.35",
+      "history_label": "- generic: 已載入 490 根｜2024-10-30 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "5452.TWO",
+      "name": "佶優",
+      "expected_close": 24.1,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：5452.TWO｜最新資料：2026-11-06｜收盤價：24.10",
+      "history_label": "- generic: 已載入 1212 根｜2021-11-08 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "6104.TWO",
+      "name": "創惟",
+      "expected_close": 74.4,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：6104.TWO｜最新資料：2026-11-06｜收盤價：74.40",
+      "history_label": "- generic: 已載入 1212 根｜2021-11-08 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "8040.TWO",
+      "name": "九暘",
+      "expected_close": 62.2,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：8040.TWO｜最新資料：2026-11-06｜收盤價：62.20",
+      "history_label": "- generic: 已載入 1212 根｜2021-11-08 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "3163.TWO",
+      "name": "波若威",
+      "expected_close": 395,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：3163.TWO｜最新資料：2026-11-06｜收盤價：395.00",
+      "history_label": "- generic: 已載入 1212 根｜2021-11-08 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "6182.TWO",
+      "name": "合晶",
+      "expected_close": 69,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：6182.TWO｜最新資料：2026-11-06｜收盤價：69.00",
+      "history_label": "      - generic: 已載入 1212 根｜2021-11-08 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "2321.TW",
+      "name": "東訊",
+      "expected_close": 30.65,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：2321.TW｜最新資料：2026-11-06｜收盤價：30.65",
+      "history_label": "- generic: 已載入 1212 根｜2021-11-08 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "7732.TW",
+      "name": "金興精密",
+      "expected_close": 30.7,
+      "heading_ok": true,
+      "price_ok": true,
+      "price_line": "- paragraph: 商品：7732.TW｜最新資料：2026-11-06｜收盤價：30.70",
+      "history_label": "- generic: 已載入 645 根｜2024-03-13 ～ 2026-11-06（左界為最早資料）",
+      "quality_blocked": false,
+      "ui_status": "actual chart navigation"
+    },
+    {
+      "symbol": "2924.TWO",
+      "name": "宏太-KY",
+      "expected_close": 17.95,
+      "heading_ok": true,
+      "price_ok": false,
+      "price_line": "",
+      "history_label": "",
+      "quality_blocked": true,
+      "ui_status": "correct stock navigation; chart blocked by 17 invalid historical OHLC bars",
+      "official_reference_ok": true,
+      "quality_invalid_bars": 17
+    },
+    {
+      "symbol": "3095.TWO",
+      "name": "及成",
+      "expected_close": 30.7,
+      "heading_ok": true,
+      "price_ok": false,
+      "official_reference_ok": true,
+      "quality_blocked": true,
+      "quality_invalid_bars": 37,
+      "ui_status": "correct stock navigation; chart blocked by 37 invalid historical OHLC bars"
+    },
+    {
+      "symbol": "3481.TW",
+      "name": "群創",
+      "expected_close": 36.05,
+      "heading_ok": true,
+      "price_ok": true,
+      "quality_blocked": false,
+      "ui_status": "direct stock-name table cell click; mobile390x844 history/reset also passed"
+    }
+  ],
+  "attempts_preserved_in": "actual_ui_results_20.json"
+}
