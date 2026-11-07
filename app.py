@@ -9,10 +9,12 @@ from live_candle import show_live_candle
 
 PRODUCTION_MODE = bool(globals().get("PRODUCTION_MODE", False))
 st.set_page_config(page_title="亞當鏡像分析 V1.0" if PRODUCTION_MODE else "亞當鏡像分析 V1.0 候選版", layout="wide")
-st.title("亞當鏡像分析 V1.0" if PRODUCTION_MODE else "亞當鏡像分析 V1.0｜候選測試版")
+from studio_layout import apply_studio_layout
+apply_studio_layout(st, production=PRODUCTION_MODE)
+st.title("亞當鏡像分析 V1.0" if PRODUCTION_MODE else "亞當鏡像股票分析")
 st.caption("A 模式左右鏡像｜短、中、長三波｜歷史路徑情境分析")
 if PRODUCTION_MODE:
-    st.caption("V1.0.1｜自選名單選股・個人即時報價｜鏡像使用歷史行情")
+    st.caption("V1.0.2｜支撐壓力・成交量集中區估算・個人即時報價")
 st.info("鏡像右側為歷史路徑反向排列的情境示意，並非即時行情或未來價格預測；未來日期為示意刻度，未完整排除台股休市日及盤中休市時段。")
 
 MARKETS = {
@@ -932,642 +934,666 @@ def load_tw_symbols():
 
 # ===== 操作介面 =====
 
+if not PRODUCTION_MODE:
+    from entry_alerts_ui import show_entry_alerts
+    show_entry_alerts(load_tw_symbols())
+    from full_market_ui import show_full_market
+    show_full_market()
+
 from screener_ui import show_screener
 show_screener(load_tw_symbols(), production=PRODUCTION_MODE)
 
 if "adam_stock_query" not in st.session_state:
     st.session_state["adam_stock_query"] = "2308"
 
-market = st.selectbox(
-    "選擇市場",
-    ["台灣股票／ETF"] if PRODUCTION_MODE else list(MARKETS)
-)
-
-if MARKETS[market] is None:
-    query = st.text_input(
-        "股票代號或中文名稱（例如：2330、台積電、台達電）",
-        key="adam_stock_query"
-    ).strip()
-    stock_list = load_tw_symbols()
-    matches = [
-        (code, name, ex) for code, name, ex in stock_list
-        if query and (query.lower() in code.lower() or query.lower() in name.lower())
-    ]
-    if matches:
-        choices = matches[:100]
-        labels = [f"{code} {name}（{ex}）" for code, name, ex in choices]
-        chosen = st.selectbox("選擇股票／ETF", range(len(choices)),
-                              format_func=lambda i: labels[i])
-        code, stock_name, exchange = choices[chosen]
-        symbol = code + (".TW" if exchange == "上市" else ".TWO")
-        st.caption(f"目前選擇：{code} {stock_name}｜{exchange}")
-    elif query.isdigit():
-        exchange = st.radio("查無名稱對照，請選擇交易市場", ["上市", "上櫃"],
-                            horizontal=True)
-        symbol = query + (".TW" if exchange == "上市" else ".TWO")
-        st.caption("目前使用股票代號查詢；中文名稱資料可能暫時無法取得。")
-    else:
-        symbol = ""
-        if query:
-            st.warning("找不到符合的中文股票名稱。請輸入完整名稱或股票代號。")
-
-elif MARKETS[market] == "TAIFEX_TX":
-    symbol = "TX（官方期交所 CSV）"
-
-    tx_source = st.radio(
-        "台指期資料來源",
-        ["官方 API 自動取得最新交易日", "官方 CSV 歷史資料"],
-        horizontal=True
-    )
-    tx_files = st.file_uploader(
-        "選用：上傳期交所年度 CSV 補足歷史（可多選）",
-        type=["csv"],
-        accept_multiple_files=True
+from contextlib import nullcontext
+with st.sidebar:
+    market = st.selectbox(
+        "選擇市場",
+        ["台灣股票／ETF"] if PRODUCTION_MODE else list(MARKETS)
     )
 
-    tx_session = st.radio(
-        "台指期交易時段",
-        ["日盤", "日盤＋夜盤"],
-        horizontal=True
-    )
-
-    st.caption(
-        "官方 API 自動讀取最近交易日，並非即時報價；"
-        "如需長期短中長波分析，請上傳歷史 CSV 補齊。"
-        "依日盤成交量選主力月；夜盤依官方交易日期合併。"
-    )
-
-elif MARKETS[market] == "CUSTOM":
-    symbol = st.text_input(
-        "Yahoo Finance 商品代碼",
-        ""
-    ).strip().upper()
-
-else:
-    symbol = MARKETS[market]
-
-
-c1, c2 = st.columns(2)
-
-with c1:
-    if PRODUCTION_MODE:
-        interval_name = st.selectbox("K線週期", ["日K", "週K"])
-    elif market == "台指期 TX（官方 CSV）":
-        interval_name = st.selectbox(
-            "K線週期",
-            ["日K"]
-        )
-    else:
-        interval_name = st.selectbox(
-            "K線週期",
-            list(INTERVALS),
-            index=6
-        )
-
-with c2:
-    interval = INTERVALS[interval_name]
-
-    if market == "台指期 TX（官方 CSV）":
-        period = st.selectbox(
-            "歷史資料長度",
-            ["上傳檔案全部日期"]
-        )
-    else:
-        options = PERIODS[interval]
-
-        period = st.selectbox(
-            "歷史資料長度",
-            options,
-            index=len(options)-1
-        )
-
-
-mode = st.radio(
-    "顯示模式",
-    [
-        "三波同圖",
-        "單一波段",
-        "三波各自獨立放大"
-    ],
-    horizontal=True
-)
-
-selected = st.radio(
-    "單一波段選擇",
-    list(WAVES),
-    horizontal=True,
-    disabled=(mode != "單一波段")
-)
-
-chart_type = st.radio(
-    "圖表模式",
-    ["K線"] if PRODUCTION_MODE else ["K線", "線圖"],
-    horizontal=True
-)
-
-mobile_engine = True if PRODUCTION_MODE else st.checkbox("測試手機雙指縮放圖表（新版）", value=True, key="b3_mobile_engine_box1125", help="測試版預設開啟；取消勾選可回原本 Plotly 圖表。")
-
-chart_theme = st.radio(
-    "圖表配色",
-    ["券商深色", "原本淺色"],
-    horizontal=True
-)
-
-show_bollinger = st.checkbox("顯示布林軌道（BOLL）", value=True)
-ma_periods = [] if PRODUCTION_MODE else st.multiselect("測試 MA 均線（可複選）", [5,10,20,60,120,240], default=[])
-ema_periods = [] if PRODUCTION_MODE else st.multiselect("測試 EMA 均線（可複選）", [5,10,20,60,120,240], default=[])
-st.caption(("正式版本 V1.0｜圖表：" if PRODUCTION_MODE else "候選版本 V1.0｜圖表：") + (RENDERER_VERSION if mobile_engine else "Plotly")
-           + "｜箱型不顯示價格標籤")
-
-auto_boxes = st.checkbox("自動箱型（箱頂／箱底／中線）" if PRODUCTION_MODE else "測試自動箱型（箱頂／箱底／中線）", value=True, key="b3_box_default_on_10_20")
-box_window = st.slider("箱型觀察根數", 10, 60, 10, disabled=not auto_boxes, key="b3_box_window_default_10")
-box_width = st.slider("箱型最大振幅（%）", 3.0, 25.0, 20.0, 0.5, disabled=not auto_boxes, key="b3_box_width_default_20")
-boll_period = st.number_input("布林均線週期", min_value=5, max_value=120, value=20, step=1, disabled=not show_bollinger)
-boll_std = st.number_input("標準差倍數", min_value=0.5, max_value=4.0, value=2.0, step=0.5, disabled=not show_bollinger)
-
-threshold = st.slider(
-    "最小反轉幅度（%）",
-    1, 20, 3
-)
-
-zoom = st.selectbox(
-    "三波同圖／單波初始放大範圍",
-    ZOOMS,
-    index=4
-)
-
-individual_zoom = {
-    "短波": "最近30根",
-    "中波": "最近60根",
-    "長波": "最近60根"
-}
-
-if mode == "三波各自獨立放大":
-    z1, z2, z3 = st.columns(3)
-
-    with z1:
-        individual_zoom["短波"] = st.selectbox(
-            "短波放大",
-            ZOOMS,
-            index=3
-        )
-
-    with z2:
-        individual_zoom["中波"] = st.selectbox(
-            "中波放大",
-            ZOOMS,
-            index=4
-        )
-
-    with z3:
-        individual_zoom["長波"] = st.selectbox(
-            "長波放大",
-            ZOOMS,
-            index=4
-        )
-
-show_personal_quote(market, symbol, production=PRODUCTION_MODE)
-
-st.info(
-    "未來鏡像保留全部 K 棒；"
-    "初始畫面只顯示所選根數。"
-)
-
-
-# ===== 開始分析 =====
-
-@st.cache_data(ttl=21600, show_spinner=False)
-def fetch_auto_eps(ticker_symbol):
-    """Yahoo trailingEps is historical TTM, not an analyst forecast."""
-    try:
-        info = yf.Ticker(ticker_symbol).info
-        value = pd.to_numeric(info.get("trailingEps"), errors="coerce")
-        if pd.notna(value) and float(value) > 0:
-            return float(value), "Yahoo Finance trailingEps（近四季歷史 EPS）"
-    except Exception:
-        pass
-    return None, "Yahoo Finance 無有效 EPS"
-
-# 估價：自動 EPS 或手動輸入，倍數為可調示例。
-valuation_enabled = False
-if not PRODUCTION_MODE:
-    with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", expanded=False):
-        valuation_enabled = st.checkbox("啟用估價", value=False, key="b3_valuation_enabled_v1")
-        valuation_mode = st.radio("估價模式", ["參考價值投資分區（可調參數）", "自訂本益比"], horizontal=True, key="b3_valuation_mode_v1")
-        eps_source_mode = st.radio("EPS 取得方式", ["自動抓取近四季 EPS", "手動輸入 EPS"], horizontal=True, key="b3_eps_source_v2")
-        if eps_source_mode == "自動抓取近四季 EPS":
-            if valuation_enabled and market == "台灣股票／ETF" and symbol:
-                eps_value, eps_period = fetch_auto_eps(symbol)
-                if eps_value is None:
-                    eps_value = 0.0
-                    st.warning("目前抓不到有效的近四季 EPS，請切換手動輸入。")
-                else:
-                    st.success(f"已取得近四季 EPS：{eps_value:,.2f} 元｜來源：{eps_period}")
-            else:
-                eps_value, eps_period = 0.0, "不支援此商品自動 EPS"
-                if valuation_enabled:
-                    st.info("此商品不支援自動 EPS，請改選手動輸入。")
+    if MARKETS[market] is None:
+        query = st.text_input(
+            "股票代號或中文名稱（例如：2330、台積電、台達電）",
+            key="adam_stock_query"
+        ).strip()
+        stock_list = load_tw_symbols()
+        matches = [
+            (code, name, ex) for code, name, ex in stock_list
+            if query and (query.lower() in code.lower() or query.lower() in name.lower())
+        ]
+        if matches:
+            choices = matches[:100]
+            labels = [f"{code} {name}（{ex}）" for code, name, ex in choices]
+            chosen = st.selectbox("選擇股票／ETF", range(len(choices)),
+                                  format_func=lambda i: labels[i])
+            code, stock_name, exchange = choices[chosen]
+            symbol = code + (".TW" if exchange == "上市" else ".TWO")
+            st.caption(f"目前選擇：{code} {stock_name}｜{exchange}")
+        elif query.isdigit():
+            exchange = st.radio("查無名稱對照，請選擇交易市場", ["上市", "上櫃"],
+                                horizontal=True)
+            symbol = query + (".TW" if exchange == "上市" else ".TWO")
+            st.caption("目前使用股票代號查詢；中文名稱資料可能暫時無法取得。")
         else:
-            eps_value = st.number_input("年度 EPS（元）", min_value=0.0, value=0.0, step=0.5, key="b3_eps_manual_v2")
-            eps_period = st.text_input("EPS 年度／資料依據", value="", placeholder="例如：2027 年預估／公司法說", key="b3_eps_period_manual_v2")
-        if valuation_enabled and market == "台灣股票／ETF":
-            st.markdown("##### 🏛️ 證交所官方最新 EPS（資料核對）")
-            if st.button("查詢證交所最新財報 EPS", key="b3_twse_eps_check_v1"):
-                from twse_eps import fetch_twse_latest_eps
-                with st.spinner("查詢證交所官方財報中…"):
-                    official_eps, official_error = fetch_twse_latest_eps(symbol)
-                if official_eps:
-                    st.success(f"官方欄位：{official_eps['field']}｜EPS：{official_eps['eps']:.2f} 元")
-                    st.caption(f"來源：{official_eps['source']}｜期間資訊：{official_eps['period']}")
-                    st.warning(official_eps["note"])
-                else:
-                    st.warning(official_error)
-            st.caption("這是官方最新財報查詢，不是完整歷史 EPS；尚未取得逐季公告日，不會把這筆資料混入歷史 PE 或直接當成 TTM。")
-        st.caption("🧩 MOPS 診斷版本：2026-11-05 v2｜多欄 EPS 候選值")
-        with st.expander("🧪 MOPS 歷史季報連線測試（不納入估價）", expanded=False):
-            st.caption("先測試單一季度的歷史財報讀取。由於尚未核對原始申報日期與欄位，任何抓到的 EPS 都不會進入歷史 PE。")
-            test_year = st.number_input("測試西元年度", min_value=2018, max_value=2026, value=2024, step=1, key="b3_mops_year_v1")
-            test_quarter = st.selectbox("測試季度", [1,2,3,4], index=2, key="b3_mops_quarter_v1")
-            if st.button("測試讀取 MOPS 歷史季報", key="b3_mops_probe_v1"):
-                import importlib
-                import mops_history
-                importlib.invalidate_caches()
-                mops_history = importlib.reload(mops_history)
-                st.caption(f"實際解析模組：{getattr(mops_history, '__file__', '未知')}｜多欄解析：{'eps_row_count' in mops_history.fetch_mops_quarter.__code__.co_consts.__str__()}")
-                with st.spinner("讀取官方歷史季報…"):
-                    result, error = mops_history.fetch_mops_quarter(symbol, int(test_year), int(test_quarter))
-                if result:
-                    st.write(f"季度末：{result['quarter_end']}｜找到 {result['eps_row_count']} 列基本 EPS 候選資料")
-                    eps_diagnostic_rows = [
-                        {"表格": item["table"], "列": item["row"],
-                         "欄": value["column"], "欄位名稱": item["label"],
-                         "EPS 候選數值": value["value"]}
-                        for item in result["eps_rows"] for value in item["values"]
-                    ]
-                    st.dataframe(pd.DataFrame(eps_diagnostic_rows), use_container_width=True, hide_index=True)
-                    if result.get("column_verified"):
-                        verified_eps = result["verified_eps"]
-                        st.success(f"已核對財報表頭｜本季基本 EPS：{verified_eps['quarter_eps']:.2f} 元｜年初至今累計基本 EPS：{verified_eps['cumulative_eps']:.2f} 元")
-                        st.caption("已核對期間欄位，但尚未核對實際申報日期；不納入歷史估價。")
+            symbol = ""
+            if query:
+                st.warning("找不到符合的中文股票名稱。請輸入完整名稱或股票代號。")
+
+    elif MARKETS[market] == "TAIFEX_TX":
+        symbol = "TX（官方期交所 CSV）"
+
+        tx_source = st.radio(
+            "台指期資料來源",
+            ["官方 API 自動取得最新交易日", "官方 CSV 歷史資料"],
+            horizontal=True
+        )
+        tx_files = st.file_uploader(
+            "選用：上傳期交所年度 CSV 補足歷史（可多選）",
+            type=["csv"],
+            accept_multiple_files=True
+        )
+
+        tx_session = st.radio(
+            "台指期交易時段",
+            ["日盤", "日盤＋夜盤"],
+            horizontal=True
+        )
+
+        st.caption(
+            "官方 API 自動讀取最近交易日，並非即時報價；"
+            "如需長期短中長波分析，請上傳歷史 CSV 補齊。"
+            "依日盤成交量選主力月；夜盤依官方交易日期合併。"
+        )
+
+    elif MARKETS[market] == "CUSTOM":
+        symbol = st.text_input(
+            "Yahoo Finance 商品代碼",
+            ""
+        ).strip().upper()
+
+    else:
+        symbol = MARKETS[market]
+
+
+    c1, c2 = st.columns(2)
+
+    with c1:
+        if PRODUCTION_MODE:
+            interval_name = st.selectbox("K線週期", ["日K", "週K"])
+        elif market == "台指期 TX（官方 CSV）":
+            interval_name = st.selectbox(
+                "K線週期",
+                ["日K"]
+            )
+        else:
+            interval_name = st.selectbox(
+                "K線週期",
+                list(INTERVALS),
+                index=6
+            )
+
+    with c2:
+        interval = INTERVALS[interval_name]
+
+        if market == "台指期 TX（官方 CSV）":
+            period = st.selectbox(
+                "歷史資料長度",
+                ["上傳檔案全部日期"]
+            )
+        else:
+            options = PERIODS[interval]
+
+            period = st.selectbox(
+                "歷史資料長度",
+                options,
+                index=len(options)-1
+            )
+
+
+    if not PRODUCTION_MODE:
+        from wave_settings import show_wave_settings
+        WAVES = show_wave_settings(interval)
+
+    mode = st.radio(
+        "顯示模式",
+        [
+            "三波同圖",
+            "單一波段",
+            "三波各自獨立放大"
+        ],
+        horizontal=True
+    )
+
+    selected = st.radio(
+        "單一波段選擇",
+        list(WAVES),
+        horizontal=True,
+        disabled=(mode != "單一波段")
+    )
+
+    chart_type = st.radio(
+        "圖表模式",
+        ["K線"] if PRODUCTION_MODE else ["K線", "線圖"],
+        horizontal=True
+    )
+
+    mobile_engine = True if PRODUCTION_MODE else st.checkbox("測試手機雙指縮放圖表（新版）", value=True, key="b3_mobile_engine_box1125", help="測試版預設開啟；取消勾選可回原本 Plotly 圖表。")
+
+    chart_theme = st.radio(
+        "圖表配色",
+        ["券商深色", "原本淺色"],
+        horizontal=True
+    )
+
+    show_bollinger = st.checkbox("顯示布林軌道（BOLL）", value=True)
+    ma_periods = [] if PRODUCTION_MODE else st.multiselect("測試 MA 均線（可複選）", [5,10,20,60,120,240], default=[])
+    ema_periods = [] if PRODUCTION_MODE else st.multiselect("測試 EMA 均線（可複選）", [5,10,20,60,120,240], default=[])
+    st.caption(("正式版本 V1.0｜圖表：" if PRODUCTION_MODE else "候選版本 V1.0｜圖表：") + (RENDERER_VERSION if mobile_engine else "Plotly")
+               + "｜箱型不顯示價格標籤")
+
+    auto_boxes = st.checkbox("自動箱型（箱頂／箱底／中線）" if PRODUCTION_MODE else "測試自動箱型（箱頂／箱底／中線）", value=True, key="b3_box_default_on_10_20")
+    box_window = st.slider("箱型觀察根數", 10, 60, 10, disabled=not auto_boxes, key="b3_box_window_default_10")
+    box_width = st.slider("箱型最大振幅（%）", 3.0, 25.0, 20.0, 0.5, disabled=not auto_boxes, key="b3_box_width_default_20")
+    boll_period = st.number_input("布林均線週期", min_value=5, max_value=120, value=20, step=1, disabled=not show_bollinger)
+    boll_std = st.number_input("標準差倍數", min_value=0.5, max_value=4.0, value=2.0, step=0.5, disabled=not show_bollinger)
+
+    threshold = st.slider(
+        "最小反轉幅度（%）",
+        1, 20, 3
+    )
+
+    zoom = st.selectbox(
+        "三波同圖／單波初始放大範圍",
+        ZOOMS,
+        index=4
+    )
+
+    individual_zoom = {
+        "短波": "最近30根",
+        "中波": "最近60根",
+        "長波": "最近60根"
+    }
+
+    if mode == "三波各自獨立放大":
+        z1, z2, z3 = st.columns(3)
+
+        with z1:
+            individual_zoom["短波"] = st.selectbox(
+                "短波放大",
+                ZOOMS,
+                index=3
+            )
+
+        with z2:
+            individual_zoom["中波"] = st.selectbox(
+                "中波放大",
+                ZOOMS,
+                index=4
+            )
+
+        with z3:
+            individual_zoom["長波"] = st.selectbox(
+                "長波放大",
+                ZOOMS,
+                index=4
+            )
+
+    show_personal_quote(market, symbol, production=PRODUCTION_MODE)
+
+    st.info(
+        "未來鏡像保留全部 K 棒；"
+        "初始畫面只顯示所選根數。"
+    )
+
+
+    # ===== 開始分析 =====
+
+    @st.cache_data(ttl=21600, show_spinner=False)
+    def fetch_auto_eps(ticker_symbol):
+        """Yahoo trailingEps is historical TTM, not an analyst forecast."""
+        try:
+            info = yf.Ticker(ticker_symbol).info
+            value = pd.to_numeric(info.get("trailingEps"), errors="coerce")
+            if pd.notna(value) and float(value) > 0:
+                return float(value), "Yahoo Finance trailingEps（近四季歷史 EPS）"
+        except Exception:
+            pass
+        return None, "Yahoo Finance 無有效 EPS"
+
+    # 估價：自動 EPS 或手動輸入，倍數為可調示例。
+    valuation_enabled = False
+    if not PRODUCTION_MODE:
+        with st.expander("🧮 便宜價／合理價／昂貴價估算（測試版）", expanded=False):
+            valuation_enabled = st.checkbox("啟用估價", value=False, key="b3_valuation_enabled_v1")
+            valuation_mode = st.radio("估價模式", ["參考價值投資分區（可調參數）", "自訂本益比"], horizontal=True, key="b3_valuation_mode_v1")
+            eps_source_mode = st.radio("EPS 取得方式", ["自動抓取近四季 EPS", "手動輸入 EPS"], horizontal=True, key="b3_eps_source_v2")
+            if eps_source_mode == "自動抓取近四季 EPS":
+                if valuation_enabled and market == "台灣股票／ETF" and symbol:
+                    eps_value, eps_period = fetch_auto_eps(symbol)
+                    if eps_value is None:
+                        eps_value = 0.0
+                        st.warning("目前抓不到有效的近四季 EPS，請切換手動輸入。")
                     else:
-                        st.warning("未能唯一核對本季及累計 EPS 欄位；保留候選數值，不納入估價。")
-                    with st.expander("🔎 EPS 數值與原始表頭逐欄對照（除錯）", expanded=True):
-                        diagnostic_rows = result.get("eps_header_diagnostics", [])
-                        if diagnostic_rows:
-                            st.dataframe(pd.DataFrame([
-                                {"表格": x["table"], "欄": x["column"], "EPS": x["value"],
-                                 "完整表頭": " / ".join(x["header_levels"]),
-                                 "包含金額": x["contains_amount"],
-                                 "包含百分比": x["contains_percent"]}
-                                for x in diagnostic_rows
-                            ]), use_container_width=True, hide_index=True)
+                        st.success(f"已取得近四季 EPS：{eps_value:,.2f} 元｜來源：{eps_period}")
+                else:
+                    eps_value, eps_period = 0.0, "不支援此商品自動 EPS"
+                    if valuation_enabled:
+                        st.info("此商品不支援自動 EPS，請改選手動輸入。")
+            else:
+                eps_value = st.number_input("年度 EPS（元）", min_value=0.0, value=0.0, step=0.5, key="b3_eps_manual_v2")
+                eps_period = st.text_input("EPS 年度／資料依據", value="", placeholder="例如：2027 年預估／公司法說", key="b3_eps_period_manual_v2")
+            if valuation_enabled and market == "台灣股票／ETF":
+                st.markdown("##### 🏛️ 證交所官方最新 EPS（資料核對）")
+                if st.button("查詢證交所最新財報 EPS", key="b3_twse_eps_check_v1"):
+                    from twse_eps import fetch_twse_latest_eps
+                    with st.spinner("查詢證交所官方財報中…"):
+                        official_eps, official_error = fetch_twse_latest_eps(symbol)
+                    if official_eps:
+                        st.success(f"官方欄位：{official_eps['field']}｜EPS：{official_eps['eps']:.2f} 元")
+                        st.caption(f"來源：{official_eps['source']}｜期間資訊：{official_eps['period']}")
+                        st.warning(official_eps["note"])
+                    else:
+                        st.warning(official_error)
+                st.caption("這是官方最新財報查詢，不是完整歷史 EPS；尚未取得逐季公告日，不會把這筆資料混入歷史 PE 或直接當成 TTM。")
+            st.caption("🧩 MOPS 診斷版本：2026-11-05 v2｜多欄 EPS 候選值")
+            with st.expander("🧪 MOPS 歷史季報連線測試（不納入估價）", expanded=False):
+                st.caption("先測試單一季度的歷史財報讀取。由於尚未核對原始申報日期與欄位，任何抓到的 EPS 都不會進入歷史 PE。")
+                test_year = st.number_input("測試西元年度", min_value=2018, max_value=2026, value=2024, step=1, key="b3_mops_year_v1")
+                test_quarter = st.selectbox("測試季度", [1,2,3,4], index=2, key="b3_mops_quarter_v1")
+                if st.button("測試讀取 MOPS 歷史季報", key="b3_mops_probe_v1"):
+                    import importlib
+                    import mops_history
+                    importlib.invalidate_caches()
+                    mops_history = importlib.reload(mops_history)
+                    st.caption(f"實際解析模組：{getattr(mops_history, '__file__', '未知')}｜多欄解析：{'eps_row_count' in mops_history.fetch_mops_quarter.__code__.co_consts.__str__()}")
+                    with st.spinner("讀取官方歷史季報…"):
+                        result, error = mops_history.fetch_mops_quarter(symbol, int(test_year), int(test_quarter))
+                    if result:
+                        st.write(f"季度末：{result['quarter_end']}｜找到 {result['eps_row_count']} 列基本 EPS 候選資料")
+                        eps_diagnostic_rows = [
+                            {"表格": item["table"], "列": item["row"],
+                             "欄": value["column"], "欄位名稱": item["label"],
+                             "EPS 候選數值": value["value"]}
+                            for item in result["eps_rows"] for value in item["values"]
+                        ]
+                        st.dataframe(pd.DataFrame(eps_diagnostic_rows), use_container_width=True, hide_index=True)
+                        if result.get("column_verified"):
+                            verified_eps = result["verified_eps"]
+                            st.success(f"已核對財報表頭｜本季基本 EPS：{verified_eps['quarter_eps']:.2f} 元｜年初至今累計基本 EPS：{verified_eps['cumulative_eps']:.2f} 元")
+                            st.caption("已核對期間欄位，但尚未核對實際申報日期；不納入歷史估價。")
                         else:
-                            st.info("目前沒有可供對照的表頭資料。")
-                    with st.expander("查看 MOPS 原始表頭（辨識本季／累計欄位）", expanded=False):
-                        for table_no, header in result.get("headers", {}).items():
-                            st.write(f"原始表格 {table_no}｜欄名：", header["columns"])
-                            st.dataframe(pd.DataFrame(header["top_rows"]), use_container_width=True, hide_index=True)
-                    st.caption("本階段只展示原始表頭，未經確認不會自動指定累計 EPS 或計算估價。")
-                    st.warning("這些數字可能包含本期、去年同期及累計 EPS；尚未核對表頭及公告日，不會納入估價。")
-                else:
-                    st.warning(error)
-        with st.expander("📚 MOPS 近五年 EPS 與 TTM 自動整理（測試版）", expanded=False):
-            st.caption("依序讀取最多 20 季官方財報；首次可能需要較長時間。只顯示可核對期間欄位的 EPS，尚未取得實際公告日，絕不混入歷史 PE。官方連線若失敗，可能顯示缺漏。")
-            history_years = st.selectbox("抓取年數", [1, 2, 3, 4, 5], index=4, key="b3_mops_history_years")
-            @st.cache_data(ttl=86400, show_spinner=False)
-            def cached_mops_quarter_success(stock_symbol, year, quarter, parser_version="annual-header-v4"):
-                from mops_history import fetch_mops_quarter
-                import time
-                last_error = None
-                for attempt in range(3):
-                    result, error = fetch_mops_quarter(stock_symbol, year, quarter, timeout=12)
-                    if not error and result and result.get("column_verified"):
-                        return result, None
-                    last_error = error or "EPS 欄位無法唯一核對"
-                    if last_error != "MOPS 歷史財報服務無法讀取或格式已變更":
-                        break
-                    if attempt < 2:
-                        time.sleep(1.5 * (attempt + 1))
-                # Do not cache transient failures as if they were valid financial data.
-                raise RuntimeError(last_error or "官方資料讀取失敗")
-            def cached_mops_quarter(stock_symbol, year, quarter):
-                try:
-                    return cached_mops_quarter_success(stock_symbol, year, quarter)
-                except RuntimeError as exc:
-                    return None, str(exc)
-                except Exception:
-                    return None, "MOPS 讀取暫時失敗，可稍後重試"
-            if st.button("自動抓取官方歷史 EPS", key="b3_mops_history_fetch"):
-                from mops_history import fetch_mops_eps_history
-                progress_bar = st.progress(0, text="準備讀取官方季度財報…")
-                def report_progress(completed, total, quarter):
-                    progress_bar.progress(completed / total, text=f"已查詢 {completed}/{total} 季｜{quarter}")
-                with st.spinner("逐季核對 MOPS 財報；已讀取季度會保留快取…"):
-                    try:
-                        history_rows, history_failures = fetch_mops_eps_history(
-                            symbol, years=int(history_years),
-                            fetcher=cached_mops_quarter, progress=report_progress)
-                        st.session_state["b3_mops_history_result"] = (symbol, history_years, history_rows, history_failures)
-                    except Exception as exc:
-                        st.error(f"歷史資料讀取失敗：{type(exc).__name__}")
-            saved_history = st.session_state.get("b3_mops_history_result")
-            if saved_history and saved_history[0] == symbol and saved_history[1] == history_years:
-                _, _, history_rows, history_failures = saved_history
-                st.write(f"已核對 {len(history_rows)} 季；缺漏或異常 {len(history_failures)} 筆")
-                if history_rows:
-                    history_table = pd.DataFrame([{
-                        "季度": x["quarter"], "單季 EPS": x["quarter_eps"],
-                        "當年累計 EPS": x["cumulative_eps"], "TTM EPS": x["ttm_eps"],
-                        "累計核對": "通過" if x["ytd_consistent"] is True else ("待核" if x["ytd_consistent"] is None else "異常"),
-                        "TTM 狀態": x["ttm_status"],
-                        "公告日期": "尚未核實"
-                    } for x in history_rows])
-                    st.dataframe(history_table, use_container_width=True, hide_index=True)
-                    st.download_button("下載 EPS 檢查結果 CSV", history_table.to_csv(index=False).encode("utf-8-sig"),
-                                       file_name=f"{str(symbol).split('.')[0]}_mops_eps_review.csv",
-                                       mime="text/csv", key="b3_mops_history_csv")
-                    st.warning("TTM 為四個連續且欄位已核對的季度 EPS 加總，僅供核對；財報公告日尚未確認，不能用於歷史估價。")
-                    with st.expander("📅 下一階段：官方公告日逐季核實", expanded=False):
-                        st.caption("證交所財務報告書資訊揭露頁可查公告日期時間；法定截止日、董事會預定日與財報期間結束日，都不能當成實際公告日。")
-                        st.markdown("[開啟證交所資訊揭露／財務報告書](https://www.twse.com.tw/IIH2/zh/market/information.html)")
-                        st.info("目前尚未取得可逐季對應、可驗證來源的 20 筆公告日期，歷史 PE 回測維持鎖定。")
-                        with st.expander("🔬 MOPS 財報公告接口診斷（不會改動估價）", expanded=False):
-                            st.caption("以最新已取得的季度為測試目標，僅檢查官方介接是否回傳可解析的表格；不會把財報期間當作公告日。")
-                            st.markdown("[官方公開資訊觀測站－財務報告公告](https://mops.twse.com.tw/mops/#/web/t163sb01)")
-                            if st.button("交叉測試 2026Q3／2025Q4／2024Q4", key="b3_mops_cross_quarter"):
-                                from official_filing_candidates import compare_filing_quarters
-                                with st.spinner("正在逐季比較官方查詢回應（最多三次查詢）…"):
-                                    st.session_state["b3_mops_cross_quarter_result"] = (
-                                        str(symbol).split(".")[0],
-                                        compare_filing_quarters(str(symbol).split(".")[0])
-                                    )
-                            cross_saved = st.session_state.get("b3_mops_cross_quarter_result")
-                            if cross_saved and cross_saved[0] == str(symbol).split(".")[0]:
-                                cross_result = cross_saved[1]
-                                cross_df = pd.DataFrame(cross_result["rows"])
-                                priority_cols = ["季度", "符合條件候選表格數", "表格判讀",
-                                                 "包含股票代號", "包含表格", "查詢狀態"]
-                                ordered_cols = [c for c in priority_cols if c in cross_df.columns]
-                                ordered_cols += [c for c in cross_df.columns if c not in ordered_cols]
-                                st.dataframe(cross_df[ordered_cols], hide_index=True, use_container_width=True)
-                                for _, cross_row in cross_df.iterrows():
-                                    status = cross_row.get("表格判讀")
-                                    count = cross_row.get("符合條件候選表格數")
-                                    st.write(f"**{cross_row['季度']}**｜候選表格：{count if pd.notna(count) else '未取得'}｜判讀：{status or '未取得'}")
-                                if "表格判讀" in cross_df and all(
-                                    x == "no_matching_filing_table" for x in cross_df["表格判讀"]
-                                ):
-                                    st.warning("三個季度都未找到符合條件的公告表格，建議停止使用目前接口。")
-                                    stock_code = str(symbol).split(".")[0]
-                                    st.markdown(
-                                        f"[改查證交所 {stock_code} 單一公司財務報告書資訊揭露]"
-                                        f"(https://www.twse.com.tw/IIH2/zh/company/information.html?code={stock_code})"
-                                    )
-                                st.write("三季回應完全相同：", cross_result["all_ajax_responses_identical"])
-                                st.info(cross_result["conclusion"])
-                                st.caption("僅比較官方查詢回應；無法因此認定公告日期或解除歷史 PE 鎖定。")
-                            if st.button("同一工作階段核對財報公告查詢", key="b3_mops_session_probe"):
-                                from official_filing_candidates import probe_session_backed_filing_query
-                                latest_period = pd.Period(history_rows[-1]["quarter"], freq="Q")
-                                with st.spinner("正在比對官方查詢頁與資料回應…"):
-                                    session_result = probe_session_backed_filing_query(
-                                        str(symbol).split(".")[0], latest_period.year, latest_period.quarter)
-                                st.session_state["b3_mops_session_probe_result"] = (
-                                    str(symbol).split(".")[0], str(latest_period), session_result)
-                            session_saved = st.session_state.get("b3_mops_session_probe_result")
-                            if session_saved and session_saved[0] == str(symbol).split(".")[0]:
-                                st.write("同工作階段測試季度：", session_saved[1])
-                                st.json(session_saved[2])
-                                st.caption("本項僅比較請求與回應，不能據此認定公告日期。")
-                            if st.button("測試新發現的 MOPS 表單提交路徑", key="b3_mops_discovered_form_probe"):
-                                from official_filing_candidates import probe_discovered_mops_form
-                                latest_period = pd.Period(history_rows[-1]["quarter"], freq="Q")
-                                with st.spinner("正在測試表單提交路徑…"):
-                                    discovered_result = probe_discovered_mops_form(
-                                        str(symbol).split(".")[0], latest_period.year, latest_period.quarter)
-                                st.session_state["b3_mops_discovered_form_result"] = (
-                                    str(symbol).split(".")[0], str(latest_period), discovered_result)
-                            discovered_saved = st.session_state.get("b3_mops_discovered_form_result")
-                            if discovered_saved and discovered_saved[0] == str(symbol).split(".")[0]:
-                                st.write("新路徑測試季度：", discovered_saved[1])
-                                st.json(discovered_saved[2])
-                                st.caption("僅測試表單路徑是否能回傳資料，不會解鎖歷史 PE。")
-                            if st.button("檢查 MOPS 財報公告接口", key="b3_mops_announcement_probe"):
-                                import importlib
-                                import official_filing_candidates as filing_module
-                                filing_module = importlib.reload(filing_module)
-                                latest_period = pd.Period(history_rows[-1]["quarter"], freq="Q")
-                                if not hasattr(filing_module, "probe_mops_financial_announcement"):
-                                    probe_result = {"status": "module_version_mismatch",
-                                                    "message": "部署中的官方公告模組版本不一致；請重新啟動 Streamlit App",
-                                                    "module_path": str(getattr(filing_module, "__file__", "unknown"))}
-                                else:
-                                    with st.spinner("正在檢查官方接口…"):
-                                        probe_result = filing_module.probe_mops_financial_announcement(
-                                            str(symbol).split(".")[0], latest_period.year, latest_period.quarter)
-                                st.session_state["b3_mops_announcement_probe_result"] = (
-                                    str(symbol).split(".")[0], str(latest_period), probe_result)
-                            probe_saved = st.session_state.get("b3_mops_announcement_probe_result")
-                            if probe_saved and probe_saved[0] == str(symbol).split(".")[0]:
-                                st.write("測試季度：", probe_saved[1])
-                                probe_data = probe_saved[2]
-                                status = probe_data.get("status", "unknown")
-                                if status == "query_form_only":
-                                    st.error("目前取得的是查詢介面，不是台達電的財報公告結果。請勿用此資料計算歷史 PE。")
-                                elif status == "tables_unverified":
-                                    st.warning("取得表格，但公告日期尚未核實。")
-                                elif status == "javascript_shell":
-                                    st.warning("官方回傳 JavaScript 頁面，尚未取得公告資料。")
-                                if "input_field_names" in probe_data or "form_targets" in probe_data:
-                                    st.markdown("**官方查詢表單結構（診斷用途）**")
-                                    st.write("欄位名稱：", ", ".join(probe_data.get("input_field_names", [])) or "無")
-                                    st.write("提交目標：", probe_data.get("form_targets", []))
-                                    st.write("安全查詢預設值：", probe_data.get("safe_form_defaults", {}))
-                                    st.caption("RID、SKEY 等可能涉及工作階段的值一律遮蔽；這些欄位不是財報公告日期。")
-                                if probe_data.get("table_profiles"):
-                                    profiles = pd.DataFrame(probe_data["table_profiles"])
-                                    profiles = profiles.rename(columns={
-                                        "index": "表格編號", "rows": "列數", "columns": "欄數",
-                                        "has_stock_code": "包含股票代號",
-                                        "has_filing_keyword": "財報關鍵字",
-                                        "has_date_keyword": "日期關鍵字",
-                                        "has_roc_date_pattern": "民國日期格式",
-                                        "header_labels": "原始欄名",
-                                        "looks_like_result_table": "疑似公告結果",
-                                        "likely_ui_table": "疑似查詢介面",
-                                    })
-                                    st.dataframe(profiles, use_container_width=True, hide_index=True)
-                                    st.caption("勾選表示偵測到關鍵字，並不代表公告日已經核實。")
-                                    with st.expander("查看原始診斷 JSON"):
-                                        st.json(probe_data)
-                                else:
-                                    st.json(probe_data)
-                                st.warning("此處僅測試接口與表格結構；尚未驗證公告日，歷史 PE 不會解鎖。")
-                        if st.button("自動查詢證交所財報公告候選紀錄", key="b3_official_filing_fetch"):
-                            from official_filing_candidates import fetch_official_filing_candidates, review_candidate_coverage
-                            with st.spinner("正在檢查證交所單一公司資訊揭露頁…"):
-                                candidates, candidate_error = fetch_official_filing_candidates(str(symbol).split(".")[0])
-                            st.session_state["b3_official_filing_candidates"] = (
-                                str(symbol).split(".")[0], candidates, candidate_error)
-                        official_saved = st.session_state.get("b3_official_filing_candidates")
-                        if official_saved and official_saved[0] == str(symbol).split(".")[0]:
-                            from official_filing_candidates import review_candidate_coverage
-                            _, candidates, candidate_error = official_saved
-                            if candidate_error:
-                                st.warning(candidate_error)
-                            if candidates:
-                                st.write(f"找到 {len(candidates)} 筆公告候選紀錄（非已核實公告日）")
-                                st.dataframe(pd.DataFrame(candidates), use_container_width=True, hide_index=True)
-                            from official_filing_candidates import summarize_filing_coverage
-                            periods_to_check = [x["quarter"] for x in history_rows]
-                            summary = summarize_filing_coverage(candidates, periods_to_check)
-                            st.write(
-                                f"**公告候選涵蓋率：{summary['quarters_with_candidates']}/{summary['requested_quarters']} 季 "
-                                f"({summary['candidate_coverage_percent']}%)**"
-                            )
-                            st.caption(
-                                f"缺漏 {summary['quarters_missing_candidates']} 季；"
-                                f"多筆候選 {summary['quarters_with_multiple_candidates']} 季；"
-                                "已核實首次申報日期 0 季（歷史 PE 維持鎖定）。"
-                            )
-                            if summary["missing_quarters"]:
-                                st.write("**尚無公告候選的季度：**", "、".join(summary["missing_quarters"]))
-                            coverage = review_candidate_coverage(candidates, periods_to_check)
-                            st.dataframe(pd.DataFrame(coverage), use_container_width=True, hide_index=True)
-                            st.caption("缺漏、重複、補正公告都不會自動填入歷史 PE；必須核對首次有效申報與原始紀錄。")
-                        filing_template = pd.DataFrame([{
-                            "股票代號": str(symbol).split(".")[0],
-                            "季度": x["quarter"],
-                            "公告日期": "",
-                            "官方來源網址": "",
-                        } for x in history_rows])
-                        st.download_button("下載公告日核對範本 CSV",
-                                           filing_template.to_csv(index=False).encode("utf-8-sig"),
-                                           file_name=f"{str(symbol).split('.')[0]}_filing_dates_template.csv",
-                                           mime="text/csv", key="b3_filing_date_template")
-                        filing_upload = st.file_uploader("上傳已核實公告日 CSV（僅作核對，不會自動啟用估價）",
-                                                         type=["csv"], key="b3_filing_dates_upload")
-                        if filing_upload is not None:
-                            try:
-                                date_table = pd.read_csv(filing_upload, dtype=str).fillna("")
-                                required = {"股票代號", "季度", "公告日期", "官方來源網址"}
-                                if not required.issubset(date_table.columns):
-                                    st.error("CSV 缺少必要欄位，請使用下載範本。")
-                                else:
-                                    from filing_dates import inspect_filing_date
-                                    matched = []
-                                    valid_periods = {x["quarter"] for x in history_rows}
-                                    for _, date_row in date_table.iterrows():
-                                        quarter = str(date_row["季度"]).strip()
-                                        code = str(date_row["股票代號"]).strip()
-                                        date_str = str(date_row["公告日期"]).strip()
-                                        source_url = str(date_row["官方來源網址"]).strip()
-                                        status = inspect_filing_date(
-                                            code, quarter, date_str, source_url,
-                                            str(symbol).split(".")[0])
-                                        if quarter not in valid_periods:
-                                            status = "季度不在目前核對範圍"
-                                        matched.append({"季度": quarter, "公告日期": date_str,
-                                                        "官方來源網址": source_url, "狀態": status})
-                                    st.dataframe(pd.DataFrame(matched), use_container_width=True, hide_index=True)
-                                    st.warning("上傳資料僅供逐季人工查證；網址存在不代表已查證，尚不會進入歷史 PE。")
-                            except Exception as exc:
-                                st.error(f"公告日 CSV 讀取失敗：{type(exc).__name__}")
-
-                if history_failures:
-                    with st.expander("查看讀取失敗／資料異常季度"):
-                        st.dataframe(pd.DataFrame(history_failures), use_container_width=True, hide_index=True)
-                        st.caption("精準診斷：選一個失敗季度，檢查 MOPS 原始 EPS 表頭；不會修改任何估價資料。")
-                        failed_periods = [x["quarter"] for x in history_failures
-                                          if x.get("reason") == "EPS 欄位無法唯一核對"]
-                        if failed_periods:
-                            inspect_period = st.selectbox("診斷季度", failed_periods,
-                                                          key="b3_eps_inspect_period")
-                            if st.button("檢查這一季的 EPS 原始表頭", key="b3_eps_inspect_button"):
-                                import json
-                                from mops_history import fetch_mops_quarter
-                                period_to_check = pd.Period(inspect_period, freq="Q")
-                                with st.spinner("正在讀取官方原始表頭…"):
-                                    diagnostic, diagnostic_error = fetch_mops_quarter(
-                                        symbol, period_to_check.year, period_to_check.quarter, timeout=12)
-                                if diagnostic_error:
-                                    st.error(diagnostic_error)
-                                elif diagnostic:
-                                    st.write("基本 EPS 資料列：", diagnostic.get("eps_row_count", 0))
-                                    st.write("欄位是否唯一核對：", diagnostic.get("column_verified", False))
-                                    details = diagnostic.get("eps_header_diagnostics", [])
-                                    if details:
-                                        st.dataframe(pd.DataFrame([{
-                                            "表格": d["table"], "欄位": d["column"],
-                                            "EPS": d["value"],
-                                            "期間表頭": d["period_text"],
-                                            "原始層級": " / ".join(d["header_levels"]),
-                                        } for d in details]), use_container_width=True, hide_index=True)
-                                    st.download_button(
-                                        "下載這季診斷 JSON",
-                                        json.dumps({
-                                            "quarter": inspect_period,
-                                            "eps_rows": diagnostic.get("eps_rows", []),
-                                            "eps_header_diagnostics": details,
-                                        }, ensure_ascii=False, indent=2).encode("utf-8"),
-                                        file_name=f"{str(symbol).split('.')[0]}_{inspect_period}_eps_diagnostic.json",
-                                        mime="application/json",
-                                        key="b3_eps_diagnostic_download")
-        filing_format = st.radio("匯入 EPS 格式", ["單季 EPS", "年初至今累計 EPS（自動換算單季）"], horizontal=True, key="b3_eps_csv_format_v1")
-        filing_upload = st.file_uploader("選用：匯入歷史季度 EPS CSV（含實際公告日）", type=["csv"], key="b3_filing_eps_csv_v1", help="單季格式欄位：symbol,quarter_end,announced_on,eps；累計格式欄位：symbol,quarter_end,announced_on,cumulative_eps。兩者都必須提供真實公告日。")
-        st.caption("匯入資料僅用於本次試算，須自行核對公開資訊觀測站的公告日期與單季 EPS；尚未自動串接官方歷史財報。")
-        auto_pe_result = None
-        auto_pe_enabled = st.checkbox("自動歷史本益比分位數（20%／50%／80%）", value=True, key="b3_auto_pe_v3")
-        if valuation_enabled and auto_pe_enabled and eps_value > 0 and market == "台灣股票／ETF":
-            try:
-                if filing_upload is not None:
-                    from filing_eps import parse_quarterly_eps_csv, parse_cumulative_eps_csv, historical_pe_from_filings
-                    parser = parse_cumulative_eps_csv if filing_format.startswith("年初") else parse_quarterly_eps_csv
-                    filing_data, pe_error = parser(filing_upload.getvalue(), symbol)
-                    if filing_data is not None:
-                        auto_pe_result, pe_error = historical_pe_from_filings(symbol, filing_data, years=3)
-                else:
-                    if str(symbol).endswith(".TW"):
-                        from twse_pe import official_twse_pe
-                        @st.cache_data(ttl=86400, show_spinner=False)
-                        def cached_twse_pe(stock_symbol):
-                            return official_twse_pe(stock_symbol, years=3)
-                        auto_pe_result, pe_error = cached_twse_pe(symbol)
+                            st.warning("未能唯一核對本季及累計 EPS 欄位；保留候選數值，不納入估價。")
+                        with st.expander("🔎 EPS 數值與原始表頭逐欄對照（除錯）", expanded=True):
+                            diagnostic_rows = result.get("eps_header_diagnostics", [])
+                            if diagnostic_rows:
+                                st.dataframe(pd.DataFrame([
+                                    {"表格": x["table"], "欄": x["column"], "EPS": x["value"],
+                                     "完整表頭": " / ".join(x["header_levels"]),
+                                     "包含金額": x["contains_amount"],
+                                     "包含百分比": x["contains_percent"]}
+                                    for x in diagnostic_rows
+                                ]), use_container_width=True, hide_index=True)
+                            else:
+                                st.info("目前沒有可供對照的表頭資料。")
+                        with st.expander("查看 MOPS 原始表頭（辨識本季／累計欄位）", expanded=False):
+                            for table_no, header in result.get("headers", {}).items():
+                                st.write(f"原始表格 {table_no}｜欄名：", header["columns"])
+                                st.dataframe(pd.DataFrame(header["top_rows"]), use_container_width=True, hide_index=True)
+                        st.caption("本階段只展示原始表頭，未經確認不會自動指定累計 EPS 或計算估價。")
+                        st.warning("這些數字可能包含本期、去年同期及累計 EPS；尚未核對表頭及公告日，不會納入估價。")
                     else:
-                        from valuation_engine import historical_pe_bands
-                        auto_pe_result, pe_error = historical_pe_bands(symbol, years=3)
-            except Exception:
-                pe_error = "財務資料或股價來源暫時不可用"
-            if auto_pe_result:
-                st.success(("公告日 CSV 歷史 PE：" if filing_upload is not None else "證交所官方歷史 PE：" if str(symbol).endswith(".TW") else "Yahoo 歷史 PE：") + "／".join(f"{p:.1f} 倍" for p in auto_pe_result["pes"]))
-                st.caption(f"樣本 {auto_pe_result['samples']} 日｜{auto_pe_result['start']}～{auto_pe_result['end']}｜{auto_pe_result['method']}")
-                if auto_pe_result.get("warnings"):
-                    st.warning("估價可信度提醒：" + "；".join(auto_pe_result["warnings"]))
-                st.caption(f"季 EPS {auto_pe_result['eps_quarters']} 季（{auto_pe_result.get('eps_first', '未知')}～{auto_pe_result.get('eps_last', '未知')}）｜有效樣本跨度 {auto_pe_result.get('coverage_days', 0)} 天；資料不足時歷史分位數可能偏誤。")
-            else:
-                st.warning(f"歷史 PE 無法計算：{pe_error}。自動估價已暫停，不會改用固定倍數；如需自行試算，請取消勾選自動歷史 PE。")
-        growth_reference = None
-        if valuation_enabled and market == "台灣股票／ETF" and symbol:
-            from valuation_engine import eps_growth_reference
-            growth_reference, growth_error = eps_growth_reference(symbol)
-            if growth_reference:
-                st.caption(f"📊 財報參考：近四季 EPS 年增率 {growth_reference['growth_pct']:+.1f}%｜最新季末 {growth_reference['quarter_end']}｜{growth_reference['source']}（不是未來預測）")
-            else:
-                st.caption(f"📊 無法取得 EPS 成長參考：{growth_error}")
-        forecast_enabled = st.checkbox("加入未來 EPS 成長情境（非分析師預測）", value=False, key="b3_growth_on_v1")
-        forecast_growth = st.number_input("假設下一年度 EPS 成長率（%）", min_value=-80.0, max_value=150.0, value=float(round(max(-80, min(150, growth_reference["growth_pct"])), 1)) if growth_reference else 10.0, step=5.0, key="b3_growth_pct_v3") if forecast_enabled else 0.0
-        forecast_discount = st.number_input("未來估價安全折扣（%）", min_value=0.0, max_value=60.0, value=20.0, step=5.0, key="b3_growth_discount_v1") if forecast_enabled else 0.0
-        if auto_pe_enabled:
-            st.caption("下方手動 PE 只在取消勾選自動模式後使用，不會作為自動模式的備援。")
-        v1, v2, v3 = st.columns(3)
-        cheap_pe = v1.number_input("便宜 PE", min_value=1.0, max_value=200.0, value=12.0, step=0.5, key="b3_cheap_pe_v1")
-        fair_pe = v2.number_input("合理 PE", min_value=1.0, max_value=200.0, value=16.0, step=0.5, key="b3_fair_pe_v1")
-        expensive_pe = v3.number_input("昂貴 PE", min_value=1.0, max_value=200.0, value=20.0, step=0.5, key="b3_expensive_pe_v1")
-        st.caption("自動模式僅使用歷史 PE 分位數；資料不足時不顯示估價。取消勾選自動模式才使用下方手動 PE。這不是孫慶龍本人發布的公式或估價。")
+                        st.warning(error)
+            with st.expander("📚 MOPS 近五年 EPS 與 TTM 自動整理（測試版）", expanded=False):
+                st.caption("依序讀取最多 20 季官方財報；首次可能需要較長時間。只顯示可核對期間欄位的 EPS，尚未取得實際公告日，絕不混入歷史 PE。官方連線若失敗，可能顯示缺漏。")
+                history_years = st.selectbox("抓取年數", [1, 2, 3, 4, 5], index=4, key="b3_mops_history_years")
+                @st.cache_data(ttl=86400, show_spinner=False)
+                def cached_mops_quarter_success(stock_symbol, year, quarter, parser_version="annual-header-v4"):
+                    from mops_history import fetch_mops_quarter
+                    import time
+                    last_error = None
+                    for attempt in range(3):
+                        result, error = fetch_mops_quarter(stock_symbol, year, quarter, timeout=12)
+                        if not error and result and result.get("column_verified"):
+                            return result, None
+                        last_error = error or "EPS 欄位無法唯一核對"
+                        if last_error != "MOPS 歷史財報服務無法讀取或格式已變更":
+                            break
+                        if attempt < 2:
+                            time.sleep(1.5 * (attempt + 1))
+                    # Do not cache transient failures as if they were valid financial data.
+                    raise RuntimeError(last_error or "官方資料讀取失敗")
+                def cached_mops_quarter(stock_symbol, year, quarter):
+                    try:
+                        return cached_mops_quarter_success(stock_symbol, year, quarter)
+                    except RuntimeError as exc:
+                        return None, str(exc)
+                    except Exception:
+                        return None, "MOPS 讀取暫時失敗，可稍後重試"
+                if st.button("自動抓取官方歷史 EPS", key="b3_mops_history_fetch"):
+                    from mops_history import fetch_mops_eps_history
+                    progress_bar = st.progress(0, text="準備讀取官方季度財報…")
+                    def report_progress(completed, total, quarter):
+                        progress_bar.progress(completed / total, text=f"已查詢 {completed}/{total} 季｜{quarter}")
+                    with st.spinner("逐季核對 MOPS 財報；已讀取季度會保留快取…"):
+                        try:
+                            history_rows, history_failures = fetch_mops_eps_history(
+                                symbol, years=int(history_years),
+                                fetcher=cached_mops_quarter, progress=report_progress)
+                            st.session_state["b3_mops_history_result"] = (symbol, history_years, history_rows, history_failures)
+                        except Exception as exc:
+                            st.error(f"歷史資料讀取失敗：{type(exc).__name__}")
+                saved_history = st.session_state.get("b3_mops_history_result")
+                if saved_history and saved_history[0] == symbol and saved_history[1] == history_years:
+                    _, _, history_rows, history_failures = saved_history
+                    st.write(f"已核對 {len(history_rows)} 季；缺漏或異常 {len(history_failures)} 筆")
+                    if history_rows:
+                        history_table = pd.DataFrame([{
+                            "季度": x["quarter"], "單季 EPS": x["quarter_eps"],
+                            "當年累計 EPS": x["cumulative_eps"], "TTM EPS": x["ttm_eps"],
+                            "累計核對": "通過" if x["ytd_consistent"] is True else ("待核" if x["ytd_consistent"] is None else "異常"),
+                            "TTM 狀態": x["ttm_status"],
+                            "公告日期": "尚未核實"
+                        } for x in history_rows])
+                        st.dataframe(history_table, use_container_width=True, hide_index=True)
+                        st.download_button("下載 EPS 檢查結果 CSV", history_table.to_csv(index=False).encode("utf-8-sig"),
+                                           file_name=f"{str(symbol).split('.')[0]}_mops_eps_review.csv",
+                                           mime="text/csv", key="b3_mops_history_csv")
+                        st.warning("TTM 為四個連續且欄位已核對的季度 EPS 加總，僅供核對；財報公告日尚未確認，不能用於歷史估價。")
+                        with st.expander("📅 下一階段：官方公告日逐季核實", expanded=False):
+                            st.caption("證交所財務報告書資訊揭露頁可查公告日期時間；法定截止日、董事會預定日與財報期間結束日，都不能當成實際公告日。")
+                            st.markdown("[開啟證交所資訊揭露／財務報告書](https://www.twse.com.tw/IIH2/zh/market/information.html)")
+                            st.info("目前尚未取得可逐季對應、可驗證來源的 20 筆公告日期，歷史 PE 回測維持鎖定。")
+                            with st.expander("🔬 MOPS 財報公告接口診斷（不會改動估價）", expanded=False):
+                                st.caption("以最新已取得的季度為測試目標，僅檢查官方介接是否回傳可解析的表格；不會把財報期間當作公告日。")
+                                st.markdown("[官方公開資訊觀測站－財務報告公告](https://mops.twse.com.tw/mops/#/web/t163sb01)")
+                                if st.button("交叉測試 2026Q3／2025Q4／2024Q4", key="b3_mops_cross_quarter"):
+                                    from official_filing_candidates import compare_filing_quarters
+                                    with st.spinner("正在逐季比較官方查詢回應（最多三次查詢）…"):
+                                        st.session_state["b3_mops_cross_quarter_result"] = (
+                                            str(symbol).split(".")[0],
+                                            compare_filing_quarters(str(symbol).split(".")[0])
+                                        )
+                                cross_saved = st.session_state.get("b3_mops_cross_quarter_result")
+                                if cross_saved and cross_saved[0] == str(symbol).split(".")[0]:
+                                    cross_result = cross_saved[1]
+                                    cross_df = pd.DataFrame(cross_result["rows"])
+                                    priority_cols = ["季度", "符合條件候選表格數", "表格判讀",
+                                                     "包含股票代號", "包含表格", "查詢狀態"]
+                                    ordered_cols = [c for c in priority_cols if c in cross_df.columns]
+                                    ordered_cols += [c for c in cross_df.columns if c not in ordered_cols]
+                                    st.dataframe(cross_df[ordered_cols], hide_index=True, use_container_width=True)
+                                    for _, cross_row in cross_df.iterrows():
+                                        status = cross_row.get("表格判讀")
+                                        count = cross_row.get("符合條件候選表格數")
+                                        st.write(f"**{cross_row['季度']}**｜候選表格：{count if pd.notna(count) else '未取得'}｜判讀：{status or '未取得'}")
+                                    if "表格判讀" in cross_df and all(
+                                        x == "no_matching_filing_table" for x in cross_df["表格判讀"]
+                                    ):
+                                        st.warning("三個季度都未找到符合條件的公告表格，建議停止使用目前接口。")
+                                        stock_code = str(symbol).split(".")[0]
+                                        st.markdown(
+                                            f"[改查證交所 {stock_code} 單一公司財務報告書資訊揭露]"
+                                            f"(https://www.twse.com.tw/IIH2/zh/company/information.html?code={stock_code})"
+                                        )
+                                    st.write("三季回應完全相同：", cross_result["all_ajax_responses_identical"])
+                                    st.info(cross_result["conclusion"])
+                                    st.caption("僅比較官方查詢回應；無法因此認定公告日期或解除歷史 PE 鎖定。")
+                                if st.button("同一工作階段核對財報公告查詢", key="b3_mops_session_probe"):
+                                    from official_filing_candidates import probe_session_backed_filing_query
+                                    latest_period = pd.Period(history_rows[-1]["quarter"], freq="Q")
+                                    with st.spinner("正在比對官方查詢頁與資料回應…"):
+                                        session_result = probe_session_backed_filing_query(
+                                            str(symbol).split(".")[0], latest_period.year, latest_period.quarter)
+                                    st.session_state["b3_mops_session_probe_result"] = (
+                                        str(symbol).split(".")[0], str(latest_period), session_result)
+                                session_saved = st.session_state.get("b3_mops_session_probe_result")
+                                if session_saved and session_saved[0] == str(symbol).split(".")[0]:
+                                    st.write("同工作階段測試季度：", session_saved[1])
+                                    st.json(session_saved[2])
+                                    st.caption("本項僅比較請求與回應，不能據此認定公告日期。")
+                                if st.button("測試新發現的 MOPS 表單提交路徑", key="b3_mops_discovered_form_probe"):
+                                    from official_filing_candidates import probe_discovered_mops_form
+                                    latest_period = pd.Period(history_rows[-1]["quarter"], freq="Q")
+                                    with st.spinner("正在測試表單提交路徑…"):
+                                        discovered_result = probe_discovered_mops_form(
+                                            str(symbol).split(".")[0], latest_period.year, latest_period.quarter)
+                                    st.session_state["b3_mops_discovered_form_result"] = (
+                                        str(symbol).split(".")[0], str(latest_period), discovered_result)
+                                discovered_saved = st.session_state.get("b3_mops_discovered_form_result")
+                                if discovered_saved and discovered_saved[0] == str(symbol).split(".")[0]:
+                                    st.write("新路徑測試季度：", discovered_saved[1])
+                                    st.json(discovered_saved[2])
+                                    st.caption("僅測試表單路徑是否能回傳資料，不會解鎖歷史 PE。")
+                                if st.button("檢查 MOPS 財報公告接口", key="b3_mops_announcement_probe"):
+                                    import importlib
+                                    import official_filing_candidates as filing_module
+                                    filing_module = importlib.reload(filing_module)
+                                    latest_period = pd.Period(history_rows[-1]["quarter"], freq="Q")
+                                    if not hasattr(filing_module, "probe_mops_financial_announcement"):
+                                        probe_result = {"status": "module_version_mismatch",
+                                                        "message": "部署中的官方公告模組版本不一致；請重新啟動 Streamlit App",
+                                                        "module_path": str(getattr(filing_module, "__file__", "unknown"))}
+                                    else:
+                                        with st.spinner("正在檢查官方接口…"):
+                                            probe_result = filing_module.probe_mops_financial_announcement(
+                                                str(symbol).split(".")[0], latest_period.year, latest_period.quarter)
+                                    st.session_state["b3_mops_announcement_probe_result"] = (
+                                        str(symbol).split(".")[0], str(latest_period), probe_result)
+                                probe_saved = st.session_state.get("b3_mops_announcement_probe_result")
+                                if probe_saved and probe_saved[0] == str(symbol).split(".")[0]:
+                                    st.write("測試季度：", probe_saved[1])
+                                    probe_data = probe_saved[2]
+                                    status = probe_data.get("status", "unknown")
+                                    if status == "query_form_only":
+                                        st.error("目前取得的是查詢介面，不是台達電的財報公告結果。請勿用此資料計算歷史 PE。")
+                                    elif status == "tables_unverified":
+                                        st.warning("取得表格，但公告日期尚未核實。")
+                                    elif status == "javascript_shell":
+                                        st.warning("官方回傳 JavaScript 頁面，尚未取得公告資料。")
+                                    if "input_field_names" in probe_data or "form_targets" in probe_data:
+                                        st.markdown("**官方查詢表單結構（診斷用途）**")
+                                        st.write("欄位名稱：", ", ".join(probe_data.get("input_field_names", [])) or "無")
+                                        st.write("提交目標：", probe_data.get("form_targets", []))
+                                        st.write("安全查詢預設值：", probe_data.get("safe_form_defaults", {}))
+                                        st.caption("RID、SKEY 等可能涉及工作階段的值一律遮蔽；這些欄位不是財報公告日期。")
+                                    if probe_data.get("table_profiles"):
+                                        profiles = pd.DataFrame(probe_data["table_profiles"])
+                                        profiles = profiles.rename(columns={
+                                            "index": "表格編號", "rows": "列數", "columns": "欄數",
+                                            "has_stock_code": "包含股票代號",
+                                            "has_filing_keyword": "財報關鍵字",
+                                            "has_date_keyword": "日期關鍵字",
+                                            "has_roc_date_pattern": "民國日期格式",
+                                            "header_labels": "原始欄名",
+                                            "looks_like_result_table": "疑似公告結果",
+                                            "likely_ui_table": "疑似查詢介面",
+                                        })
+                                        st.dataframe(profiles, use_container_width=True, hide_index=True)
+                                        st.caption("勾選表示偵測到關鍵字，並不代表公告日已經核實。")
+                                        with st.expander("查看原始診斷 JSON"):
+                                            st.json(probe_data)
+                                    else:
+                                        st.json(probe_data)
+                                    st.warning("此處僅測試接口與表格結構；尚未驗證公告日，歷史 PE 不會解鎖。")
+                            if st.button("自動查詢證交所財報公告候選紀錄", key="b3_official_filing_fetch"):
+                                from official_filing_candidates import fetch_official_filing_candidates, review_candidate_coverage
+                                with st.spinner("正在檢查證交所單一公司資訊揭露頁…"):
+                                    candidates, candidate_error = fetch_official_filing_candidates(str(symbol).split(".")[0])
+                                st.session_state["b3_official_filing_candidates"] = (
+                                    str(symbol).split(".")[0], candidates, candidate_error)
+                            official_saved = st.session_state.get("b3_official_filing_candidates")
+                            if official_saved and official_saved[0] == str(symbol).split(".")[0]:
+                                from official_filing_candidates import review_candidate_coverage
+                                _, candidates, candidate_error = official_saved
+                                if candidate_error:
+                                    st.warning(candidate_error)
+                                if candidates:
+                                    st.write(f"找到 {len(candidates)} 筆公告候選紀錄（非已核實公告日）")
+                                    st.dataframe(pd.DataFrame(candidates), use_container_width=True, hide_index=True)
+                                from official_filing_candidates import summarize_filing_coverage
+                                periods_to_check = [x["quarter"] for x in history_rows]
+                                summary = summarize_filing_coverage(candidates, periods_to_check)
+                                st.write(
+                                    f"**公告候選涵蓋率：{summary['quarters_with_candidates']}/{summary['requested_quarters']} 季 "
+                                    f"({summary['candidate_coverage_percent']}%)**"
+                                )
+                                st.caption(
+                                    f"缺漏 {summary['quarters_missing_candidates']} 季；"
+                                    f"多筆候選 {summary['quarters_with_multiple_candidates']} 季；"
+                                    "已核實首次申報日期 0 季（歷史 PE 維持鎖定）。"
+                                )
+                                if summary["missing_quarters"]:
+                                    st.write("**尚無公告候選的季度：**", "、".join(summary["missing_quarters"]))
+                                coverage = review_candidate_coverage(candidates, periods_to_check)
+                                st.dataframe(pd.DataFrame(coverage), use_container_width=True, hide_index=True)
+                                st.caption("缺漏、重複、補正公告都不會自動填入歷史 PE；必須核對首次有效申報與原始紀錄。")
+                            filing_template = pd.DataFrame([{
+                                "股票代號": str(symbol).split(".")[0],
+                                "季度": x["quarter"],
+                                "公告日期": "",
+                                "官方來源網址": "",
+                            } for x in history_rows])
+                            st.download_button("下載公告日核對範本 CSV",
+                                               filing_template.to_csv(index=False).encode("utf-8-sig"),
+                                               file_name=f"{str(symbol).split('.')[0]}_filing_dates_template.csv",
+                                               mime="text/csv", key="b3_filing_date_template")
+                            filing_upload = st.file_uploader("上傳已核實公告日 CSV（僅作核對，不會自動啟用估價）",
+                                                             type=["csv"], key="b3_filing_dates_upload")
+                            if filing_upload is not None:
+                                try:
+                                    date_table = pd.read_csv(filing_upload, dtype=str).fillna("")
+                                    required = {"股票代號", "季度", "公告日期", "官方來源網址"}
+                                    if not required.issubset(date_table.columns):
+                                        st.error("CSV 缺少必要欄位，請使用下載範本。")
+                                    else:
+                                        from filing_dates import inspect_filing_date
+                                        matched = []
+                                        valid_periods = {x["quarter"] for x in history_rows}
+                                        for _, date_row in date_table.iterrows():
+                                            quarter = str(date_row["季度"]).strip()
+                                            code = str(date_row["股票代號"]).strip()
+                                            date_str = str(date_row["公告日期"]).strip()
+                                            source_url = str(date_row["官方來源網址"]).strip()
+                                            status = inspect_filing_date(
+                                                code, quarter, date_str, source_url,
+                                                str(symbol).split(".")[0])
+                                            if quarter not in valid_periods:
+                                                status = "季度不在目前核對範圍"
+                                            matched.append({"季度": quarter, "公告日期": date_str,
+                                                            "官方來源網址": source_url, "狀態": status})
+                                        st.dataframe(pd.DataFrame(matched), use_container_width=True, hide_index=True)
+                                        st.warning("上傳資料僅供逐季人工查證；網址存在不代表已查證，尚不會進入歷史 PE。")
+                                except Exception as exc:
+                                    st.error(f"公告日 CSV 讀取失敗：{type(exc).__name__}")
 
-if st.button(
+                    if history_failures:
+                        with st.expander("查看讀取失敗／資料異常季度"):
+                            st.dataframe(pd.DataFrame(history_failures), use_container_width=True, hide_index=True)
+                            st.caption("精準診斷：選一個失敗季度，檢查 MOPS 原始 EPS 表頭；不會修改任何估價資料。")
+                            failed_periods = [x["quarter"] for x in history_failures
+                                              if x.get("reason") == "EPS 欄位無法唯一核對"]
+                            if failed_periods:
+                                inspect_period = st.selectbox("診斷季度", failed_periods,
+                                                              key="b3_eps_inspect_period")
+                                if st.button("檢查這一季的 EPS 原始表頭", key="b3_eps_inspect_button"):
+                                    import json
+                                    from mops_history import fetch_mops_quarter
+                                    period_to_check = pd.Period(inspect_period, freq="Q")
+                                    with st.spinner("正在讀取官方原始表頭…"):
+                                        diagnostic, diagnostic_error = fetch_mops_quarter(
+                                            symbol, period_to_check.year, period_to_check.quarter, timeout=12)
+                                    if diagnostic_error:
+                                        st.error(diagnostic_error)
+                                    elif diagnostic:
+                                        st.write("基本 EPS 資料列：", diagnostic.get("eps_row_count", 0))
+                                        st.write("欄位是否唯一核對：", diagnostic.get("column_verified", False))
+                                        details = diagnostic.get("eps_header_diagnostics", [])
+                                        if details:
+                                            st.dataframe(pd.DataFrame([{
+                                                "表格": d["table"], "欄位": d["column"],
+                                                "EPS": d["value"],
+                                                "期間表頭": d["period_text"],
+                                                "原始層級": " / ".join(d["header_levels"]),
+                                            } for d in details]), use_container_width=True, hide_index=True)
+                                        st.download_button(
+                                            "下載這季診斷 JSON",
+                                            json.dumps({
+                                                "quarter": inspect_period,
+                                                "eps_rows": diagnostic.get("eps_rows", []),
+                                                "eps_header_diagnostics": details,
+                                            }, ensure_ascii=False, indent=2).encode("utf-8"),
+                                            file_name=f"{str(symbol).split('.')[0]}_{inspect_period}_eps_diagnostic.json",
+                                            mime="application/json",
+                                            key="b3_eps_diagnostic_download")
+            filing_format = st.radio("匯入 EPS 格式", ["單季 EPS", "年初至今累計 EPS（自動換算單季）"], horizontal=True, key="b3_eps_csv_format_v1")
+            filing_upload = st.file_uploader("選用：匯入歷史季度 EPS CSV（含實際公告日）", type=["csv"], key="b3_filing_eps_csv_v1", help="單季格式欄位：symbol,quarter_end,announced_on,eps；累計格式欄位：symbol,quarter_end,announced_on,cumulative_eps。兩者都必須提供真實公告日。")
+            st.caption("匯入資料僅用於本次試算，須自行核對公開資訊觀測站的公告日期與單季 EPS；尚未自動串接官方歷史財報。")
+            auto_pe_result = None
+            auto_pe_enabled = st.checkbox("自動歷史本益比分位數（20%／50%／80%）", value=True, key="b3_auto_pe_v3")
+            if valuation_enabled and auto_pe_enabled and eps_value > 0 and market == "台灣股票／ETF":
+                try:
+                    if filing_upload is not None:
+                        from filing_eps import parse_quarterly_eps_csv, parse_cumulative_eps_csv, historical_pe_from_filings
+                        parser = parse_cumulative_eps_csv if filing_format.startswith("年初") else parse_quarterly_eps_csv
+                        filing_data, pe_error = parser(filing_upload.getvalue(), symbol)
+                        if filing_data is not None:
+                            auto_pe_result, pe_error = historical_pe_from_filings(symbol, filing_data, years=3)
+                    else:
+                        if str(symbol).endswith(".TW"):
+                            from twse_pe import official_twse_pe
+                            @st.cache_data(ttl=86400, show_spinner=False)
+                            def cached_twse_pe(stock_symbol):
+                                return official_twse_pe(stock_symbol, years=3)
+                            auto_pe_result, pe_error = cached_twse_pe(symbol)
+                        else:
+                            from valuation_engine import historical_pe_bands
+                            auto_pe_result, pe_error = historical_pe_bands(symbol, years=3)
+                except Exception:
+                    pe_error = "財務資料或股價來源暫時不可用"
+                if auto_pe_result:
+                    st.success(("公告日 CSV 歷史 PE：" if filing_upload is not None else "證交所官方歷史 PE：" if str(symbol).endswith(".TW") else "Yahoo 歷史 PE：") + "／".join(f"{p:.1f} 倍" for p in auto_pe_result["pes"]))
+                    st.caption(f"樣本 {auto_pe_result['samples']} 日｜{auto_pe_result['start']}～{auto_pe_result['end']}｜{auto_pe_result['method']}")
+                    if auto_pe_result.get("warnings"):
+                        st.warning("估價可信度提醒：" + "；".join(auto_pe_result["warnings"]))
+                    st.caption(f"季 EPS {auto_pe_result['eps_quarters']} 季（{auto_pe_result.get('eps_first', '未知')}～{auto_pe_result.get('eps_last', '未知')}）｜有效樣本跨度 {auto_pe_result.get('coverage_days', 0)} 天；資料不足時歷史分位數可能偏誤。")
+                else:
+                    st.warning(f"歷史 PE 無法計算：{pe_error}。自動估價已暫停，不會改用固定倍數；如需自行試算，請取消勾選自動歷史 PE。")
+            growth_reference = None
+            if valuation_enabled and market == "台灣股票／ETF" and symbol:
+                from valuation_engine import eps_growth_reference
+                growth_reference, growth_error = eps_growth_reference(symbol)
+                if growth_reference:
+                    st.caption(f"📊 財報參考：近四季 EPS 年增率 {growth_reference['growth_pct']:+.1f}%｜最新季末 {growth_reference['quarter_end']}｜{growth_reference['source']}（不是未來預測）")
+                else:
+                    st.caption(f"📊 無法取得 EPS 成長參考：{growth_error}")
+            forecast_enabled = st.checkbox("加入未來 EPS 成長情境（非分析師預測）", value=False, key="b3_growth_on_v1")
+            forecast_growth = st.number_input("假設下一年度 EPS 成長率（%）", min_value=-80.0, max_value=150.0, value=float(round(max(-80, min(150, growth_reference["growth_pct"])), 1)) if growth_reference else 10.0, step=5.0, key="b3_growth_pct_v3") if forecast_enabled else 0.0
+            forecast_discount = st.number_input("未來估價安全折扣（%）", min_value=0.0, max_value=60.0, value=20.0, step=5.0, key="b3_growth_discount_v1") if forecast_enabled else 0.0
+            if auto_pe_enabled:
+                st.caption("下方手動 PE 只在取消勾選自動模式後使用，不會作為自動模式的備援。")
+            v1, v2, v3 = st.columns(3)
+            cheap_pe = v1.number_input("便宜 PE", min_value=1.0, max_value=200.0, value=12.0, step=0.5, key="b3_cheap_pe_v1")
+            fair_pe = v2.number_input("合理 PE", min_value=1.0, max_value=200.0, value=16.0, step=0.5, key="b3_fair_pe_v1")
+            expensive_pe = v3.number_input("昂貴 PE", min_value=1.0, max_value=200.0, value=20.0, step=0.5, key="b3_expensive_pe_v1")
+            st.caption("自動模式僅使用歷史 PE 分位數；資料不足時不顯示估價。取消勾選自動模式才使用下方手動 PE。這不是孫慶龍本人發布的公式或估價。")
+
+    sr_show = st.checkbox("顯示關鍵壓力與支撐點", value=True, key="sr_show")
+    sr_window = st.selectbox("支撐壓力觀察根數", [60, 120, 250], index=1, key="sr_lookback", disabled=not sr_show)
+
+    vp_show = st.checkbox("顯示成交量集中區（估算）", value=True, key="vp_show")
+    with st.expander("成交量分布估算設定"):
+        vp_window = st.selectbox("分布觀察根數（不含訊號K線）", [20, 60, 120, 250], index=1, key="vp_window")
+        vp_bins = st.selectbox("價位格數", [20, 40, 80], index=1, key="vp_bins")
+        vp_area = st.slider("價值區涵蓋量（%）", 50, 95, 70, key="vp_area")
+        vp_buffer = st.number_input("價值區突破確認幅度（%）", min_value=0., max_value=5., value=.5, step=.1, key="vp_buffer")
+        vp_ratio = st.number_input("價值區突破最低量比", min_value=1., max_value=5., value=1.5, step=.1, key="vp_ratio")
+        st.caption("使用K線高低價均分成交量；非逐筆價量、未分日夜盤。")
+
+if st.sidebar.button(
     "開始亞當鏡像分析",
-    type="primary"
+    type="primary", use_container_width=True
 ):
     if not symbol:
         st.error("請輸入商品代碼")
@@ -1615,7 +1641,21 @@ if st.button(
     quality_issues = audit_ohlc_data(df)
     if quality_issues:
         st.error("行情資料品質異常，已停止鏡像分析：" + "；".join(quality_issues))
+        from quote_quality import invalid_price_rows
+        invalid_rows = invalid_price_rows(df)
+        if invalid_rows:
+            st.caption("異常行情明細（最多列20根）：以下保留資料來源數值，未推測哪一個價格正確。")
+            st.dataframe(pd.DataFrame(invalid_rows), hide_index=True)
+        st.info("可將「歷史資料長度」縮短後重新分析，或稍後重試。縮短期間可能無法涵蓋完整中、長波，請保留資料不足提示；系統不會自動刪除異常K線或改寫價格。")
         st.stop()
+
+    if vp_show:
+        from volume_profile_estimate import show_volume_profile
+        show_volume_profile(df, symbol, interval, vp_window, vp_bins, vp_area, vp_buffer, vp_ratio)
+
+    if sr_show:
+        from support_resistance import show_key_levels
+        show_key_levels(df, symbol, interval, sr_window, production=PRODUCTION_MODE)
 
     if roll_dates:
         dates_text = "、".join(
@@ -2083,3 +2123,4 @@ if st.button(
         "日期僅為估算，未完整處理休市日、"
         "分K交易時段與期貨換月。"
     )
+

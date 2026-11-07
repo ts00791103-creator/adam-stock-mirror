@@ -1,0 +1,16 @@
+即時指數接入調查 — 2026-11-07
+範圍：先加權指數與櫃買指數。此階段僅研究方案，尚未接入或驗證既有帳號指數權限，未購買服務。
+資料源：沿用後台FUGLE_API_KEY、現有個人報價密碼與伺服器端請求；金鑰不顯示、不放前端或檔案。
+先取得/intraday/tickers?type=INDEX&exchange=TWSE及TPEx列表，以實際回傳名稱及代碼核對目標，不猜IR/IX代碼；不可帶isNormal=true（會覆蓋成股票）。
+REST /intraday/quote/{symbol}讀指數報價，顯示指數名稱、最新值、漲跌、百分比、來源成交/更新時間及市場狀態。盤前試撮、休市、延遲、失敗要清楚區分；不把取得時間當成交時間。
+首版建議每10秒更新兩指數、伺服器共用快取與限流。理論兩指數12次/分鐘，須合計個股查詢與其他使用者，同金鑰不可每個分頁各自無限制輪詢。失敗保留最後數值並標過期，429退避。
+官網基本免費方案台股日內60次/分鐘，股票WebSocket5訂閱/1連線；先REST可避免每個Streamlit連線耗盡額度。實際權限與回傳品質需上線前實測。
+第二期可用WebSocket indices頻道與共用收集器；該事件欄位為index/time，不能直接沿用股票lastTrade.price解析。
+指數獨立白名單及解析器，保留個股代號驗證。歷史鏡像與即時卡片分開，不以即時值改寫歷史K線。
+台指期及夜盤不是加權現貨指數；基本方案期權不支援，不能承諾免費台指期。公開轉播須另核對資料授權；先維持個人報價密碼保護。
+驗收規劃：列表名稱核對、時戳/價格欄位、盤中與休市狀態、錯誤/429、跨分頁共享限流、密碼隔離、手機完整數值。先候選站，發布另確認。
+官方來源：
+https://developer.fugle.tw/docs/data/http-api/intraday/tickers/
+https://developer.fugle.tw/docs/data/http-api/intraday/quote/
+https://developer.fugle.tw/docs/data/websocket-api/market-data-channels/indices/
+https://developer.fugle.tw/docs/pricing/

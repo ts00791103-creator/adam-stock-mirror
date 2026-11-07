@@ -1,0 +1,65 @@
+name: Adam entry observation reminders
+on:
+  schedule:
+    - cron: '47 6 * * 1-5'
+    - cron: '17 10 * * 1-5'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: '先check-bot，再find-chat、test-message；preview不發送，send為正式推播'
+        type: choice
+        options: [preview, check-bot, find-chat, test-message, send]
+        default: preview
+      setup_code:
+        description: 'find-chat時填入你傳給機器人的配對碼（不是Token）'
+        type: string
+        required: false
+permissions:
+  contents: write
+concurrency:
+  group: adam-entry-reminders
+  cancel-in-progress: false
+jobs:
+  remind:
+    if: github.event.repository.private == true && (github.event_name == 'workflow_dispatch' || vars.ALERTS_ENABLED == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements.txt
+      - name: Verify worker
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Configure private state commits
+        run: |
+          git config user.name "adam-alert-worker"
+          git config user.email "adam-alert-worker@users.noreply.github.com"
+      - name: Setup or connection test
+        if: github.event_name == 'workflow_dispatch' && (inputs.mode == 'check-bot' || inputs.mode == 'find-chat' || inputs.mode == 'test-message')
+        env:
+          SETUP_MODE: ${{ inputs.mode }}
+          TELEGRAM_SETUP_CODE: ${{ inputs.setup_code }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python telegram_setup.py "$SETUP_MODE"
+      - name: Preview conditions without sending
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'preview'
+        run: python scripts/run_entry_alerts.py
+      - name: Send enabled daily observations
+        if: github.event_name == 'schedule' || inputs.mode == 'send'
+        env:
+          ALERTS_ENABLED: ${{ vars.ALERTS_ENABLED }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python scripts/run_entry_alerts.py --send --git-state
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: private-reminder-report
+          path: reports/
+          if-no-files-found: ignore
+          retention-days: 3
