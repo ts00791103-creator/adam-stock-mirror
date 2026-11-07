@@ -1135,7 +1135,7 @@ with st.sidebar:
     large_box_window = st.selectbox("大區間箱型觀察根數（同一K線週期）",
                                    [n for n in [60, 120, 250] if n > box_window],
                                    disabled=not auto_boxes, key="large_box_window")
-    box_history = st.checkbox("顯示歷史箱型（已突破淡色虛線）", value=False,
+    box_history = st.checkbox("顯示歷史箱型（大小區間合計最新5個）", value=False,
                               disabled=not auto_boxes, key="box_history")
     box_options = dict(short_window=box_window, large_window=large_box_window,
                        max_width_pct=box_width, history=box_history)
