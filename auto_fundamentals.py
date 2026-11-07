@@ -201,6 +201,7 @@ def _render_auto_fundamentals(symbol, market):
             return
         st.write(f"查詢個股：{symbol}")
         st.caption("首次最多查詢 12 季。按一次即可，讀取期間每 2 秒自動更新；EPS 與淨值分開顯示，不需反覆按按鈕。")
+        st.caption("已核對季度會保留 6 小時；來源暫時失敗可更新補查，不必每次重抓全部季度。")
         allow_alternative = st.checkbox("官方缺少淨值時，允許 Yahoo Finance 替代財報", value=True,
                                         key="auto_financial_alternative")
         from financial_jobs import start_job, poll_job
@@ -251,4 +252,6 @@ def _render_auto_fundamentals(symbol, market):
             st.warning("部分財報期末距今超過 180 天，請留意資料可能過舊。")
         if result["history_failures"]:
             st.caption(f"歷史季度缺漏／核對問題：{len(result['history_failures'])} 筆")
+            with st.expander("查看缺漏季度與原因"):
+                st.dataframe(result["history_failures"], hide_index=True)
         st.caption("這是實際 EPS 成長率；圖片的 ROE × 留存率屬另一種成長情境，五年配發率尚未自動取得。資料不會自動帶入估價或觸發交易。")
