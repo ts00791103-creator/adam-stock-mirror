@@ -30,6 +30,7 @@ for market in results:
  if not item: continue
  try:
   frame=history_as_of(yf.Ticker(item["Yahoo代號"]).history(period="1y",interval="1d",auto_adjust=False,timeout=10),day)
+  info["sample_raw"]={"item":item,"history_date":str(frame.index[-1]),"history_close":float(frame.Close.iloc[-1]),"history_volume":float(frame.Volume.iloc[-1])}
   five=price_factors(frame,day)["5日前日期"]
   try:
    past=fetch_margin(exchange,five).get(code) if code in margins else None
