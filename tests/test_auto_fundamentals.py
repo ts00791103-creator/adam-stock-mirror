@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 from datetime import date
 import pandas as pd
 from auto_fundamentals import eps_growth, parse_book_value, fetch_book_value, fetch_fundamentals, stock_code
@@ -76,7 +77,8 @@ class FinancialTests(unittest.TestCase):
 
 
 class AutoPanelTests(unittest.TestCase):
-    def test_load_button_renders_metrics_and_never_leaks_across_symbols(self):
+    @patch("financial_jobs.start_job")
+    def test_load_button_renders_metrics_and_never_leaks_across_symbols(self, mocked_start):
         from streamlit.testing.v1 import AppTest
         code = '''
 import streamlit as st
@@ -87,7 +89,15 @@ def fixture(symbol):
         "growth":{"recent_ttm":8,"prior_ttm":4,"growth_pct":100,"quarter":"2026Q2","quarter_end":"2026-06-30","age_days":130},
         "book":{"value":39.91,"quarter":"2026Q2","field":"每股參考淨值","published_snapshot":"1151107","source":"official","age_days":130},
         "book_error":None,"history_failures":[]}, None
-af.fetch_fundamentals = fixture
+import financial_jobs
+from concurrent.futures import Future
+def fake_start(symbol, allow_alternative=False):
+    r, _ = fixture(symbol)
+    growth, book = Future(), Future()
+    growth.set_result((r['growth'], []))
+    book.set_result((r['book'], None))
+    return {'symbol':symbol,'retrieved_at':r['retrieved_at'], 'futures':{'growth':growth,'book':book}}, None
+financial_jobs.start_job = fake_start
 af.render_auto_fundamentals(st.sidebar, symbol, "台灣股票／ETF")
 '''
         app = AppTest.from_string(code).run()
