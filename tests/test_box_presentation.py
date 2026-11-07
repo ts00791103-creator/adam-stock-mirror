@@ -71,6 +71,21 @@ class BoxPresentationTests(unittest.TestCase):
         self.assertFalse(fig.layout.annotations)
         self.assertTrue(all("目前整理中" in t.name for t in fig.data))
 
+    def test_next_box_requires_full_window_after_break(self):
+        from box_theory import detect_boxes
+        df=frame(20)
+        df.iloc[10:]=[96,97,94,95,100000]
+        just_broke=detect_boxes(df.iloc[:11],window=10,max_width_pct=20)
+        self.assertEqual(len(just_broke),1)
+        self.assertEqual(just_broke[-1]["status"],"下破")
+        not_ready=detect_boxes(df.iloc[:19],window=10,max_width_pct=20)
+        self.assertEqual(len(not_ready),1)
+        ready=detect_boxes(df,window=10,max_width_pct=20)
+        self.assertEqual(len(ready),2)
+        self.assertEqual(ready[-1]["start"],10)
+        self.assertEqual(ready[-1]["status"],"整理中")
+        self.assertEqual(ready[-1]["bottom"],94)
+
     def test_invalid_horizon_order(self):
         with self.assertRaises(ValueError):
             box_layers(frame(),short_window=60,large_window=60)

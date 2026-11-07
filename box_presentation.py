@@ -85,7 +85,7 @@ def show_box_overview(df, interval_name="", **options):
                      "下緣": round(b["bottom"],2) if b else None})
     st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
     st.caption("青色＝小區間；橙色＝大區間。同一K線週期的不同觀察根數，並非多週期共振。"
-               "箱頂／底在形成時固定；後續收盤越界即上破／下破，盤中K線尚未收盤時狀態仍可能變動。"
+               "箱頂／底在形成時固定；收盤越界即上破／下破。突破當根起須重新累積完整觀察根數，才形成新箱。盤中K線狀態仍可能變動。"
                "歷史框不代表目前有效支撐；跌破後轉壓力仍須另行確認回測。")
 
     if options.get("history"):
