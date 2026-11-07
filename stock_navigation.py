@@ -63,12 +63,14 @@ def stock_result_table(frame, rows, key, production=False):
     widget_key=key+"_"+hashlib.sha256(identity.encode()).hexdigest()[:12]
     def picked():
         event=st.session_state.get(widget_key,{})
-        selected=event.get("selection",{}).get("rows",[])
+        selection=event.get("selection",{})
+        cells=selection.get("cells",[])
+        selected=[cells[0][0]] if len(cells)==1 else selection.get("rows",[])
         if len(selected)==1 and 0 <= selected[0] < len(snapshot):
             queue_analysis(st.session_state,snapshot[selected[0]])
     st.caption("點選股票列即可開啟線型、箱型與價格分析；也可展開下方逐檔按鈕。")
     st.dataframe(frame,hide_index=True,width="stretch",key=widget_key,
-                 on_select=picked,selection_mode="single-row")
+                 on_select=picked,selection_mode=["single-row","single-cell"])
     with st.expander("逐檔開啟分析（手機可用）"):
         for row in snapshot[:30]:
             symbol=str(row.get("Yahoo代號",""))
