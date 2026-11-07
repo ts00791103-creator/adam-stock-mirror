@@ -84,8 +84,8 @@ def show_box_overview(df, interval_name="", **options):
         rows.append({"區間": f'{item["name"]} {item["window"]}根 {interval_name}',
                      "狀態": "目前箱內整理" if b else "沒有目前有效箱型",
                      "形成日": str(df.index[b["start"]+item["window"]-1].date()) if b else "—",
-                     "上緣": round(b["top"],2) if b else None,
-                     "下緣": round(b["bottom"],2) if b else None})
+                     "上緣": f'{b["top"]:,.2f}' if b else "—",
+                     "下緣": f'{b["bottom"]:,.2f}' if b else "—"})
     st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
     st.caption("青色＝小區間；橙色＝大區間。同一K線週期的不同觀察根數，並非多週期共振。"
                "箱頂／底在形成時固定；收盤越界即上破／下破。突破當根起須重新累積完整觀察根數，才形成新箱。盤中K線狀態仍可能變動。"
