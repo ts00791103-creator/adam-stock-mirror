@@ -937,13 +937,17 @@ def load_tw_symbols():
 from initial_navigation import consume_initial, back_to_initial, scroll_chart_top
 initial_request=consume_initial(st.session_state)
 initial_chart=bool(st.session_state.get("initial_chart_open"))
+initial_back_slot=st.empty()
 if initial_chart:
-    st.button("← 返回初選股票",key="initial_chart_back",on_click=back_to_initial)
+    initial_back_slot.button("← 返回初選股票",key="initial_chart_back",on_click=back_to_initial)
 chart_heading_slot=st.empty()
+initial_style_slot=st.empty()
 if initial_chart:
-    st.markdown('<style>.st-key-initial_results_panel{display:none}</style>',unsafe_allow_html=True)
+    initial_style_slot.markdown('<style>.st-key-initial_results_panel{display:none}</style>',unsafe_allow_html=True)
+initial_scroll_slot=st.empty()
 if st.session_state.get("initial_chart_jump"):
-    scroll_chart_top(st.session_state.pop("initial_chart_jump"))
+    with initial_scroll_slot.container():
+        scroll_chart_top(st.session_state.pop("initial_chart_jump"))
 with st.container(key="initial_results_panel"):
     if not PRODUCTION_MODE:
         from entry_alerts_ui import show_entry_alerts
