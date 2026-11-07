@@ -980,13 +980,17 @@ with st.sidebar:
         if matches:
             choices = matches[:100]
             labels = [f"{code} {name}（{ex}）" for code, name, ex in choices]
-            chosen = st.selectbox("選擇股票／ETF", range(len(choices)),
+            requested=st.session_state.get("initial_chart_context",{}).get("symbol","")
+            chosen_index=next((i for i,r in enumerate(choices)
+                               if r[0]+(".TW" if r[2]=="上市" else ".TWO")==requested),0)
+            chosen = st.selectbox("選擇股票／ETF", range(len(choices)),index=chosen_index,
                                   format_func=lambda i: labels[i])
             code, stock_name, exchange = choices[chosen]
             symbol = code + (".TW" if exchange == "上市" else ".TWO")
             st.caption(f"目前選擇：{code} {stock_name}｜{exchange}")
         elif query.isdigit():
             exchange = st.radio("查無名稱對照，請選擇交易市場", ["上市", "上櫃"],
+                                index=1 if st.session_state.get("initial_chart_context",{}).get("symbol")==query+".TWO" else 0,
                                 horizontal=True)
             symbol = query + (".TW" if exchange == "上市" else ".TWO")
             st.caption("目前使用股票代號查詢；中文名稱資料可能暫時無法取得。")
