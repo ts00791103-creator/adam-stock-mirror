@@ -8,7 +8,9 @@ urls = {
  "twse_margin": "https://openapi.twse.com.tw/v1/exchangeReport/MI_MARGN",
  "tpex_institution": "https://www.tpex.org.tw/openapi/v1/tpex_3insti_daily_trading",
  "tpex_margin": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_margin_balance",
- "tpex_schema": "https://www.tpex.org.tw/openapi/swagger.json",
+ "twse_margin_dated": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?date=20261106&selectType=ALL&response=json",
+ "twse_margin_past": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?date=20261030&selectType=ALL&response=json",
+ "tpex_margin_dated": "https://www.tpex.org.tw/web/stock/margin_trading/margin_balance/margin_bal_result.php?l=zh-tw&d=115/11/06&o=json",
 }
 out = {}
 for name, url in urls.items():
@@ -22,7 +24,7 @@ for name, url in urls.items():
    paths=body.get("paths",{})
    out[name]={p:v for p,v in paths.items() if any(x in p.lower() for x in ("3inst","margin_balance"))}
   else:
-   out[name]={"stat":body.get("stat"),"date":body.get("date"),"fields":body.get("fields"),"sample":body.get("data",[])[:2],"keys":list(body)}
+   out[name]={"stat":body.get("stat"),"date":body.get("date"),"fields":body.get("fields"),"sample":body.get("data",[])[:2],"keys":list(body),"tables":[{"title":t.get("title"),"fields":t.get("fields"),"rows":t.get("data",[])[:1]} for t in body.get("tables",[])],"aaData":body.get("aaData",[])[:1],"reportDate":body.get("reportDate"),"reports":[{"title":t.get("title"),"fields":t.get("fields"),"rows":t.get("data",[])[:1]} for t in body.get("reports",[])]}
  except Exception as exc:
   out[name]={"error":str(exc)[:250]}
 Path("diagnostics").mkdir(exist_ok=True)
