@@ -8,6 +8,19 @@ from auto_fundamentals import fetch_alternative_book_value
 
 
 class FinancialJobTests(unittest.TestCase):
+    def test_transient_quarter_failure_retries_and_only_success_is_cached(self):
+        calls=[]
+        def fetch(symbol,year,quarter,**kwargs):
+            calls.append((year,quarter))
+            return (None,'temporary') if len(calls)==1 else ({'column_verified':True},None)
+        with patch.dict(jobs._quarter_cache, {}, clear=True):
+            result,error=jobs.verified_quarter('2330.TW',2026,1,fetcher=fetch)
+            self.assertIsNone(error); self.assertTrue(result['column_verified'])
+            jobs.verified_quarter('2330.TW',2026,1,fetcher=fetch)
+            self.assertEqual(len(calls),2)
+            jobs.verified_quarter('2330.TW',2026,2,fetcher=lambda *a,**k:(None,'offline'))
+            self.assertNotIn(('2330.TW',2026,2),jobs._quarter_cache)
+
     def test_pending_eps_does_not_hide_completed_book(self):
         growth, book = Future(), Future()
         book.set_result(({'value': 100}, None))
