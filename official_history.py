@@ -182,6 +182,17 @@ def compare_month_sources(symbol, month):
     return official, source, repaired, ledger, evidence, payload
 
 
+def month_differences(source, official):
+    differences = []
+    for stamp in sorted(set(source.index) & set(official.index)):
+        for field in PRICE_COLUMNS:
+            left, right = float(source.loc[stamp, field]), float(official.loc[stamp, field])
+            if not math.isfinite(left) or abs(left - right) > .005:
+                differences.append({"date": str(stamp.date()), "field": field,
+                                    "source": left if math.isfinite(left) else None, "official": right})
+    return differences
+
+
 def preview_close_repairs(source, official, evidence):
     """Only invalid Close with matching O/H/L anchors; never convert price basis.
 

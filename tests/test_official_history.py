@@ -5,7 +5,7 @@ import unittest
 
 import pandas as pd
 from official_history import (OfficialHistoryError, invalid_candles, parse_official_month,
-                              preview_close_repairs, request_spec)
+                              preview_close_repairs, request_spec, month_differences)
 
 FIXTURES = Path(__file__).parent / "fixtures" / "official-history"
 
@@ -99,6 +99,15 @@ class OfficialHistoryTests(unittest.TestCase):
         fixed, ledger = preview_close_repairs(source, official, evidence)
         self.assertEqual(ledger, [])
         self.assertIn("2018-06-28", invalid_candles(fixed))
+
+    def test_valid_adjusted_candles_are_still_reported_as_official_differences(self):
+        official, evidence = self.gold()
+        source = self.source(official)
+        source.loc[:, ["Open", "High", "Low", "Close"]] *= 2
+        self.assertEqual(invalid_candles(source), [])
+        fixed, ledger = preview_close_repairs(source, official, evidence)
+        self.assertEqual(ledger, [])
+        self.assertEqual(len(month_differences(fixed, official)), len(official) * 4)
 
     def test_wrong_stock_or_unknown_basis_rejected(self):
         official, evidence = self.gold()

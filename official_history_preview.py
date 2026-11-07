@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
-from official_history import compare_month_sources, invalid_candles
+from official_history import compare_month_sources, invalid_candles, month_differences
 
 CASES = {"8358 金居｜2018年6月": ("8358.TWO", "2018-06"),
          "2924 宏太-KY｜2021年12月": ("2924.TWO", "2021-12"),
@@ -43,6 +43,13 @@ def show_official_history_preview():
         missing_days = sorted(set(official.index) - set(original.index))
         extra_days = sorted(set(original.index) - set(official.index))
         st.caption(f"官方{len(official)}根；官方未提供一般交易OHLC：{len(evidence['unavailable_rows'])}天；原始來源缺少官方日期：{len(missing_days)}天、多出未核對日期：{len(extra_days)}天。這些日期未造價補齊或刪除。")
+        original_diff = month_differences(original, official)
+        preview_diff = month_differences(repaired, official)
+        before_days = len({r['date'] for r in original_diff})
+        after_days = len({r['date'] for r in preview_diff})
+        st.write(f"與官方同日價格不同：修正前{before_days}天／{len(original_diff)}個欄位；預覽後{after_days}天／{len(preview_diff)}個欄位")
+        if preview_diff or missing_days or extra_days or after:
+            st.warning("本月仍有價格或日期待核對，不能當成資料已修復。整段價格基準不同者不會直接混補。")
         st.warning("只處理原收盤超出高低範圍、且同日官方開高低均吻合的情況。原本看似正常但與官方不同的價格不自動改寫；此月份通過不代表整段歷史已修復。")
         if ledger:
             st.dataframe(pd.DataFrame(ledger), hide_index=True, width="stretch")
@@ -59,10 +66,14 @@ def show_official_history_preview():
         with st.expander("官方來源證據與未提供OHLC的日期"):
             st.json(evidence)
             st.dataframe(official, width="stretch")
+            if original_diff:
+                st.dataframe(pd.DataFrame(original_diff), hide_index=True, width="stretch")
         download = {"symbol": symbol, "month": month, "evidence": evidence, "repair_ledger": ledger,
                     "source_invalid_dates": before, "preview_invalid_dates": after,
                     "source_missing_official_dates": [str(d.date()) for d in missing_days],
                     "source_extra_unverified_dates": [str(d.date()) for d in extra_days],
+                    "original_official_differences": original_diff,
+                    "preview_official_differences": preview_diff,
                     "official_payload": payload}
         st.download_button("下載本月來源證據與修正紀錄", json.dumps(download, ensure_ascii=False, indent=2),
                            file_name=f"official_history_{symbol}_{month}.json", mime="application/json", key="hsrc_download")
