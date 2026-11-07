@@ -17,6 +17,11 @@ if PRODUCTION_MODE:
     st.caption("V1.0.3｜支撐壓力・成交量集中區估算・個人即時報價")
 st.info("鏡像右側為歷史路徑反向排列的情境示意，並非即時行情或未來價格預測；未來日期為示意刻度，未完整排除台股休市日及盤中休市時段。")
 
+if not PRODUCTION_MODE:
+    from official_history_preview import show_official_history_preview
+    show_official_history_preview()
+
+
 MARKETS = {
     "台灣股票／ETF": None,
     "台指期 TX（官方 CSV）": "TAIFEX_TX",

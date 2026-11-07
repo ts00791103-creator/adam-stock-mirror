@@ -1,0 +1,44 @@
+name: Official history source validation
+on:
+  push:
+    branches: [release/v1.0-development]
+    paths:
+      - official_history.py
+      - official_history_preview.py
+      - tests/test_official_history.py
+      - tests/fixtures/official-history/**
+      - scripts/verify_official_history_live.py
+      - .github/workflows/history-source-validation.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.11', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -r requirements.txt
+      - run: python -m unittest discover -s tests -p test_official_history.py -v
+  live:
+    needs: offline
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - run: python -m pip install -r requirements.txt
+      - run: python scripts/verify_official_history_live.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: official-history-month-verification
+          path: history-source-output/
+          retention-days: 90
