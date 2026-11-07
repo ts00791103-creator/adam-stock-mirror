@@ -1,6 +1,7 @@
 """Open an official preliminary result in the production single-stock chart."""
 import hashlib
 import re
+import math
 import streamlit as st
 
 
@@ -8,9 +9,15 @@ def queue_initial(state, row):
     symbol=str(row.get("Yahoo代號","")).upper()
     if not re.fullmatch(r"[0-9]{4,6}\.(TW|TWO)",symbol):
         raise ValueError("無法確認個股代號與上市／上櫃市場")
+    try:
+        official_close=float(row.get("官方收盤"))
+        if not math.isfinite(official_close) or official_close<=0:
+            official_close=None
+    except (TypeError,ValueError):
+        official_close=None
     state["adam_stock_query"]=symbol.split(".")[0]
     state["initial_chart_request"]={"symbol":symbol,"name":str(row.get("名稱","")),
-                                    "date":str(row.get("官方行情日期",""))}
+                                    "date":str(row.get("官方行情日期","")),"official_close":official_close}
     state["initial_chart_sequence"]=state.get("initial_chart_sequence",0)+1
     state["initial_chart_jump"]=state["initial_chart_sequence"]
 

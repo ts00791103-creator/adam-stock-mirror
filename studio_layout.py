@@ -25,7 +25,7 @@ def apply_studio_layout(st, production=False):
     @media(max-width:640px) {.block-container{padding:1rem}h1{font-size:1.65rem!important}}
     </style>
     """, unsafe_allow_html=True)
-    edition = "正式版 V1.0.6" if production else "候選測試版"
+    edition = "正式版 V1.0.7" if production else "候選測試版"
     st.markdown(f'<div class="studio-brand">亞當鏡像 · 台股走勢分析工作室｜{edition}</div>', unsafe_allow_html=True)
     st.sidebar.markdown("### 個股查詢與圖表")
     st.sidebar.caption("輸入股票 → 選擇週期 → 開始分析。手機請展開左上角側欄。")

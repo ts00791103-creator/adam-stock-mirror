@@ -14,7 +14,7 @@ apply_studio_layout(st, production=PRODUCTION_MODE)
 st.title("亞當鏡像分析 V1.0" if PRODUCTION_MODE else "亞當鏡像股票分析")
 st.caption("A 模式左右鏡像｜短、中、長三波｜歷史路徑情境分析")
 if PRODUCTION_MODE:
-    st.caption("V1.0.6｜初選個股直接開圖・大小箱型・自動財報")
+    st.caption("V1.0.7｜完整歷史K線・初選個股直接開圖・自動財報")
 st.info("鏡像右側為歷史路徑反向排列的情境示意，並非即時行情或未來價格預測；未來日期為示意刻度，未完整排除台股休市日及盤中休市時段。")
 
 MARKETS = {
@@ -1047,7 +1047,10 @@ with st.sidebar:
         with chart_heading_slot.container():
             st.subheader("個股線圖｜"+symbol)
             if context:
-                st.caption(f'{context["name"]}｜初選行情日期：{context["date"]}；本頁依所選期間重新讀取歷史行情。')
+                reference=context.get("official_close")
+                reference_text=f'{reference:,.2f}' if reference is not None else "未取得"
+                st.caption(f'{context["name"]}｜初選官方收盤：{reference_text}｜日期：{context["date"]}（非即時）')
+                st.caption("下方線圖使用側欄所選期間的歷史行情；異常明細是歷史日期，不是目前報價。")
                 st.info("這是初選個股，尚未驗證20日均量與箱型；開圖不代表符合進場條件。")
 
     c1, c2 = st.columns(2)
@@ -1865,7 +1868,7 @@ if analysis_requested or initial_chart:
                     f"{symbol}｜{w['name']} A模式完整鏡像",
                     show_bollinger, boll_period, boll_std, chart_theme,
                     ma_periods=ma_periods, ema_periods=ema_periods,
-                    auto_boxes=auto_boxes, box_window=box_window, box_width=box_width, box_options=box_options
+                    auto_boxes=auto_boxes, box_window=box_window, box_width=box_width, box_options=box_options, retain_history=PRODUCTION_MODE
                 )
             else:
                 st.plotly_chart(
@@ -1902,7 +1905,7 @@ if analysis_requested or initial_chart:
                 df, waves, zoom, f"{symbol}｜{mode}｜A模式完整鏡像",
                 show_bollinger, boll_period, boll_std, chart_theme,
                 ma_periods=ma_periods, ema_periods=ema_periods,
-                auto_boxes=auto_boxes, box_window=box_window, box_width=box_width, box_options=box_options
+                auto_boxes=auto_boxes, box_window=box_window, box_width=box_width, box_options=box_options, retain_history=PRODUCTION_MODE
             )
         else:
             st.plotly_chart(
