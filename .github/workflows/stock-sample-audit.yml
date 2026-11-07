@@ -1,0 +1,28 @@
+name: Read-only 16 stock price audit
+on:
+  push:
+    branches: [release/v1.0-development]
+    paths:
+      - scripts/audit_16_stocks_20261108.py
+      - .github/workflows/stock-sample-audit.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - run: python -m pip install -r requirements.txt
+      - name: Compare official same-date OHLC and inspect full history
+        run: python scripts/audit_16_stocks_20261108.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stock-sample-audit-20261108
+          path: audit-output/
+          retention-days: 30
