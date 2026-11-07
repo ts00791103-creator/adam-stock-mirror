@@ -4,6 +4,7 @@ import math
 import re
 import pandas as pd
 import requests
+import streamlit as ui
 
 SECTORS = ("ci", "basi", "fh", "ins", "bd", "mim")
 
@@ -141,10 +142,51 @@ def fetch_fundamentals(symbol, history_fetcher=None, book_fetcher=None):
     return result, None
 
 
+def fetch_alternative_book_value(symbol, ticker=None):
+    """Explicitly labelled fallback; same-period common equity and ordinary shares."""
+    stock_code(symbol)
+    try:
+        if ticker is None:
+            import yfinance as yf
+            ticker = yf.Ticker(symbol)
+        if ticker.get_info().get("financialCurrency") != "TWD":
+            return None, "替代財報幣別不是可核對的 TWD，停止換算"
+        balance = ticker.quarterly_balance_sheet
+        if balance is None or balance.empty or not {"Common Stock Equity", "Ordinary Shares Number"}.issubset(balance.index):
+            return None, "替代財報缺少同季普通股權益／流通股數"
+        today = pd.Timestamp.now(tz="UTC").tz_localize(None).normalize()
+        for stamp in sorted(balance.columns, reverse=True):
+            date = pd.Timestamp(stamp).tz_localize(None).normalize()
+            if date > today:
+                continue
+            equity = number(balance.loc["Common Stock Equity", stamp])
+            shares = number(balance.loc["Ordinary Shares Number", stamp])
+            if equity is None or shares is None or shares <= 0:
+                continue
+            return {"value": equity/shares, "quarter": str(date.to_period("Q")),
+                    "quarter_end": str(date.date()), "field": "Common Stock Equity / Ordinary Shares Number",
+                    "source": f"https://finance.yahoo.com/quote/{symbol}/balance-sheet/",
+                    "provider": "Yahoo Finance 替代來源，未經官方交叉核實",
+                    "published_snapshot": "非官方出表日期；使用財報期末",
+                    "age_days": (today-date).days, "common_equity": equity,
+                    "ordinary_shares": shares}, None
+    except Exception:
+        return None, "Yahoo Finance 替代財報暫時不可用"
+    return None, "替代財報沒有有效的同季權益與股數"
+
+
 def render_auto_fundamentals(st, symbol, market):
-    import streamlit as streamlit_state
+    # Fragments must inherit the sidebar context, rather than call st.sidebar inside.
+    with st:
+        _render_auto_fundamentals(symbol, market)
+
+
+@ui.fragment(run_every="2s")
+def _render_auto_fundamentals(symbol, market):
+    st = ui
+    streamlit_state = ui
     with st.expander("自動財報｜盈餘成長率・每股淨值", expanded=False):
-        st.caption("上市／上櫃個股，使用目前已取得的官方財報；非即時行情、非歷史時點回測。ETF 不適用。")
+        st.caption("上市／上櫃個股，優先讀取官方財報；非即時行情、非歷史時點回測。ETF 不適用。")
         if market != "台灣股票／ETF" or not symbol:
             st.info("請先選擇台灣個股並輸入代碼。")
             return
@@ -158,20 +200,26 @@ def render_auto_fundamentals(st, symbol, market):
             st.info("ETF 不適用公司 EPS 與每股淨值計算。")
             return
         st.write(f"查詢個股：{symbol}")
-        st.caption("首次最多查詢 12 季。每次等候 12 秒，未完成可再按同一按鈕取得結果，不重複排入相同查詢。")
+        st.caption("首次最多查詢 12 季。按一次即可，讀取期間每 2 秒自動更新；EPS 與淨值分開顯示，不需反覆按按鈕。")
+        allow_alternative = st.checkbox("官方缺少淨值時，允許 Yahoo Finance 替代財報", value=True,
+                                        key="auto_financial_alternative")
+        from financial_jobs import start_job, poll_job
+        saved_jobs = streamlit_state.session_state.setdefault("official_financial_jobs_v2", {})
+        job_key = (symbol, allow_alternative)
         if st.button("自動讀取／更新個股財報", key="auto_fundamentals_load"):
-            from valuation_io import bounded_fetch
-            with st.spinner("核對官方財報中…"):
-                result, error = bounded_fetch(("official_fundamentals_v1", symbol),
-                                              lambda: fetch_fundamentals(symbol), timeout_seconds=12)
-            if result is not None:
-                streamlit_state.session_state.setdefault("official_fundamentals_results", {})[symbol] = result
-            elif error:
+            job, error = start_job(symbol, allow_alternative=allow_alternative)
+            if job is not None:
+                saved_jobs[job_key] = job
+            if error:
                 st.warning(error)
-        result = streamlit_state.session_state.get("official_fundamentals_results", {}).get(symbol)
-        if result is None:
+        job = saved_jobs.get(job_key)
+        if job is None:
             return
-        st.caption(f"取值時間（UTC）：{result['retrieved_at']}｜來源：MOPS／證交所／櫃買中心")
+        result = poll_job(job)
+        if result["pending"]:
+            labels = {"growth": "逐季 EPS／成長率", "book": "每股淨值"}
+            st.info("讀取中：" + "、".join(labels[x] for x in result["pending"]) + "；完成後自動顯示。")
+        st.caption(f"查詢開始時間（UTC）：{result['retrieved_at']}")
         g = result["growth"]
         if g.get("recent_ttm") is not None:
             st.metric("近四季 EPS（元）", f"{g['recent_ttm']:.2f}")
@@ -186,10 +234,16 @@ def render_auto_fundamentals(st, symbol, market):
             st.caption(f"EPS 來源：{source}")
         book = result["book"]
         if book:
-            st.metric("官方每股淨值（元）", f"{book['value']:.2f}")
-            st.caption(f"淨值季度：{book['quarter']}｜官方欄位：{book['field']}｜出表日期（民國）：{book['published_snapshot']}")
-            st.caption(f"官方已計算的每股值，未自行假設面額或流通股數。來源：{book['source']}")
-        else:
+            alternative = bool(book.get("provider"))
+            st.metric("每股淨值（元，替代財報）" if alternative else "官方每股淨值（元）", f"{book['value']:.2f}")
+            st.caption(f"淨值季度：{book['quarter']}｜欄位：{book['field']}｜來源日期：{book['published_snapshot']}")
+            if alternative:
+                st.warning(book["provider"])
+                st.caption(f"同季普通股權益 {book['common_equity']:,.0f} 元 ÷ 流通普通股 {book['ordinary_shares']:,.0f} 股。")
+            else:
+                st.caption("官方已計算的每股值，未自行假設面額或流通股數。")
+            st.caption(f"淨值來源：{book['source']}")
+        elif result["book_error"]:
             st.info(result["book_error"])
         if book and g.get("quarter") and book["quarter"] != g["quarter"]:
             st.warning("EPS 與每股淨值季度不同，請分別閱讀，不合併成同季財報。")
