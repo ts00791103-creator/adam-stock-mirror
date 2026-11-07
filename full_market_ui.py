@@ -65,7 +65,11 @@ def show_full_market(production=False):
         st.write(f"初選 {total} 檔｜已檢查 {cursor} 檔｜待檢查 {total-cursor} 檔")
         if candidates:
             with st.expander("查看初選股票（尚未驗證20日均量與箱型）"):
-                st.dataframe(pd.DataFrame(candidates), hide_index=True)
+                if production:
+                    from initial_navigation import initial_result_table
+                    initial_result_table(pd.DataFrame(candidates),candidates)
+                else:
+                    st.dataframe(pd.DataFrame(candidates), hide_index=True)
                 st.download_button("下載初選CSV", pd.DataFrame(candidates).to_csv(index=False).encode("utf-8-sig"),
                                    file_name="adam_market_shortlist.csv", mime="text/csv", key="market_first_csv")
         else:

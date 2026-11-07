@@ -14,7 +14,7 @@ apply_studio_layout(st, production=PRODUCTION_MODE)
 st.title("亞當鏡像分析 V1.0" if PRODUCTION_MODE else "亞當鏡像股票分析")
 st.caption("A 模式左右鏡像｜短、中、長三波｜歷史路徑情境分析")
 if PRODUCTION_MODE:
-    st.caption("V1.0.5｜大小箱型狀態修正・自動財報・個人即時報價")
+    st.caption("V1.0.6｜初選個股直接開圖・大小箱型・自動財報")
 st.info("鏡像右側為歷史路徑反向排列的情境示意，並非即時行情或未來價格預測；未來日期為示意刻度，未完整排除台股休市日及盤中休市時段。")
 
 MARKETS = {
@@ -933,19 +933,29 @@ def load_tw_symbols():
 
 
 # ===== 操作介面 =====
-
-if not PRODUCTION_MODE:
-    from entry_alerts_ui import show_entry_alerts
-    show_entry_alerts(load_tw_symbols())
-
-if PRODUCTION_MODE:
-    st.subheader("尋找股票")
-    st.caption("全台股選股與自選名單在這裡；查詢單一股票，請展開左上角側欄輸入代號或中文名稱。")
-from full_market_ui import show_full_market
-show_full_market(production=PRODUCTION_MODE)
-
-from screener_ui import show_screener
-show_screener(load_tw_symbols(), production=PRODUCTION_MODE)
+from initial_navigation import consume_initial, back_to_initial, scroll_chart_top
+initial_request=consume_initial(st.session_state)
+initial_chart=bool(st.session_state.get("initial_chart_open"))
+if initial_chart:
+    st.button("← 返回初選股票",key="initial_chart_back",on_click=back_to_initial)
+chart_heading_slot=st.empty()
+if initial_chart:
+    st.markdown('<style>.st-key-initial_results_panel{display:none}</style>',unsafe_allow_html=True)
+if st.session_state.get("initial_chart_jump"):
+    scroll_chart_top(st.session_state.pop("initial_chart_jump"))
+with st.container(key="initial_results_panel"):
+    if not PRODUCTION_MODE:
+        from entry_alerts_ui import show_entry_alerts
+        show_entry_alerts(load_tw_symbols())
+    
+    if PRODUCTION_MODE:
+        st.subheader("尋找股票")
+        st.caption("全台股選股與自選名單在這裡；查詢單一股票，請展開左上角側欄輸入代號或中文名稱。")
+    from full_market_ui import show_full_market
+    show_full_market(production=PRODUCTION_MODE)
+    
+    from screener_ui import show_screener
+    show_screener(load_tw_symbols(), production=PRODUCTION_MODE)
 
 if "adam_stock_query" not in st.session_state:
     st.session_state["adam_stock_query"] = "2308"
@@ -970,13 +980,17 @@ with st.sidebar:
         if matches:
             choices = matches[:100]
             labels = [f"{code} {name}（{ex}）" for code, name, ex in choices]
-            chosen = st.selectbox("選擇股票／ETF", range(len(choices)),
+            requested=st.session_state.get("initial_chart_context",{}).get("symbol","")
+            chosen_index=next((i for i,r in enumerate(choices)
+                               if r[0]+(".TW" if r[2]=="上市" else ".TWO")==requested),0)
+            chosen = st.selectbox("選擇股票／ETF", range(len(choices)),index=chosen_index,
                                   format_func=lambda i: labels[i])
             code, stock_name, exchange = choices[chosen]
             symbol = code + (".TW" if exchange == "上市" else ".TWO")
             st.caption(f"目前選擇：{code} {stock_name}｜{exchange}")
         elif query.isdigit():
             exchange = st.radio("查無名稱對照，請選擇交易市場", ["上市", "上櫃"],
+                                index=1 if st.session_state.get("initial_chart_context",{}).get("symbol")==query+".TWO" else 0,
                                 horizontal=True)
             symbol = query + (".TW" if exchange == "上市" else ".TWO")
             st.caption("目前使用股票代號查詢；中文名稱資料可能暫時無法取得。")
@@ -1020,6 +1034,17 @@ with st.sidebar:
     else:
         symbol = MARKETS[market]
 
+
+
+    if initial_chart and symbol:
+        context=st.session_state.get("initial_chart_context",{})
+        if context and symbol.split(".")[0]==context["symbol"].split(".")[0]:
+            symbol=context["symbol"]
+        with chart_heading_slot.container():
+            st.subheader("個股線圖｜"+symbol)
+            if context:
+                st.caption(f'{context["name"]}｜初選行情日期：{context["date"]}；本頁依所選期間重新讀取歷史行情。')
+                st.info("這是初選個股，尚未驗證20日均量與箱型；開圖不代表符合進場條件。")
 
     c1, c2 = st.columns(2)
 
@@ -1613,7 +1638,7 @@ analysis_requested = st.sidebar.button(
 from auto_fundamentals import render_auto_fundamentals
 render_auto_fundamentals(st.sidebar, symbol, market)
 
-if analysis_requested:
+if analysis_requested or initial_chart:
     if not symbol:
         st.error("請輸入商品代碼")
         st.stop()
@@ -1667,14 +1692,6 @@ if analysis_requested:
             st.dataframe(pd.DataFrame(invalid_rows), hide_index=True)
         st.info("可將「歷史資料長度」縮短後重新分析，或稍後重試。縮短期間可能無法涵蓋完整中、長波，請保留資料不足提示；系統不會自動刪除異常K線或改寫價格。")
         st.stop()
-
-    if vp_show:
-        from volume_profile_estimate import show_volume_profile
-        show_volume_profile(df, symbol, interval, vp_window, vp_bins, vp_area, vp_buffer, vp_ratio)
-
-    if sr_show:
-        from support_resistance import show_key_levels
-        show_key_levels(df, symbol, interval, sr_window, production=PRODUCTION_MODE)
 
     if roll_dates:
         dates_text = "、".join(
@@ -1777,30 +1794,31 @@ if analysis_requested:
     for message in projection_warnings(waves):
         st.warning(message)
 
-    st.subheader("亞當鏡像｜歷史波段來源")
-    source_rows = wave_source_rows(waves, interval)
-    # 手機優先：每波段各一張直向摘要，不必橫向捲動寬表格。
-    for source in source_rows:
-        with st.container(border=True):
-            st.markdown(
-                f"**{source['波段']}**｜鏡像情境終點 "
-                f"**{source['鏡像終點']:,.2f}**"
-            )
-            st.caption(
-                f"歷史來源：{source['歷史起日']} → {source['歷史迄日']}"
-            )
-            st.caption(
-                f"歷史價格：{source['歷史起價']:,.2f} → "
-                f"{source['歷史迄價']:,.2f}"
-            )
-            if source["與其他波段相同來源"] != "無":
-                st.warning(
-                    f"與{source['與其他波段相同來源']}共用同一歷史區間，"
-                    "不是獨立鏡像訊號。"
+    with st.expander("歷史波段來源與鏡像說明",expanded=False) if initial_chart else nullcontext():
+        st.subheader("亞當鏡像｜歷史波段來源")
+        source_rows = wave_source_rows(waves, interval)
+        # 手機優先：每波段各一張直向摘要，不必橫向捲動寬表格。
+        for source in source_rows:
+            with st.container(border=True):
+                st.markdown(
+                    f"**{source['波段']}**｜鏡像情境終點 "
+                    f"**{source['鏡像終點']:,.2f}**"
                 )
-    with st.expander("查看完整波段來源表"):
-        st.dataframe(source_rows, use_container_width=True, hide_index=True)
-    st.caption("鏡像終點僅為歷史時間左右翻轉的情境結果，不是未來價格預測。")
+                st.caption(
+                    f"歷史來源：{source['歷史起日']} → {source['歷史迄日']}"
+                )
+                st.caption(
+                    f"歷史價格：{source['歷史起價']:,.2f} → "
+                    f"{source['歷史迄價']:,.2f}"
+                )
+                if source["與其他波段相同來源"] != "無":
+                    st.warning(
+                        f"與{source['與其他波段相同來源']}共用同一歷史區間，"
+                        "不是獨立鏡像訊號。"
+                    )
+        with st.expander("查看完整波段來源表"):
+            st.dataframe(source_rows, use_container_width=True, hide_index=True)
+        st.caption("鏡像終點僅為歷史時間左右翻轉的情境結果，不是未來價格預測。")
 
     config = {
         "scrollZoom": True,
@@ -1889,6 +1907,15 @@ if analysis_requested:
                 config=config,
                 key="combined"
             )
+
+    if vp_show:
+        from volume_profile_estimate import show_volume_profile
+        show_volume_profile(df, symbol, interval, vp_window, vp_bins, vp_area, vp_buffer, vp_ratio)
+
+    if sr_show:
+        from support_resistance import show_key_levels
+        show_key_levels(df, symbol, interval, sr_window, production=PRODUCTION_MODE)
+
 
     if auto_boxes:
         from box_presentation import show_box_overview
