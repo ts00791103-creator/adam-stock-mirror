@@ -14,7 +14,7 @@ apply_studio_layout(st, production=PRODUCTION_MODE)
 st.title("亞當鏡像分析 V1.0" if PRODUCTION_MODE else "亞當鏡像股票分析")
 st.caption("A 模式左右鏡像｜短、中、長三波｜歷史路徑情境分析")
 if PRODUCTION_MODE:
-    st.caption("V1.0.3｜支撐壓力・成交量集中區估算・個人即時報價")
+    st.caption("V1.0.4｜自動財報・支撐壓力・成交量集中區估算・個人即時報價")
 st.info("鏡像右側為歷史路徑反向排列的情境示意，並非即時行情或未來價格預測；未來日期為示意刻度，未完整排除台股休市日及盤中休市時段。")
 
 MARKETS = {
@@ -1594,6 +1594,9 @@ with st.sidebar:
         vp_buffer = st.number_input("價值區突破確認幅度（%）", min_value=0., max_value=5., value=.5, step=.1, key="vp_buffer")
         vp_ratio = st.number_input("價值區突破最低量比", min_value=1., max_value=5., value=1.5, step=.1, key="vp_ratio")
         st.caption("使用K線高低價均分成交量；非逐筆價量、未分日夜盤。")
+
+from auto_fundamentals import render_auto_fundamentals
+render_auto_fundamentals(st.sidebar, symbol, market)
 
 if st.sidebar.button(
     "開始亞當鏡像分析",
