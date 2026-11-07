@@ -22,7 +22,7 @@ def _points(index, values):
 
 
 def mobile_chart(df, waves, zoom, title, show_bollinger=False,
-                 boll_period=20, boll_std=2.0, chart_theme="券商深色", viewport_key=None, ma_periods=None, ema_periods=None, auto_boxes=False, box_window=20, box_width=12.0):
+                 boll_period=20, boll_std=2.0, chart_theme="券商深色", viewport_key=None, ma_periods=None, ema_periods=None, auto_boxes=False, box_window=20, box_width=12.0, box_options=None):
     """Render mobile-friendly pinch zoom; no effect on Adam calculations."""
     dark = chart_theme == "券商深色"
     if zoom == "全部歷史與鏡像":
@@ -94,7 +94,17 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
                 "points": _points(previous["times"], previous["projection"]),
                 "style": 1
             })
-    boxes = detect_boxes(df, box_window, box_width) if auto_boxes else []
+    enhanced_boxes = bool(auto_boxes and box_options)
+    if enhanced_boxes:
+        from box_presentation import chart_box_payload
+        enhanced_payload, box_overview = chart_box_payload(df, **box_options)
+        boxes = []
+        # Future mirror paths are scenarios, including the long wave.
+        for line in series:
+            if line.get("mirrorWave"):
+                line["style"] = 2
+    else:
+        boxes = detect_boxes(df, box_window, box_width) if auto_boxes else []
     for n, box in enumerate(boxes, 1):
         indexes = df.index[box["start"]:box["end"]+1]
         if len(indexes) < 2:
@@ -120,6 +130,11 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
                            "end": min(end_ts, int(visible_end)),
                            "top": box["top"], "bottom": box["bottom"],
                            "status": box["status"]})
+    if enhanced_boxes:
+        for b in enhanced_payload:
+            if b["end"] >= visible_start and b["start"] <= visible_end:
+                rectangles.append({**b, "start": max(b["start"], int(visible_start)),
+                                   "end": min(b["end"], int(visible_end))})
     # Lightweight Charts requires monotonically increasing unique timestamps.
     for line in series:
         unique = {p["time"]: p for p in line["points"]}
@@ -127,12 +142,15 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
     bars = sorted({b["time"]: b for b in bars}.values(), key=lambda b: b["time"])
     payload = json.dumps({"rendererVersion": RENDERER_VERSION, "bars": bars, "lines": series, "boxes": rectangles, "volumes": volumes, "volumeMA5": volume_ma5, "volumeMA20": volume_ma20, "volumeUnit": volume_unit,
                           "count": view_count, "dark": dark,
-                          "title": title, "viewportKey": viewport_key, "mirrorSummary": mirror_summary}, ensure_ascii=False).replace("</", "<\\/")
+                          "title": title, "viewportKey": viewport_key, "mirrorSummary": mirror_summary, "enhancedBoxes": enhanced_boxes,
+                          "boxSummary": ([{"name": b["name"], "window": b["window"], "color": b["color"],
+                                          "active": b["active"] is not None} for b in box_overview]
+                                         if enhanced_boxes else [])}, ensure_ascii=False).replace("</", "<\\/")
     html = """<!doctype html><html lang="zh-Hant"><head><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <style>html,body{margin:0;padding:0;overflow:hidden;background:BG;color:FG;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif}
 #heading{padding:8px 10px;font-size:14px;font-weight:600}#ohlc{padding:4px 10px;font-size:12px;min-height:20px;font-variant-numeric:tabular-nums}#chart-wrap{position:relative;width:100%;height:480px}#chart{width:100%;height:480px;touch-action:none}#box-overlay{position:absolute;inset:0;width:100%;height:480px;pointer-events:none;z-index:2}
 #mirror-summary{font-size:12px;padding:5px 10px;display:flex;flex-wrap:wrap;gap:10px}#hint{font-size:12px;opacity:.8;padding:6px 10px}#error{color:#ff7777;padding:12px}</style></head>
-<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量｜成交量資料：Yahoo Finance（台股單位：張）</div><div id="mirror-summary"></div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="error"></div>
+<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量｜成交量資料：Yahoo Finance（台股單位：張）</div><div id="mirror-summary"></div><div id="box-summary" style="font-size:12px;padding:5px 10px;line-height:1.6"></div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="error"></div>
 <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
 <script>PAN_SCRIPT</script>
 <script>
@@ -165,6 +183,18 @@ else {
    item.addEventListener('click',toggle);
    item.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
    summary.appendChild(item);
+ }
+ if(data.enhancedBoxes){
+   const legend=document.getElementById('box-summary');
+   for(const b of data.boxSummary){
+     const row=document.createElement('div');
+     row.style.color=b.color;
+     row.textContent=b.name+' '+b.window+'根｜'+(b.active?'目前箱內整理':'無目前有效箱型');
+     legend.appendChild(row);
+   }
+   const note=document.createElement('div');
+   note.textContent='歷史框＝淡色虛線；鏡像虛線＝條件情境，並非預測。形成日期及上下緣見圖下表格。';
+   legend.appendChild(note);
  }
  const priceSeries=[];
  let candle=null;
@@ -272,10 +302,28 @@ else {
      rect.setAttribute('x',left);rect.setAttribute('y',top);
      rect.setAttribute('width',Math.max(1,Math.abs(x2-x1)));
      rect.setAttribute('height',Math.max(1,Math.abs(y2-y1)));
-     rect.setAttribute('fill',b.status==='整理中'?'rgba(53,160,245,0.13)':'rgba(53,160,245,0.09)');
-     rect.setAttribute('stroke','#52a9ff');
-     rect.setAttribute('stroke-width','1');
+     if(data.enhancedBoxes){
+       rect.setAttribute('fill',b.active?b.color:'none');
+       rect.setAttribute('fill-opacity',b.active?'0.08':'0');
+       rect.setAttribute('stroke',b.active?b.color:'#94a3b8');
+       rect.setAttribute('stroke-opacity',b.active?'1':'0.4');
+       rect.setAttribute('stroke-width',b.active?'2':'1');
+       if(!b.active)rect.setAttribute('stroke-dasharray','5 4');
+     }else{
+       rect.setAttribute('fill',b.status==='整理中'?'rgba(53,160,245,0.13)':'rgba(53,160,245,0.09)');
+       rect.setAttribute('stroke','#52a9ff');
+       rect.setAttribute('stroke-width','1');
+     }
      overlay.appendChild(rect);
+     if(data.enhancedBoxes){
+       const mid=document.createElementNS(svgNS,'line');
+       mid.setAttribute('x1',x1);mid.setAttribute('x2',x2);
+       mid.setAttribute('y1',(y1+y2)/2);mid.setAttribute('y2',(y1+y2)/2);
+       mid.setAttribute('stroke',b.active?b.color:'#94a3b8');
+       mid.setAttribute('stroke-opacity',b.active?'0.6':'0.25');
+       mid.setAttribute('stroke-dasharray','2 4');
+       overlay.appendChild(mid);
+     }
    }
  }
  function queueBoxDraw(){
@@ -365,4 +413,4 @@ else {
         "PAN_SCRIPT", Path(__file__).with_name("chart_price_pan.js").read_text(encoding="utf-8")
     ).replace("PAYLOAD", payload)
     # Leave room for wrapped headings and three wave toggles on narrow phones.
-    components.html(html, height=720, scrolling=False)
+    components.html(html, height=850 if enhanced_boxes else 720, scrolling=False)

@@ -14,7 +14,7 @@ apply_studio_layout(st, production=PRODUCTION_MODE)
 st.title("亞當鏡像分析 V1.0" if PRODUCTION_MODE else "亞當鏡像股票分析")
 st.caption("A 模式左右鏡像｜短、中、長三波｜歷史路徑情境分析")
 if PRODUCTION_MODE:
-    st.caption("V1.0.4｜自動財報・支撐壓力・成交量集中區估算・個人即時報價")
+    st.caption("V1.0.5｜大小箱型狀態修正・自動財報・個人即時報價")
 st.info("鏡像右側為歷史路徑反向排列的情境示意，並非即時行情或未來價格預測；未來日期為示意刻度，未完整排除台股休市日及盤中休市時段。")
 
 MARKETS = {
@@ -1100,6 +1100,15 @@ with st.sidebar:
     auto_boxes = st.checkbox("自動箱型（箱頂／箱底／中線）" if PRODUCTION_MODE else "測試自動箱型（箱頂／箱底／中線）", value=True, key="b3_box_default_on_10_20")
     box_window = st.slider("箱型觀察根數", 10, 60, 10, disabled=not auto_boxes, key="b3_box_window_default_10")
     box_width = st.slider("箱型最大振幅（%）", 3.0, 25.0, 20.0, 0.5, disabled=not auto_boxes, key="b3_box_width_default_20")
+    large_box_window = st.selectbox("大區間箱型觀察根數（同一K線週期）",
+                                   [n for n in [60, 120, 250] if n > box_window],
+                                   disabled=not auto_boxes, key="large_box_window")
+    box_history = st.checkbox("顯示歷史箱型（已突破淡色虛線）", value=False,
+                              disabled=not auto_boxes, key="box_history")
+    box_options = dict(short_window=box_window, large_window=large_box_window,
+                       max_width_pct=box_width, history=box_history)
+    st.caption("圖上預設只保留目前整理箱型：青色小區間、橙色大區間。大小以K棒根數區分。")
+
     boll_period = st.number_input("布林均線週期", min_value=5, max_value=120, value=20, step=1, disabled=not show_bollinger)
     boll_std = st.number_input("標準差倍數", min_value=0.5, max_value=4.0, value=2.0, step=0.5, disabled=not show_bollinger)
 
@@ -1813,6 +1822,10 @@ if st.sidebar.button(
                 show_bollinger, boll_period, boll_std, chart_theme
             )
 
+            if auto_boxes:
+                from box_presentation import add_plotly_boxes
+                add_plotly_boxes(fig, df, **box_options)
+
             for date in roll_dates:
                 fig.add_vline(
                     x=date,
@@ -1827,7 +1840,7 @@ if st.sidebar.button(
                     f"{symbol}｜{w['name']} A模式完整鏡像",
                     show_bollinger, boll_period, boll_std, chart_theme,
                     ma_periods=ma_periods, ema_periods=ema_periods,
-                    auto_boxes=auto_boxes, box_window=box_window, box_width=box_width
+                    auto_boxes=auto_boxes, box_window=box_window, box_width=box_width, box_options=box_options
                 )
             else:
                 st.plotly_chart(
@@ -1847,6 +1860,10 @@ if st.sidebar.button(
             show_bollinger, boll_period, boll_std
         )
 
+        if auto_boxes:
+            from box_presentation import add_plotly_boxes
+            add_plotly_boxes(fig, df, **box_options)
+
         for date in roll_dates:
             fig.add_vline(
                 x=date,
@@ -1860,7 +1877,7 @@ if st.sidebar.button(
                 df, waves, zoom, f"{symbol}｜{mode}｜A模式完整鏡像",
                 show_bollinger, boll_period, boll_std, chart_theme,
                 ma_periods=ma_periods, ema_periods=ema_periods,
-                auto_boxes=auto_boxes, box_window=box_window, box_width=box_width
+                auto_boxes=auto_boxes, box_window=box_window, box_width=box_width, box_options=box_options
             )
         else:
             st.plotly_chart(
@@ -1871,6 +1888,9 @@ if st.sidebar.button(
             )
 
     if auto_boxes:
+        from box_presentation import show_box_overview
+        show_box_overview(df, interval_name, **box_options)
+        st.caption(f"以下突破目標與歷史追蹤使用小區間 {box_window}根。")
         from box_theory import detect_boxes
         detected = detect_boxes(df, window=box_window, max_width_pct=box_width, max_boxes=5)
         st.subheader("自動箱型突破目標分析" if PRODUCTION_MODE else "自動箱型突破目標分析（測試版）")
@@ -1908,7 +1928,7 @@ if st.sidebar.button(
                 st.info(
                     f"目前沒有仍有效的整理箱型。最近一個歷史箱型："
                     f"{latest['status']}（{df.index[latest['end']].strftime('%Y-%m-%d')} 結束）。"
-                    "歷史箱型價位不視為當前有效支撐或壓力。"
+                    "歷史箱型價位不直接視為當前有效支撐或壓力；轉換角色需確認回測。"
                 )
             st.markdown("#### 最近一次箱型突破後追蹤" if PRODUCTION_MODE else "#### 最近一次箱型突破後追蹤（測試版）")
             from box_tracking import track_latest_breakout

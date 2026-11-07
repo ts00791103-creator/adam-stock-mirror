@@ -22,5 +22,8 @@ def detect_boxes(df, window=20, max_width_pct=12.0, max_boxes=5):
         if end+1 < len(df):
             status = "上破" if float(close.iloc[end+1]) > top else "下破"
         boxes.append({"start":start,"end":end,"top":top,"bottom":bottom,"mid":(top+bottom)/2,"status":status})
-        i = end+1
+        # A broken box cannot absorb its breakout candle into an immediately
+        # redrawn overlapping box. Begin the next formation at the breakout bar,
+        # and require an entirely new window before it becomes knowable.
+        i = end + window
     return boxes[-max_boxes:]

@@ -1,0 +1,13 @@
+亞當正式版V1.0.5｜箱型修正發布，2026-11-08台北日期
+使用者授權：測試完成後上正式版。
+前一正式版完整Git版本：677f5c21dbf3d9dd8957cab14189611f6fb4e1f8
+發布基礎：前一正式版，不直接合併整個開發分支。
+正式站：https://adam-mirror-v1.streamlit.app/
+變更：app.py（大小區間設定/有效狀態/圖表）、box_theory.py（突破後累積新視窗）、box_presentation.py、mobile_chart.py、studio_layout.py（僅版本標示）、tests/test_box_presentation.py。
+正式版app.py與開發分支 production_box_preview.py 移除首行PRODUCTION_MODE=True後完全一致。
+發布前測試：459b76110a4d15f6cf065815de2e9b344ec12b82，Actions 42390239605，Python3.11與3.14各217項成功，JS拖曳/繪圖及worker-package成功。
+保留正式版原有選股、財報、估算、即時報價功能；不納入開發版其他新功能，不修改main/B3，不改Telegram名單。
+重新形成規則：突破當根算新視窗第1根，滿指定根數後才可形成下一箱；上下緣固定，不以跌破當根重包舊K線。以收盤判斷，盤中尚未收完時暫定。
+大小區間預設10/60根，同一日K或週K的不同長度，並非多週期共振。歷史框預設關閉，開啟為淡灰虛線。
+本機before保存前版相關來源；完整前版Git commit可作恢復參考。
+發布後正式站驗收：待補。
