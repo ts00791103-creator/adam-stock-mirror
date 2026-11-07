@@ -14,7 +14,7 @@ apply_studio_layout(st, production=PRODUCTION_MODE)
 st.title("亞當鏡像分析 V1.0" if PRODUCTION_MODE else "亞當鏡像股票分析")
 st.caption("A 模式左右鏡像｜短、中、長三波｜歷史路徑情境分析")
 if PRODUCTION_MODE:
-    st.caption("V1.0.2｜支撐壓力・成交量集中區估算・個人即時報價")
+    st.caption("V1.0.3｜支撐壓力・成交量集中區估算・個人即時報價")
 st.info("鏡像右側為歷史路徑反向排列的情境示意，並非即時行情或未來價格預測；未來日期為示意刻度，未完整排除台股休市日及盤中休市時段。")
 
 MARKETS = {
@@ -937,8 +937,12 @@ def load_tw_symbols():
 if not PRODUCTION_MODE:
     from entry_alerts_ui import show_entry_alerts
     show_entry_alerts(load_tw_symbols())
-    from full_market_ui import show_full_market
-    show_full_market()
+
+if PRODUCTION_MODE:
+    st.subheader("尋找股票")
+    st.caption("全台股選股與自選名單在這裡；查詢單一股票，請展開左上角側欄輸入代號或中文名稱。")
+from full_market_ui import show_full_market
+show_full_market(production=PRODUCTION_MODE)
 
 from screener_ui import show_screener
 show_screener(load_tw_symbols(), production=PRODUCTION_MODE)
