@@ -942,7 +942,9 @@ if analysis_page:
     context = st.session_state.get("analysis_context", {})
     st.button("← 返回選股結果", key="analysis_back", on_click=return_to_results)
     analysis_heading_slot = st.container()
-else:
+if analysis_page:
+    st.markdown('<style>.st-key-stock_results_panel{display:none}</style>', unsafe_allow_html=True)
+with st.container(key="stock_results_panel"):
     if not PRODUCTION_MODE:
         from entry_alerts_ui import show_entry_alerts
         show_entry_alerts(load_tw_symbols())
