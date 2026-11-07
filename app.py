@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 from mobile_chart_v2 import mobile_chart
+from price_zones import add_price_zones, zone_status
 
 
 def render_mobile_chart(*args, indicators=None, auto_boxes=False, box_window=20, box_width=12.0):
@@ -793,6 +794,10 @@ def make_figure(
                 range=[lo-pad, hi+pad]
             )
 
+    if auto_boxes or show_poc:
+        add_price_zones(fig, df, window=box_window, width=box_width,
+                        show_poc=show_poc, lookback=poc_lookback) if auto_boxes else add_price_zones(
+                            fig, df, window=len(df)+1, show_poc=show_poc, lookback=poc_lookback)
     return fig
 
 
@@ -979,10 +984,14 @@ indicators = st.multiselect(
     help="BOLL 預設開啟；其他指標的新版繪圖暫停，待手機圖表修復後恢復。"
 )
 show_bollinger = "BOLL" in indicators
-auto_boxes = st.checkbox("自動生成箱型（測試中，暫停顯示）", value=False, disabled=True)
-st.caption("為排除手機黑畫面，已暫時停用新版箱型及技術指標繪圖；原本 K 線和亞當鏡像正常使用。")
+auto_boxes = st.checkbox("啟用區間箱型與突破／回測觀察", value=False)
+show_poc = st.checkbox("顯示近 N 根估算 POC", value=False)
 box_window = st.slider("箱型整理觀察根數", 10, 60, 20, disabled=not auto_boxes)
-box_width = st.slider("箱型最大振幅（%）", 3.0, 25.0, 12.0, 0.5, disabled=not auto_boxes)
+box_width = st.slider("箱型最大振幅（%）", 0.1, 25.0, 3.0, 0.1, disabled=not auto_boxes)
+poc_lookback = st.slider("POC 觀察根數", 20, 500, 120, disabled=not show_poc)
+st.caption("箱型以觀察根數內最高／最低價固定邊界，收盤離開才判定突破；並非原圖作者已驗證規則。POC 將每根成交量歸入典型價分箱，屬估算，並非逐價成交量。")
+if market == "台指期 TX（官方 CSV）":
+    st.caption("目前 TX 為日 K，且沒有可用的 K 棒成交量；不能計算圖中的 5 分 K 日夜盤 POC。")
 boll_period = st.number_input("布林均線週期", min_value=5, max_value=120, value=20, step=1, disabled=not show_bollinger)
 boll_std = st.number_input("標準差倍數", min_value=0.5, max_value=4.0, value=2.0, step=0.5, disabled=not show_bollinger)
 
@@ -1126,8 +1135,23 @@ if st.button(
         else:
             waves.append(result)
 
-    if not waves:
+    if auto_boxes or show_poc:
+        from box_theory import detect_boxes
+        from price_zones import estimate_poc
+        boxes = detect_boxes(df, window=box_window, max_width_pct=box_width) if auto_boxes else []
+        if auto_boxes:
+            if boxes:
+                latest_box = boxes[-1]
+                st.info(f"最近箱型：{latest_box['bottom']:,.2f}～{latest_box['top']:,.2f}｜歷史結果：{latest_box['breakout']}｜最新狀態：{zone_status(df, latest_box)}")
+            else:
+                st.info("目前沒有符合根數與振幅條件的箱型。")
+        if show_poc and estimate_poc(df.tail(poc_lookback)) is None:
+            st.info("缺少有效成交量，無法計算估算 POC。")
+    if not waves and not (auto_boxes or show_poc):
         st.stop()
+    if not waves:
+        mode = "三波同圖"
+
 
     st.caption(
         f"商品：{symbol}｜"
@@ -1189,7 +1213,7 @@ if st.button(
             chart_type,
             zoom,
             f"{symbol}｜{mode}｜A模式完整鏡像",
-            show_bollinger, boll_period, boll_std
+            show_bollinger, boll_period, boll_std, chart_theme
         )
 
         for date in roll_dates:
@@ -1329,3 +1353,4 @@ if st.button(
         "日期僅為估算，未完整處理休市日、"
         "分K交易時段與期貨換月。"
     )
+
