@@ -1617,6 +1617,9 @@ with st.sidebar:
         vp_ratio = st.number_input("價值區突破最低量比", min_value=1., max_value=5., value=1.5, step=.1, key="vp_ratio")
         st.caption("使用K線高低價均分成交量；非逐筆價量、未分日夜盤。")
 
+from auto_fundamentals import render_auto_fundamentals
+render_auto_fundamentals(st.sidebar, symbol, market)
+
 if st.sidebar.button(
     "開始亞當鏡像分析",
     type="primary", use_container_width=True
@@ -2149,4 +2152,5 @@ if st.sidebar.button(
         "日期僅為估算，未完整處理休市日、"
         "分K交易時段與期貨換月。"
     )
+
 
