@@ -1047,7 +1047,10 @@ with st.sidebar:
         with chart_heading_slot.container():
             st.subheader("個股線圖｜"+symbol)
             if context:
-                st.caption(f'{context["name"]}｜初選行情日期：{context["date"]}；本頁依所選期間重新讀取歷史行情。')
+                reference=context.get("official_close")
+                reference_text=f'{reference:,.2f}' if reference is not None else "未取得"
+                st.caption(f'{context["name"]}｜初選官方收盤：{reference_text}｜日期：{context["date"]}（非即時）')
+                st.caption("下方線圖使用側欄所選期間的歷史行情；異常明細是歷史日期，不是目前報價。")
                 st.info("這是初選個股，尚未驗證20日均量與箱型；開圖不代表符合進場條件。")
 
     c1, c2 = st.columns(2)
