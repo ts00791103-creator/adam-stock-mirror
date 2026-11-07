@@ -944,6 +944,10 @@ if PRODUCTION_MODE:
 from full_market_ui import show_full_market
 show_full_market(production=PRODUCTION_MODE)
 
+if not PRODUCTION_MODE:
+    from composite_strategy_ui import show_composite_strategy
+    show_composite_strategy()
+
 from screener_ui import show_screener
 show_screener(load_tw_symbols(), production=PRODUCTION_MODE)
 
