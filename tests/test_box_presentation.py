@@ -67,9 +67,9 @@ class BoxPresentationTests(unittest.TestCase):
         payload,_=chart_box_payload(df)
         self.assertEqual(payload[0]["formed_date"],str(df.index[9].date()))
         fig=add_plotly_boxes(go.Figure(),df)
-        self.assertEqual(len(fig.data),len(payload))
+        self.assertEqual(len(fig.data),2*len(payload))
         self.assertFalse(fig.layout.annotations)
-        self.assertTrue(all("目前整理中" in t.name for t in fig.data))
+        self.assertTrue(all("目前整理中" in t.name for t in fig.data if t.showlegend is not False))
 
     def test_next_box_requires_full_window_after_break(self):
         from box_theory import detect_boxes

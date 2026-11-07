@@ -58,6 +58,9 @@ def add_plotly_boxes(fig, df, **options):
                       line=dict(color=color, width=2 if b["active"] else 1,
                                 dash="solid" if b["active"] else "dash"),
                       fillcolor=color, opacity=.12 if b["active"] else .04, layer="below")
+        fig.add_scatter(x=[x0,x1], y=[b["mid"],b["mid"]], mode="lines",
+                        line=dict(color=color,width=1,dash="dot"),
+                        opacity=.6 if b["active"] else .25,showlegend=False,hoverinfo="skip")
         # One legend/hover item per box; no stack of permanent price labels.
         fig.add_scatter(x=[x0,x1,x1,x0,x0],
                         y=[b["bottom"],b["bottom"],b["top"],b["top"],b["bottom"]],

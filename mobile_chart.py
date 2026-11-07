@@ -315,6 +315,15 @@ else {
        rect.setAttribute('stroke-width','1');
      }
      overlay.appendChild(rect);
+     if(data.enhancedBoxes){
+       const mid=document.createElementNS(svgNS,'line');
+       mid.setAttribute('x1',x1);mid.setAttribute('x2',x2);
+       mid.setAttribute('y1',(y1+y2)/2);mid.setAttribute('y2',(y1+y2)/2);
+       mid.setAttribute('stroke',b.active?b.color:'#94a3b8');
+       mid.setAttribute('stroke-opacity',b.active?'0.6':'0.25');
+       mid.setAttribute('stroke-dasharray','2 4');
+       overlay.appendChild(mid);
+     }
    }
  }
  function queueBoxDraw(){
