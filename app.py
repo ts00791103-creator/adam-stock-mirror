@@ -1617,6 +1617,9 @@ with st.sidebar:
         vp_ratio = st.number_input("價值區突破最低量比", min_value=1., max_value=5., value=1.5, step=.1, key="vp_ratio")
         st.caption("使用K線高低價均分成交量；非逐筆價量、未分日夜盤。")
 
+from reference_strategies import render_reference_strategies
+render_reference_strategies(st.sidebar)
+
 if st.sidebar.button(
     "開始亞當鏡像分析",
     type="primary", use_container_width=True
