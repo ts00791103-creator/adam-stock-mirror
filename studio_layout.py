@@ -15,7 +15,7 @@ def apply_studio_layout(st):
     [data-testid="stBaseButton-primary"]:hover {background:#e7c17a;color:#111c21;border-color:#e7c17a}
     [data-testid="stMetric"] {padding:1rem;background:#17262d;border:1px solid #2c3b40;border-radius:10px}
     /* Keep complete prices readable inside narrow metric cards. */
-    [data-testid="stMetricValue"], [data-testid="stMetricValue"] > div {
+    [data-testid="stMetricValue"], [data-testid="stMetricValue"] * {
         white-space:normal!important;overflow:visible!important;
         text-overflow:clip!important;overflow-wrap:anywhere;
         font-size:clamp(1.25rem,2.4vw,2.25rem)!important;line-height:1.3
