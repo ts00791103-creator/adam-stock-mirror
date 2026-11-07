@@ -1,1 +1,14 @@
-User approved expansion to ALL listed and OTC common stocks on 2026-11-08. Read-only diagnostic uses exact production commit 6ef07921465a9b4f50a2dce8c4c71935ef10b6be. Official company directory without price/volume filters. Eight checkpointed shards compare dated official OHLC and 10y/5y history quality; missing/suspended entries retained. Navigation state logic tested separately; this workflow performs ZERO browser UI acceptance tests. Actual UI checks remain pending; never claim all charts passed from this report. No main/B3/production branch modification; no price correction; no notifications or secrets. Local backup work/all-market-audit. Outputs in Actions artifacts (90 days), download for durable local/cloud handoff after completion.
+亞當全市場資料與線圖核對交接｜2026-11-08（台灣）
+使用者已指定全部上市、上櫃普通股，無需再次詢問下一步。不要修改 main 或 b3-speed-test。
+正式網站 https://adam-mirror-v1.streamlit.app/ V1.0.7；程式6ef07921465a9b4f50a2dce8c4c71935ef10b6be。
+本輪僅在 release/v1.0-development 新增唯讀檢查程式與文件，未改正式站程式。
+全市場官方公司名單1990（上市1093、上櫃897），有效每日行情1964，缺漏/無效26。正式站將價格0～1000000、初選最低當日量0後，實際顯示初選1964，與官方一致。
+全市場執行：https://github.com/ts00791103-creator/adam-stock-mirror/actions/runs/42400359137
+分8批，最多4批同時。使用固定正式版SHA下載來源，不依開發版冒充正式版。每檔逐列寫jsonl，完成每批上傳artifact，最終CSV/JSON；90天保存，仍須下載本地與雲端交接。
+檢查：上市.TW/上櫃.TWO、queue_initial/consume_initial狀態對應、官方同日期OHLC（允許0.005浮點誤差）、10y及5y歷史OHLC內部品質。缺漏保留，不補值、不刪異常K線。導航邏輯通過不代表瀏覽器全市場操作通過。此次全市場背景程式的實際瀏覽器測試數=0。
+正式站實際UI抽驗16檔（5y日K）全部開到對應代碼與同日收盤：2330 2135、2308 1055、2509 12.5、6405 30.5、6695 46、6756 97.2、5515 46.9、4770 260、8358 303、8240 42.65、7767 47.35、5452 24.1、6104 74.4、8040 62.2、3163 395、6182 69。日期2026-11-06。普通股較低量樣本包含在內。
+曾有6695搜尋後鍵盤快捷操作實際開到2395，改以畫面中明確選項點選後重測6695成功；保留原失敗紀錄。尚不能確認是網站缺陷還是自動化鍵盤操作選錯。不要刪除紀錄或直接宣稱完全無錯配。
+合晶實際完整日K1212根(2021-11-08～2026-11-06)；查看已載入歷史可看早期2022刻度，拖曳到左界仍顯示資料，回到最新K線正常。週K522根(2016-11-07～2026-11-02)已開圖；日期為週起始日。切回10y日K時品質閘門偵測舊異常而阻擋，恢復5y後可分析。開啟歷史箱型時DOM實際5個矩形，大/小區間合計，部分在近期視窗外屬正常；已保存完整歷史/近期截圖。
+16檔先前獨立官方OHLC全相符；6檔10y舊資料共8根異常（8358/8240/5452/6104/3163/6182），5y切片均無同類異常。不要用最新價格相符冒充所有歷史價格正確。
+本地：outputs/stock-audit-16/actual_ui_results_v1_0_7.json及.csv；outputs/all-market-audit/snapshot/universe.json；work/all-market-audit/程式；outputs/亞當_V1.0.7及全市場測試_階段備份_20261108.zip。
+尚待：等待全部8批與aggregate，檢視報告未確認/錯價，必要時有限重試；下載完整產物並存雲端成果/交接。不要將1990全市場資料核對寫成1990檔均已瀏覽器實際開圖。
