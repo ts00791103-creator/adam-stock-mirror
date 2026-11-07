@@ -14,6 +14,13 @@ def apply_studio_layout(st):
     [data-testid="stBaseButton-primary"] {background:#d6ad62;color:#111c21;border-color:#d6ad62;font-weight:700}
     [data-testid="stBaseButton-primary"]:hover {background:#e7c17a;color:#111c21;border-color:#e7c17a}
     [data-testid="stMetric"] {padding:1rem;background:#17262d;border:1px solid #2c3b40;border-radius:10px}
+    /* Keep complete prices readable inside narrow metric cards. */
+    [data-testid="stMetricValue"], [data-testid="stMetricValue"] > div {
+        white-space:normal!important;overflow:visible!important;
+        text-overflow:clip!important;overflow-wrap:anywhere;
+        font-size:clamp(1.25rem,2.4vw,2.25rem)!important;line-height:1.3
+    }
+    [data-testid="stMetricLabel"] {white-space:normal;overflow-wrap:anywhere}
     .studio-brand {color:#d6ad62;font-size:.85rem;letter-spacing:.15em;margin-bottom:.6rem}
     @media(max-width:640px) {.block-container{padding:1rem}h1{font-size:1.65rem!important}}
     </style>
