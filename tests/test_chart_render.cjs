@@ -6,10 +6,10 @@ const vm = require('node:vm');
 const root = path.join(__dirname, '..');
 const source = fs.readFileSync(path.join(root, 'mobile_chart.py'), 'utf8');
 const template = source.match(/html = """([\s\S]*?)"""/)[1];
-function render(width, empty = false) {
+function render(width, empty = false, retainHistory = false) {
   const elements = new Map();
   const element = () => ({style:{},clientWidth:width,clientHeight:480,textContent:'',
-    appendChild(){},replaceChildren(){},setAttribute(){},addEventListener(){},
+    appendChild(){},replaceChildren(){},setAttribute(){},handlers:{},addEventListener(type,fn){this.handlers[type]=fn;},
     getBoundingClientRect(){return {left:0,top:0};}});
   const chartElement = element(); elements.set('chart', chartElement);
   const series = [];
@@ -20,7 +20,7 @@ function render(width, empty = false) {
     series.push(item); return item;
   }
   const time = {width:()=>chartElement.clientWidth-50,height:()=>30,
-    timeToCoordinate:()=>100,subscribeVisibleLogicalRangeChange(){},setVisibleLogicalRange(){}};
+    timeToCoordinate:()=>100,subscribeVisibleLogicalRangeChange(){},setVisibleLogicalRange(range){this.lastRange=range;}};
   const chart = {addCandlestickSeries:o=>add('candle',o),addHistogramSeries:o=>add('volume',o),
     addLineSeries:o=>add('line',o),priceScale:()=>({applyOptions(){}}),timeScale:()=>time,
     subscribeCrosshairMove(){},applyOptions(){}};
@@ -29,13 +29,13 @@ function render(width, empty = false) {
     console,Number,Map,Math,Date,JSON,
     document:{getElementById(id){if(!elements.has(id))elements.set(id,element());return elements.get(id);},
       createElement:element,createElementNS:element},
-    LightweightCharts:{createChart:()=>chart,CrosshairMode:{Normal:0},LineStyle:{Dashed:2,Dotted:1,Solid:0}},
+    LightweightCharts:{createChart:(element,options)=>{chart.options=options;return chart;},CrosshairMode:{Normal:0},LineStyle:{Dashed:2,Dotted:1,Solid:0}},
     sessionStorage:{getItem:()=>null,setItem(){}},addEventListener(){},
     requestAnimationFrame:()=>1,setTimeout:()=>1,clearTimeout(){},
     ResizeObserver:class {constructor(callback){resize=callback;}observe(){}}
   };
   context.window = context;
-  const data = {dark:true,title:'2330.TW',rendererVersion:'TEST',viewportKey:'test',count:60,
+  const data = {dark:true,title:'2330.TW',rendererVersion:'TEST',viewportKey:'test',count:60,retainHistory,
     bars:empty?[]:[{time:1791158400,open:99,high:102,low:98,close:100},
       {time:1791244800,open:101,high:112,low:100,close:110}],
     volumes:empty?[]:[{time:1791158400,value:500},{time:1791244800,value:600}],
@@ -45,7 +45,7 @@ function render(width, empty = false) {
     .replace('PAYLOAD',JSON.stringify(data));
   vm.createContext(context);
   for(const match of html.matchAll(/<script>([\s\S]*?)<\/script>/g))vm.runInContext(match[1],context);
-  return {elements,series,resize:()=>resize(),chartElement};
+  return {elements,series,resize:()=>resize(),chartElement,chart,time};
 }
 const narrow = render(390);
 const initial = narrow.elements.get('ohlc').textContent;
@@ -63,3 +63,16 @@ assert.equal(render(1000).series.find(s=>s.type==='line').options.title,'短波�
 assert.doesNotThrow(()=>render(390,true));
 console.log('Chart initial OHLC, responsive labels, and empty data checks passed');
 module.exports = {passed:true};
+
+const fullHistory=render(390,false,true);
+assert.equal(fullHistory.chart.options.timeScale.fixLeftEdge,true);
+assert.equal(fullHistory.elements.get('history-controls').style.display,'flex');
+fullHistory.elements.get('history-all').handlers.click();
+assert.equal(fullHistory.time.lastRange.from,0);
+assert.equal(fullHistory.time.lastRange.to,1);
+fullHistory.elements.get('history-latest').handlers.click();
+assert.equal(fullHistory.time.lastRange.from,0);
+assert.equal(fullHistory.time.lastRange.to,14);
+assert.equal(render(390).chart.options.timeScale.fixLeftEdge,false);
+assert.doesNotThrow(()=>render(390,true,true).elements.get('history-latest').handlers.click());
+console.log('Full history left boundary and reset controls passed');

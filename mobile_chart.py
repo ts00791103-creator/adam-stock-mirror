@@ -6,7 +6,7 @@ import pandas as pd
 import streamlit.components.v1 as components
 from box_theory import detect_boxes
 
-RENDERER_VERSION = "V1.0.0"
+RENDERER_VERSION = "V1.0.7"
 
 
 def _points(index, values):
@@ -22,17 +22,17 @@ def _points(index, values):
 
 
 def mobile_chart(df, waves, zoom, title, show_bollinger=False,
-                 boll_period=20, boll_std=2.0, chart_theme="券商深色", viewport_key=None, ma_periods=None, ema_periods=None, auto_boxes=False, box_window=20, box_width=12.0, box_options=None):
+                 boll_period=20, boll_std=2.0, chart_theme="券商深色", viewport_key=None, ma_periods=None, ema_periods=None, auto_boxes=False, box_window=20, box_width=12.0, box_options=None, retain_history=False):
     """Render mobile-friendly pinch zoom; no effect on Adam calculations."""
     dark = chart_theme == "券商深色"
     if zoom == "全部歷史與鏡像":
-        view_count = min(len(df), 120)
+        view_count = len(df) if retain_history else min(len(df), 120)
     else:
         try:
             view_count = int(zoom.replace("最近", "").replace("根", ""))
         except ValueError:
             view_count = 60
-    plot_df = df.tail(min(len(df), max(300, view_count + 40)))
+    plot_df = df if retain_history else df.tail(min(len(df), max(300, view_count + 40)))
     bars = []
     for t, row in plot_df.iterrows():
         bars.append({
@@ -141,7 +141,7 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
         line["points"] = sorted(unique.values(), key=lambda p: p["time"])
     bars = sorted({b["time"]: b for b in bars}.values(), key=lambda b: b["time"])
     payload = json.dumps({"rendererVersion": RENDERER_VERSION, "bars": bars, "lines": series, "boxes": rectangles, "volumes": volumes, "volumeMA5": volume_ma5, "volumeMA20": volume_ma20, "volumeUnit": volume_unit,
-                          "count": view_count, "dark": dark,
+                          "count": view_count, "dark": dark, "retainHistory": bool(retain_history),
                           "title": title, "viewportKey": viewport_key, "mirrorSummary": mirror_summary, "enhancedBoxes": enhanced_boxes,
                           "boxSummary": ([{"name": b["name"], "window": b["window"], "color": b["color"],
                                           "active": b["active"] is not None} for b in box_overview]
@@ -150,7 +150,11 @@ def mobile_chart(df, waves, zoom, title, show_bollinger=False,
 <style>html,body{margin:0;padding:0;overflow:hidden;background:BG;color:FG;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif}
 #heading{padding:8px 10px;font-size:14px;font-weight:600}#ohlc{padding:4px 10px;font-size:12px;min-height:20px;font-variant-numeric:tabular-nums}#chart-wrap{position:relative;width:100%;height:480px}#chart{width:100%;height:480px;touch-action:none}#box-overlay{position:absolute;inset:0;width:100%;height:480px;pointer-events:none;z-index:2}
 #mirror-summary{font-size:12px;padding:5px 10px;display:flex;flex-wrap:wrap;gap:10px}#hint{font-size:12px;opacity:.8;padding:6px 10px}#error{color:#ff7777;padding:12px}</style></head>
-<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量｜成交量資料：Yahoo Finance（台股單位：張）</div><div id="mirror-summary"></div><div id="box-summary" style="font-size:12px;padding:5px 10px;line-height:1.6"></div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="error"></div>
+<body><div id="heading"></div><div id="renderer-status" style="padding:4px 10px;font-size:12px;color:#65d6a5">手機圖表版本 VOL-OHLC-1｜箱型＋量能</div><div id="ohlc">移動十字游標查看開高低收及成交量｜成交量資料：Yahoo Finance（台股單位：張）</div><div id="history-controls" style="display:none;gap:6px;flex-wrap:wrap;padding:4px 10px;font-size:12px">
+<span id="history-loaded" style="width:100%"></span>
+<button id="history-latest" style="background:transparent;color:inherit;border:1px solid #64748b;border-radius:5px;padding:5px 9px">回到最新K線</button>
+<button id="history-all" style="background:transparent;color:inherit;border:1px solid #64748b;border-radius:5px;padding:5px 9px">查看已載入歷史</button>
+</div><div id="mirror-summary"></div><div id="box-summary" style="font-size:12px;padding:5px 10px;line-height:1.6"></div><div id="chart-wrap"><div id="chart"></div><svg id="box-overlay" aria-hidden="true"></svg></div><div id="error"></div>
 <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
 <script>PAN_SCRIPT</script>
 <script>
@@ -226,7 +230,7 @@ else {
   layout:{background:{type:'solid',color:dark?'#101010':'#ffffff'},textColor:dark?'#eeeeee':'#333333'},
   grid:{vertLines:{color:dark?'#242424':'#eeeeee'},horzLines:{color:dark?'#353535':'#eeeeee'}},
   timeScale:{timeVisible:true,secondsVisible:false,rightOffset:Math.min(80,Math.max(12,...(data.mirrorSummary||[]).map(w=>w.bars))),barSpacing:9,
-    fixLeftEdge:false,lockVisibleTimeRangeOnResize:true},
+    fixLeftEdge:!!data.retainHistory,lockVisibleTimeRangeOnResize:true},
   rightPriceScale:{borderColor:dark?'#555555':'#cccccc'},
   handleScroll:{mouseWheel:true,pressedMouseMove:true,horzTouchDrag:true,vertTouchDrag:true},
   handleScale:{mouseWheel:true,pinch:true,axisPressedMouseMove:false},
@@ -249,7 +253,8 @@ else {
    const ma=chart.addLineSeries({priceScaleId:'volume',color,lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
    ma.setData(points);
  }
- const byTime=new Map(data.bars.map((b,i)=>[b.time,{...b,volume:data.volumes.find(v=>v.time===b.time)?.value,prev:i?data.bars[i-1].close:null}]));
+ const volumeByTime=new Map(data.volumes.map(v=>[v.time,v.value]));
+ const byTime=new Map(data.bars.map((b,i)=>[b.time,{...b,volume:volumeByTime.get(b.time),prev:i?data.bars[i-1].close:null}]));
  const fmt=v=>Number.isFinite(v)?v.toLocaleString('zh-TW',{maximumFractionDigits:2}):'—';
  const showBar=b=>{
    if(!b)return;
@@ -395,6 +400,28 @@ else {
      try {sessionStorage.setItem(storageKey,JSON.stringify({from:range.from,to:range.to}));}catch(e){}
    },150);
  });
+ if(data.retainHistory){
+   document.getElementById('history-controls').style.display='flex';
+   if(data.bars.length){
+     const first=new Date(data.bars[0].time*1000).toISOString().slice(0,10);
+     const last=new Date(data.bars[data.bars.length-1].time*1000).toISOString().slice(0,10);
+     document.getElementById('history-loaded').textContent='已載入 '+data.bars.length+' 根｜'+first+' ～ '+last+'（左界為最早資料）';
+   }
+ }
+ document.getElementById('history-latest').addEventListener('click',()=>{
+   if(!data.bars.length)return;
+   pricePan.reset();persistPan();
+   const n=data.bars.length;
+   chart.timeScale().setVisibleLogicalRange({from:Math.max(0,n-60),
+     to:n+Math.min(80,Math.max(12,...(data.mirrorSummary||[]).map(w=>w.bars)))});
+   showBar(byTime.get(data.bars[n-1].time));queueBoxDraw();
+ });
+ document.getElementById('history-all').addEventListener('click',()=>{
+   if(!data.bars.length)return;
+   pricePan.reset();persistPan();
+   chart.timeScale().setVisibleLogicalRange({from:0,to:Math.max(1,data.bars.length-1)});
+   showBar(byTime.get(data.bars[data.bars.length-1].time));queueBoxDraw();
+ });
  let lastCompact=compactLabels();
  const resize=new ResizeObserver(()=>{
    chart.applyOptions({width:document.getElementById('chart').clientWidth});
@@ -413,4 +440,4 @@ else {
         "PAN_SCRIPT", Path(__file__).with_name("chart_price_pan.js").read_text(encoding="utf-8")
     ).replace("PAYLOAD", payload)
     # Leave room for wrapped headings and three wave toggles on narrow phones.
-    components.html(html, height=850 if enhanced_boxes else 720, scrolling=False)
+    components.html(html, height=850 if (enhanced_boxes or retain_history) else 720, scrolling=False)
