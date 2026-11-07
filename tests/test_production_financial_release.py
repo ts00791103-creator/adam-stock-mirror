@@ -30,3 +30,17 @@ class ProductionFinancialReleaseTests(entry.ProductionEntryTests):
             start.assert_called_once()
             self.assertIn("123.45",[m.value for m in app.metric])
             self.assertTrue(any("替代來源" in w.value for w in app.warning))
+
+    def test_fallback_requires_permission_and_official_missing(self):
+        import financial_jobs
+        with patch("auto_fundamentals.fetch_book_value",return_value=(None,"official missing")), \
+             patch("auto_fundamentals.fetch_alternative_book_value",return_value=({"value":20.},None)) as alt:
+            self.assertEqual(financial_jobs._book("2308.TW",False),(None,"official missing"))
+            alt.assert_not_called()
+            value,error=financial_jobs._book("2308.TW",True)
+            self.assertEqual(value["official_error"],"official missing")
+            alt.assert_called_once()
+        with patch("auto_fundamentals.fetch_book_value",return_value=({"value":10.},None)), \
+             patch("auto_fundamentals.fetch_alternative_book_value") as alt:
+            self.assertEqual(financial_jobs._book("2308.TW",True)[0]["value"],10.)
+            alt.assert_not_called()
