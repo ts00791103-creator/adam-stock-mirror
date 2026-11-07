@@ -15,9 +15,13 @@ class FullHistoryChartTests(unittest.TestCase):
                             index=pd.date_range("2016-01-04",periods=n,freq=freq))
 
     def render(self,frame,**options):
+        started=time.perf_counter()
         with patch.object(mobile_chart.components,"html") as output:
             mobile_chart.mobile_chart(frame,[],"最近60根","TEST",**options)
-        return json.loads(output.call_args.args[0].split("const data=",1)[1].split(";\ndocument",1)[0])
+        html=output.call_args.args[0]
+        self.render_metrics={"bars":len(frame),"full_history":bool(options.get("retain_history")),
+                             "html_bytes":len(html.encode("utf-8")),"build_ms":round((time.perf_counter()-started)*1000,2)}
+        return json.loads(html.split("const data=",1)[1].split(";\ndocument",1)[0])
 
     def test_full_daily_history_is_retained_with_the_same_latest_bars(self):
         data=self.frame(2500)
