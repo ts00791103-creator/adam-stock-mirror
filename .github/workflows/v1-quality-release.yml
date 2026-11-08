@@ -1,0 +1,42 @@
+name: Production V1.0.8 release acceptance
+on:
+  push:
+    branches: [release/v1.0-development]
+    paths: ['production_quality_preview.py', 'release-preview/v1.0.8/**', 'tests/test_production_quality_release.py', 'scripts/diagnose_release_quality.py', '.github/workflows/v1-quality-release.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  exact-production:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        python: ['3.11', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -r requirements.txt
+      - run: python -m compileall -q .
+      - run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - run: node tests/test_chart_price_pan.cjs
+      - run: node tests/test_chart_render.cjs
+      - run: node deploy/fallback-scheduler/test_worker.mjs
+  seven-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - run: python -m pip install -r requirements.txt
+      - run: python scripts/diagnose_release_quality.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-v1-0-8-seven-evidence
+          path: release-quality-output/
+          retention-days: 90
