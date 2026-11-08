@@ -1,0 +1,27 @@
+name: Additional seven OHLC evidence
+on:
+  push:
+    branches: [release/v1.0-development]
+    paths:
+      - scripts/diagnose_additional_seven.py
+      - .github/workflows/ohlc-seven-diagnostic.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - run: python -m pip install -r requirements.txt
+      - run: python scripts/diagnose_additional_seven.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: additional-seven-ohlc-evidence
+          path: additional-seven-output/
+          retention-days: 90
