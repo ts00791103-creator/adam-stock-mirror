@@ -1,0 +1,93 @@
+{
+  "checkedAt": "2026-11-08",
+  "sources": [
+    {
+      "role": "financial/company announcements, not a complete daily price feed",
+      "url": "https://mops.twse.com.tw/",
+      "status": "official directory contents verified; some direct content not readable via web fetch"
+    },
+    {
+      "role": "TWSE monthly daily OHLC",
+      "url": "https://www.twse.com.tw/zh/trading/historical/stock-day.html",
+      "earliestPublished": "2010-01-04",
+      "proof": "Official page says ROC99/1/4; 2010-01 stock2330 actual monthly response obtained in gap probe."
+    },
+    {
+      "role": "TPEx monthly daily OHLC",
+      "url": "https://www.tpex.org.tw/zh-tw/mainboard/trading/info/stock-pricing.html",
+      "earliestPublished": "1994-01",
+      "proof": "Official search index; page HTTP403 from web retrieval. Authorized CI monthly POSTs succeeded for all 23 specified months. Earliest individual stock still limited by listing date."
+    },
+    {
+      "role": "TPEx ordinary lot unit, foreign ETF exception",
+      "url": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "proof": "Ordinary mainboard board lot1000 shares; foreign added ETF has100 units. Research lot adapter restricted to named ordinary stocks."
+    },
+    {
+      "role": "Stock history vs financial disclosures",
+      "url": "https://www.tpex.org.tw/zh-tw/about/company/faq.html",
+      "proof": "FAQ directs historical listed/OTC prices to exchange historical price pages; company disclosures to MOPS. Delisted history requires correct market route."
+    },
+    {
+      "role": "Trading calendar and makeup sessions",
+      "url": "https://accessibility.twse.com.tw/zh/products/system/trading.html",
+      "proof": "Weekdays plus announced makeup sessions. Actual2017-06 and2017-09 monthly rows contain Saturday2017-06-03 and2017-09-30."
+    },
+    {
+      "role": "Official calendar",
+      "url": "https://www.twse.com.tw/zh/trading/holiday.html",
+      "proof": "Annual calendar source identified; full decade calendar not downloaded/certified in this prototype."
+    },
+    {
+      "role": "TPEx monthly trade scope",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "proof": "Actual saved monthly table notes exclude block trades. Volumes differ from Yahoo beyond simple rounding; all causes not independently resolved."
+    },
+    {
+      "role": "Corporate action reference limitations",
+      "url": "https://wwwc.twse.com.tw/zh/announcement/ex-right/twt49u.html",
+      "proof": "Ex-right/ex-dividend reference table excludes some combined cash-return/capital-split cases; not a complete adjustment chain."
+    }
+  ],
+  "companyEvidence": [
+    {
+      "symbol": "3552.TWO",
+      "url": "https://www.tungthih.com.tw/investor02_show.php?show=425",
+      "fact": "Company2024-08-02 announces stock dividendNT$1.0 and ex-right2024-08-19."
+    },
+    {
+      "symbol": "3552.TWO",
+      "url": "https://www.tungthih.com.tw/investor02_show.php?show=452",
+      "fact": "Company2025-06-27 AGM approves stock dividendNT$0.4; this alone is not an ex-date record."
+    },
+    {
+      "symbol": "6146.TWO",
+      "url": "https://www.sporton.com.tw/UserFiles/FIN/110financial_statement_Year_cht.pdf",
+      "fact": "Annual report records stock dividendNT$0.5 from2020 earnings, approved2021."
+    },
+    {
+      "symbol": "6146.TWO",
+      "url": "https://www.sporton.com.tw/UserFiles/Fin/Other/Fin14_41.pdf",
+      "fact": "2023 AGM proposal for2022 earnings includes stock dividendNT$0.5."
+    },
+    {
+      "symbol": "8086.TWO",
+      "url": "https://www.awsc.com.tw/events.aspx",
+      "fact": "Company timeline records OTC listing2009-06-01 and2020 capital increases; no price-conversion factor inferred."
+    },
+    {
+      "symbol": "6121.TWO",
+      "url": "https://www.simplo.com.tw/article_d.php?id=666&lang=tw&tb=1",
+      "fact": "Company timeline records OTC listing2001-11. Primary company proof of exact2017 reduction chain not obtained this run."
+    }
+  ],
+  "ratePolicy": {
+    "officialNumericQuotaFound": false,
+    "engineeringDelaySeconds": 3,
+    "serialPerHost": true,
+    "cacheByStockMonth": true,
+    "stopOn403or429": true,
+    "noIpRotation": true
+  },
+  "status": "Research only; no runtime switch, partial provider insertion, alert, or production publication."
+}

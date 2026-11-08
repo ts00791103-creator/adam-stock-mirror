@@ -1,0 +1,332 @@
+[
+  {
+    "symbol": "6146.TWO",
+    "date": "2017-08-01",
+    "checks": [
+      {
+        "field": "Open",
+        "raw": 133.8181915283203,
+        "official": 150.5,
+        "providerFutureSplitProduct": 1.12466025,
+        "diagnosticProduct": 150.5000007387886,
+        "absoluteDifference": 7.387886000742583e-7
+      },
+      {
+        "field": "High",
+        "raw": 134.7073516845703,
+        "official": 151.5,
+        "providerFutureSplitProduct": 1.12466025,
+        "diagnosticProduct": 151.50000382240677,
+        "absoluteDifference": 0.000003822406767994835
+      },
+      {
+        "field": "Low",
+        "raw": 132.4844512939453,
+        "official": 149,
+        "providerFutureSplitProduct": 1.12466025,
+        "diagnosticProduct": 148.99999611336136,
+        "absoluteDifference": 0.000003886638637595752
+      }
+    ],
+    "allOhlNumericallyExplained": true,
+    "appliedToData": false,
+    "interpretation": "Diagnostic provider event product, not a certified corporate-action adjustment chain or economic-return formula."
+  },
+  {
+    "symbol": "6146.TWO",
+    "date": "2018-07-18",
+    "checks": [
+      {
+        "field": "Open",
+        "raw": 134.25831604003906,
+        "official": 149.5,
+        "providerFutureSplitProduct": 1.113525,
+        "diagnosticProduct": 149.4999913684845,
+        "absoluteDifference": 0.000008631515498791487
+      },
+      {
+        "field": "High",
+        "raw": 134.7073516845703,
+        "official": 150,
+        "providerFutureSplitProduct": 1.113525,
+        "diagnosticProduct": 150.00000378456116,
+        "absoluteDifference": 0.000003784561158681754
+      },
+      {
+        "field": "Low",
+        "raw": 133.3602752685547,
+        "official": 148.5,
+        "providerFutureSplitProduct": 1.113525,
+        "diagnosticProduct": 148.50000051841738,
+        "absoluteDifference": 5.184173801353609e-7
+      }
+    ],
+    "allOhlNumericallyExplained": true,
+    "appliedToData": false,
+    "interpretation": "Diagnostic provider event product, not a certified corporate-action adjustment chain or economic-return formula."
+  },
+  {
+    "symbol": "6146.TWO",
+    "date": "2021-04-22",
+    "checks": [
+      {
+        "field": "Open",
+        "raw": 226.7573699951172,
+        "official": 250,
+        "providerFutureSplitProduct": 1.1025,
+        "diagnosticProduct": 250.0000004196167,
+        "absoluteDifference": 4.1961669694501325e-7
+      },
+      {
+        "field": "High",
+        "raw": 226.7573699951172,
+        "official": 250,
+        "providerFutureSplitProduct": 1.1025,
+        "diagnosticProduct": 250.0000004196167,
+        "absoluteDifference": 4.1961669694501325e-7
+      },
+      {
+        "field": "Low",
+        "raw": 222.22222900390625,
+        "official": 245,
+        "providerFutureSplitProduct": 1.1025,
+        "diagnosticProduct": 245.00000747680664,
+        "absoluteDifference": 0.000007476806644035605
+      }
+    ],
+    "allOhlNumericallyExplained": true,
+    "appliedToData": false,
+    "interpretation": "Diagnostic provider event product, not a certified corporate-action adjustment chain or economic-return formula."
+  },
+  {
+    "symbol": "8086.TWO",
+    "date": "2017-06-23",
+    "checks": [
+      {
+        "field": "Open",
+        "raw": 60.43692398071289,
+        "official": 61.2,
+        "providerFutureSplitProduct": 1,
+        "diagnosticProduct": 60.43692398071289,
+        "absoluteDifference": 0.7630760192871122
+      },
+      {
+        "field": "High",
+        "raw": 60.83193588256836,
+        "official": 61.6,
+        "providerFutureSplitProduct": 1,
+        "diagnosticProduct": 60.83193588256836,
+        "absoluteDifference": 0.768064117431642
+      },
+      {
+        "field": "Low",
+        "raw": 60.041908264160156,
+        "official": 60.8,
+        "providerFutureSplitProduct": 1,
+        "diagnosticProduct": 60.041908264160156,
+        "absoluteDifference": 0.7580917358398409
+      }
+    ],
+    "allOhlNumericallyExplained": false,
+    "appliedToData": false,
+    "interpretation": "Diagnostic provider event product, not a certified corporate-action adjustment chain or economic-return formula."
+  },
+  {
+    "symbol": "8086.TWO",
+    "date": "2018-06-25",
+    "checks": [
+      {
+        "field": "Open",
+        "raw": 74.8548812866211,
+        "official": 75.8,
+        "providerFutureSplitProduct": 1,
+        "diagnosticProduct": 74.8548812866211,
+        "absoluteDifference": 0.9451187133789034
+      },
+      {
+        "field": "High",
+        "raw": 76.43492889404297,
+        "official": 77.4,
+        "providerFutureSplitProduct": 1,
+        "diagnosticProduct": 76.43492889404297,
+        "absoluteDifference": 0.9650711059570369
+      },
+      {
+        "field": "Low",
+        "raw": 72.28730010986328,
+        "official": 73.2,
+        "providerFutureSplitProduct": 1,
+        "diagnosticProduct": 72.28730010986328,
+        "absoluteDifference": 0.9126998901367216
+      }
+    ],
+    "allOhlNumericallyExplained": false,
+    "appliedToData": false,
+    "interpretation": "Diagnostic provider event product, not a certified corporate-action adjustment chain or economic-return formula."
+  },
+  {
+    "symbol": "8086.TWO",
+    "date": "2019-06-24",
+    "checks": [
+      {
+        "field": "Open",
+        "raw": 55.79552459716797,
+        "official": 56.5,
+        "providerFutureSplitProduct": 1,
+        "diagnosticProduct": 55.79552459716797,
+        "absoluteDifference": 0.7044754028320312
+      },
+      {
+        "field": "High",
+        "raw": 57.37557601928711,
+        "official": 58.1,
+        "providerFutureSplitProduct": 1,
+        "diagnosticProduct": 57.37557601928711,
+        "absoluteDifference": 0.724423980712892
+      },
+      {
+        "field": "Low",
+        "raw": 55.499267578125,
+        "official": 56.2,
+        "providerFutureSplitProduct": 1,
+        "diagnosticProduct": 55.499267578125,
+        "absoluteDifference": 0.7007324218750028
+      }
+    ],
+    "allOhlNumericallyExplained": false,
+    "appliedToData": false,
+    "interpretation": "Diagnostic provider event product, not a certified corporate-action adjustment chain or economic-return formula."
+  },
+  {
+    "symbol": "6121.TWO",
+    "date": "2017-07-12",
+    "checks": [
+      {
+        "field": "Open",
+        "raw": 171.6666717529297,
+        "official": 103,
+        "providerFutureSplitProduct": 0.6,
+        "diagnosticProduct": 103.00000305175782,
+        "absoluteDifference": 0.000003051757815342171
+      },
+      {
+        "field": "High",
+        "raw": 171.6666717529297,
+        "official": 103,
+        "providerFutureSplitProduct": 0.6,
+        "diagnosticProduct": 103.00000305175782,
+        "absoluteDifference": 0.000003051757815342171
+      },
+      {
+        "field": "Low",
+        "raw": 170,
+        "official": 102,
+        "providerFutureSplitProduct": 0.6,
+        "diagnosticProduct": 102,
+        "absoluteDifference": 0
+      }
+    ],
+    "allOhlNumericallyExplained": true,
+    "appliedToData": false,
+    "interpretation": "Diagnostic provider event product, not a certified corporate-action adjustment chain or economic-return formula."
+  },
+  {
+    "symbol": "6121.TWO",
+    "date": "2018-07-11",
+    "checks": [
+      {
+        "field": "Open",
+        "raw": 177.5,
+        "official": 177.5,
+        "providerFutureSplitProduct": 1,
+        "diagnosticProduct": 177.5,
+        "absoluteDifference": 0
+      },
+      {
+        "field": "High",
+        "raw": 178,
+        "official": 178,
+        "providerFutureSplitProduct": 1,
+        "diagnosticProduct": 178,
+        "absoluteDifference": 0
+      },
+      {
+        "field": "Low",
+        "raw": 175.5,
+        "official": 175.5,
+        "providerFutureSplitProduct": 1,
+        "diagnosticProduct": 175.5,
+        "absoluteDifference": 0
+      }
+    ],
+    "allOhlNumericallyExplained": true,
+    "appliedToData": false,
+    "interpretation": "Diagnostic provider event product, not a certified corporate-action adjustment chain or economic-return formula."
+  },
+  {
+    "symbol": "3552.TWO",
+    "date": "2017-08-23",
+    "checks": [
+      {
+        "field": "Open",
+        "raw": 165.6468505859375,
+        "official": 189.5,
+        "providerFutureSplitProduct": 1.1440000000000001,
+        "diagnosticProduct": 189.49999707031253,
+        "absoluteDifference": 0.000002929687468622433
+      },
+      {
+        "field": "High",
+        "raw": 165.6468505859375,
+        "official": 189.5,
+        "providerFutureSplitProduct": 1.1440000000000001,
+        "diagnosticProduct": 189.49999707031253,
+        "absoluteDifference": 0.000002929687468622433
+      },
+      {
+        "field": "Low",
+        "raw": 158.21678161621094,
+        "official": 181,
+        "providerFutureSplitProduct": 1.1440000000000001,
+        "diagnosticProduct": 180.99999816894533,
+        "absoluteDifference": 0.0000018310546749944479
+      }
+    ],
+    "allOhlNumericallyExplained": true,
+    "appliedToData": false,
+    "interpretation": "Diagnostic provider event product, not a certified corporate-action adjustment chain or economic-return formula."
+  },
+  {
+    "symbol": "3552.TWO",
+    "date": "2018-08-15",
+    "checks": [
+      {
+        "field": "Open",
+        "raw": 96.15384674072266,
+        "official": 110,
+        "providerFutureSplitProduct": 1.1440000000000001,
+        "diagnosticProduct": 110.00000067138673,
+        "absoluteDifference": 6.713867293228759e-7
+      },
+      {
+        "field": "High",
+        "raw": 97.02796936035156,
+        "official": 111,
+        "providerFutureSplitProduct": 1.1440000000000001,
+        "diagnosticProduct": 110.9999969482422,
+        "absoluteDifference": 0.0000030517578011313162
+      },
+      {
+        "field": "Low",
+        "raw": 91.78321838378906,
+        "official": 105,
+        "providerFutureSplitProduct": 1.1440000000000001,
+        "diagnosticProduct": 105.0000018310547,
+        "absoluteDifference": 0.0000018310547034161573
+      }
+    ],
+    "allOhlNumericallyExplained": true,
+    "appliedToData": false,
+    "interpretation": "Diagnostic provider event product, not a certified corporate-action adjustment chain or economic-return formula."
+  }
+]

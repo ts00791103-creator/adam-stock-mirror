@@ -1,0 +1,2433 @@
+{
+  "symbol": "3105.TWO",
+  "requested_start": "2016-11-07",
+  "requested_end": "2026-11-06",
+  "requested_months": [
+    "2016-11",
+    "2016-12",
+    "2017-01",
+    "2017-02",
+    "2017-03",
+    "2017-04",
+    "2017-05",
+    "2017-06",
+    "2017-07",
+    "2017-08",
+    "2017-09",
+    "2017-10",
+    "2017-11",
+    "2017-12",
+    "2018-01",
+    "2018-02",
+    "2018-03",
+    "2018-04",
+    "2018-05",
+    "2018-06",
+    "2018-07",
+    "2018-08",
+    "2018-09",
+    "2018-10",
+    "2018-11",
+    "2018-12",
+    "2019-01",
+    "2019-02",
+    "2019-03",
+    "2019-04",
+    "2019-05",
+    "2019-06",
+    "2019-07",
+    "2019-08",
+    "2019-09",
+    "2019-10",
+    "2019-11",
+    "2019-12",
+    "2020-01",
+    "2020-02",
+    "2020-03",
+    "2020-04",
+    "2020-05",
+    "2020-06",
+    "2020-07",
+    "2020-08",
+    "2020-09",
+    "2020-10",
+    "2020-11",
+    "2020-12",
+    "2021-01",
+    "2021-02",
+    "2021-03",
+    "2021-04",
+    "2021-05",
+    "2021-06",
+    "2021-07",
+    "2021-08",
+    "2021-09",
+    "2021-10",
+    "2021-11",
+    "2021-12",
+    "2022-01",
+    "2022-02",
+    "2022-03",
+    "2022-04",
+    "2022-05",
+    "2022-06",
+    "2022-07",
+    "2022-08",
+    "2022-09",
+    "2022-10",
+    "2022-11",
+    "2022-12",
+    "2023-01",
+    "2023-02",
+    "2023-03",
+    "2023-04",
+    "2023-05",
+    "2023-06",
+    "2023-07",
+    "2023-08",
+    "2023-09",
+    "2023-10",
+    "2023-11",
+    "2023-12",
+    "2024-01",
+    "2024-02",
+    "2024-03",
+    "2024-04",
+    "2024-05",
+    "2024-06",
+    "2024-07",
+    "2024-08",
+    "2024-09",
+    "2024-10",
+    "2024-11",
+    "2024-12",
+    "2025-01",
+    "2025-02",
+    "2025-03",
+    "2025-04",
+    "2025-05",
+    "2025-06",
+    "2025-07",
+    "2025-08",
+    "2025-09",
+    "2025-10",
+    "2025-11",
+    "2025-12",
+    "2026-01",
+    "2026-02",
+    "2026-03",
+    "2026-04",
+    "2026-05",
+    "2026-06",
+    "2026-07",
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11"
+  ],
+  "retrieved_months": 121,
+  "bars": 2437,
+  "first": "2016-11-07",
+  "last": "2026-11-06",
+  "source": "TPEx",
+  "price_basis": "official_raw_unadjusted",
+  "volume_unit": "shares",
+  "volume_precision": [
+    "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+    "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元"
+  ],
+  "unavailable_ohlc_rows": [],
+  "monthly_evidence": [
+    {
+      "symbol": "3105.TWO",
+      "month": "2016-11",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2016/11/01",
+        "response": "json"
+      },
+      "payload_sha256": "f880ba429d66ec6df9db26ee70c0674b3e08263958f1d8b2ba67f1a036beb5ac",
+      "parsed_frame_sha256": "5c0326d7b4ea53d1c171f7bef72b8b732d561c5e6a72e0e497ad07427782b009",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:36:17.832002+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2016-12",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2016/12/01",
+        "response": "json"
+      },
+      "payload_sha256": "def7f4598e02ccac822cd54a633670d096d348797f07386aec4ed3b62e94f9cb",
+      "parsed_frame_sha256": "51bf0495eed5c9d00b60725d6696729eed3d8e82dcb0037e37aa8ecc11b8aae1",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:36:20.555536+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2017-01",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2017/01/01",
+        "response": "json"
+      },
+      "payload_sha256": "74d9ba9acb3e20282ffc5a1e5a18c0a93ac2d6bd21161398e6e1fece278ce4f1",
+      "parsed_frame_sha256": "90387fd1ba1763688330d9fcbe5d4d7a17ad087f486c9261cdc6156ddbb2136b",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 16,
+      "retrieved_at_utc": "2026-11-08T08:36:22.877559+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2017-02",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2017/02/01",
+        "response": "json"
+      },
+      "payload_sha256": "79da87d49f254603c36cd83955d9bd4d6dcb53bb5c4a55108856aa1c2e741aea",
+      "parsed_frame_sha256": "f254386c1c98fdda0a4a114f3979e52159b8de77a3373eb6ab85eedd087f7294",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 18,
+      "retrieved_at_utc": "2026-11-08T08:36:25.877810+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2017-03",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2017/03/01",
+        "response": "json"
+      },
+      "payload_sha256": "1e528f67d919d668c20a9b0fa3f51ed7d6fe4ff3d177a7d1dfe8e7991200cdc6",
+      "parsed_frame_sha256": "119b4e69c0a199319e97520169c5aac933950dc769976f676b8ac08e9e5dc921",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:36:28.852692+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2017-04",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2017/04/01",
+        "response": "json"
+      },
+      "payload_sha256": "5c99f1d71040a3c07b904da42dcb26e92d6686ada539ff44fd461f39d04203ba",
+      "parsed_frame_sha256": "87e1cb23db04b3e3aa96a08fee2042855fb49a83a3b253a1f2f8ce91113c6b24",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 18,
+      "retrieved_at_utc": "2026-11-08T08:36:31.915631+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2017-05",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2017/05/01",
+        "response": "json"
+      },
+      "payload_sha256": "668b0e31d857a20e435b4f293975f2b8ebd05d39b2bdb984ada2fbb98d02153f",
+      "parsed_frame_sha256": "df750579fe63c7350aabbedc0641470a6c332e334824b06106f289b415efd60a",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:36:34.871093+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2017-06",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2017/06/01",
+        "response": "json"
+      },
+      "payload_sha256": "6d237ca22815d6c4f38cd93bb5151efd890ac28ebf33922a7e14a6eb210f8ee6",
+      "parsed_frame_sha256": "351d6f5e8e98800e315946cda82a1ff5c29a3f0a52480a726454451cfdcfd4b2",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:36:37.851126+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2017-07",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2017/07/01",
+        "response": "json"
+      },
+      "payload_sha256": "a2f058ee383df2db10e8be4be33f3e3573d5a7d2f8955c3c2c762bcf8d1de30d",
+      "parsed_frame_sha256": "b5d2848adce5798235436816fc4b6ce443ad296a2a0f5fa7a5311b35f8233c7b",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:36:40.934055+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2017-08",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2017/08/01",
+        "response": "json"
+      },
+      "payload_sha256": "308581eb7cba7359c23b4bff01c8b001c8e55714c23d72ba308c8359fb32d746",
+      "parsed_frame_sha256": "e4d6d9a4b0731c7fd0c3dee8fbf3622e4e9b64eaf81ba1099dcee3f579a813c6",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:36:43.856139+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2017-09",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2017/09/01",
+        "response": "json"
+      },
+      "payload_sha256": "9c710af0a392388f8985b5b4ad11821126379f14fea760d889246f1fb7d689cd",
+      "parsed_frame_sha256": "eb53429bd606276c917eb4c48a3b5a4ae2d7f1c6d65d467db4059b3cd2817f37",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:36:46.891875+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2017-10",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2017/10/01",
+        "response": "json"
+      },
+      "payload_sha256": "8a13a96d6fe434ac8ba7de4e26a3c3fccb0b4e6e298e5502f221f64a7fd03100",
+      "parsed_frame_sha256": "4d8d016db436f7750d10052a89e3ac1ac57cd386cd1ad54d5b14174b77d5c45a",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:36:49.833116+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2017-11",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2017/11/01",
+        "response": "json"
+      },
+      "payload_sha256": "0407cdc89f32ee19587a90ffae064b4940094ddc057e08ebc2de12563609a5fb",
+      "parsed_frame_sha256": "4fde9e650b6773b8d18743ac9a66cacb039c94b8f5a0e107253c898801c4ca35",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:36:52.926846+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2017-12",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2017/12/01",
+        "response": "json"
+      },
+      "payload_sha256": "8aca673403ccc6dff1ac48659b5d8f6d30e2d793bf3204071a98de58d19e08a5",
+      "parsed_frame_sha256": "25e03f6bc3305f55309d663219dc6d493179f914df4a43fabea3723ec162362c",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:36:55.860831+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2018-01",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2018/01/01",
+        "response": "json"
+      },
+      "payload_sha256": "73e3fa9978280dff2de60ada2e2fa365b7556331d31e7b6d874c01c49f297033",
+      "parsed_frame_sha256": "57bc74aeded1a82497cf08736a6028b602453fb49c4888dd9cf3ec29303e258d",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:36:58.850086+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2018-02",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2018/02/01",
+        "response": "json"
+      },
+      "payload_sha256": "e72e4aedd5c9b368cebb2f3dacae46b099d0b5de1de107f1c814df1511965913",
+      "parsed_frame_sha256": "6c5f29e5801663cd7641bf77b2644c0e38a906778623368fd2d40fe46b5d65fa",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 13,
+      "retrieved_at_utc": "2026-11-08T08:37:01.869135+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2018-03",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2018/03/01",
+        "response": "json"
+      },
+      "payload_sha256": "18d7548136eb4840af3c18e8d11ee193b9de35eaf95dc1787866c1af6fa7d75a",
+      "parsed_frame_sha256": "ee077d21069c9209861632b6c645f2b754aa08053ce99c4d401e870ec5311232",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:37:04.888181+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2018-04",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2018/04/01",
+        "response": "json"
+      },
+      "payload_sha256": "64237c09d70b884a704b007c22dccf11a89137fe787db85db659535977fb9dde",
+      "parsed_frame_sha256": "b3b52751d1aadab0b218cb295d6c63294ddbd2bff2c1c9c397d09baffcd64154",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 18,
+      "retrieved_at_utc": "2026-11-08T08:37:08.521925+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2018-05",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2018/05/01",
+        "response": "json"
+      },
+      "payload_sha256": "b8d2f111549aa31833d6cfa4119c103a0765986adfd2ec9e6dcb56f1fb6733ff",
+      "parsed_frame_sha256": "df71d51ae0073331c2fc59ad8e6e1f2d3a1ba3f84526e59ba400380b6c5da61a",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:37:10.879158+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2018-06",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2018/06/01",
+        "response": "json"
+      },
+      "payload_sha256": "195ceed4fcfe76d9bf61c7ec906c1304d0e3adf8dc1f3b8a803c7ccbb7ec6e0e",
+      "parsed_frame_sha256": "6f24fb9aa96fa04a6ffac67d8f1c1fd26a28d2e93ae089dfa1d76e5af44a2d3a",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:37:13.873591+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2018-07",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2018/07/01",
+        "response": "json"
+      },
+      "payload_sha256": "e259d5573b1ffcafb75e627d7c9861ba435c5cff5d11f5ca6bb2cd03cdb20a3f",
+      "parsed_frame_sha256": "37bc60ee6c416f187b943c241d2369d351fb0d63384a69549dc6cdb40bc4f044",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:37:16.862540+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2018-08",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2018/08/01",
+        "response": "json"
+      },
+      "payload_sha256": "01c4eb72a9d5d589077ae75c60ce39e026371cf4993068694509001270ea4c80",
+      "parsed_frame_sha256": "2173dfd1a2f84e96e7735efe2d5b4734ea5443afe72ea9a3608eea297759a123",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:37:19.882809+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2018-09",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2018/09/01",
+        "response": "json"
+      },
+      "payload_sha256": "3b924d75fd9b94e0b67ff6610f9d00939431a39b19e8137e1b8a59cbbbb6d1dc",
+      "parsed_frame_sha256": "8a8353598974216e9c2d45a31e6d49b405e32c8a1cdd374c3cb6ce26c1ad2b0f",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:37:22.868918+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2018-10",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2018/10/01",
+        "response": "json"
+      },
+      "payload_sha256": "326d180dd44d5ff4a6e97229afbfabc32ac01d394c333563ada07b7386c0551f",
+      "parsed_frame_sha256": "29100c9a306670ed26e3e9dfae65d9b4b6ab2551ca0fdbecf6e03e530667e731",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:37:25.873396+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2018-11",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2018/11/01",
+        "response": "json"
+      },
+      "payload_sha256": "0956b8eb59aff0666e86377b1fbbcbc568a8aa9c9fc6aeb205b61b4790e647ea",
+      "parsed_frame_sha256": "43b63c812c8c10f6d07bc2288cbcf352dac0913466b8ed31994e9764036a9ad4",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:37:28.936466+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2018-12",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2018/12/01",
+        "response": "json"
+      },
+      "payload_sha256": "4c1f8f952dff49936028d1c93b26b6aba6ed0e1b4aabfa5353701c0d33a2a088",
+      "parsed_frame_sha256": "1307a9a07a7493d8c9d402dc8632b46f3e2a2ab4a4728c4bdd00f63906f50477",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:37:32.415560+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2019-01",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2019/01/01",
+        "response": "json"
+      },
+      "payload_sha256": "a33d483dd5124877df5a988a7647e211de57761de2c7ca6831645811c1066fbe",
+      "parsed_frame_sha256": "dce56a8c302a7a2510826673739ff1be99a2892f934110ff8c7d611059a452e3",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:37:35.431659+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2019-02",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2019/02/01",
+        "response": "json"
+      },
+      "payload_sha256": "b0cfaa302b6e242d88f6bb1dd6409f95a36d58eac177d647ffa5c8de047da7d0",
+      "parsed_frame_sha256": "7ee2350e67bd0deed4cca9b3978f5b88a057d72e05eaf8ad82e6fafc65667ede",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 13,
+      "retrieved_at_utc": "2026-11-08T08:37:37.856923+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2019-03",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2019/03/01",
+        "response": "json"
+      },
+      "payload_sha256": "c561bfa4d869182c9f025243f6595d6ed974751ba7db198e48615d793d01992f",
+      "parsed_frame_sha256": "ff4a67d8f7619d989f6b50aa26fd1eab716138b6c17c3f3530d4f59d875fde5c",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:37:40.866470+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2019-04",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2019/04/01",
+        "response": "json"
+      },
+      "payload_sha256": "0b1892a4914b1f89ebde7bf8f128e7c3334d865d3aff11561fe99e006c6aaf2f",
+      "parsed_frame_sha256": "7aa8501271d8a9232ea1eea28568867c410bb4ad88b97153a683ff2de7151dbb",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:37:45.121180+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2019-05",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2019/05/01",
+        "response": "json"
+      },
+      "payload_sha256": "03d9b90777ddf9eb089695dea72082af3fb954dfbd2a4fbbe3acaa45f47ba9b0",
+      "parsed_frame_sha256": "d990282225a35b8579b7703f8780908563f679fe3e7e2323928df4eef6ba0f15",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:37:46.863636+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2019-06",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2019/06/01",
+        "response": "json"
+      },
+      "payload_sha256": "1926e8384cf2f81899cc7ccb26b1e05c799e709ed576ab3879502bf7f83e1add",
+      "parsed_frame_sha256": "8752fafa01d9338a2d622f684e871f2eff6b992312db27652f0e5a3c99106c07",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:37:50.704974+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2019-07",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2019/07/01",
+        "response": "json"
+      },
+      "payload_sha256": "4f283e2fa24f58fa6100b337eb2db78b1ff94831f9a0c71e54adc05c77ca73dc",
+      "parsed_frame_sha256": "4d9a68b2c2da9b09f14a771dba40d5c2e2805ff28412cee78001a3d4b07765ff",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:37:52.841647+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2019-08",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2019/08/01",
+        "response": "json"
+      },
+      "payload_sha256": "6e42004c58a436f604c09b55bd73d410c8d61e9e0b0990cd9efd863aca5b9e36",
+      "parsed_frame_sha256": "9885eb122ecaaff90c8c6077b2b9afcfda5f0b8beb6b4eeb6d6301445037feff",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:37:57.762856+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2019-09",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2019/09/01",
+        "response": "json"
+      },
+      "payload_sha256": "146d17ff378424f71d06305b273f9e626cee816875e44ea9976b30ece837fdce",
+      "parsed_frame_sha256": "ddff762ea8f3369fda050c1a43a31df04a3c8b381a6dd78bb9a02dec9e13d807",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:37:58.861249+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2019-10",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2019/10/01",
+        "response": "json"
+      },
+      "payload_sha256": "1268947ff01b3e13f48cb015f3c50e73fdd414d8d4b3cd195571244a4a34a9ef",
+      "parsed_frame_sha256": "ef6f477272afca00eb56384c3c51b98bb2b32db195e83efe93f509cb0b3d1f70",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:38:02.907480+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2019-11",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2019/11/01",
+        "response": "json"
+      },
+      "payload_sha256": "863b79b883af4d7d085c61581ae6e8a517fc1632bb01d2901051fec1c1e80a91",
+      "parsed_frame_sha256": "0d7c815fa1b92a393ccff75eb478950a293aee80a4ea41f22107b2be6c05f504",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:38:09.164814+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2019-12",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2019/12/01",
+        "response": "json"
+      },
+      "payload_sha256": "afc39fa514d84e6949c4cde2ec7bc5bae2609c807b6353673c723fa70e45030f",
+      "parsed_frame_sha256": "09cff7ceedd349430724aa6e5473585249518bea2e3159501156ab7195d15550",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:38:09.461372+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2020-01",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2020/01/01",
+        "response": "json"
+      },
+      "payload_sha256": "2462f1584e4303a86168701f17082e35bb3bc80b6431efa0fdcf53eb3b5cce66",
+      "parsed_frame_sha256": "205437585587125fc50ade01b66b5a68204ed517d924bee95be75328a2937fed",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 15,
+      "retrieved_at_utc": "2026-11-08T08:38:11.771479+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2020-02",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2020/02/01",
+        "response": "json"
+      },
+      "payload_sha256": "24477d93c1f6203102956d5579538552061748e3ffd5e1a9a52d8302dc75d379",
+      "parsed_frame_sha256": "b3c53483233ba99a24ebb04f90b9caf4a8987246fc530f8396034bdc881db64e",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:38:17.855273+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2020-03",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2020/03/01",
+        "response": "json"
+      },
+      "payload_sha256": "62484ae7353cb16202d60b8aa74e60da4207ba8dc0e7ab7508afa05bb8fe09f4",
+      "parsed_frame_sha256": "9e47b326ef03dbb4c64854fbd442c442b6a32be92a171506ef1a7b363ce0b9fa",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:38:20.139848+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2020-04",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2020/04/01",
+        "response": "json"
+      },
+      "payload_sha256": "155db9159e35a440a0e2a4b7a02e7000e69c9a3d05cecc1d7710109aa5460ee5",
+      "parsed_frame_sha256": "e1a0663405d343a50d4778ff960a8757c3d0f966e71b1c92f13f36c6053f1b02",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:38:21.147113+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2020-05",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2020/05/01",
+        "response": "json"
+      },
+      "payload_sha256": "195cf1fc11020845cbec9c44ea03bdf35f2ec617f42791f51a27ee45d3ad7c72",
+      "parsed_frame_sha256": "372384e6b7463ea37ce3fb9ac91907f3ac358b97c40bf40b40f2920c69a4a321",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:38:24.106899+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2020-06",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2020/06/01",
+        "response": "json"
+      },
+      "payload_sha256": "4ab087ab9458878401992009a8166cc0fbc180ed4e4caf62609c34519440dae1",
+      "parsed_frame_sha256": "5b590b3815d35345dd968a2df122beb672400ce97f403c9c6030b35f5f545c49",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:38:27.159805+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2020-07",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2020/07/01",
+        "response": "json"
+      },
+      "payload_sha256": "535eb6035ec15f1f5531ab3b6af0bcdddfcd1404f4ea615b7bd204f608f3ee05",
+      "parsed_frame_sha256": "a24ecc0fc9055e2bd4b55d931ce51a3a671ccd8a235999597224f948b4951ffd",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:38:30.105494+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2020-08",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2020/08/01",
+        "response": "json"
+      },
+      "payload_sha256": "27c8718b0e5b82645fd4e5b4f4e045097c1a751eb8fe7ea40af01735d10442ba",
+      "parsed_frame_sha256": "fd07b2a1d35c4d4c9237fa1f9d3803ec8cd710f1f16e4b360a5d124e247d45d6",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:38:33.116327+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2020-09",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2020/09/01",
+        "response": "json"
+      },
+      "payload_sha256": "6e73a67d292a8505493381b435d734ecb3f0987fa15fbb41acd3886e0be9c814",
+      "parsed_frame_sha256": "e530a3cd357e60b87693bf95214ce75de77e5e39c34134fbf3c84d98310ae666",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:38:36.768700+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2020-10",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2020/10/01",
+        "response": "json"
+      },
+      "payload_sha256": "f9efebe973f5fafbc833d2a2b6b97cb9b028864f1157ab1c6754bc09fe658357",
+      "parsed_frame_sha256": "b8f89adb86d1bdf478cced7818f49aa5d344ffd80f269c9c7c0a953e3960c986",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:38:39.137005+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2020-11",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2020/11/01",
+        "response": "json"
+      },
+      "payload_sha256": "0e1096f86b7638c82c98f134a153b96288babd42eb7f6bcf48624ba053f06ac9",
+      "parsed_frame_sha256": "49be7bd564837d4881165674dbf963895ed9e92d0b1b81c4a2ddc2386ce16311",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:38:42.113705+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2020-12",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2020/12/01",
+        "response": "json"
+      },
+      "payload_sha256": "113538072a03f29aa27ba099e465a0f5d839365de348688eb76a6dc71a5dc723",
+      "parsed_frame_sha256": "08ab6fb67f9cf8e89b4cb6126041834b0864f2f08ef1bdc8a4e241ff77622043",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:38:45.128242+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2021-01",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2021/01/01",
+        "response": "json"
+      },
+      "payload_sha256": "31c33e62a37e2fb6d26d0a3826737871e91292c7f88124dcbc00d67ed84c87fd",
+      "parsed_frame_sha256": "36ab4cc616ff99c2384cdb3e4eea7362c8094b0087c1626e580595b588acc99a",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:38:50.078917+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2021-02",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2021/02/01",
+        "response": "json"
+      },
+      "payload_sha256": "3f4425a5519f38a83512a8af2e9e6b5551ac151a0678c25a16c59b33fd9129d2",
+      "parsed_frame_sha256": "298730714b144385d457a1a6a4a708e87dbdc4a1a6f2b44b011b0725d9025177",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 13,
+      "retrieved_at_utc": "2026-11-08T08:38:53.860023+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2021-03",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2021/03/01",
+        "response": "json"
+      },
+      "payload_sha256": "e9909c2fadbadddc4d1760bf0929a40115a2e88edae8d09719cfff26484c315c",
+      "parsed_frame_sha256": "9bcd11f54fff17cdb756cc1b8183721284d9fb3047e055fd259db30b9222cc4f",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:38:55.344089+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2021-04",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2021/04/01",
+        "response": "json"
+      },
+      "payload_sha256": "266d5264f82e415afb0fd29460f51ee0a29061a5d3e5ea1a1273d96c983a8095",
+      "parsed_frame_sha256": "d610a222442326b57da3f7e36112cb28cdc10a85e9fff7565077d190be4e93c6",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:38:57.309635+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2021-05",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2021/05/01",
+        "response": "json"
+      },
+      "payload_sha256": "dcd13f6a09238259ebf458e5c338d0613c87383ee2dd6069c9a4789ac0ad2865",
+      "parsed_frame_sha256": "f171d7ba20a5b7816e98ddb4cf568bd92cfa3309cef620f5d21a863cbf7c94a6",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:39:00.498628+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2021-06",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2021/06/01",
+        "response": "json"
+      },
+      "payload_sha256": "3325399b69d385487396e14bc85a1d4bdb4e527f21fbafa5bc7aea5bb18425c7",
+      "parsed_frame_sha256": "83fd0ba68052d4bf0b0198f076e80ec45521f1ee158e3dc2bf79e9e48ea27eeb",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:39:03.376573+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2021-07",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2021/07/01",
+        "response": "json"
+      },
+      "payload_sha256": "2016cc1d901c80542ed460184c73c3541ab37b0ef9e725124db3a6d010940f83",
+      "parsed_frame_sha256": "f10bd366f1bcfbc69dfe7d5d9e2b5c1b32323fca5f9a80cc3989f1ae7545d071",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:39:06.340953+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2021-08",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2021/08/01",
+        "response": "json"
+      },
+      "payload_sha256": "8487465973d38697a5ba8dad0482777d37bd035c952e0bcb4c9ef931d983ca45",
+      "parsed_frame_sha256": "fe30ddd499f1c93a1b13e23709e30eb70ff3ed9d6e1eb60d26eb74ef4e67ac66",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:39:09.995980+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2021-09",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2021/09/01",
+        "response": "json"
+      },
+      "payload_sha256": "eec2e438cf4c30083b06f0b39aa3efe7f792361907590bae266e992b64535911",
+      "parsed_frame_sha256": "30b9d388aa805903620200d321bdefefeaee3c86ae8fe6c5302bc95d3cdb2329",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:39:12.332494+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2021-10",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2021/10/01",
+        "response": "json"
+      },
+      "payload_sha256": "81363b870498e76160472ec82571813c96c235323bc8815c8d31032c0083d3dd",
+      "parsed_frame_sha256": "5a5caa424d5a95034908f21f0aea181ca618354c4eec9b41fd2f7854f387419c",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:39:17.252141+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2021-11",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2021/11/01",
+        "response": "json"
+      },
+      "payload_sha256": "b5f8700d7d7dcc89c341a84141b06543d27722329f056b1169ec7b20a4eccd13",
+      "parsed_frame_sha256": "cbaa3a8c461a28e215b04fc2970aacae59969ae639b9368fd999ffea5cef5f2c",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:39:18.328438+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2021-12",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2021/12/01",
+        "response": "json"
+      },
+      "payload_sha256": "d476085cc370b178316c3047e04d5b9fa75e5bf16c5aa8e5870d6446bbca0e91",
+      "parsed_frame_sha256": "74b9865999ec8b9597392f22bc2740619dcddfc91ede51607e2b131bebaec27d",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:39:24.293811+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2022-01",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2022/01/01",
+        "response": "json"
+      },
+      "payload_sha256": "75d9a5584a72237d6a18a59c6cd4679ba2e9c305632c45718e577e9aa6631612",
+      "parsed_frame_sha256": "35e611c249f937ad8f859de38fdae2a2a5540250461835bb475f8697c115cf49",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 18,
+      "retrieved_at_utc": "2026-11-08T08:39:24.792413+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2022-02",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2022/02/01",
+        "response": "json"
+      },
+      "payload_sha256": "10f85f23e3a2a9e9734ca8869ac8e6d60eb0f10627297887d63aba579ffcbaaa",
+      "parsed_frame_sha256": "e0c8984cf771af4c6cf308c170e08e0597d6531f6669e51abb68e01b7313cafa",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 15,
+      "retrieved_at_utc": "2026-11-08T08:39:28.327419+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2022-03",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2022/03/01",
+        "response": "json"
+      },
+      "payload_sha256": "eaeaec0d265385a721f38660639956dfc98fe03203805b3fbe3a4493b2c2da6c",
+      "parsed_frame_sha256": "e6bf957e788da7c00b4b48b7deabcf3b9b99826ce148e7597673170913914df1",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:39:30.871213+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2022-04",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2022/04/01",
+        "response": "json"
+      },
+      "payload_sha256": "09e3039b99be2dc3fdd1a799778144ec1cb947631b0ebe4ad7246fb1fea73598",
+      "parsed_frame_sha256": "7862fafe1181e8c195580b74cb86b3269f8120fbfda1977a1e1bda5d7bc7c61c",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:39:33.767132+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2022-05",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2022/05/01",
+        "response": "json"
+      },
+      "payload_sha256": "4b9177c5a6470b58536bffd4b8fbeb23358f57608a5a0486ca667101acead1b8",
+      "parsed_frame_sha256": "5f82e2f95ea3daa70d868d9f7a9f472fac61f864e203902cb4884c11d586eb49",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:39:36.750672+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2022-06",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2022/06/01",
+        "response": "json"
+      },
+      "payload_sha256": "f945c8da707f11c551e7ef8ce8b19c610482864cf813029c94c15b761c2a0f8b",
+      "parsed_frame_sha256": "a44de852aefedd572c164dcfd42e9f2bfbd7e33a9ed1f258bd5d25f9f5e3ccf9",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:39:39.750723+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2022-07",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2022/07/01",
+        "response": "json"
+      },
+      "payload_sha256": "bf58eec6a0ac4a7ef2cf25ae7ad7c35a82fc1b1ee79046b7cf20c466cdd7cb23",
+      "parsed_frame_sha256": "faff175c012976b10e2d4f0b9c6ac9e718bbb8ca89ee5f92e47452077fe10f7f",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:39:42.803110+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2022-08",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2022/08/01",
+        "response": "json"
+      },
+      "payload_sha256": "e3d3696903ec8150f4f3645508946fdf9906feb09adb9e5c03eaceb1f474f02d",
+      "parsed_frame_sha256": "193072b6db6c7ec736c30ce4e449e8ed6d2a0e1f7403841f451446b2a4063529",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:39:45.566056+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2022-09",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2022/09/01",
+        "response": "json"
+      },
+      "payload_sha256": "82dbbb5ca058951ab68de19dd47ac1a7b6103fffcfe6efb217edfbface902e19",
+      "parsed_frame_sha256": "3d70f19f488e6912a439de184a211c2ce8832aac7abe4966a126677749407f34",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:39:48.883959+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2022-10",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2022/10/01",
+        "response": "json"
+      },
+      "payload_sha256": "298b9bec464abb77e7fbeafa18c2322ea76f723f092a3de3cf9c25c17e931de1",
+      "parsed_frame_sha256": "5cb35a3fc48c012017b3dbd9ba3d8ea089fba6a9a3ff973159cefd0d71152b0d",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:43:37.902342+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2022-11",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2022/11/01",
+        "response": "json"
+      },
+      "payload_sha256": "3126ab1624fadae1b0168f7865a343217e24f948b096e1b261d21f469918d216",
+      "parsed_frame_sha256": "8250970f3ce6e58c4cabd1642960afcaf19c896e0d6088b431da86ee905c1020",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:43:42.769208+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2022-12",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2022/12/01",
+        "response": "json"
+      },
+      "payload_sha256": "f6237e22db1567dd6654fce84065f1621f5e2a9b83724b14cb9bbac088f04a7a",
+      "parsed_frame_sha256": "7a01c6c1dde75a8381c9cbb8d47093a1f07365da311eb55fc80ef49c205e4f80",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:43:43.579835+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2023-01",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2023/01/01",
+        "response": "json"
+      },
+      "payload_sha256": "9231a2d55dd504abb66c51ec3d88f308c9d274cb5f868a22ca0189da27e52e89",
+      "parsed_frame_sha256": "b54820da65a365d111378ec2a917bd88c31a48d2c37f31b09666c996ffa7225d",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 13,
+      "retrieved_at_utc": "2026-11-08T08:43:46.473668+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2023-02",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2023/02/01",
+        "response": "json"
+      },
+      "payload_sha256": "12d83a4ef55ea936012ea1e713f526db106176898f9e201e470ff9b8a0ecfe61",
+      "parsed_frame_sha256": "c6463df3730ec902bfc59460a73d84f032524fecb6079a64a4f4ae9ff933c92f",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 18,
+      "retrieved_at_utc": "2026-11-08T08:43:49.400580+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2023-03",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2023/03/01",
+        "response": "json"
+      },
+      "payload_sha256": "8737c715e7924a75ba00fe3284c70257c37cca00a81789f78dc7fa7d2e4e30de",
+      "parsed_frame_sha256": "7dbd855845e8a3d302b91cc43b3c6fa3e750e8e01e85339c2fd45f7114ee5a53",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:43:52.407575+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2023-04",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2023/04/01",
+        "response": "json"
+      },
+      "payload_sha256": "72b1bb08d4d85bf2a88233666755da7abbaf012b7c40bab794dd2cdc2ac1260e",
+      "parsed_frame_sha256": "fb99c13bc5c3b58c63db7d004cf133932421f1e18278847750e44a25d2f1e1f2",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 17,
+      "retrieved_at_utc": "2026-11-08T08:43:56.088079+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2023-05",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2023/05/01",
+        "response": "json"
+      },
+      "payload_sha256": "d9f0292a5e4283c8b37f8e20a68ba1e9b97e647ffda77ea32750eaf82e773c2e",
+      "parsed_frame_sha256": "fcadb5be42ee1f0d2129e7384f2f3e34fc25db40da9e37b3dbae734bf22a2918",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:43:58.412131+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2023-06",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2023/06/01",
+        "response": "json"
+      },
+      "payload_sha256": "4e7d4594560578c8b425bc33eadc6acabbc81d318d857f0ec2bb9cbcd0627c30",
+      "parsed_frame_sha256": "004c42f7922518c143f102e2f822b006b7d01fededa0d4bd6a51074adb1bd3a6",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:44:02.929731+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2023-07",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2023/07/01",
+        "response": "json"
+      },
+      "payload_sha256": "9a650a128283e7069cee5aa5be8b3acc11c24fc6720fb341398a5aeccf9e74c9",
+      "parsed_frame_sha256": "37da4b0562739a4fdfd0fd2351e9cead1c6227ad625be8176f4569ab8afc54da",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:44:04.751328+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2023-08",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2023/08/01",
+        "response": "json"
+      },
+      "payload_sha256": "ba5e78b072e3b2a18301d16037dfb67cd390eb60f7eee3dfeb1642ec80cd7d50",
+      "parsed_frame_sha256": "80d78e26c41a3258f45396418f4bb417e415c251044cb3422e08e0ef191b058a",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:44:07.342740+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2023-09",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2023/09/01",
+        "response": "json"
+      },
+      "payload_sha256": "7ce65f9f51dcaab6ec5c8d5bd6dde5d4473b0f00361592b11c5986bb8e8e7d6c",
+      "parsed_frame_sha256": "feb823caf09b13ac4239ca382dff2696b3e6d42405db17b8b65a7352d2d55d79",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:44:10.320936+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2023-10",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2023/10/01",
+        "response": "json"
+      },
+      "payload_sha256": "b87d5fef5e053d91c1dc9fd69ce67b24b2419c6718eaf10a09365b02ab6654c6",
+      "parsed_frame_sha256": "d56dc216dfe3ce5f9d31ade82495853cd60ff1d201f021367b6bc694cfa7c831",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:44:13.325304+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2023-11",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2023/11/01",
+        "response": "json"
+      },
+      "payload_sha256": "77d4bd25e699187c422e1deb7b78f80d8afbf1fd43c62b98a31b8d616a5f7363",
+      "parsed_frame_sha256": "ef0a6672cd6fc3f46754d021e30eeed03915ad68648d2f1cdf27186326b7c12b",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:44:16.320341+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2023-12",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2023/12/01",
+        "response": "json"
+      },
+      "payload_sha256": "81788ba0b6020abab204e08974fada1ac95c1521f1ec7c89419a8376bdd4e7ec",
+      "parsed_frame_sha256": "9a149cab2a3bdc70b94076ce8ebb4e522e5ff3385426bb4da9005c5f7d08f59a",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:44:20.327977+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2024-01",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2024/01/01",
+        "response": "json"
+      },
+      "payload_sha256": "93ffc6851da387f96341f2f514271212ef0fe5d7b1ec2261a5d4899049ed2408",
+      "parsed_frame_sha256": "404f47ef7a321a354b2a7b9409bafbf33da4eb4531a0beb897f103e17c58e8ac",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:44:22.959846+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2024-02",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2024/02/01",
+        "response": "json"
+      },
+      "payload_sha256": "57b5dd58311ff54b56152977b73b320ec059f757acd604298e7856afd197bec2",
+      "parsed_frame_sha256": "bdd9ab16600a7136d480c30b09976f31875f920e1a46a60e72c9e18a38d8f2d5",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 13,
+      "retrieved_at_utc": "2026-11-08T08:44:26.041303+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2024-03",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2024/03/01",
+        "response": "json"
+      },
+      "payload_sha256": "ddd49f0782cf8f4ea2ca118fc10263b788e85be6403dfb7d61f650cda43da9db",
+      "parsed_frame_sha256": "f421c97371b09138be5dc06fcffb9f7f8f041de95a7fc7c23f10932d32b4943e",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:44:28.327750+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2024-04",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2024/04/01",
+        "response": "json"
+      },
+      "payload_sha256": "b49a61276d7fdd33f537ca9b61bd83dfedca29de391bde260e4b48f7ea100d2a",
+      "parsed_frame_sha256": "574c4a4d5081ed16607d3bf4ef672be0df6141327c146ce2e900c06a8f2095f0",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:44:35.916481+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2024-05",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2024/05/01",
+        "response": "json"
+      },
+      "payload_sha256": "2357d138f2eeeffa6fc1b52a39d2b041825a2df009f173dc18e29461cc31235f",
+      "parsed_frame_sha256": "47963d8da5b667d70c85685b2901b61d2e716f8a528d4c4f8e10ebda8fc42bec",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:44:36.755070+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2024-06",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2024/06/01",
+        "response": "json"
+      },
+      "payload_sha256": "7d50598c4336c5170dd62b59ad9747339f29103ea7b45d6888188e5fffd1ef78",
+      "parsed_frame_sha256": "8945e061ca2d6eb3bdd8b830150822d6e0cd66686024fb316199ecc5cbb603be",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:44:40.796174+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2024-07",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2024/07/01",
+        "response": "json"
+      },
+      "payload_sha256": "8cd6276fdf11bdfe582bfea93d03a65b3e081a59e1e94bd766fe40fc07609f9c",
+      "parsed_frame_sha256": "5f7f978e5cbc9b2067fc1d35814af4a963abcc4563f57661cc3563995316d2b9",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:44:42.141313+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2024-08",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2024/08/01",
+        "response": "json"
+      },
+      "payload_sha256": "b4bdff41a526cc2940da56f3ead2c45a793159b35933ab556f1bc721226eeea3",
+      "parsed_frame_sha256": "438e000ec3e1ab74bca593aefea03b2a0789b0a486b6335a0c8a700af248c018",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:44:45.140741+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2024-09",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2024/09/01",
+        "response": "json"
+      },
+      "payload_sha256": "7b167be7360aed1f6a09d6eb8ad2aa6b5ef587e789fed0e1fe6fb439117ec1cc",
+      "parsed_frame_sha256": "2e247e766b02e006f25a42d48c921707c28f98b0d03370d4055a625d8bfa872b",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:44:48.133322+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2024-10",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2024/10/01",
+        "response": "json"
+      },
+      "payload_sha256": "917fad5f06b51218257e30b33479984f93b1b94f4cc3a6d6209b3b16d3c21e8d",
+      "parsed_frame_sha256": "5bb473d16a5efd46573c60dd103a3de6a3076839fccab0d3383f09162fb41dfd",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:44:51.196631+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2024-11",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2024/11/01",
+        "response": "json"
+      },
+      "payload_sha256": "07c851adb19fd742115f9c6683ea6f90fead65450bd9615264aec446f1d314cd",
+      "parsed_frame_sha256": "8861d02efb492e98e09bc1c47b7deb86c5902140ce8ec571c20fb4e8c4ba936e",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:44:54.141866+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2024-12",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2024/12/01",
+        "response": "json"
+      },
+      "payload_sha256": "04608ac833f978bbbdbff99148e794cb30c38ab0b683659ac08613342a7f82c3",
+      "parsed_frame_sha256": "88a5c0328e402ef56a6b5260dde92e9b92475560384f414db58fcdc0a3bd3224",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:44:57.139224+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2025-01",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2025/01/01",
+        "response": "json"
+      },
+      "payload_sha256": "54d3975952b3a44ea19f8dd38f815cb609e11164fd80c34543ad73a824dd9ccf",
+      "parsed_frame_sha256": "00e5838a1ebf0f817f5fc49e593cab96a459a6be2edf9632363071d00604d499",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 15,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:00.705367+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2025-02",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2025/02/01",
+        "response": "json"
+      },
+      "payload_sha256": "6fc6b73a508c26fb3354b662fcf90966c440c593f665d85105cc4f57d975505d",
+      "parsed_frame_sha256": "48e9fa4b1cd83b023ae893ee77dcc2c436e610ffc6d941a2a6bf6ddfbc0cfbaf",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 19,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:03.150997+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2025-03",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2025/03/01",
+        "response": "json"
+      },
+      "payload_sha256": "6ee4f80844cbd809d3035dbe0b3c2107a769f016649e65675bd9e9b4de6e3699",
+      "parsed_frame_sha256": "7c5fd7bad739b32325710641a5bc0333fe500f5be7ba77f1a2c0efce8953d8b8",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 21,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:06.120315+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2025-04",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2025/04/01",
+        "response": "json"
+      },
+      "payload_sha256": "3308bdf8b5e050fa44a4dd5229de96bd2e03208cd5ce75c56fe7d3f792895cd4",
+      "parsed_frame_sha256": "244cccb7d6ba70db709294ad46ab04b84a8791e8ea1bcc0a66f1e99beebbdd40",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 20,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:09.532090+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2025-05",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2025/05/01",
+        "response": "json"
+      },
+      "payload_sha256": "1041f59d9e951b76519bcbd91c9c4d9230ecfdf69d0b9f07d58a6122b22aad4d",
+      "parsed_frame_sha256": "7dca4034cd5611aefa66cb44df0db4c00677b8ef334de55934647b5e0599de45",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 20,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:12.129804+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2025-06",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2025/06/01",
+        "response": "json"
+      },
+      "payload_sha256": "5ddf6f3934c21ca4d692b00b4f4258deede08256a6d82120208abaaaa0355292",
+      "parsed_frame_sha256": "86412946786091baa05b56113c6138475766c9c9e567ef036a98d993c9e5a142",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 21,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:15.129376+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2025-07",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2025/07/01",
+        "response": "json"
+      },
+      "payload_sha256": "cb8549828304bfbe611a7bf0af395144c108de372362ce39c20d74810c7177d7",
+      "parsed_frame_sha256": "97549b9a03b15b478b8a9fcbfbacc09fee96b43d63d33f740f212c32e268a2b7",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 23,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:18.167670+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2025-08",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2025/08/01",
+        "response": "json"
+      },
+      "payload_sha256": "11edc0c2e3f3d657c67db6c11f4d4576fb3749fba787b2ff64825bab5f84bced",
+      "parsed_frame_sha256": "689fbc51aa80cf292f046a2f5b9931e1d19f552d94895c93c2026c277deeb850",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 21,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:22.233108+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2025-09",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2025/09/01",
+        "response": "json"
+      },
+      "payload_sha256": "6c01c25f9566734c41b604df3c09fbae8181195406851b4534cce33ca58363f5",
+      "parsed_frame_sha256": "3ebb9cafeafb182f7aed5c3cb531d93c5951552c2739796f97a597e85e1efbc9",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 21,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:24.123164+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2025-10",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2025/10/01",
+        "response": "json"
+      },
+      "payload_sha256": "ab8a26c0d9e195edb29662e9f9914abd9c5743ec1bfd6ccbc8b39c3019f6267f",
+      "parsed_frame_sha256": "0539313d36363abdc68bfed344105d7cb9e060a09218dc6b4fb6dfcd8e03a237",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 20,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:27.121544+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2025-11",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2025/11/01",
+        "response": "json"
+      },
+      "payload_sha256": "963a3f789b1ae48a93b8545d385e9229c95e37ba558ccf57a1f6cfc098339f08",
+      "parsed_frame_sha256": "f16cd4a3d0740cca861505e15478a313fc63a515beb9a19e72dd81131aacb338",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 20,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:30.138368+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2025-12",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2025/12/01",
+        "response": "json"
+      },
+      "payload_sha256": "7acdf810440cdd935224721e7bf0a1ce4c5b67f9520698b07e1e2c8f55a197ef",
+      "parsed_frame_sha256": "047390022279c2dea6c98c572af0f45737543602c5ec38aff38b34f154a0bcf6",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 22,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:34.947456+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2026-01",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2026/01/01",
+        "response": "json"
+      },
+      "payload_sha256": "e000fb72db0df83506842e5ec4a48da4b9996a5c8ee56d6900a828ef74ba68be",
+      "parsed_frame_sha256": "a8274e0ec7d9b23759ea1bd4ebcebcc6fc6390ff91307b1e819dbe8095a3c9fc",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 21,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:36.150449+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2026-02",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2026/02/01",
+        "response": "json"
+      },
+      "payload_sha256": "ebd6462edf98137242661c3d6be32bdb24f29cf6767880ce7cb871a1227d9516",
+      "parsed_frame_sha256": "571a1eba3cc8a8f3561f2702d41f044add4d51a934ed24516d09691cd4f60642",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 12,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:39.127148+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2026-03",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2026/03/01",
+        "response": "json"
+      },
+      "payload_sha256": "d03048359529a475bbcb208fd36e1bb8ec628001aea3d91fb3cdf0e86200ca75",
+      "parsed_frame_sha256": "8ef6b511c1373d0157817f2f38a9818e71de8b0eea66a0f9a36990b208acbffd",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 22,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:42.273646+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2026-04",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2026/04/01",
+        "response": "json"
+      },
+      "payload_sha256": "dcaad6646cb051bca193485f317f1841b38d7898d29f0dfe04d8c08cedafe8d0",
+      "parsed_frame_sha256": "20e35d889b6329bb324c6955c278de3e29b3317e1011710876ae7e46dc9a1e11",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 20,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:45.129156+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2026-05",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2026/05/01",
+        "response": "json"
+      },
+      "payload_sha256": "a021aebd2f7737e61ce624f041010baee71c136ba4f96cf8c055bad709cb0f1c",
+      "parsed_frame_sha256": "e905ec6baf8002e86ca43f704510f96197d5c713c3bd72cfb7c2ad4714607e1f",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 20,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:49.952080+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2026-06",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2026/06/01",
+        "response": "json"
+      },
+      "payload_sha256": "68cb9db217c9fc2bb1684ce9ac1eb29a6e2a4de81f1b57a36ec1d678d075b7f0",
+      "parsed_frame_sha256": "faa7d16414f3e0d5d4cc1ace4d5173cd848db140735868301e76073d7f9ab837",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 21,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:51.195619+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2026-07",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2026/07/01",
+        "response": "json"
+      },
+      "payload_sha256": "5a159d318c9f6644bfc77749d23c966071331341d1e4c19eaf684fda5a57fd8e",
+      "parsed_frame_sha256": "84df8a9ebbc02c07b5943454af5510409e004fb957d6df75ad256f472a349682",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 22,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:54.122312+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2026-08",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2026/08/01",
+        "response": "json"
+      },
+      "payload_sha256": "867fe95923f760afef5d1be767f69388812415d4ea50b43c349b8cc70513968d",
+      "parsed_frame_sha256": "86f28ce7534f4f6d5746747263419ebea95579e70be96d3c2045b32ecc27d6f6",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 21,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:45:57.282354+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2026-09",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2026/09/01",
+        "response": "json"
+      },
+      "payload_sha256": "43d2b0b0144603b8f5b4eb223faa11dc62a19445b3adc6b2652b23d4e9554c62",
+      "parsed_frame_sha256": "5de6b4021f8ddc3f0e719c6f19f11228a5e39b21e26cae6eebc16cffd50e48c8",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 20,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:46:00.147017+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2026-10",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2026/10/01",
+        "response": "json"
+      },
+      "payload_sha256": "98da55bc246f2b7e6df694ab91902672e1fc1f23397e9b8d76297e4234725e80",
+      "parsed_frame_sha256": "00f61854dc31a84fe0c45502f18b068ee763519d88a5d3829ea65168f31dc8c2",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 19,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:46:03.127284+00:00"
+    },
+    {
+      "symbol": "3105.TWO",
+      "month": "2026-11",
+      "method": "POST",
+      "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+      "request": {
+        "code": "3105",
+        "date": "2026/11/01",
+        "response": "json"
+      },
+      "payload_sha256": "81a8dfc6273031b0c9aaf899145e11723ef32d23122561a4052a6f3263a966be",
+      "parsed_frame_sha256": "37542a59a46b798366dcd98b89094bfccc22ec5d2a707a135b5cb5d637f9aa57",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+      "unavailable_rows": [],
+      "bars": 5,
+      "raw_volume_field": "成交張數",
+      "parser_variant": "tpex_lots_research_v1",
+      "units_per_lot": 1000,
+      "unit_rule_source": "https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html",
+      "retrieved_at_utc": "2026-11-08T08:46:06.720056+00:00"
+    }
+  ],
+  "month_coverage_complete": true,
+  "trading_calendar_independently_certified": false,
+  "listing_route_evidence": {
+    "symbol": "3105.TWO",
+    "endpoint": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",
+    "retrieved_at_utc": "2026-11-08T08:46:09.663078+00:00",
+    "selected_fields": {
+      "Date": "1151107",
+      "SecuritiesCompanyCode": "3105",
+      "CompanyAbbreviation": "穩懋",
+      "DateOfIncorporation": "19991016",
+      "DateOfListing": "20111213"
+    },
+    "raw_directory_sha256": "0ccc1b2ecd313e3f095b89a764bebf56f4f71ad589c186081b8e8fe52c43de53",
+    "scope": "Current identity/listing-date evidence only; not a complete transfer/delisting/relisting history."
+  },
+  "listing_transitions_independently_certified": false,
+  "corporate_action_adjustments": "not applied or certified",
+  "production_ready": false,
+  "series_sha256": "8be761249b4bcd6fce711c0259c3b1fc4c83aa4202c1732d8f288e633add5bfa",
+  "policy": "Whole official snapshot only; no Yahoo rows, guessed candles, ffill, deleted exceptions or adjusted-close substitution."
+}

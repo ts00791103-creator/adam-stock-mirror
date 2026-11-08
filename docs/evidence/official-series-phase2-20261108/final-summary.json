@@ -1,0 +1,220 @@
+{
+  "scope": {
+    "knownGapStocks": 7,
+    "stockMonthCases": 23,
+    "pilotCompleteMonthlySeries": [
+      "3105.TWO",
+      "2330.TW"
+    ],
+    "notFullMarketScan": true
+  },
+  "codeCommit": "f9aac67d0ce8ad9e112f6b97794513aa17773b3e",
+  "regression": {
+    "run": 42464103456,
+    "tests": 297,
+    "status": "success",
+    "newModuleTests": 11
+  },
+  "initialResearch": {
+    "run": 42463452416,
+    "status": "failure",
+    "reason": "3105 upstream HTTP525 at2022-10;2330 subjob succeeded;all23 known-month probes succeeded"
+  },
+  "resumedOtc": {
+    "run": 42464103457,
+    "status": "success",
+    "validatedCacheMonthsReused": 71
+  },
+  "pilots": [
+    {
+      "symbol": "2330.TW",
+      "daily_bars": 2437,
+      "weekly_bars": 516,
+      "month_coverage_complete": true,
+      "weekly_aggregation_pass": true,
+      "mirror": [
+        {
+          "interval": "1d",
+          "wave": "短波",
+          "bars": 2437,
+          "reference_bars": 100,
+          "status": "formula_pass",
+          "history_segment": 11,
+          "first_projection": 2135,
+          "last_projection": 2335
+        },
+        {
+          "interval": "1d",
+          "wave": "中波",
+          "bars": 2437,
+          "reference_bars": 260,
+          "status": "formula_pass",
+          "history_segment": 14,
+          "first_projection": 2135,
+          "last_projection": 1930
+        },
+        {
+          "interval": "1d",
+          "wave": "長波",
+          "bars": 2437,
+          "reference_bars": 650,
+          "status": "formula_pass",
+          "history_segment": 49,
+          "first_projection": 2135,
+          "last_projection": 1750
+        },
+        {
+          "interval": "1wk",
+          "wave": "短波",
+          "bars": 516,
+          "reference_bars": 26,
+          "status": "formula_pass",
+          "history_segment": 13,
+          "first_projection": 2135,
+          "last_projection": 1875
+        },
+        {
+          "interval": "1wk",
+          "wave": "中波",
+          "bars": 516,
+          "reference_bars": 78,
+          "status": "formula_pass",
+          "history_segment": 3,
+          "first_projection": 2135,
+          "last_projection": 2290
+        },
+        {
+          "interval": "1wk",
+          "wave": "長波",
+          "bars": 516,
+          "reference_bars": 156,
+          "status": "formula_pass",
+          "history_segment": 12,
+          "first_projection": 2135,
+          "last_projection": 2420
+        }
+      ],
+      "no_raw_ohlc_contradictions": true,
+      "production_ready": false,
+      "limitations": [
+        "Raw unadjusted: capital actions can create non-market price gaps.",
+        "Monthly publication is not an independently certified calendar or historical market-transfer chain.",
+        "TPEx monthly volume retains published thousand-share precision; no exact single-share claim.",
+        "Weekly boundary may be partial; mirror formula pass is not strategy or return validation."
+      ],
+      "sourceMonths": 121,
+      "providerMissing": [
+        "2017-02-18",
+        "2017-06-03",
+        "2017-09-30",
+        "2018-03-31",
+        "2018-12-22",
+        "2019-09-09",
+        "2021-04-06",
+        "2025-08-01"
+      ],
+      "providerExtra": [
+        "2026-10-23"
+      ],
+      "priceFieldDifferences": 13,
+      "volumeDateDifferences": 2336
+    },
+    {
+      "symbol": "3105.TWO",
+      "daily_bars": 2437,
+      "weekly_bars": 516,
+      "month_coverage_complete": true,
+      "weekly_aggregation_pass": true,
+      "mirror": [
+        {
+          "interval": "1d",
+          "wave": "短波",
+          "bars": 2437,
+          "reference_bars": 100,
+          "status": "formula_pass",
+          "history_segment": 6,
+          "first_projection": 406,
+          "last_projection": 287
+        },
+        {
+          "interval": "1d",
+          "wave": "中波",
+          "bars": 2437,
+          "reference_bars": 260,
+          "status": "formula_pass",
+          "history_segment": 11,
+          "first_projection": 406,
+          "last_projection": 546
+        },
+        {
+          "interval": "1d",
+          "wave": "長波",
+          "bars": 2437,
+          "reference_bars": 650,
+          "status": "formula_pass",
+          "history_segment": 46,
+          "first_projection": 406,
+          "last_projection": 59
+        },
+        {
+          "interval": "1wk",
+          "wave": "短波",
+          "bars": 516,
+          "reference_bars": 26,
+          "status": "formula_pass",
+          "history_segment": 10,
+          "first_projection": 406,
+          "last_projection": 109.5
+        },
+        {
+          "interval": "1wk",
+          "wave": "中波",
+          "bars": 516,
+          "reference_bars": 78,
+          "status": "formula_pass",
+          "history_segment": 15,
+          "first_projection": 406,
+          "last_projection": 658.5
+        },
+        {
+          "interval": "1wk",
+          "wave": "長波",
+          "bars": 516,
+          "reference_bars": 156,
+          "status": "formula_pass",
+          "history_segment": 15,
+          "first_projection": 406,
+          "last_projection": 658.5
+        }
+      ],
+      "no_raw_ohlc_contradictions": true,
+      "production_ready": false,
+      "limitations": [
+        "Raw unadjusted: capital actions can create non-market price gaps.",
+        "Monthly publication is not an independently certified calendar or historical market-transfer chain.",
+        "TPEx monthly volume retains published thousand-share precision; no exact single-share claim.",
+        "Weekly boundary may be partial; mirror formula pass is not strategy or return validation."
+      ],
+      "sourceMonths": 121,
+      "providerMissing": [
+        "2017-02-18",
+        "2017-06-03",
+        "2017-09-30",
+        "2018-03-31",
+        "2018-12-22",
+        "2019-09-09",
+        "2021-04-06",
+        "2025-08-01"
+      ],
+      "providerExtra": [
+        "2026-10-23"
+      ],
+      "priceFieldDifferences": 18,
+      "volumeDateDifferences": 2429
+    }
+  ],
+  "websiteRuntimeChanged": false,
+  "productionUnchanged": "8b6cefc70a84a856b793f29df2553f0e00a248b6",
+  "partialProviderPatchApplied": false,
+  "productionSourceReady": false
+}

@@ -1,0 +1,107 @@
+[
+  {
+    "symbol": "3105.TWO",
+    "date": "2025-08-01",
+    "officialHas": true,
+    "yahooHas": false,
+    "ohlc": [
+      82,
+      86,
+      80.3,
+      85.7
+    ],
+    "volumePublishedConverted": 5387000,
+    "precision": "官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度",
+    "localPatchApplied": false
+  },
+  {
+    "symbol": "3211.TWO",
+    "date": "2017-06-03",
+    "officialHas": true,
+    "yahooHas": false,
+    "ohlc": [
+      40.45,
+      40.6,
+      40.35,
+      40.6
+    ],
+    "volumePublishedConverted": 176000,
+    "precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+    "localPatchApplied": false
+  },
+  {
+    "symbol": "5274.TWO",
+    "date": "2017-06-03",
+    "officialHas": true,
+    "yahooHas": false,
+    "ohlc": [
+      655,
+      676,
+      647,
+      666
+    ],
+    "volumePublishedConverted": 348000,
+    "precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+    "localPatchApplied": false
+  },
+  {
+    "symbol": "8086.TWO",
+    "date": "2017-06-03",
+    "officialHas": true,
+    "yahooHas": false,
+    "ohlc": [
+      62.3,
+      62.3,
+      60.7,
+      61.4
+    ],
+    "volumePublishedConverted": 3612000,
+    "precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+    "localPatchApplied": false
+  },
+  {
+    "symbol": "4123.TWO",
+    "date": "2017-09-30",
+    "officialHas": true,
+    "yahooHas": false,
+    "ohlc": [
+      46.6,
+      47.35,
+      46.5,
+      47
+    ],
+    "volumePublishedConverted": 234000,
+    "precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+    "localPatchApplied": false
+  },
+  {
+    "symbol": "6223.TWO",
+    "date": "2017-09-30",
+    "officialHas": true,
+    "yahooHas": false,
+    "ohlc": [
+      71,
+      71.9,
+      71,
+      71.6
+    ],
+    "volumePublishedConverted": 145000,
+    "precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+    "localPatchApplied": false
+  },
+  {
+    "symbol": "6146.TWO",
+    "date": "2021-04-06",
+    "officialHas": true,
+    "yahooHas": false,
+    "ohlc": [
+      253.5,
+      253.5,
+      249.5,
+      251
+    ],
+    "volumePublishedConverted": 92000,
+    "precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+    "localPatchApplied": false
+  }
+]

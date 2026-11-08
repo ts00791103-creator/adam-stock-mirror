@@ -1,0 +1,14 @@
+{
+  "symbol": "2330.TW",
+  "calendarWeekSlots": 522,
+  "observedOfficialWeeks": 516,
+  "weeksWithoutPublishedDailyRows": [
+    "2019-02-04",
+    "2021-02-08",
+    "2022-01-31",
+    "2023-01-23",
+    "2025-01-27",
+    "2026-02-16"
+  ],
+  "note": "Do not label these weeks holidays or suspensions without official-calendar reconciliation. No empty weekly candles generated. Native Yahoo weekly feed has not been independently reconciled in this prototype."
+}

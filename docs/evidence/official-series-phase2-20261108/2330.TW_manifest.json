@@ -1,0 +1,2340 @@
+{
+  "symbol": "2330.TW",
+  "requested_start": "2016-11-07",
+  "requested_end": "2026-11-06",
+  "requested_months": [
+    "2016-11",
+    "2016-12",
+    "2017-01",
+    "2017-02",
+    "2017-03",
+    "2017-04",
+    "2017-05",
+    "2017-06",
+    "2017-07",
+    "2017-08",
+    "2017-09",
+    "2017-10",
+    "2017-11",
+    "2017-12",
+    "2018-01",
+    "2018-02",
+    "2018-03",
+    "2018-04",
+    "2018-05",
+    "2018-06",
+    "2018-07",
+    "2018-08",
+    "2018-09",
+    "2018-10",
+    "2018-11",
+    "2018-12",
+    "2019-01",
+    "2019-02",
+    "2019-03",
+    "2019-04",
+    "2019-05",
+    "2019-06",
+    "2019-07",
+    "2019-08",
+    "2019-09",
+    "2019-10",
+    "2019-11",
+    "2019-12",
+    "2020-01",
+    "2020-02",
+    "2020-03",
+    "2020-04",
+    "2020-05",
+    "2020-06",
+    "2020-07",
+    "2020-08",
+    "2020-09",
+    "2020-10",
+    "2020-11",
+    "2020-12",
+    "2021-01",
+    "2021-02",
+    "2021-03",
+    "2021-04",
+    "2021-05",
+    "2021-06",
+    "2021-07",
+    "2021-08",
+    "2021-09",
+    "2021-10",
+    "2021-11",
+    "2021-12",
+    "2022-01",
+    "2022-02",
+    "2022-03",
+    "2022-04",
+    "2022-05",
+    "2022-06",
+    "2022-07",
+    "2022-08",
+    "2022-09",
+    "2022-10",
+    "2022-11",
+    "2022-12",
+    "2023-01",
+    "2023-02",
+    "2023-03",
+    "2023-04",
+    "2023-05",
+    "2023-06",
+    "2023-07",
+    "2023-08",
+    "2023-09",
+    "2023-10",
+    "2023-11",
+    "2023-12",
+    "2024-01",
+    "2024-02",
+    "2024-03",
+    "2024-04",
+    "2024-05",
+    "2024-06",
+    "2024-07",
+    "2024-08",
+    "2024-09",
+    "2024-10",
+    "2024-11",
+    "2024-12",
+    "2025-01",
+    "2025-02",
+    "2025-03",
+    "2025-04",
+    "2025-05",
+    "2025-06",
+    "2025-07",
+    "2025-08",
+    "2025-09",
+    "2025-10",
+    "2025-11",
+    "2025-12",
+    "2026-01",
+    "2026-02",
+    "2026-03",
+    "2026-04",
+    "2026-05",
+    "2026-06",
+    "2026-07",
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11"
+  ],
+  "retrieved_months": 121,
+  "bars": 2437,
+  "first": "2016-11-07",
+  "last": "2026-11-06",
+  "source": "TWSE",
+  "price_basis": "official_raw_unadjusted",
+  "volume_unit": "shares",
+  "volume_precision": [
+    "官方股數原值"
+  ],
+  "unavailable_ohlc_rows": [],
+  "monthly_evidence": [
+    {
+      "symbol": "2330.TW",
+      "month": "2016-11",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20161101",
+        "response": "json"
+      },
+      "payload_sha256": "9dfce8b983b8e6a3949308ed6f3bd1a7676c7a4ae5c6b0592a03fcac39434f8f",
+      "parsed_frame_sha256": "b947489cedd2f22fb33154b86da6a3cbc4f00b5155d010c1300fa48750c0102e",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:36:16.698482+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2016-12",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20161201",
+        "response": "json"
+      },
+      "payload_sha256": "622a1ef805da207770cc5c61a6891ab11bf5da72bab375bce483ef9592107ee3",
+      "parsed_frame_sha256": "00861553f5152dc9d9ec997c1b4d83ff8691b11a9b8b799ab85d785ba1a8388d",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:36:19.667365+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2017-01",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20170101",
+        "response": "json"
+      },
+      "payload_sha256": "b98e563bc27d6a7d1913dd8be4f00a72bc129e6575d3a542c219ed2396156e12",
+      "parsed_frame_sha256": "33084eb1000925c94026a80ce7fe33a5db5c3680287c1954928cf9f18292d7da",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 16,
+      "retrieved_at_utc": "2026-11-08T08:36:22.599730+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2017-02",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20170201",
+        "response": "json"
+      },
+      "payload_sha256": "5b44f7e83c92cf1205178b0208aa8dc06aa8ff6a9cbc803b1e3bc353ecd8b38c",
+      "parsed_frame_sha256": "9d65437deeb67c59d8cc40e020276157b47ccf1a735b909062a36db1d5d1b75f",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 18,
+      "retrieved_at_utc": "2026-11-08T08:36:25.604468+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2017-03",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20170301",
+        "response": "json"
+      },
+      "payload_sha256": "6c1ac21a39f6e5e7d1eb3b1ef306d6e15c87262e1a7066ef3e48424a8779ed57",
+      "parsed_frame_sha256": "bc8bff6b72989ec48b262dd41af493bd51fe9caa179dd2c9b35d0bceb1642ad7",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:36:28.411896+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2017-04",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20170401",
+        "response": "json"
+      },
+      "payload_sha256": "01cffe176849dbecf5cd3ecb14a0b3698e80b74fff8f697bca13dac1cbf818c1",
+      "parsed_frame_sha256": "8853d49b632a35e85303b44e2765515a3854599aecb7cd02fb48f9ddc141a919",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 18,
+      "retrieved_at_utc": "2026-11-08T08:36:31.473005+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2017-05",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20170501",
+        "response": "json"
+      },
+      "payload_sha256": "c9edcfa793d0339bf75b8013c576aab4074f17507faabf83fb6494ff56d04d94",
+      "parsed_frame_sha256": "4a29fcaa5dd7e2a5dd95c9adc51c3df291960f0e5313a6e5149365a6b2cbf0aa",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:36:34.232726+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2017-06",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20170601",
+        "response": "json"
+      },
+      "payload_sha256": "79b14c3b44084f8cc47fbe74e8859bd1824230e88f5f8ae068944a3363ccd136",
+      "parsed_frame_sha256": "8be0badbd32a1975f90960d4b0ab20f91da21f1c8d0a71b8398ffb52dd2698ea",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:36:37.063458+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2017-07",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20170701",
+        "response": "json"
+      },
+      "payload_sha256": "a5ad4e7028dd1348aade64f16184c25888f2dd0a14c506084b9c025e948706e4",
+      "parsed_frame_sha256": "1289a1c87a38a3c1a01e2a31f6a3fa3b35b2c49ecae1a46e4f8fc2e8862bcf2c",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:36:40.108299+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2017-08",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20170801",
+        "response": "json"
+      },
+      "payload_sha256": "d01fe0873759c6359c54721cab3134a8614f87d234d508bf32a6e58cc68cf337",
+      "parsed_frame_sha256": "8d8385986de30abcb3c347026c8fc0b0a5337ac6ef7c8be87e4cf834e77cade9",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:36:43.470494+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2017-09",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20170901",
+        "response": "json"
+      },
+      "payload_sha256": "83909c0950dcb6402926ddcd7875b420662b66da3c7eea9906a81d36f82b00bf",
+      "parsed_frame_sha256": "5f99af0047fe849582b20b70f43de422be8dda56cdb164d397f2053d43bb9ad8",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:36:46.132396+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2017-10",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20171001",
+        "response": "json"
+      },
+      "payload_sha256": "daa3a9442b71ce8c82b5feef6806d281a3301cd2925f9999f4545dae8b60bea3",
+      "parsed_frame_sha256": "6a0d26195814398c8125f6e71eca56506f89478fec05474b4f0534fffe15b1cc",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:36:49.492245+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2017-11",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20171101",
+        "response": "json"
+      },
+      "payload_sha256": "516693c110d97518a5ab66a86f3dee6a824448b374e1098458c458f8210bac1e",
+      "parsed_frame_sha256": "7d6fcf87dd8676a2eef1f34af10ef7aad0cc3c1dd57275c285bbfe54601922ec",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:36:52.490484+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2017-12",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20171201",
+        "response": "json"
+      },
+      "payload_sha256": "c58bc54a0de39766fbc721558dde2e088acfc66195a8b173664e17aea0b94992",
+      "parsed_frame_sha256": "b9f11c06ca15ae8ea2cdfdb56fd0447f2119da09cd69c1d9a423d34dfe7e1988",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:36:55.305265+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2018-01",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20180101",
+        "response": "json"
+      },
+      "payload_sha256": "d33a9ff30ad41a5d9dd2551c7e53e4d99ba9eac78212196b1d54b2867e850b07",
+      "parsed_frame_sha256": "5da0734180d1ebd3d4cf4f7ef20150fa5b2445f81dcb0d1c6a843bd823e41cef",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:36:58.482820+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2018-02",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20180201",
+        "response": "json"
+      },
+      "payload_sha256": "d95307ff10a0bffb96983c1c8b810ad6fb5c7cbdf553722f07b0a6dff427e9cc",
+      "parsed_frame_sha256": "4427dd1a6a00b6a69f88183fdc65ae3f869385a696d8ebc16b569f405b5ee565",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 13,
+      "retrieved_at_utc": "2026-11-08T08:37:01.096088+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2018-03",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20180301",
+        "response": "json"
+      },
+      "payload_sha256": "8f21f60b72ab86cf140d961ff84700666f2f64a2b3eecfa5e2a32a19b782b6c5",
+      "parsed_frame_sha256": "cbe101629b8f466706092f31ad5f303ba19b61341705fe2fbdf7f7d095a12807",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:37:04.417576+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2018-04",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20180401",
+        "response": "json"
+      },
+      "payload_sha256": "3e181050a5c2b6acc5e4b125aef7230ff0a549eb0064ce358b57eafcbc9b3500",
+      "parsed_frame_sha256": "340bce4a60a7d7468dcca70dcda5ecd9b65c1c4bd95b8c08a6c553b58143669a",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 18,
+      "retrieved_at_utc": "2026-11-08T08:37:07.424985+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2018-05",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20180501",
+        "response": "json"
+      },
+      "payload_sha256": "61faa9c3627b285767b8754e06a42d6848209cf538f657cd66488f7182b47d56",
+      "parsed_frame_sha256": "d521a18fef1eed175fc510268cd6c1eb9128ede7684ea34aa55e14782c0692ea",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:37:10.486515+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2018-06",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20180601",
+        "response": "json"
+      },
+      "payload_sha256": "384e69ba1fe177afde069f8da166b76e3c0dee570b4271013e9c37d229a24629",
+      "parsed_frame_sha256": "eb53bf49bc1fd81de42dae76ed567c3e6cabec9f34c531fdc6189684b40740fa",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:37:13.415288+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2018-07",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20180701",
+        "response": "json"
+      },
+      "payload_sha256": "07b3cad4a197dfe2d3e0d7937ad8f0d3a42b389db9f56937997b62c0f4b995d0",
+      "parsed_frame_sha256": "a26f8aac8e12e77a1e0d44acef15253b6e82a9761d28ff68371f91120f232c4c",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:37:16.108029+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2018-08",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20180801",
+        "response": "json"
+      },
+      "payload_sha256": "874600c33108ea8d6b62b1392db9e775efb14bb2c4dbfccf57d1485a89f5891e",
+      "parsed_frame_sha256": "87ec17c6db8a836fe65d8dd4160ea8e1ca815baa4ee21a35e3fecfe3e62b5bcb",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:37:19.750893+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2018-09",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20180901",
+        "response": "json"
+      },
+      "payload_sha256": "c7e43af690f8cfa0c5b17212f8f4b7852c8ac2d98fadc03602c0686fcf34320b",
+      "parsed_frame_sha256": "ff07a50728395f3488023a53cc4ff15c6fe76946a9f8e25edd836aeba0fbcaed",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:37:22.287512+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2018-10",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20181001",
+        "response": "json"
+      },
+      "payload_sha256": "e8c7ec3a108de68a8ffb0607e3499a1bf236b0e0f09ee2ce6e289c1b13e6dbb2",
+      "parsed_frame_sha256": "b47497267b88efe200bca322a1d012604a47189c6127405a4b7256880dac6351",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:37:25.231763+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2018-11",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20181101",
+        "response": "json"
+      },
+      "payload_sha256": "eeb8985ee5364d6c038b36cd447a7f239dd2a2b8731f502194129a5f543dfd04",
+      "parsed_frame_sha256": "c49dd426e198fc35ad6b2903e1c90e2120c1c4a37da8cfeb82d4e19076477805",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:37:28.102973+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2018-12",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20181201",
+        "response": "json"
+      },
+      "payload_sha256": "e539bbf2c1149c48ceb0ee4adff90ee26b0eb47d97242a6b02b3df40aa8756db",
+      "parsed_frame_sha256": "ca4389ba983f1f7ce6726a87c5a81764d8b022e2dcdeae191085e22eac6c9598",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:37:31.482618+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2019-01",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20190101",
+        "response": "json"
+      },
+      "payload_sha256": "1f88b5bc142344e8f7e2769946859f708f25e6bf62abc01234450163352d2797",
+      "parsed_frame_sha256": "040e32d16c32e06d5601c159d6095aa9f35293522ee749694306e0a81434e8bc",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:37:34.484831+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2019-02",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20190201",
+        "response": "json"
+      },
+      "payload_sha256": "1ebb9656792cb6ed0d3a615f8d9b0fc35d118d3b0a1cb00265b09dab6dd02bd6",
+      "parsed_frame_sha256": "e759453519680e37f666448acfb3cd3c5ea6d8daccd49ebac1de346aa4f8752e",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 13,
+      "retrieved_at_utc": "2026-11-08T08:37:37.230116+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2019-03",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20190301",
+        "response": "json"
+      },
+      "payload_sha256": "6e53703b3d89dfa757d03afd206d9a71d809e85bcd97e495e7c59190f49a80e6",
+      "parsed_frame_sha256": "d997915084ca3f1d8e9993e54ec206f98ce22b604fd5e01e6717a6bd3139e0ed",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:37:40.289452+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2019-04",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20190401",
+        "response": "json"
+      },
+      "payload_sha256": "3ad0597fefc8f4533cee8e456755593183360eb94b9d8cad50f5db418b2937b4",
+      "parsed_frame_sha256": "7fa9c98c53a80e1062127bbc3f51e6e1c466b9ac4023ddec2a4fe90dccd0b41e",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:37:43.435721+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2019-05",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20190501",
+        "response": "json"
+      },
+      "payload_sha256": "5aa1e8174e7b1fdc232f2c9ad84eb1e0159f89319c96b8983cd1b7e6e29c0a8e",
+      "parsed_frame_sha256": "8060e4b4d6f2f09845a79e6999058690dd8018daa4a08ca15ee5fbb0054c92be",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:37:46.472007+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2019-06",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20190601",
+        "response": "json"
+      },
+      "payload_sha256": "003103fde61059f8dce9c2c01861edf698ae9e97ef07dc28966b14b4f1b76917",
+      "parsed_frame_sha256": "d0985cef771dd418f9b86c018402161dd4a41bffdbfd58c31a2095bc78ebf76b",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:37:49.686562+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2019-07",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20190701",
+        "response": "json"
+      },
+      "payload_sha256": "10f92e702959a857ef3a6c5f33242bffe8e0fa972471cbf978ef9a9617985cb5",
+      "parsed_frame_sha256": "b1352f742b04388aa75cfcd52685070ce2357ed39b6c508ffeccb57a3ceb2510",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:37:52.284824+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2019-08",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20190801",
+        "response": "json"
+      },
+      "payload_sha256": "eba1723d6796c5b83c73a3c72b919b163c00131067ced9be57c74e554f2fd11c",
+      "parsed_frame_sha256": "30313eb1514cc565e15a999799e5f0a1f87519eeec37e6b52dd94513a305b621",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:37:55.486447+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2019-09",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20190901",
+        "response": "json"
+      },
+      "payload_sha256": "e39841d7b51b69da35042241779db1ad252c950a6601534fc51aa17b852d67aa",
+      "parsed_frame_sha256": "dda3a09e38efa5e85fb6b846470a515ef8c21fb3e0ac2bc2e77c1ae0f7798a5b",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:37:58.611793+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2019-10",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20191001",
+        "response": "json"
+      },
+      "payload_sha256": "df9c813be7c9ac60bd75aa49b2bb148242fa0bf01bb59eab201eff7207bbc1ec",
+      "parsed_frame_sha256": "6b9636b47f83aec5ac62ca6cae7478fa0c972de90678302eb76a5c992e6afc96",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:38:01.445380+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2019-11",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20191101",
+        "response": "json"
+      },
+      "payload_sha256": "fa2be3be69ed77f728e6da6c056cf1324352d866c477d1e349629525bc026556",
+      "parsed_frame_sha256": "64e4e337e9242ec2b8e077994be6b239cae19a276629537667a906026a6322a5",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:38:04.111018+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2019-12",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20191201",
+        "response": "json"
+      },
+      "payload_sha256": "0d59d3c33ab7331dfd460e014b5f7ee221f54c925cfc157396cb3b3e95df61b2",
+      "parsed_frame_sha256": "c98c7fa92aff10f23990ac60812231fe4fa347b26bc746fe16bc58fe602bdb2a",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:38:07.486402+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2020-01",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20200101",
+        "response": "json"
+      },
+      "payload_sha256": "e84862422e775837fbd176937e289dd03c4761a73b1af16505dad664cc9b2200",
+      "parsed_frame_sha256": "b5f7b6230006a57f1ceabf1f56a7501e387b98cf5fd101927e319008e580b9ee",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 15,
+      "retrieved_at_utc": "2026-11-08T08:38:10.618024+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2020-02",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20200201",
+        "response": "json"
+      },
+      "payload_sha256": "01beb0c268f02ac245ce00c3dbda7a9dcb651142cefdedf9ada5b42604936490",
+      "parsed_frame_sha256": "3ba89795310d11a5e01f41300bbd0d65752953842a5669758e0506745fae1ef1",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:38:13.656201+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2020-03",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20200301",
+        "response": "json"
+      },
+      "payload_sha256": "27ba61f439780dd3f623c85733eafcfcfa94335555e5875fb20e04f9bb8208db",
+      "parsed_frame_sha256": "150b39a1ff88161cdd70063f5f52f1c9ad18ce4c1cef51308c647e13d8e35953",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:38:16.810267+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2020-04",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20200401",
+        "response": "json"
+      },
+      "payload_sha256": "23f7cf45393cb94f9d6e13e806ae32f93fc8f01046b16d580743da5035e63811",
+      "parsed_frame_sha256": "2914f5f587f1097dfe62fbb09e04f31dbc57f5e3e868c715c243b42e5c15e239",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:38:20.007902+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2020-05",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20200501",
+        "response": "json"
+      },
+      "payload_sha256": "34e418e56b8390f4b650a79f7453884ad624e33585e16d586cdd29bb00b626e9",
+      "parsed_frame_sha256": "acfd644df62ea8fe0bc4da5c7ce0d93574dd07722a40ef5beb27821093b507d0",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:38:22.700169+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2020-06",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20200601",
+        "response": "json"
+      },
+      "payload_sha256": "a06957ddc8489cb5129d9e51a360c9a6c8227e0d16b34e81283b3b790a688b20",
+      "parsed_frame_sha256": "8587a993bbb1bce5b30ebb70e800067ea77c27fe455584b6ce5b0e1dbee1120d",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:38:25.490807+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2020-07",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20200701",
+        "response": "json"
+      },
+      "payload_sha256": "e837c58a503cb597fbc4030ff985b87e80e2aa3c821ebccc85370453371f6d1a",
+      "parsed_frame_sha256": "7b5ac6ac2e3bed1df6c5d0bceb3430e7cc06695e20a0b20e1e8f08fcab556ced",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:38:28.988506+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2020-08",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20200801",
+        "response": "json"
+      },
+      "payload_sha256": "a480792f998032dc4f641465e4231ba19ad19f64bcf38915cd35fe8d47893bb2",
+      "parsed_frame_sha256": "312e9ece0d6ab26ba69538342383442de874dad53ccc4131513d9c70edbbe457",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:38:31.676724+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2020-09",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20200901",
+        "response": "json"
+      },
+      "payload_sha256": "0d279d3ae374301cddc160533e9bd18fa12483e1f23c7701778c7f9529d0b2ea",
+      "parsed_frame_sha256": "3f8cd4f260c8f05c518b46205b235f4255b215ce149582dc49e7d0857eb67848",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:38:34.664036+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2020-10",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20201001",
+        "response": "json"
+      },
+      "payload_sha256": "0ec9e9b3dc28ad585445ffd103b9d6f5979831c593918b28800a7b9d5466e5ea",
+      "parsed_frame_sha256": "1ef05a7782f5288080e51cb4d89ea754fe4af6abe150e2fde3113c6f358c121a",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:38:37.817485+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2020-11",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20201101",
+        "response": "json"
+      },
+      "payload_sha256": "6f264d65bece6e54bbbf148a26c3889bcd206b214cb87982ffd61e6c1294f3c6",
+      "parsed_frame_sha256": "080f4225dfeda5adc7aded183f3cb26d7eca22a0582f79fa5c9289152fc4b8b0",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:38:40.689096+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2020-12",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20201201",
+        "response": "json"
+      },
+      "payload_sha256": "a0e76ab040279ef1214c8c151754e3bc26cec8bd67942070f5aae63227066c86",
+      "parsed_frame_sha256": "228f7cb5175bd9de4a573385dfb2ae0dff2772ebb0370d125780b8c09c1d6d8b",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:38:43.295277+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2021-01",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20210101",
+        "response": "json"
+      },
+      "payload_sha256": "de4925f3345168f7c91b7c32e59a91c26427d6e57013c330d9a9111ecdd5e914",
+      "parsed_frame_sha256": "b715475ec062a04eae848b297c0ccbe776ec49c8fa0c3a9f7d820fa144ce455f",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:38:46.488080+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2021-02",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20210201",
+        "response": "json"
+      },
+      "payload_sha256": "cad77ac8de155886d5a94d3338d0bf98449fcfcd83b1c2f903ecd3984eca90c8",
+      "parsed_frame_sha256": "b6511ce3aa3fa7e260a9392f33548520db70a071a5af683afe06d03660736133",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 13,
+      "retrieved_at_utc": "2026-11-08T08:38:49.677354+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2021-03",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20210301",
+        "response": "json"
+      },
+      "payload_sha256": "3f8e2a70b9421fe7580fe7c141e54a4af457c15559fccf6983081f24e967e5ac",
+      "parsed_frame_sha256": "f51c67f302e44fb870a98adb6b4ab7bddc49ae035ce2697b931eab97e2618046",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:38:52.709260+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2021-04",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20210401",
+        "response": "json"
+      },
+      "payload_sha256": "6da4a18b78f0a39bf6bfe17c682fb425a7a7b43072220cf1298c749131e36907",
+      "parsed_frame_sha256": "e86b5df7bbc6578d64bd11b308222a20e0e41f26a70b6115a759848a72f5164e",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:38:55.615651+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2021-05",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20210501",
+        "response": "json"
+      },
+      "payload_sha256": "d1065393937e1df2bd8e501ba6ed1e6644ab6013dc9dafad585b6af4ab2da6e8",
+      "parsed_frame_sha256": "9c943b6c5cbc89e1d4583fab39a47ef4b24f448f6243559381db6dcdd254ed1a",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:38:58.489300+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2021-06",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20210601",
+        "response": "json"
+      },
+      "payload_sha256": "a84884e4f042d73a317b92308bcd2b1a1ff601b8265a6690ad76c37150a7b237",
+      "parsed_frame_sha256": "659215f4f61d25223f7232d358cfdbfc0c300ba9c79fedc9d8f0d8b460135824",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:39:01.485128+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2021-07",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20210701",
+        "response": "json"
+      },
+      "payload_sha256": "2c643929f601de6eede19e7c3e4dc8477ee07da842790a09540ba8ac96479ba8",
+      "parsed_frame_sha256": "de5fe9ebf4284f5ee5b12670122567344fdc3eec46f74226978f682cd8145be7",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:39:04.803346+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2021-08",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20210801",
+        "response": "json"
+      },
+      "payload_sha256": "bcaa4f30cabacf7811278873d1b2614984dc6de4ce9aae975dd8a2a65066004d",
+      "parsed_frame_sha256": "8371fc7940ed6503a2002781a75c22d76f7f713d72a35af14825ea0d22c9804c",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:39:07.474113+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2021-09",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20210901",
+        "response": "json"
+      },
+      "payload_sha256": "eca6d9016a302b1ee1a23ca33f6c761c957077e18895c2f8297f2c2252c526a6",
+      "parsed_frame_sha256": "e197bfd9520e4f0d5fd71ef6a80640f24226e5e587caaf1b15fe123ed9c80339",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:39:10.481943+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2021-10",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20211001",
+        "response": "json"
+      },
+      "payload_sha256": "214252a6fa72c69f186b7d467c61cb2b42c4830ba99b3344471e9540c69f18f0",
+      "parsed_frame_sha256": "ec32a87679838dd61371bdb651e6c4ab6fb52c533fe27757e374403ae41e7fe7",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:39:13.545453+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2021-11",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20211101",
+        "response": "json"
+      },
+      "payload_sha256": "651c2dbe8bb6d71c573c3755040e35a3ff441e275aa41d3a79989e0579573120",
+      "parsed_frame_sha256": "c796930b6c61edf39cf18490ea4542c2972da301efb8b04a526d7ec651f2f283",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:39:16.480137+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2021-12",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20211201",
+        "response": "json"
+      },
+      "payload_sha256": "54434d76530e5d0c84c5c19e4e9a1896e16eead5118ec20998a24b6f8820d285",
+      "parsed_frame_sha256": "625c986ef6d72726162a6fd489781bc06b6c574ca7b347b6d2cf4a58aebfd576",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:39:19.484853+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2022-01",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20220101",
+        "response": "json"
+      },
+      "payload_sha256": "67e4c5651490509726c9fc54afbbb4182771732eddad1fdfac5fdd14518ec21d",
+      "parsed_frame_sha256": "0fa13e3498c0ed61829ae0d78cc26a51ba0709b1562ccd77ba7f23fc4481a94f",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 18,
+      "retrieved_at_utc": "2026-11-08T08:39:22.609814+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2022-02",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20220201",
+        "response": "json"
+      },
+      "payload_sha256": "9a557922c063f3257a2f67e195e1a6e94c242845612ee561059197984ee29dd0",
+      "parsed_frame_sha256": "33cd09894c7cc41be70955bbd665f4db97bfcb0998719b50bae2e05cdb41b23b",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 15,
+      "retrieved_at_utc": "2026-11-08T08:39:26.270098+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2022-03",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20220301",
+        "response": "json"
+      },
+      "payload_sha256": "aeabc4ebdaaa26b64147f80ee990f1742d51889e985d3bc0ee436e4f66b84dea",
+      "parsed_frame_sha256": "0032c2abcb20eff5227fcb9276ad8a7f6c558589f4dd168370276ad5b4363c63",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:39:28.479876+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2022-04",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20220401",
+        "response": "json"
+      },
+      "payload_sha256": "892e1dd59baa5db5c2fcd6adbd66f87a54921e1ffff2d5d4d84378c6478e659e",
+      "parsed_frame_sha256": "8a45672f299ee06f5b4d47ae6640837277547ed9a883437c7d1ec0b5fa4b86cd",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:39:31.320993+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2022-05",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20220501",
+        "response": "json"
+      },
+      "payload_sha256": "bd4e622d7ea5d6c5388022081219c7d33ef42e27a4607966eb68272e7217d842",
+      "parsed_frame_sha256": "6d9f96fee7e4ee6cf85ccc4cedb14df1af82ccd62cccf6c7d38cfbf430d747c3",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:39:34.480581+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2022-06",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20220601",
+        "response": "json"
+      },
+      "payload_sha256": "ff046c9a0bbb058b0b97448e0a46a17bdde765b0ee0a9fe0b05c74dd4fc18127",
+      "parsed_frame_sha256": "1f62c29c320b9168be169055b464cdc640c31ac66e617200eb5fc2a894da3f13",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:39:37.813278+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2022-07",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20220701",
+        "response": "json"
+      },
+      "payload_sha256": "c02143d96591a8198fb5f40b753836f56922c1d172e87a9ea9e617cde5273fc1",
+      "parsed_frame_sha256": "dfe8fcd4a4d6e975fd038d3cc90c58ed01d04011b1efe393efaba23bff8bbe6c",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:39:40.808512+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2022-08",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20220801",
+        "response": "json"
+      },
+      "payload_sha256": "5a659679886f0fa6366e1bc00468138d837f76e585ff45d7691748513513688f",
+      "parsed_frame_sha256": "c940c53f4a00a1df75f14034ce0f28611ec508143c12ec193b7f4cbdac2d1c53",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:39:43.625775+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2022-09",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20220901",
+        "response": "json"
+      },
+      "payload_sha256": "3b7dad89ad7f153e2712f16dfbe6fa0efc7a693df527bcdf65da5d6648a9a53b",
+      "parsed_frame_sha256": "a80260df940ffa7e98fef5d5d2d945c0707574d7b44ec656ea89373761cbe76c",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:39:46.629788+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2022-10",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20221001",
+        "response": "json"
+      },
+      "payload_sha256": "d7640a8cd8d47a057d610808eb231583122e4b1332cc4ffe3b919dc917d9648f",
+      "parsed_frame_sha256": "8f44bd57fdd68e1fc1fcd862167cdbe7b37abf0139491b552ecf32a90fbd4afd",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:39:49.292522+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2022-11",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20221101",
+        "response": "json"
+      },
+      "payload_sha256": "d1ca71808f4f85e982d7672d4a2166bb3c74c6205579c427fbe2c978dc41fffa",
+      "parsed_frame_sha256": "d54515171085895538ba930c6cf36138f0089c52d57c6947e9a1e91c15b19f7b",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:39:52.636146+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2022-12",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20221201",
+        "response": "json"
+      },
+      "payload_sha256": "fce113be66036490f12fdb5fb90664eb56ba603dca98f2562d537f953893b499",
+      "parsed_frame_sha256": "9b459bd99f8c9763ffa9fa9e8daa4308ef44fc30d3d2a942a85fe1a25c8f940a",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:39:55.696727+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2023-01",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20230101",
+        "response": "json"
+      },
+      "payload_sha256": "4b3d9678f559be9f4b51aae26fd02541c7e2b94ebb5a38d47b49baab81328d1e",
+      "parsed_frame_sha256": "6eb1485982258737e9c24d550da43af8a5b4cecf2947d4a5e158c114d0684084",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 13,
+      "retrieved_at_utc": "2026-11-08T08:39:58.463422+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2023-02",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20230201",
+        "response": "json"
+      },
+      "payload_sha256": "1554b61dedbc4f030cb0d5405d5e532226986a61ee5dcde3d971b73e9fee7d44",
+      "parsed_frame_sha256": "da5cbeadb50caf5860f2599c138c5337e706c6532800cf4ec674be48d197c561",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 18,
+      "retrieved_at_utc": "2026-11-08T08:40:01.509913+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2023-03",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20230301",
+        "response": "json"
+      },
+      "payload_sha256": "0ec5c46498528942a2c10c0b21469ebef760ab824740e5e2c8ef3b81aac604e4",
+      "parsed_frame_sha256": "84808dc92f769e1b0d3038b939e9201372e5e56271f05332b3a3b148f378ea76",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:40:04.324630+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2023-04",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20230401",
+        "response": "json"
+      },
+      "payload_sha256": "29999b8af88742e20c1979aba28d103f47884f9bbd9f38187bef340ff651202a",
+      "parsed_frame_sha256": "c253af61189dd023aedd6becdd1482a9e714fd92bd5328bbb85a14b93fc883b4",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 17,
+      "retrieved_at_utc": "2026-11-08T08:40:07.304572+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2023-05",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20230501",
+        "response": "json"
+      },
+      "payload_sha256": "d411dda9fcf1b7960ee704982f588871f3d55f28097bfcb091acfc6541db7c99",
+      "parsed_frame_sha256": "71b6a1c47d74dea1cabd9bb2d3284e0dfa7b384a6e8f61ad9890b18e843e2dd6",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:40:10.490335+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2023-06",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20230601",
+        "response": "json"
+      },
+      "payload_sha256": "dae29581032299b397bdec2814d124830e7a7e7ebd7cc18437ec8845826bc2c8",
+      "parsed_frame_sha256": "f6b1a1b03f07d01b53b8819675b4cc739a832abe757dedf38ebd116d56c9eb5c",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:40:13.492292+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2023-07",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20230701",
+        "response": "json"
+      },
+      "payload_sha256": "0d1185d6c9e7f39d659ea7d652950a1282e09aef143bb762dd5d45584a49af79",
+      "parsed_frame_sha256": "0efc8afd98fcd6daec48af38440bf71024b94291f72faa71fef60af9ba42e82d",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:40:16.492398+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2023-08",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20230801",
+        "response": "json"
+      },
+      "payload_sha256": "c20dcf4e65536cb9d0496f40e7ddcbabb14cdee684615c21510b25d5677b7680",
+      "parsed_frame_sha256": "89558b4839fc32c506724d36fd625f88ff531b15c33b1ad64631e936e16cfe53",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:40:19.294389+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2023-09",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20230901",
+        "response": "json"
+      },
+      "payload_sha256": "121ce515dfbb2315ac842e296c751052e4a5e5e3e374a8928a3c05cfc2bdfd91",
+      "parsed_frame_sha256": "98f68536f26c8d36d1bd4cacf4b2365a62f8dd8233f187d432ca2fd7def0d905",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:40:22.607429+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2023-10",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20231001",
+        "response": "json"
+      },
+      "payload_sha256": "25978c2e9a30f69c0ddf9d277c92da2e4701b9633182012f0ca29be2d87307a5",
+      "parsed_frame_sha256": "738da4015454954f357155824f0930acb48bd616ccbaf9737141f78d87393ce1",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:40:25.291371+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2023-11",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20231101",
+        "response": "json"
+      },
+      "payload_sha256": "9f2f33dc7e8604b316484fd6032658a5e0a36a5cdd1a4f660b125cf9f8d49487",
+      "parsed_frame_sha256": "d199f2a865b9e6cfc0df3677f9bbd6b17c551bf51af666c1f71fa63e17e352ba",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:40:28.691143+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2023-12",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20231201",
+        "response": "json"
+      },
+      "payload_sha256": "2fc1519b9796934972fa7ae9626e0549f4294db80a04766e60fc0b9dc047bd46",
+      "parsed_frame_sha256": "bead2f645acbe2afc002228e052e358f866d3bbdfb40f4907909a67f9389bc5f",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:40:31.691267+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2024-01",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20240101",
+        "response": "json"
+      },
+      "payload_sha256": "475775c23e03f47605b59c2aa0186121911b8b4faf12b974067a1fd37a484223",
+      "parsed_frame_sha256": "4db6f8b666327423c3cc2162745dd88ed6d3b5575ea206df363556997ff6ee27",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:40:34.811771+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2024-02",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20240201",
+        "response": "json"
+      },
+      "payload_sha256": "7aa645a67b3dd0dcd4512b27f9886fa727312907aea0d090a8ff966ac1b60b9d",
+      "parsed_frame_sha256": "293d5ea0fd395b288ab8ab54ec8460f7b8b7ff07d26cb9aa175e8d753b564ec5",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 13,
+      "retrieved_at_utc": "2026-11-08T08:40:37.548054+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2024-03",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20240301",
+        "response": "json"
+      },
+      "payload_sha256": "7c40f89552773edf2c6db2da87c5591eada50395d2e35fa50040d160cb510687",
+      "parsed_frame_sha256": "9ce976aecbce59309924867cc987f05fd3a327019791e55d6563ee63782c44a3",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:40:40.764421+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2024-04",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20240401",
+        "response": "json"
+      },
+      "payload_sha256": "292af147620f81d69ac44d0d893fa2a251aae71e8e8136d95300b069f12890eb",
+      "parsed_frame_sha256": "c414228e271a1e22b27474717a17a73ed906c831365d7d8ac5edcad49dd5a11e",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:40:43.550338+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2024-05",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20240501",
+        "response": "json"
+      },
+      "payload_sha256": "5ceb0f2bf88a2f0df90a294e24dc250ef57d677e693c3499bfc3c75b90d48d60",
+      "parsed_frame_sha256": "666e8603c0152a2fe5937eb634c044a351436552cdf93cf4971ee1f16b16d52f",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:40:46.681831+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2024-06",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20240601",
+        "response": "json"
+      },
+      "payload_sha256": "a731986861eb7188684f5e076d63b96ab283b606114c60a0ac4bf8cd24ac47b9",
+      "parsed_frame_sha256": "2117cc73eafa6b7a9e5f5252f095460e21cb0f559eea6aa10876f4ff40c1b736",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:40:49.832368+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2024-07",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20240701",
+        "response": "json"
+      },
+      "payload_sha256": "7c0f4273b00002721905af76a403656484a76b75a07b14cc8f07a2dc5438e5a6",
+      "parsed_frame_sha256": "e77a00170fba35abea8543ea9149ad2c1dc08f90dcd76b129bbc4f86f70cf835",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:40:52.556170+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2024-08",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20240801",
+        "response": "json"
+      },
+      "payload_sha256": "607b116c88fa28d0ac9fbb3b57b3c1fa305560d0e6167c92709d8fdb33e1973a",
+      "parsed_frame_sha256": "c48561c9e87d36e685ea4c4845c88ed43df81bc2b84b3f21499cbc2e343b6abf",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:40:55.750195+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2024-09",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20240901",
+        "response": "json"
+      },
+      "payload_sha256": "a38d8395d236190704ae9d1c3c712177a2beb67d7bd35e4d983fd8609388cd5d",
+      "parsed_frame_sha256": "42426bbffe9ec4db3b82d17f4f75c98ff891faa4c19199fdd79679137aa1161e",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:40:58.770329+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2024-10",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20241001",
+        "response": "json"
+      },
+      "payload_sha256": "3f6b64b8ce83fc69d4066156bd3e15ebb6bb9ba34ba992eb55d501e11489d1b2",
+      "parsed_frame_sha256": "0dd466b7d7472e28c2c5ee2f3b808395d104bf72e9981776ea6e91c4af44a8fd",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:41:02.321448+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2024-11",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20241101",
+        "response": "json"
+      },
+      "payload_sha256": "2775e5b8732e6af7bdf1a04e4e6817607126a6393afff07de906bda1649cdb27",
+      "parsed_frame_sha256": "b93d85b208f46a3d223118f2aa55bc982f69c838537eaee73fa848ef552e2d99",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:41:04.782286+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2024-12",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20241201",
+        "response": "json"
+      },
+      "payload_sha256": "6f86fa5a87dea0a05bcb53dff8cec43cb249e541780f1ed383f2c227e59f0e57",
+      "parsed_frame_sha256": "acbb1a4339af3d4c3ae7f9c39c49da1d795a78f3b50fde9c5fea88de0e321fe8",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:41:07.706810+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2025-01",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20250101",
+        "response": "json"
+      },
+      "payload_sha256": "3c3f1c27ec5a1e2a2f71035453bb577dd3f1b5de3adaaf15f154f163537bb8fd",
+      "parsed_frame_sha256": "6ef9ef282bf4a48da683f0af511a4111ac1dd34bafcdc718d029c355c27d2f47",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 15,
+      "retrieved_at_utc": "2026-11-08T08:41:10.568051+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2025-02",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20250201",
+        "response": "json"
+      },
+      "payload_sha256": "196dba508676f752ea1da26992ffea9e14192504c938fe94f0a7c4e705dc4590",
+      "parsed_frame_sha256": "1f7ae5734a3b8b7caa41b097ab13c1aafbd70ff8db1e177265120904e75cd81b",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:41:13.742848+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2025-03",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20250301",
+        "response": "json"
+      },
+      "payload_sha256": "e2e5158665474970ed09ab1cea4aa99f3bcfa7e0bea36fa1e600dec196aa38cd",
+      "parsed_frame_sha256": "962c69954f603bfea2f2d1d25cc2d9dba9f643ae6af233f1ee228d22fe87464d",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:41:17.064727+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2025-04",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20250401",
+        "response": "json"
+      },
+      "payload_sha256": "edfc1f9a7fbc6d6716dac374eac51464a3af4f28704afffee5379dba9d7827c1",
+      "parsed_frame_sha256": "19a4eba563b876c2dbe3700259762160d40b7ed1ce74214a79d52f293d6feae8",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:41:19.874512+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2025-05",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20250501",
+        "response": "json"
+      },
+      "payload_sha256": "aa101d42e8f5ddd6773f1693e37737c7da0b3dc6f7d6a2887356c971ab131424",
+      "parsed_frame_sha256": "3ed75896a2ab01ea81891c4c3ad04c20d396eba6bf0a925a8558e5955f6a2601",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:41:22.742287+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2025-06",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20250601",
+        "response": "json"
+      },
+      "payload_sha256": "1bba8ec3cbd4d922fe3d9067cee171a67f44f387589e61dfae0376251a15ad33",
+      "parsed_frame_sha256": "ca16cb3df2b1be770445cc8c8e4b576745687eea92993ee3834f855af3e7ed55",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:41:25.597259+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2025-07",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20250701",
+        "response": "json"
+      },
+      "payload_sha256": "1e7bd0cd9ae844554dd1b1f5482b03a3684a0da971eca428f92d50d1ea10e9ed",
+      "parsed_frame_sha256": "eb74915d8ce16e89bfacdad377906918b1c705cc53e10a7bd2b629bd9eb898c9",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 23,
+      "retrieved_at_utc": "2026-11-08T08:41:28.554236+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2025-08",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20250801",
+        "response": "json"
+      },
+      "payload_sha256": "529f74257cc2bfbdfc1e2e8366b84d011f5de1ea00ee2477194282790e996fe0",
+      "parsed_frame_sha256": "9e2dcdeabef36236f1d292ae7cd022ead8cfaf43ab49d0cab918861a0c66ae9b",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:41:31.925181+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2025-09",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20250901",
+        "response": "json"
+      },
+      "payload_sha256": "defa2864882db57fb4dafba45bdb8876fa5515be095b6a0a854cfcf5ff9d9ee3",
+      "parsed_frame_sha256": "81e0673fb08586d14a0c4d37ecde8f3c01555ef3b683c0570001d87653d61ea2",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:41:34.745377+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2025-10",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20251001",
+        "response": "json"
+      },
+      "payload_sha256": "994b13558eee541d8f80ad0d9b6a1464f950304ac5ae3fb01e838687a248e8de",
+      "parsed_frame_sha256": "df46d6220924ba51b0a222bc62ea1fd6638f8d847f65d868c99ce1789ef5dad2",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:41:37.740887+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2025-11",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20251101",
+        "response": "json"
+      },
+      "payload_sha256": "5b2920e568b6a41331973474e9d12f6fed230be1ac0c9949223df14bc3e16521",
+      "parsed_frame_sha256": "7fe68b44aa3742e8b86f1c300efcc994ff4ec1f8629d885093a02dc036e49670",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:41:40.778238+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2025-12",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20251201",
+        "response": "json"
+      },
+      "payload_sha256": "f64a4593e804463a7bae26b3760bdeadcc0d4c442a9052cda6c18263dc29d804",
+      "parsed_frame_sha256": "99a7d92320c542794677bed750e54433b80eeff53fa20cac6e8e22fafc40fb29",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:41:43.878506+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2026-01",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20260101",
+        "response": "json"
+      },
+      "payload_sha256": "da0a98acbd8ba2a105b574da6d0d13b555c0adf6f2d874352b02e6dfb11dbd67",
+      "parsed_frame_sha256": "b53bf691a03f0ad9b5f7d734e57792cb103b30c4c515335585c575638f52e5d7",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:41:46.741190+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2026-02",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20260201",
+        "response": "json"
+      },
+      "payload_sha256": "14822fc94c1965b29cdcd1fe6ace29e85b5cd6e2d07cf29150f7df52c819afec",
+      "parsed_frame_sha256": "a7102f17432ce1231de0fd211b3fbc48be7b7c5fc3cc82acb61636b8aa93e1d6",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 12,
+      "retrieved_at_utc": "2026-11-08T08:41:49.745536+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2026-03",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20260301",
+        "response": "json"
+      },
+      "payload_sha256": "3895d63146873ebc8718f2144b06dbaadc359637081fa4193663aa458f58d6f6",
+      "parsed_frame_sha256": "ad33f557f00c639dd1e687dc1567ed2f85b151f6d8d316c5417e943e194063a0",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:41:52.564708+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2026-04",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20260401",
+        "response": "json"
+      },
+      "payload_sha256": "90ff34070da4df02dcda0b2a1f64f37152d42c96ad026701b9e65c6a6b458ccd",
+      "parsed_frame_sha256": "1e6b8cab939b47054f4885f4ba0bd7b27b2944538379a656600e8faa91987bc2",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:41:55.739500+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2026-05",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20260501",
+        "response": "json"
+      },
+      "payload_sha256": "6c31d3bfae0b853b377086b680aeab4411e3cc1f01047e6e73febf465a404fc0",
+      "parsed_frame_sha256": "d2e97a385c7d7a3af5d492a7eb17be1302a258b5c7ab284e412dbc09f20f94c7",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:41:59.060662+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2026-06",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20260601",
+        "response": "json"
+      },
+      "payload_sha256": "d33cced6f5562620b66112b58fd0d05ce9a2771415322d14ccdab653d75692f1",
+      "parsed_frame_sha256": "4c280d402c60b8e726e220ece19d7b52c1055e12eba20602747ce7af7f52ef07",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:42:01.886008+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2026-07",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20260701",
+        "response": "json"
+      },
+      "payload_sha256": "cc627af5b557d4dcd2e4eb6800e925fe70965d7d4bd82b29575460a21cc4579e",
+      "parsed_frame_sha256": "370f922dead4dcecac8d66725560a68de69e5e74c7daf3e4012deb60a7c5110d",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 22,
+      "retrieved_at_utc": "2026-11-08T08:42:05.311412+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2026-08",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20260801",
+        "response": "json"
+      },
+      "payload_sha256": "e9f0679cabb8fc13d45b55c754db74ce1938dde88120660eeb3402fda4515ba0",
+      "parsed_frame_sha256": "e7957d45493a586981314a118f3b1fc9520a069f05a7bb379d809c369eea0655",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 21,
+      "retrieved_at_utc": "2026-11-08T08:42:08.064325+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2026-09",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20260901",
+        "response": "json"
+      },
+      "payload_sha256": "9c57397eae34de1e218a4288e2b95358c13516b680482f5fdfde2905c2693ee1",
+      "parsed_frame_sha256": "10ee8310a5de92be660009e0d81f1375b2f18e8916d4e2c8a94cd54bb329e65f",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 20,
+      "retrieved_at_utc": "2026-11-08T08:42:10.939287+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2026-10",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20261001",
+        "response": "json"
+      },
+      "payload_sha256": "09a7604f9b0672189f9fa17900015bbaf3a232217a1c6e2f3f35d1b7f75a742c",
+      "parsed_frame_sha256": "052a0c865ff16367e47208d788995bd8dd36b152d4e2209ba3e481a1254cd445",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 19,
+      "retrieved_at_utc": "2026-11-08T08:42:13.936612+00:00"
+    },
+    {
+      "symbol": "2330.TW",
+      "month": "2026-11",
+      "method": "GET",
+      "endpoint": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY",
+      "request": {
+        "stockNo": "2330",
+        "date": "20261101",
+        "response": "json"
+      },
+      "payload_sha256": "d1d2cdddf07ec067e29a6d5c66f4c6d70a555dd052a5573982f3c46f1322b625",
+      "parsed_frame_sha256": "d025d296e24e4593fa4edbafebe95e3aae8992f0de44145f87977b9a8d3cd2fa",
+      "price_basis": "official_raw_unadjusted",
+      "volume_precision": "官方股數原值",
+      "unavailable_rows": [],
+      "bars": 5,
+      "retrieved_at_utc": "2026-11-08T08:42:16.949705+00:00"
+    }
+  ],
+  "month_coverage_complete": true,
+  "trading_calendar_independently_certified": false,
+  "listing_route_evidence": {
+    "symbol": "2330.TW",
+    "endpoint": "https://openapi.twse.com.tw/v1/opendata/t187ap03_L",
+    "retrieved_at_utc": "2026-11-08T08:42:20.836071+00:00",
+    "selected_fields": {
+      "出表日期": "1151107",
+      "公司代號": "2330",
+      "公司簡稱": "台積電",
+      "成立日期": "19870221",
+      "上市日期": "19940905"
+    },
+    "raw_directory_sha256": "3c29190bc0c09a40d48b7217a7b49101635d37680a14f372b7c0eb7104f90e8b",
+    "scope": "Current identity/listing-date evidence only; not a complete transfer/delisting/relisting history."
+  },
+  "listing_transitions_independently_certified": false,
+  "corporate_action_adjustments": "not applied or certified",
+  "production_ready": false,
+  "series_sha256": "2f57dcca62cf6b9820e0ffd6fa310e1050409b3f8c52a7dcdba424ee0795460c",
+  "policy": "Whole official snapshot only; no Yahoo rows, guessed candles, ffill, deleted exceptions or adjusted-close substitution."
+}
