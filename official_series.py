@@ -77,6 +77,7 @@ class OfficialArchive:
         self.fetcher = fetcher
         self.last_request = {}
         self.blocked_hosts = {}
+        self.transport_events = []
 
     def get(self, symbol, month):
         _, endpoint, _ = request_spec(symbol, month)
@@ -94,12 +95,24 @@ class OfficialArchive:
         if wait > 0:
             time.sleep(wait)
         self.last_request[host] = time.monotonic()
-        try:
-            _, evidence, payload = self.fetcher(symbol, month)
-        except HTTPError as exc:
-            if exc.code in (403, 429):
-                self.blocked_hosts[host] = str(exc.code)
-            raise
+        for attempt in range(2):
+            try:
+                _, evidence, payload = self.fetcher(symbol, month)
+                break
+            except HTTPError as exc:
+                self.transport_events.append({"symbol":symbol,"month":month,"host":host,"http_status":exc.code,
+                                              "attempt":attempt+1,"at_utc":datetime.now(timezone.utc).isoformat()})
+                (self.folder/"transport-events.json").write_text(json.dumps(self.transport_events,indent=2),encoding="utf8")
+                if exc.code in (403, 429):
+                    self.blocked_hosts[host] = str(exc.code)
+                    raise
+                # The edge confirmed a read-only request failed with 5xx. Keep
+                # certificate validation and host unchanged; one bounded retry.
+                if 500 <= exc.code < 600 and attempt == 0:
+                    time.sleep(10)
+                    self.last_request[host]=time.monotonic()
+                    continue
+                raise
         bundle = {"symbol": symbol, "month": month, "payload": payload,
                   "evidence": evidence,
                   "retrieved_at_utc": evidence.get("retrieved_at_utc", datetime.now(timezone.utc).isoformat())}

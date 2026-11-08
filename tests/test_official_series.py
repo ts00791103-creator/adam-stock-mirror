@@ -4,7 +4,7 @@ from pathlib import Path
 import tempfile
 import unittest
 from urllib.error import HTTPError
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 import pandas as pd
 from pandas.testing import assert_frame_equal
 from official_history import parse_official_month, OfficialHistoryError
@@ -18,6 +18,17 @@ def bundle(symbol="3211.TWO",month="2017-06"):
     return {"symbol":symbol,"month":month,"payload":payload,"evidence":evidence,"retrieved_at_utc":"saved fixture, not fresh request"}
 
 class OfficialSeriesTests(unittest.TestCase):
+    def test_only_one_delayed_5xx_retry_with_transport_evidence(self):
+        data=bundle();frame,evidence=parse_series_month(data["payload"],"3211.TWO","2017-06")
+        fetch=Mock(side_effect=[HTTPError("https://www.tpex.org.tw/",525,"upstream TLS",{},None),(frame,evidence,data["payload"])])
+        with tempfile.TemporaryDirectory() as folder,patch("official_series.time.sleep") as wait:
+            archive=OfficialArchive(folder,fetcher=fetch);archive.get("3211.TWO","2017-06")
+            self.assertEqual(fetch.call_count,2);wait.assert_called_once_with(10)
+            self.assertEqual(json.loads((Path(folder)/"transport-events.json").read_text())[0]["http_status"],525)
+    def test_changed_official_frame_cannot_be_aggregated(self):
+        frame,_=assemble_official_series("3211.TWO","2017-06-01","2017-06-30",[bundle()])
+        frame.iloc[0,frame.columns.get_loc("Volume")]+=1000
+        with self.assertRaises(OfficialHistoryError):aggregate_official_weeks(frame)
     def test_real_lots_schema_retains_raw_payload_and_precision(self):
         data=bundle("3105.TWO","2025-08")
         original=copy.deepcopy(data["payload"])

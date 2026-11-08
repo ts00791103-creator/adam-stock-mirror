@@ -1,8 +1,7 @@
 name: Official complete-series research (read only)
 on:
-  push:
-    branches: [release/v1.0-development]
-    paths: [official_series.py, tests/test_official_series.py, tests/fixtures/official-series/**, scripts/probe_official_series.py, .github/workflows/official-series-research.yml]
+  # Large backfills are explicit one-off runs. Later source/tests/doc changes
+  # must not automatically redownload a decade of exchange data.
   workflow_dispatch:
 permissions:
   contents: read
