@@ -946,8 +946,6 @@ from stock_navigation import consume_request, preserve_scanner_inputs, reset_sto
 navigation_request = consume_request(st.session_state) if not PRODUCTION_MODE else None
 analysis_page = bool(not PRODUCTION_MODE and st.session_state.get("analysis_page_open"))
 if not PRODUCTION_MODE:
-    st.session_state.setdefault("analysis_interval_name","日K")
-    st.session_state.setdefault("analysis_period","10y")
     analysis_back_slot=st.empty()
     analysis_heading_slot=st.empty()
     analysis_style_slot=st.empty()
@@ -1091,7 +1089,7 @@ with st.sidebar:
             interval_name = st.selectbox(
                 "K線週期",
                 list(INTERVALS),
-                index=6,key="analysis_interval_name"
+                index=6,key="analysis_interval_name",on_change=lambda:st.session_state.pop("analysis_period",None)
             )
 
     with c2:
@@ -1104,8 +1102,6 @@ with st.sidebar:
             )
         else:
             options = PERIODS[interval]
-            if not PRODUCTION_MODE and st.session_state.get("analysis_period") not in options:
-                st.session_state["analysis_period"]=options[-1]
 
             period = st.selectbox(
                 "歷史資料長度",
@@ -1693,7 +1689,8 @@ if analysis_clicked and not PRODUCTION_MODE:
     st.session_state["analysis_page_open"] = True
     st.session_state["analysis_jump_top"] = True
     st.session_state["analysis_jump_sequence"] = st.session_state.get("analysis_jump_sequence",0)+1
-    st.session_state["analysis_context"] = {"symbol":symbol}
+    previous_context=st.session_state.get("analysis_context",{})
+    st.session_state["analysis_context"] = {**(previous_context if previous_context.get("symbol")==symbol else {}),"symbol":symbol}
     st.rerun()
 if analysis_clicked or analysis_page:
     if not symbol:

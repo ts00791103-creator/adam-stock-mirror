@@ -180,5 +180,15 @@ class CandidateNavigationIntegrationTests(unittest.TestCase):
                 app.button(key="analysis_back").click().run()
                 self.assertEqual(app.session_state["market_scan"]["cursor"],10)
 
+    def test_period_controls_are_explicit_and_interval_change_uses_valid_defaults(self):
+        with self.patches():
+            app=AppTest.from_file(str(ROOT/"app.py"),default_timeout=60).run()
+            self.assertEqual(app.selectbox(key="analysis_period").value,"10y")
+            app.selectbox(key="analysis_period").set_value("5y").run()
+            self.assertEqual(app.selectbox(key="analysis_period").value,"5y")
+            app.selectbox(key="analysis_interval_name").set_value("週K").run()
+            self.assertEqual(len(app.exception),0)
+            self.assertEqual(app.selectbox(key="analysis_period").value,"10y")
+
 
 if __name__=="__main__":unittest.main()
