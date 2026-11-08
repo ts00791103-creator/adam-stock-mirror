@@ -1,0 +1,568 @@
+{
+  "retrieved_at_utc": "2026-11-08T04:22:27.769360+00:00",
+  "request": {
+    "period": "10y",
+    "interval": "1d",
+    "auto_adjust": false,
+    "actions": false
+  },
+  "policy": "Read-only evidence; no guessed prices, removed candles, shortened request, mixed-basis replacements or weakened gate.",
+  "stocks": [
+    {
+      "symbol": "6488.TWO",
+      "bars": 2430,
+      "first": "2016-11-07",
+      "last": "2026-11-06",
+      "duplicate_dates": 0,
+      "missing_ohlc": 0,
+      "latest_close": 512,
+      "invalid_dates": [
+        "2018-07-16"
+      ],
+      "invalid_rows": [
+        {
+          "date": "2018-07-16",
+          "Open": 517,
+          "High": 527,
+          "Low": 516,
+          "Close": 510
+        }
+      ],
+      "action_metadata_matches_primary_prices": true,
+      "split_events": [],
+      "status": "unresolved source OHLC anomalies"
+    },
+    {
+      "symbol": "5347.TWO",
+      "bars": 2430,
+      "first": "2016-11-07",
+      "last": "2026-11-06",
+      "duplicate_dates": 0,
+      "missing_ohlc": 0,
+      "latest_close": 120,
+      "invalid_dates": [
+        "2017-07-05",
+        "2018-07-04"
+      ],
+      "invalid_rows": [
+        {
+          "date": "2017-07-05",
+          "Open": 60,
+          "High": 60.099998474121094,
+          "Low": 57.79999923706055,
+          "Close": 55.900001525878906
+        },
+        {
+          "date": "2018-07-04",
+          "Open": 68.80000305175781,
+          "High": 69.30000305175781,
+          "Low": 68.19999694824219,
+          "Close": 66
+        }
+      ],
+      "action_metadata_matches_primary_prices": true,
+      "split_events": [],
+      "status": "unresolved source OHLC anomalies"
+    },
+    {
+      "symbol": "8069.TWO",
+      "bars": 2430,
+      "first": "2016-11-07",
+      "last": "2026-11-06",
+      "duplicate_dates": 0,
+      "missing_ohlc": 0,
+      "latest_close": 142.5,
+      "invalid_dates": [
+        "2017-09-07",
+        "2018-09-04"
+      ],
+      "invalid_rows": [
+        {
+          "date": "2017-09-07",
+          "Open": 43.400001525878906,
+          "High": 43.95000076293945,
+          "Low": 42.95000076293945,
+          "Close": 42.04999923706055
+        },
+        {
+          "date": "2018-09-04",
+          "Open": 35.20000076293945,
+          "High": 36.75,
+          "Low": 35.20000076293945,
+          "Close": 34.349998474121094
+        }
+      ],
+      "action_metadata_matches_primary_prices": true,
+      "split_events": [],
+      "status": "unresolved source OHLC anomalies"
+    },
+    {
+      "symbol": "6147.TWO",
+      "bars": 2430,
+      "first": "2016-11-07",
+      "last": "2026-11-06",
+      "duplicate_dates": 0,
+      "missing_ohlc": 0,
+      "latest_close": 142,
+      "invalid_dates": [
+        "2017-07-26",
+        "2018-07-24"
+      ],
+      "invalid_rows": [
+        {
+          "date": "2017-07-26",
+          "Open": 52.900001525878906,
+          "High": 53,
+          "Low": 51.599998474121094,
+          "Close": 50.79999923706055
+        },
+        {
+          "date": "2018-07-24",
+          "Open": 66.80000305175781,
+          "High": 69.5,
+          "Low": 66.30000305175781,
+          "Close": 66
+        }
+      ],
+      "action_metadata_matches_primary_prices": true,
+      "split_events": [],
+      "status": "unresolved source OHLC anomalies"
+    }
+  ],
+  "official_months": [
+    {
+      "symbol": "6488.TWO",
+      "month": "2018-07",
+      "request_spec": [
+        "POST",
+        "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        {
+          "code": "6488",
+          "date": "2018/07/01",
+          "response": "json"
+        }
+      ],
+      "targets": [
+        {
+          "date": "2018-07-16",
+          "source": {
+            "date": "2018-07-16",
+            "Open": 517,
+            "High": 527,
+            "Low": 516,
+            "Close": 510
+          },
+          "official_raw": {
+            "Open": 517,
+            "High": 527,
+            "Low": 516,
+            "Close": 520
+          },
+          "source_over_official": {
+            "Open": 1,
+            "High": 1,
+            "Low": 1,
+            "Close": 0.9807692307692307
+          },
+          "provider_inverse_split_product_after_date": 1,
+          "basis_status": "Official is unadjusted raw price; Yahoo auto_adjust=False may still have split-adjusted OHLC. Provider action metadata is not an official complete adjustment chain. No conversion or replacement applied."
+        }
+      ],
+      "evidence": {
+        "symbol": "6488.TWO",
+        "month": "2018-07",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "6488",
+          "date": "2018/07/01",
+          "response": "json"
+        },
+        "payload_sha256": "f8727381372962825a72eda09f5bdea0a16b6dba73f1219fa11943293778e3d8",
+        "parsed_frame_sha256": "3abae7f9cb1b72b6e6373e61e74c7adab15f9c8b8800e8267d7a48fe65d7f3bb",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 22,
+        "retrieved_at_utc": "2026-11-08T04:22:29.148933+00:00"
+      },
+      "month_ohl_ratio_range": [
+        1,
+        1
+      ],
+      "status": "official month queried; basis unresolved; no repair"
+    },
+    {
+      "symbol": "5347.TWO",
+      "month": "2017-07",
+      "request_spec": [
+        "POST",
+        "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        {
+          "code": "5347",
+          "date": "2017/07/01",
+          "response": "json"
+        }
+      ],
+      "targets": [
+        {
+          "date": "2017-07-05",
+          "source": {
+            "date": "2017-07-05",
+            "Open": 60,
+            "High": 60.099998474121094,
+            "Low": 57.79999923706055,
+            "Close": 55.900001525878906
+          },
+          "official_raw": {
+            "Open": 60,
+            "High": 60.1,
+            "Low": 57.8,
+            "Close": 58.9
+          },
+          "source_over_official": {
+            "Open": 1,
+            "High": 0.9999999746109999,
+            "Low": 0.9999999868003555,
+            "Close": 0.9490662398281648
+          },
+          "provider_inverse_split_product_after_date": 1,
+          "basis_status": "Official is unadjusted raw price; Yahoo auto_adjust=False may still have split-adjusted OHLC. Provider action metadata is not an official complete adjustment chain. No conversion or replacement applied."
+        }
+      ],
+      "evidence": {
+        "symbol": "5347.TWO",
+        "month": "2017-07",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "5347",
+          "date": "2017/07/01",
+          "response": "json"
+        },
+        "payload_sha256": "58570301e5ca92f764fb5572b17a3b687d70c4dac27fa8799a316d86601a6711",
+        "parsed_frame_sha256": "3dcda53c46de0e1d4a2e02898adc2d50de7085d29f31d70782e7e6f8bc3de97c",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 21,
+        "retrieved_at_utc": "2026-11-08T04:22:29.804677+00:00"
+      },
+      "month_ohl_ratio_range": [
+        0.9999999717952143,
+        1.000000027793787
+      ],
+      "status": "official month queried; basis unresolved; no repair"
+    },
+    {
+      "symbol": "5347.TWO",
+      "month": "2018-07",
+      "request_spec": [
+        "POST",
+        "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        {
+          "code": "5347",
+          "date": "2018/07/01",
+          "response": "json"
+        }
+      ],
+      "targets": [
+        {
+          "date": "2018-07-04",
+          "source": {
+            "date": "2018-07-04",
+            "Open": 68.80000305175781,
+            "High": 69.30000305175781,
+            "Low": 68.19999694824219,
+            "Close": 66
+          },
+          "official_raw": {
+            "Open": 68.8,
+            "High": 69.3,
+            "Low": 68.2,
+            "Close": 69
+          },
+          "source_over_official": {
+            "Open": 1.000000044356945,
+            "High": 1.0000000440369092,
+            "Low": 0.9999999552528179,
+            "Close": 0.9565217391304348
+          },
+          "provider_inverse_split_product_after_date": 1,
+          "basis_status": "Official is unadjusted raw price; Yahoo auto_adjust=False may still have split-adjusted OHLC. Provider action metadata is not an official complete adjustment chain. No conversion or replacement applied."
+        }
+      ],
+      "evidence": {
+        "symbol": "5347.TWO",
+        "month": "2018-07",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "5347",
+          "date": "2018/07/01",
+          "response": "json"
+        },
+        "payload_sha256": "f4415a14ef18c08b8e449940232db1998fd8f845d964a1255cfddfd05b04c859",
+        "parsed_frame_sha256": "51ec9b911a26075c09903e54188e837978d897abcc2f487516a85afbd42b43b1",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 22,
+        "retrieved_at_utc": "2026-11-08T04:22:30.129450+00:00"
+      },
+      "month_ohl_ratio_range": [
+        0.9999999535501094,
+        1.0000000474612414
+      ],
+      "status": "official month queried; basis unresolved; no repair"
+    },
+    {
+      "symbol": "8069.TWO",
+      "month": "2017-09",
+      "request_spec": [
+        "POST",
+        "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        {
+          "code": "8069",
+          "date": "2017/09/01",
+          "response": "json"
+        }
+      ],
+      "targets": [
+        {
+          "date": "2017-09-07",
+          "source": {
+            "date": "2017-09-07",
+            "Open": 43.400001525878906,
+            "High": 43.95000076293945,
+            "Low": 42.95000076293945,
+            "Close": 42.04999923706055
+          },
+          "official_raw": {
+            "Open": 43.4,
+            "High": 43.95,
+            "Low": 42.95,
+            "Close": 43.55
+          },
+          "source_over_official": {
+            "Open": 1.0000000351585001,
+            "High": 1.0000000173592594,
+            "Low": 1.0000000177634332,
+            "Close": 0.9655568137097715
+          },
+          "provider_inverse_split_product_after_date": 1,
+          "basis_status": "Official is unadjusted raw price; Yahoo auto_adjust=False may still have split-adjusted OHLC. Provider action metadata is not an official complete adjustment chain. No conversion or replacement applied."
+        }
+      ],
+      "evidence": {
+        "symbol": "8069.TWO",
+        "month": "2017-09",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "8069",
+          "date": "2017/09/01",
+          "response": "json"
+        },
+        "payload_sha256": "afd86aae527270405bf7862ace8d4b351d63efe8ceb4e14c673e922779622945",
+        "parsed_frame_sha256": "9636828a92a6fa189470db9849f396949bb70a3bc4f593d587fca7782281a164",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 22,
+        "retrieved_at_utc": "2026-11-08T04:22:30.816263+00:00"
+      },
+      "month_ohl_ratio_range": [
+        0.9999999619481569,
+        1.0000000370808968
+      ],
+      "status": "official month queried; basis unresolved; no repair"
+    },
+    {
+      "symbol": "8069.TWO",
+      "month": "2018-09",
+      "request_spec": [
+        "POST",
+        "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        {
+          "code": "8069",
+          "date": "2018/09/01",
+          "response": "json"
+        }
+      ],
+      "targets": [
+        {
+          "date": "2018-09-04",
+          "source": {
+            "date": "2018-09-04",
+            "Open": 35.20000076293945,
+            "High": 36.75,
+            "Low": 35.20000076293945,
+            "Close": 34.349998474121094
+          },
+          "official_raw": {
+            "Open": 35.2,
+            "High": 36.75,
+            "Low": 35.2,
+            "Close": 36
+          },
+          "source_over_official": {
+            "Open": 1.0000000216744163,
+            "High": 1,
+            "Low": 1.0000000216744163,
+            "Close": 0.9541666242811415
+          },
+          "provider_inverse_split_product_after_date": 1,
+          "basis_status": "Official is unadjusted raw price; Yahoo auto_adjust=False may still have split-adjusted OHLC. Provider action metadata is not an official complete adjustment chain. No conversion or replacement applied."
+        }
+      ],
+      "evidence": {
+        "symbol": "8069.TWO",
+        "month": "2018-09",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "8069",
+          "date": "2018/09/01",
+          "response": "json"
+        },
+        "payload_sha256": "71b0ab52a3734cb95300d1eeac781092ba200b2509e1111aae8fe829a49a26a2",
+        "parsed_frame_sha256": "20922e235f2fe2c26c690d9b31efc736e20be4214a21fba469c72569f9c08da1",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 19,
+        "retrieved_at_utc": "2026-11-08T04:22:31.103909+00:00"
+      },
+      "month_ohl_ratio_range": [
+        0.9999999524648315,
+        1.0000000474612414
+      ],
+      "status": "official month queried; basis unresolved; no repair"
+    },
+    {
+      "symbol": "6147.TWO",
+      "month": "2017-07",
+      "request_spec": [
+        "POST",
+        "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        {
+          "code": "6147",
+          "date": "2017/07/01",
+          "response": "json"
+        }
+      ],
+      "targets": [
+        {
+          "date": "2017-07-26",
+          "source": {
+            "date": "2017-07-26",
+            "Open": 52.900001525878906,
+            "High": 53,
+            "Low": 51.599998474121094,
+            "Close": 50.79999923706055
+          },
+          "official_raw": {
+            "Open": 52.9,
+            "High": 53,
+            "Low": 51.6,
+            "Close": 52.9
+          },
+          "source_over_official": {
+            "Open": 1.0000000288445918,
+            "High": 1,
+            "Low": 0.9999999704287034,
+            "Close": 0.9603024430446229
+          },
+          "provider_inverse_split_product_after_date": 1,
+          "basis_status": "Official is unadjusted raw price; Yahoo auto_adjust=False may still have split-adjusted OHLC. Provider action metadata is not an official complete adjustment chain. No conversion or replacement applied."
+        }
+      ],
+      "evidence": {
+        "symbol": "6147.TWO",
+        "month": "2017-07",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "6147",
+          "date": "2017/07/01",
+          "response": "json"
+        },
+        "payload_sha256": "031ce4c26968beca23a826ef9eb225df1bfe6fae28325305fa9e365470f8115f",
+        "parsed_frame_sha256": "f574cce51a965ddd390b150f7b4941e21d1c98b968f0b7935e5b4d736fdc5fc4",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 21,
+        "retrieved_at_utc": "2026-11-08T04:22:32.724481+00:00"
+      },
+      "month_ohl_ratio_range": [
+        0.9999999677744686,
+        1.0000000325347316
+      ],
+      "status": "official month queried; basis unresolved; no repair"
+    },
+    {
+      "symbol": "6147.TWO",
+      "month": "2018-07",
+      "request_spec": [
+        "POST",
+        "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        {
+          "code": "6147",
+          "date": "2018/07/01",
+          "response": "json"
+        }
+      ],
+      "targets": [
+        {
+          "date": "2018-07-24",
+          "source": {
+            "date": "2018-07-24",
+            "Open": 66.80000305175781,
+            "High": 69.5,
+            "Low": 66.30000305175781,
+            "Close": 66
+          },
+          "official_raw": {
+            "Open": 66.8,
+            "High": 69.5,
+            "Low": 66.3,
+            "Close": 68.3
+          },
+          "source_over_official": {
+            "Open": 1.0000000456849973,
+            "High": 1,
+            "Low": 1.0000000460295297,
+            "Close": 0.9663250366032211
+          },
+          "provider_inverse_split_product_after_date": 1,
+          "basis_status": "Official is unadjusted raw price; Yahoo auto_adjust=False may still have split-adjusted OHLC. Provider action metadata is not an official complete adjustment chain. No conversion or replacement applied."
+        }
+      ],
+      "evidence": {
+        "symbol": "6147.TWO",
+        "month": "2018-07",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "6147",
+          "date": "2018/07/01",
+          "response": "json"
+        },
+        "payload_sha256": "915eba41b1732653acfb90b2e34783028beb4f647da44e1c6ff9f646a817c2f4",
+        "parsed_frame_sha256": "46a830e3ba1bdd94599a037d957d83d523f2417b726472c7af81913dfbb7df35",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 22,
+        "retrieved_at_utc": "2026-11-08T04:22:33.157418+00:00"
+      },
+      "month_ohl_ratio_range": [
+        0.9999999531938986,
+        1.0000000474612414
+      ],
+      "status": "official month queried; basis unresolved; no repair"
+    }
+  ]
+}

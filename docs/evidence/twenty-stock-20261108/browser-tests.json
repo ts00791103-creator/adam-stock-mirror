@@ -1,0 +1,105 @@
+[
+  {
+    "case": "before fix exact search",
+    "result": "reproduced",
+    "query": "2002",
+    "selected": "020020.TW"
+  },
+  {
+    "case": "before fix 2002 box clipped",
+    "result": "reproduced",
+    "topPixel": -113.40173451995997
+  },
+  {
+    "case": "after fix cold search 2002",
+    "result": "pass",
+    "selected": "2002.TW"
+  },
+  {
+    "case": "after fix 2002 initial 60 bars",
+    "result": "pass",
+    "boxTopPixel": 18.08000000000004,
+    "boxHeight": 254.58082884211075,
+    "priceBounds": [
+      18.05,
+      21
+    ]
+  },
+  {
+    "case": "2002 desktop pan and price axis reset",
+    "result": "pass",
+    "rightDown": {
+      "x": -352.7608695652174,
+      "y": 58.08
+    },
+    "leftUp": {
+      "x": -427.76086956521726,
+      "y": -1.92
+    },
+    "resetTop": 18.08
+  },
+  {
+    "case": "2002 wheel zoom",
+    "result": "pass",
+    "boxTop": 18.08,
+    "boxWidthAfter": 873.8304347826086
+  },
+  {
+    "case": "2002 daily to weekly",
+    "result": "pass",
+    "boxTop": 60.08415534812718,
+    "boxBottom": 266.6045079186942
+  },
+  {
+    "case": "switch 2002 to 2330 weekly",
+    "result": "pass",
+    "note": "correct symbol 2330 and no old 2002 box"
+  },
+  {
+    "case": "leading zero full code",
+    "result": "pass",
+    "query": "020020"
+  },
+  {
+    "case": "Chinese stock name",
+    "result": "pass",
+    "query": "中鋼"
+  },
+  {
+    "case": "6488 daily 10y gate",
+    "result": "correctly blocked",
+    "bars": 2430,
+    "invalid": 1
+  },
+  {
+    "case": "5347 daily 10y gate",
+    "result": "correctly blocked",
+    "bars": 2430,
+    "invalid": 2
+  },
+  {
+    "case": "8069 daily 10y gate",
+    "result": "correctly blocked",
+    "bars": 2430,
+    "invalid": 2
+  },
+  {
+    "case": "6147 daily 10y gate",
+    "result": "correctly blocked",
+    "bars": 2430,
+    "invalid": 2
+  },
+  {
+    "case": "switch back to 2002 daily after four blocked stocks",
+    "result": "pass",
+    "boxTop": 18.08,
+    "boxBottom": 272.6608288421108
+  },
+  {
+    "case": "2002 390x844 layout",
+    "result": "pass (viewport only)",
+    "boxTop": 18.08,
+    "boxHeight": 254.58082884211075,
+    "touchVerified": false
+  }
+]

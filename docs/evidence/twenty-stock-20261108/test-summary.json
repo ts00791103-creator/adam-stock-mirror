@@ -1,0 +1,23 @@
+{
+  "run": 42446523931,
+  "commit": "a318f8229d16fb66cef94a511b77fc6e3c4a9625",
+  "pythonTests": 268,
+  "pricePanBehaviorTests": 10,
+  "chartRender": "passed",
+  "jobs": [
+    {
+      "name": "worker-package",
+      "conclusion": "success"
+    },
+    {
+      "name": "validate (3.11)",
+      "conclusion": "success"
+    },
+    {
+      "name": "validate (3.14)",
+      "conclusion": "success"
+    }
+  ],
+  "localNodeShell": "not found; tests executed using Node REPL and GitHub Actions instead",
+  "localPython": "not run; GitHub Python 3.11 and 3.14 passed"
+}
