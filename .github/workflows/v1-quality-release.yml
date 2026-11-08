@@ -2,7 +2,7 @@ name: Production V1.0.8 release acceptance
 on:
   push:
     branches: [release/v1.0-development]
-    paths: ['production_quality_preview.py', 'release-preview/v1.0.8/**', 'tests/test_production_quality_release.py', 'scripts/diagnose_release_quality.py', '.github/workflows/v1-quality-release.yml']
+    paths: ['production_quality_preview.py', 'release-preview/v1.0.8/**', 'tests/test_production_quality_release.py', 'scripts/prepare_quality_release.py', 'scripts/diagnose_release_quality.py', '.github/workflows/v1-quality-release.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -15,6 +15,10 @@ jobs:
         python: ['3.11', '3.14']
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: 6ef07921465a9b4f50a2dce8c4c71935ef10b6be
+          path: production-base
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
@@ -24,6 +28,10 @@ jobs:
       - run: node tests/test_chart_price_pan.cjs
       - run: node tests/test_chart_render.cjs
       - run: node deploy/fallback-scheduler/test_worker.mjs
+      - run: python scripts/prepare_quality_release.py
+      - name: Test exact production package and stable production dependencies
+        working-directory: production-package
+        run: python -m unittest discover -s tests -p test_production_quality_release.py -v
   seven-live:
     runs-on: ubuntu-latest
     timeout-minutes: 15
