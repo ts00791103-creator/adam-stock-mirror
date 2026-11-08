@@ -1691,6 +1691,10 @@ with st.sidebar:
 from auto_fundamentals import render_auto_fundamentals
 render_auto_fundamentals(st.sidebar, symbol, market)
 
+if not PRODUCTION_MODE and market == "台指期 TX（官方 CSV）":
+    from tx_reference import show_tx_reference
+    show_tx_reference(st, market, production=PRODUCTION_MODE)
+
 analysis_clicked = st.sidebar.button(
     "開始亞當鏡像分析",
     type="primary", use_container_width=True
