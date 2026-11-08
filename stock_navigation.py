@@ -15,6 +15,7 @@ def queue_analysis(state, row):
     symbol=str(row.get("Yahoo代號","")).upper()
     if not re.fullmatch(r"[0-9]{4,6}\.(TW|TWO)",symbol):
         raise ValueError("無法確認個股代號與上市／上櫃市場")
+    state.pop("stock_navigation_error",None)
     state["adam_stock_query"]=symbol.split(".")[0]
     state["analysis_jump_top"]=True
     state["analysis_jump_sequence"]=state.get("analysis_jump_sequence",0)+1
@@ -26,6 +27,19 @@ def queue_analysis(state, row):
                                     "screen_date":str(row.get("資料日期") or row.get("官方行情日期") or ""),
                                     "official_date":str(row.get("官方行情日期") or ""),"official_close":official_close,
                                     "screen_stage":"一年日K複選" if "符合" in row else "官方每日行情初選（尚未複選）"}
+
+
+def queue_current_selection(state, snapshot, choice_key):
+    # Resolve the live widget value at click time, never a row captured before
+    # the user's last selection/rerun. Reject absent symbols rather than fall back.
+    selected=state.get(choice_key)
+    row=next((r for r in snapshot if r.get("Yahoo代號")==selected),None)
+    if row is None:
+        state.pop("stock_analysis_request",None)
+        state["stock_navigation_error"]={"key":choice_key,"reason":"名單或選取已更新，請重新選擇個股；未改開其他股票。"}
+        return False
+    queue_analysis(state,row)
+    return True
 
 
 def reset_stock_pricing(state, symbol):
@@ -98,6 +112,8 @@ def stock_result_table(frame, rows, key, production=False, analysis_options=None
     chosen=st.selectbox(choice_label,symbols,
                         format_func=lambda s:f"{s.split('.')[0]} {lookup[s].get('名稱','')}（{s}）",
                         key=key+"_stock_choice")
+    navigation_error=st.session_state.get("stock_navigation_error",{})
+    if navigation_error.get("key")==key+"_stock_choice":st.error(navigation_error["reason"])
     if analysis_options:
         from analysis_availability import (inspect_history,save_availability,failed_history,
                                            availability_label,availability_key,show_availability)
@@ -113,8 +129,8 @@ def stock_result_table(frame, rows, key, production=False, analysis_options=None
         if report:
             show_availability(st,report)
             st.caption("以上為該次核對結果；實際開啟時仍重新執行品質檢查。")
-    st.button("開啟所選個股分析",key=key+"_selected_open",on_click=queue_analysis,
-              args=(st.session_state,lookup[chosen]),use_container_width=True)
+    st.button("開啟所選個股分析",key=key+"_selected_open",on_click=queue_current_selection,
+              args=(st.session_state,snapshot,key+"_stock_choice"),use_container_width=True)
     if len(snapshot)>30:
         return
     with st.expander("逐檔開啟分析（手機可用）"):

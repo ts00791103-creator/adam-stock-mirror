@@ -7,7 +7,7 @@ import pandas as pd
 import streamlit as st
 from streamlit.testing.v1 import AppTest
 from analysis_availability import inspect_history,save_availability,availability_label
-from stock_navigation import queue_analysis,consume_request,return_to_results
+from stock_navigation import queue_analysis,consume_request,return_to_results,queue_current_selection
 from test_market_data_quality import audit
 from test_stock_navigation import valuation
 
@@ -33,6 +33,18 @@ def snapshot():
 
 
 class AvailabilityTests(unittest.TestCase):
+    def test_open_resolves_current_selection_instead_of_a_stale_captured_row(self):
+        rows=[{"Yahoo代號":"2330.TW"},{"Yahoo代號":"2887.TW"}]
+        state={"choice":"2887.TW"}
+        self.assertTrue(queue_current_selection(state,rows,"choice"))
+        self.assertEqual(state["stock_analysis_request"]["symbol"],"2887.TW")
+
+    def test_removed_selection_does_not_open_the_first_or_previous_stock(self):
+        state={"choice":"1815.TWO","stock_analysis_request":{"symbol":"2330.TW"}}
+        self.assertFalse(queue_current_selection(state,[{"Yahoo代號":"2330.TW"}],"choice"))
+        self.assertNotIn("stock_analysis_request",state)
+        self.assertIn("未改開其他股票",state["stock_navigation_error"]["reason"])
+
     def test_complete_bad_history_is_preserved_and_remains_blocked(self):
         frame=bars(bad=True);before=frame.copy(deep=True)
         report=inspect_history("1815.TWO","10y","1d",frame,audit)
