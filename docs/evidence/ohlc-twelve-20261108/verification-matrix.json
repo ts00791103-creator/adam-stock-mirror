@@ -1,0 +1,966 @@
+[
+  {
+    "symbol": "3105.TWO",
+    "sample": "subject",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2430,
+    "analysis_bars": 2430,
+    "raw_invalid_dates": [
+      "2017-07-06",
+      "2018-07-02"
+    ],
+    "analysis_invalid_dates": [],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [
+      {
+        "symbol": "3105.TWO",
+        "date": "2017-07-06",
+        "original_close": 155.5,
+        "official_close": 160,
+        "applied_close": 160,
+        "float_alignment_delta": 0,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "a2f058ee383df2db10e8be4be33f3e3573d5a7d2f8955c3c2c762bcf8d1de30d",
+        "ex_date": "2017-07-07",
+        "official_previous_close": 160,
+        "official_reference_price": 155.5,
+        "cash_dividend": 4.5,
+        "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+        "action_payload_sha256": "59ebdef980daa7f8c37eccadc1905d51a1ac9f6bf2b036f2bb2c46e9800fcd71",
+        "original_ohlc": {
+          "Open": 162,
+          "High": 165.5,
+          "Low": 159,
+          "Close": 155.5
+        },
+        "source_reference_difference": 0
+      },
+      {
+        "symbol": "3105.TWO",
+        "date": "2018-07-02",
+        "original_close": 210,
+        "official_close": 217,
+        "applied_close": 217,
+        "float_alignment_delta": 0,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "e259d5573b1ffcafb75e627d7c9861ba435c5cff5d11f5ca6bb2cd03cdb20a3f",
+        "ex_date": "2018-07-03",
+        "official_previous_close": 217,
+        "official_reference_price": 210,
+        "cash_dividend": 7,
+        "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+        "action_payload_sha256": "a433f3cb8b6527e8bc23ac2cab8ac7aa4130b95449a52e71870e9073e1cb5f1f",
+        "original_ohlc": {
+          "Open": 221,
+          "High": 228.5,
+          "Low": 217,
+          "Close": 210
+        },
+        "source_reference_difference": 0
+      }
+    ],
+    "unresolved": [],
+    "status": "available"
+  },
+  {
+    "symbol": "3260.TWO",
+    "sample": "subject",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2430,
+    "analysis_bars": 2430,
+    "raw_invalid_dates": [
+      "2017-07-03",
+      "2018-07-10"
+    ],
+    "analysis_invalid_dates": [
+      "2017-07-03",
+      "2018-07-10"
+    ],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [],
+    "unresolved": [
+      {
+        "month": "2017-07",
+        "status": "unresolved",
+        "official_evidence": {
+          "symbol": "3260.TWO",
+          "month": "2017-07",
+          "method": "POST",
+          "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+          "request": {
+            "code": "3260",
+            "date": "2017/07/01",
+            "response": "json"
+          },
+          "payload_sha256": "1687c6605317b1c67460bd9cd95b9d2e5e3d4eaa45b73faf00351da02426f818",
+          "parsed_frame_sha256": "0b4ad8bacceb5f9ff2a4b24734d63d46bf6ab63c5c5bafe4b55c3be448f6538c",
+          "price_basis": "official_raw_unadjusted",
+          "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+          "unavailable_rows": [],
+          "bars": 21,
+          "retrieved_at_utc": "2026-11-08T05:11:09.162849+00:00"
+        },
+        "source_missing_official_dates": [],
+        "source_extra_dates": [],
+        "reason": "OfficialHistoryError: 同日開高低不吻合或並非可證實的收盤越界，未改價"
+      },
+      {
+        "month": "2018-07",
+        "status": "unresolved",
+        "official_evidence": {
+          "symbol": "3260.TWO",
+          "month": "2018-07",
+          "method": "POST",
+          "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+          "request": {
+            "code": "3260",
+            "date": "2018/07/01",
+            "response": "json"
+          },
+          "payload_sha256": "6138743df9ffb0a21b240bd748e19b26b48c114fd08716e5ea51886ce1d49264",
+          "parsed_frame_sha256": "e82082cb9548feaa1c8421750bacf78d406364fd02de7ef88909e78ccfbc0392",
+          "price_basis": "official_raw_unadjusted",
+          "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+          "unavailable_rows": [],
+          "bars": 22,
+          "retrieved_at_utc": "2026-11-08T05:11:09.485416+00:00"
+        },
+        "source_missing_official_dates": [],
+        "source_extra_dates": [],
+        "reason": "OfficialHistoryError: 同日開高低不吻合或並非可證實的收盤越界，未改價"
+      }
+    ],
+    "status": "blocked"
+  },
+  {
+    "symbol": "5274.TWO",
+    "sample": "subject",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2430,
+    "analysis_bars": 2430,
+    "raw_invalid_dates": [
+      "2017-06-14",
+      "2019-06-14"
+    ],
+    "analysis_invalid_dates": [
+      "2017-06-14",
+      "2019-06-14"
+    ],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [],
+    "unresolved": [
+      {
+        "month": "2017-06",
+        "status": "unresolved",
+        "official_evidence": {
+          "symbol": "5274.TWO",
+          "month": "2017-06",
+          "method": "POST",
+          "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+          "request": {
+            "code": "5274",
+            "date": "2017/06/01",
+            "response": "json"
+          },
+          "payload_sha256": "eb39cd8c3094838589eecfe395a3878c57ab54a63fe61da01d6e46927c1ec3ba",
+          "parsed_frame_sha256": "c050cc01cbbbbd93cd8e2b4c1a43e58ede478bf491fb9e7384ddca8c1f6ff830",
+          "price_basis": "official_raw_unadjusted",
+          "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+          "unavailable_rows": [],
+          "bars": 23,
+          "retrieved_at_utc": "2026-11-08T05:11:13.731763+00:00"
+        },
+        "source_missing_official_dates": [
+          "2017-06-03"
+        ],
+        "source_extra_dates": [],
+        "reason": "OfficialHistoryError: 本月原始與官方日K日期不完全相同，未混補"
+      },
+      {
+        "month": "2019-06",
+        "status": "unresolved",
+        "official_evidence": {
+          "symbol": "5274.TWO",
+          "month": "2019-06",
+          "method": "POST",
+          "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+          "request": {
+            "code": "5274",
+            "date": "2019/06/01",
+            "response": "json"
+          },
+          "payload_sha256": "0a2465512d454c3dd5d0f4d9ba45ae7ed324d2440c034dbf5738282a763e3e9b",
+          "parsed_frame_sha256": "d951854e4ee77689db2d42184018afafa93a0907e95a1e33eee3c783c2179e9d",
+          "price_basis": "official_raw_unadjusted",
+          "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+          "unavailable_rows": [],
+          "bars": 19,
+          "retrieved_at_utc": "2026-11-08T05:11:14.029228+00:00"
+        },
+        "source_missing_official_dates": [],
+        "source_extra_dates": [],
+        "reason": "OfficialHistoryError: 同日開高低不吻合或並非可證實的收盤越界，未改價"
+      }
+    ],
+    "status": "blocked"
+  },
+  {
+    "symbol": "8299.TWO",
+    "sample": "subject",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2430,
+    "analysis_bars": 2430,
+    "raw_invalid_dates": [
+      "2017-07-05",
+      "2018-06-27"
+    ],
+    "analysis_invalid_dates": [],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [
+      {
+        "symbol": "8299.TWO",
+        "date": "2017-07-05",
+        "original_close": 353,
+        "official_close": 367,
+        "applied_close": 367,
+        "float_alignment_delta": 0,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "beff41c5748108f1fad263845dc26e3097a941f6efd17017328db537fbcae45d",
+        "ex_date": "2017-07-06",
+        "official_previous_close": 367,
+        "official_reference_price": 353,
+        "cash_dividend": 14,
+        "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+        "action_payload_sha256": "59ebdef980daa7f8c37eccadc1905d51a1ac9f6bf2b036f2bb2c46e9800fcd71",
+        "original_ohlc": {
+          "Open": 365.5,
+          "High": 369,
+          "Low": 363,
+          "Close": 353
+        },
+        "source_reference_difference": 0
+      },
+      {
+        "symbol": "8299.TWO",
+        "date": "2018-06-27",
+        "original_close": 246.5,
+        "official_close": 263.5,
+        "applied_close": 263.5,
+        "float_alignment_delta": 0,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "07bf0fb25678e0b58e2d7705262d84b370ce70fa570d5ffd05b1c2af7847395d",
+        "ex_date": "2018-06-28",
+        "official_previous_close": 263.5,
+        "official_reference_price": 246.5,
+        "cash_dividend": 17,
+        "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+        "action_payload_sha256": "3b95aa04da9e8418b61f87828ee0a5458477ba6c7bea583d291fd5a1a5a3e38d",
+        "original_ohlc": {
+          "Open": 262,
+          "High": 267,
+          "Low": 261.5,
+          "Close": 246.5
+        },
+        "source_reference_difference": 0
+      }
+    ],
+    "unresolved": [],
+    "status": "available"
+  },
+  {
+    "symbol": "3227.TWO",
+    "sample": "subject",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2430,
+    "analysis_bars": 2430,
+    "raw_invalid_dates": [
+      "2018-08-20"
+    ],
+    "analysis_invalid_dates": [],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [
+      {
+        "symbol": "3227.TWO",
+        "date": "2018-08-20",
+        "original_close": 123.5,
+        "official_close": 128,
+        "applied_close": 128,
+        "float_alignment_delta": 0,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "17351b81a5d89c2135fcaf5c682ab7925bfb9fbe5d74c16f8dd57a3e3415aacc",
+        "ex_date": "2018-08-21",
+        "official_previous_close": 128,
+        "official_reference_price": 123.53,
+        "cash_dividend": 4.47114744,
+        "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+        "action_payload_sha256": "9d8baab404c0a42bd74316079c37d6f01216716537d78114ad9911531468f599",
+        "original_ohlc": {
+          "Open": 129,
+          "High": 131,
+          "Low": 126,
+          "Close": 123.5
+        },
+        "source_reference_difference": -0.030000000000001137
+      }
+    ],
+    "unresolved": [],
+    "status": "available"
+  },
+  {
+    "symbol": "6182.TWO",
+    "sample": "subject",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2430,
+    "analysis_bars": 2430,
+    "raw_invalid_dates": [
+      "2018-08-22"
+    ],
+    "analysis_invalid_dates": [
+      "2018-08-22"
+    ],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [],
+    "unresolved": [
+      {
+        "month": "2018-08",
+        "status": "unresolved",
+        "official_evidence": {
+          "symbol": "6182.TWO",
+          "month": "2018-08",
+          "method": "POST",
+          "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+          "request": {
+            "code": "6182",
+            "date": "2018/08/01",
+            "response": "json"
+          },
+          "payload_sha256": "abcca544e72005a42ca854d54dcd652302fbc602a612c17d61e7e7edfd353373",
+          "parsed_frame_sha256": "9f0ff6d3b41734cf7724d9bf365cd92b63bef86d35dea65d75a8b1cbee687f1c",
+          "price_basis": "official_raw_unadjusted",
+          "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+          "unavailable_rows": [],
+          "bars": 23,
+          "retrieved_at_utc": "2026-11-08T05:11:23.963144+00:00"
+        },
+        "source_missing_official_dates": [],
+        "source_extra_dates": [],
+        "reason": "OfficialHistoryError: 同日開高低不吻合或並非可證實的收盤越界，未改價"
+      }
+    ],
+    "status": "blocked"
+  },
+  {
+    "symbol": "4123.TWO",
+    "sample": "subject",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2430,
+    "analysis_bars": 2430,
+    "raw_invalid_dates": [
+      "2017-09-06",
+      "2018-08-08"
+    ],
+    "analysis_invalid_dates": [
+      "2017-09-06",
+      "2018-08-08"
+    ],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [],
+    "unresolved": [
+      {
+        "month": "2017-09",
+        "status": "unresolved",
+        "official_evidence": {
+          "symbol": "4123.TWO",
+          "month": "2017-09",
+          "method": "POST",
+          "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+          "request": {
+            "code": "4123",
+            "date": "2017/09/01",
+            "response": "json"
+          },
+          "payload_sha256": "1551977d40c90b8b2406bdec1415c3ac8abfd9f3f7cb4bdf5b20340e5889ee1c",
+          "parsed_frame_sha256": "a4e09f3708cc554f475e67018e3778a8da1e6c09b6105773d06a800c05c02cfe",
+          "price_basis": "official_raw_unadjusted",
+          "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+          "unavailable_rows": [],
+          "bars": 22,
+          "retrieved_at_utc": "2026-11-08T05:11:27.422122+00:00"
+        },
+        "source_missing_official_dates": [
+          "2017-09-30"
+        ],
+        "source_extra_dates": [],
+        "reason": "OfficialHistoryError: 本月原始與官方日K日期不完全相同，未混補"
+      },
+      {
+        "month": "2018-08",
+        "status": "unresolved",
+        "official_evidence": {
+          "symbol": "4123.TWO",
+          "month": "2018-08",
+          "method": "POST",
+          "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+          "request": {
+            "code": "4123",
+            "date": "2018/08/01",
+            "response": "json"
+          },
+          "payload_sha256": "02213d3c6c2e5bfea21a7d93706b9d204b84dfa95e99518f0a112456b99246c2",
+          "parsed_frame_sha256": "15104a5fcbff211a2b7a953a53a6e92a5526978187d38095cdb7c57b3bc83d74",
+          "price_basis": "official_raw_unadjusted",
+          "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+          "unavailable_rows": [],
+          "bars": 23,
+          "retrieved_at_utc": "2026-11-08T05:11:27.731152+00:00"
+        },
+        "source_missing_official_dates": [],
+        "source_extra_dates": [],
+        "reason": "OfficialHistoryError: 同日開高低不吻合或並非可證實的收盤越界，未改價"
+      }
+    ],
+    "status": "blocked"
+  },
+  {
+    "symbol": "6274.TWO",
+    "sample": "subject",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2430,
+    "analysis_bars": 2430,
+    "raw_invalid_dates": [
+      "2017-08-08",
+      "2018-08-06"
+    ],
+    "analysis_invalid_dates": [],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [
+      {
+        "symbol": "6274.TWO",
+        "date": "2017-08-08",
+        "original_close": 67,
+        "official_close": 69.1,
+        "applied_close": 69.1,
+        "float_alignment_delta": 0,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "86c3ead07b91312863b7157ffa344cb6e93ca8eac4b07a2ba907774cbede19d5",
+        "ex_date": "2017-08-09",
+        "official_previous_close": 69.1,
+        "official_reference_price": 67,
+        "cash_dividend": 2.09841906,
+        "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+        "action_payload_sha256": "d7f0174f2743a0bab67c41f116a892ecc6ad1167e57f472049d0e85083350c59",
+        "original_ohlc": {
+          "Open": 69.5,
+          "High": 69.9000015258789,
+          "Low": 68,
+          "Close": 67
+        },
+        "source_reference_difference": 0
+      },
+      {
+        "symbol": "6274.TWO",
+        "date": "2018-08-06",
+        "original_close": 115.5,
+        "official_close": 118.5,
+        "applied_close": 118.5,
+        "float_alignment_delta": 0,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "c0e47a8e33f545f31edc733a93ebb8e170368e9d0b29943cfd033a1e1936dbde",
+        "ex_date": "2018-08-07",
+        "official_previous_close": 118.5,
+        "official_reference_price": 115.31,
+        "cash_dividend": 3.18853027,
+        "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+        "action_payload_sha256": "9d8baab404c0a42bd74316079c37d6f01216716537d78114ad9911531468f599",
+        "original_ohlc": {
+          "Open": 119,
+          "High": 119.5,
+          "Low": 117,
+          "Close": 115.5
+        },
+        "source_reference_difference": 0.18999999999999773
+      }
+    ],
+    "unresolved": [],
+    "status": "available"
+  },
+  {
+    "symbol": "1565.TWO",
+    "sample": "subject",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2430,
+    "analysis_bars": 2430,
+    "raw_invalid_dates": [
+      "2017-08-23",
+      "2018-07-11"
+    ],
+    "analysis_invalid_dates": [],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [
+      {
+        "symbol": "1565.TWO",
+        "date": "2017-08-23",
+        "original_close": 647,
+        "official_close": 674,
+        "applied_close": 674,
+        "float_alignment_delta": 0,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "cc227c14e412ccd9c87b9f813928639d18f4ef3f8b9d90f2bb847b88d53accb1",
+        "ex_date": "2017-08-24",
+        "official_previous_close": 674,
+        "official_reference_price": 647,
+        "cash_dividend": 27,
+        "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+        "action_payload_sha256": "d7f0174f2743a0bab67c41f116a892ecc6ad1167e57f472049d0e85083350c59",
+        "original_ohlc": {
+          "Open": 674,
+          "High": 678,
+          "Low": 670,
+          "Close": 647
+        },
+        "source_reference_difference": 0
+      },
+      {
+        "symbol": "1565.TWO",
+        "date": "2018-07-11",
+        "original_close": 575,
+        "official_close": 600,
+        "applied_close": 600,
+        "float_alignment_delta": 0,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "6df30a78dda660d711c4dfb3c5e5778e9c6658806451f662f904c046b4b6c1ab",
+        "ex_date": "2018-07-12",
+        "official_previous_close": 600,
+        "official_reference_price": 575,
+        "cash_dividend": 25,
+        "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+        "action_payload_sha256": "a433f3cb8b6527e8bc23ac2cab8ac7aa4130b95449a52e71870e9073e1cb5f1f",
+        "original_ohlc": {
+          "Open": 608,
+          "High": 610,
+          "Low": 598,
+          "Close": 575
+        },
+        "source_reference_difference": 0
+      }
+    ],
+    "unresolved": [],
+    "status": "available"
+  },
+  {
+    "symbol": "3211.TWO",
+    "sample": "subject",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2430,
+    "analysis_bars": 2430,
+    "raw_invalid_dates": [
+      "2017-06-27",
+      "2018-07-02"
+    ],
+    "analysis_invalid_dates": [
+      "2017-06-27"
+    ],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [
+      {
+        "symbol": "3211.TWO",
+        "date": "2018-07-02",
+        "original_close": 38.25,
+        "official_close": 40.75,
+        "applied_close": 40.75,
+        "float_alignment_delta": 0,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "dc416a80c18d006dab63a99226747589970e1df84ce64c69a4f59edbeecd7c31",
+        "ex_date": "2018-07-03",
+        "official_previous_close": 40.75,
+        "official_reference_price": 38.25,
+        "cash_dividend": 2.5,
+        "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+        "action_payload_sha256": "a433f3cb8b6527e8bc23ac2cab8ac7aa4130b95449a52e71870e9073e1cb5f1f",
+        "original_ohlc": {
+          "Open": 40.849998474121094,
+          "High": 41,
+          "Low": 40.70000076293945,
+          "Close": 38.25
+        },
+        "source_reference_difference": 0
+      }
+    ],
+    "unresolved": [
+      {
+        "month": "2017-06",
+        "status": "unresolved",
+        "official_evidence": {
+          "symbol": "3211.TWO",
+          "month": "2017-06",
+          "method": "POST",
+          "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+          "request": {
+            "code": "3211",
+            "date": "2017/06/01",
+            "response": "json"
+          },
+          "payload_sha256": "b7070efe05b0748d57dd56148e7c128c26db0c2f9a2d54adbb0da60957ecd1f4",
+          "parsed_frame_sha256": "3b5c4c1e5caf9e725f84064dccf1bf59ebf0547cc494ffdc669eda462b0c84ca",
+          "price_basis": "official_raw_unadjusted",
+          "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+          "unavailable_rows": [],
+          "bars": 23,
+          "retrieved_at_utc": "2026-11-08T05:11:38.260685+00:00"
+        },
+        "source_missing_official_dates": [
+          "2017-06-03"
+        ],
+        "source_extra_dates": [],
+        "reason": "OfficialHistoryError: 本月原始與官方日K日期不完全相同，未混補"
+      }
+    ],
+    "status": "blocked"
+  },
+  {
+    "symbol": "3529.TWO",
+    "sample": "subject",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2430,
+    "analysis_bars": 2430,
+    "raw_invalid_dates": [
+      "2018-07-02"
+    ],
+    "analysis_invalid_dates": [],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [
+      {
+        "symbol": "3529.TWO",
+        "date": "2018-07-02",
+        "original_close": 377.5,
+        "official_close": 385,
+        "applied_close": 385,
+        "float_alignment_delta": 0,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "b5cb81ba3ea8fb518254436cca20a60b80fa1cbf985e5e6980cddb2f514f6c78",
+        "ex_date": "2018-07-03",
+        "official_previous_close": 385,
+        "official_reference_price": 377.5,
+        "cash_dividend": 7.499,
+        "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+        "action_payload_sha256": "a433f3cb8b6527e8bc23ac2cab8ac7aa4130b95449a52e71870e9073e1cb5f1f",
+        "original_ohlc": {
+          "Open": 380,
+          "High": 388,
+          "Low": 378.5,
+          "Close": 377.5
+        },
+        "source_reference_difference": 0
+      }
+    ],
+    "unresolved": [],
+    "status": "available"
+  },
+  {
+    "symbol": "8358.TWO",
+    "sample": "subject",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2430,
+    "analysis_bars": 2430,
+    "raw_invalid_dates": [
+      "2018-06-28"
+    ],
+    "analysis_invalid_dates": [],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [
+      {
+        "symbol": "8358.TWO",
+        "date": "2018-06-28",
+        "original_close": 37,
+        "official_close": 40,
+        "applied_close": 40,
+        "float_alignment_delta": 0,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "0369e20caeeee6e32cdc305ce09ae961a9b50dfb261ad2d032c8eb6f41479369",
+        "ex_date": "2018-06-29",
+        "official_previous_close": 40,
+        "official_reference_price": 37,
+        "cash_dividend": 3,
+        "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+        "action_payload_sha256": "3b95aa04da9e8418b61f87828ee0a5458477ba6c7bea583d291fd5a1a5a3e38d",
+        "original_ohlc": {
+          "Open": 40.349998474121094,
+          "High": 40.75,
+          "Low": 40,
+          "Close": 37
+        },
+        "source_reference_difference": 0
+      }
+    ],
+    "unresolved": [],
+    "status": "available"
+  },
+  {
+    "symbol": "2330.TW",
+    "sample": "control",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2430,
+    "analysis_bars": 2430,
+    "raw_invalid_dates": [],
+    "analysis_invalid_dates": [],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [],
+    "unresolved": [],
+    "status": "available"
+  },
+  {
+    "symbol": "2002.TW",
+    "sample": "control",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2430,
+    "analysis_bars": 2430,
+    "raw_invalid_dates": [],
+    "analysis_invalid_dates": [],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [],
+    "unresolved": [],
+    "status": "available"
+  },
+  {
+    "symbol": "6643.TWO",
+    "sample": "control",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2217,
+    "analysis_bars": 2217,
+    "raw_invalid_dates": [],
+    "analysis_invalid_dates": [],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [],
+    "unresolved": [],
+    "status": "available"
+  },
+  {
+    "symbol": "6530.TWO",
+    "sample": "control",
+    "request": {
+      "period": "10y",
+      "interval": "1d",
+      "auto_adjust": false,
+      "actions": false
+    },
+    "raw_bars": 2430,
+    "analysis_bars": 2430,
+    "raw_invalid_dates": [
+      "2018-06-13",
+      "2019-06-14",
+      "2021-06-30",
+      "2021-07-28"
+    ],
+    "analysis_invalid_dates": [
+      "2021-06-30",
+      "2021-07-28"
+    ],
+    "raw_equals_processed": true,
+    "non_close_fields_unchanged": true,
+    "corrections": [
+      {
+        "symbol": "6530.TWO",
+        "date": "2018-06-13",
+        "original_close": 17.100000381469727,
+        "official_close": 18.1,
+        "applied_close": 18.1,
+        "float_alignment_delta": 0,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "6938581513b8943fb7295d3afac36207fe4f25b4714a1b18842f94c49dfa5c1d",
+        "ex_date": "2018-06-14",
+        "official_previous_close": 18.1,
+        "official_reference_price": 17.1,
+        "cash_dividend": 1,
+        "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+        "action_payload_sha256": "3b95aa04da9e8418b61f87828ee0a5458477ba6c7bea583d291fd5a1a5a3e38d",
+        "original_ohlc": {
+          "Open": 18.100000381469727,
+          "High": 18.25,
+          "Low": 18.049999237060547,
+          "Close": 17.100000381469727
+        },
+        "source_reference_difference": 3.8146972514141453e-7
+      },
+      {
+        "symbol": "6530.TWO",
+        "date": "2019-06-14",
+        "original_close": 14.649999618530273,
+        "official_close": 15.65,
+        "applied_close": 15.65,
+        "float_alignment_delta": 0,
+        "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "payload_sha256": "5ec4b8bf729b1bfa4d9ca0418d855a98c25ce9222dd5b4b08b68925add73220d",
+        "ex_date": "2019-06-17",
+        "official_previous_close": 15.65,
+        "official_reference_price": 14.65,
+        "cash_dividend": 1,
+        "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+        "action_payload_sha256": "3881c29e1edccf25bc2d4f3862adcef16bbf0c30f8678a0ffd29d95c09199fbf",
+        "original_ohlc": {
+          "Open": 15.5,
+          "High": 15.699999809265137,
+          "Low": 15.449999809265137,
+          "Close": 14.649999618530273
+        },
+        "source_reference_difference": -3.8146972691777137e-7
+      }
+    ],
+    "unresolved": [
+      {
+        "month": "2021-06",
+        "status": "unresolved",
+        "official_evidence": {
+          "symbol": "6530.TWO",
+          "month": "2021-06",
+          "method": "POST",
+          "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+          "request": {
+            "code": "6530",
+            "date": "2021/06/01",
+            "response": "json"
+          },
+          "payload_sha256": "f9262e5fac76ba57b58ce9c6dff98e9e2c45902deab4084b51f7f8920a5d7f67",
+          "parsed_frame_sha256": "4f3d8f87ae56a5840c2837096b6209e0875f4364de754e43b3604bda9b8a1b94",
+          "price_basis": "official_raw_unadjusted",
+          "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+          "unavailable_rows": [],
+          "bars": 21,
+          "retrieved_at_utc": "2026-11-08T05:11:54.536282+00:00"
+        },
+        "source_missing_official_dates": [],
+        "source_extra_dates": [],
+        "reason": "OfficialHistoryError: 下一交易日沒有唯一可核對的官方除息紀錄"
+      },
+      {
+        "month": "2021-07",
+        "status": "unresolved",
+        "official_evidence": {
+          "symbol": "6530.TWO",
+          "month": "2021-07",
+          "method": "POST",
+          "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+          "request": {
+            "code": "6530",
+            "date": "2021/07/01",
+            "response": "json"
+          },
+          "payload_sha256": "cbabf7b31dfa5364ecefd41e2dff30a51ec9a7f2158e638946606cdf7b716e21",
+          "parsed_frame_sha256": "f5e1b496b11c5ede1bc91d8de305194694dc5f2ad98987f43d723374bfcf37e1",
+          "price_basis": "official_raw_unadjusted",
+          "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+          "unavailable_rows": [],
+          "bars": 22,
+          "retrieved_at_utc": "2026-11-08T05:11:55.175605+00:00"
+        },
+        "source_missing_official_dates": [],
+        "source_extra_dates": [],
+        "reason": "OfficialHistoryError: 下一交易日沒有唯一可核對的官方除息紀錄"
+      }
+    ],
+    "status": "blocked"
+  }
+]

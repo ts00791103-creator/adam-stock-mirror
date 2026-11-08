@@ -1,0 +1,159 @@
+[
+  {
+    "symbol": "3105.TWO",
+    "result": "available",
+    "verified": 2,
+    "bars": 2430,
+    "chart": "3105.TWO｜三波同圖｜A模式完整鏡像｜V1.0.7",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true
+  },
+  {
+    "symbol": "3260.TWO",
+    "result": "blocked",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true,
+    "chart": false,
+    "gate": [
+      "      - paragraph: 行情資料品質異常，已停止鏡像分析：存在 2 根高低價關係異常 K 線"
+    ]
+  },
+  {
+    "symbol": "5274.TWO",
+    "result": "blocked",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true,
+    "chart": false,
+    "gate": [
+      "      - paragraph: 行情資料品質異常，已停止鏡像分析：存在 2 根高低價關係異常 K 線"
+    ]
+  },
+  {
+    "symbol": "8299.TWO",
+    "result": "available",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true,
+    "chart": true,
+    "gate": []
+  },
+  {
+    "symbol": "3227.TWO",
+    "result": "available",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true,
+    "chart": true,
+    "gate": []
+  },
+  {
+    "symbol": "6182.TWO",
+    "result": "blocked",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true,
+    "chart": false,
+    "gate": [
+      "      - paragraph: 行情資料品質異常，已停止鏡像分析：存在 1 根高低價關係異常 K 線"
+    ]
+  },
+  {
+    "symbol": "4123.TWO",
+    "result": "blocked",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true,
+    "chart": false,
+    "gate": [
+      "      - paragraph: 行情資料品質異常，已停止鏡像分析：存在 2 根高低價關係異常 K 線"
+    ]
+  },
+  {
+    "symbol": "6274.TWO",
+    "result": "available",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true,
+    "chart": true,
+    "gate": []
+  },
+  {
+    "symbol": "1565.TWO",
+    "result": "available",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true,
+    "chart": true,
+    "gate": []
+  },
+  {
+    "symbol": "3211.TWO",
+    "result": "blocked",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true,
+    "chart": false,
+    "gate": [
+      "      - paragraph: 行情資料品質異常，已停止鏡像分析：存在 1 根高低價關係異常 K 線"
+    ]
+  },
+  {
+    "symbol": "3529.TWO",
+    "result": "available",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true,
+    "chart": true,
+    "gate": []
+  },
+  {
+    "symbol": "8358.TWO",
+    "result": "available",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true,
+    "chart": true,
+    "gate": []
+  },
+  {
+    "symbol": "2330.TW",
+    "result": "available",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true,
+    "chart": true,
+    "gate": []
+  },
+  {
+    "symbol": "2002.TW",
+    "result": "available",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true,
+    "chart": true,
+    "gate": []
+  },
+  {
+    "symbol": "6643.TWO",
+    "result": "available",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true,
+    "chart": true,
+    "gate": []
+  },
+  {
+    "symbol": "6530.TWO",
+    "result": "blocked",
+    "expectedMatches": true,
+    "correctionNotice": true,
+    "fullRequest": true,
+    "chart": false,
+    "gate": [
+      "      - paragraph: 行情資料品質異常，已停止鏡像分析：存在 2 根高低價關係異常 K 線"
+    ]
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "symbol": "3105.TWO",
+  "date": "2025-08-01",
+  "primary_has_date": false,
+  "provider_repair_has_date": true,
+  "official_has_date": true,
+  "official_rows": [
+    [
+      "114/08/01",
+      "5,387",
+      "451,709",
+      "82.00",
+      "86.00",
+      "80.30",
+      "85.70",
+      "-0.30",
+      "4,576"
+    ]
+  ],
+  "request": {
+    "method": "POST",
+    "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+    "code": "3105",
+    "date": "2025/08/01",
+    "response": "json"
+  },
+  "status": "Known source date gap; no row inserted; other samples not independently officially checked for this date"
+}

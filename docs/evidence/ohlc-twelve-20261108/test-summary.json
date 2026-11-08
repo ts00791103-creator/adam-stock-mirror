@@ -1,0 +1,15 @@
+{
+  "run": 42449715217,
+  "pythonVersions": [
+    "3.11",
+    "3.14"
+  ],
+  "tests": 278,
+  "pricePanTests": 10,
+  "chartScripts": "passed",
+  "workerPackage": "passed",
+  "firstImplementationFailure": "1 subtest expecting 3211 fully pass, corrected after confirming missing official trading day",
+  "sourceDiagnosticRun": 42449715221,
+  "candidateCode": "0cc6870c1c8f3f53aa2af3fc43e226b064366235",
+  "watchlistConfigurationUnchanged": true
+}
