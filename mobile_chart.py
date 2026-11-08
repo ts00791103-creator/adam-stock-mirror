@@ -210,6 +210,7 @@ else {
  }catch(e){}
  const pricePan=createAdamPricePan({
    initialOffset,
+   readAdditionalRange:()=>createAdamPricePan.activeBoxRange(data.boxes,chart.timeScale().getVisibleRange()),
    readPricePerPixel:()=>{
      if(!candle)return null;
      const top=candle.coordinateToPrice(0),next=candle.coordinateToPrice(1);

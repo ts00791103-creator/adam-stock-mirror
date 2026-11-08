@@ -20,6 +20,7 @@ function render(width, empty = false, retainHistory = false) {
     series.push(item); return item;
   }
   const time = {width:()=>chartElement.clientWidth-50,height:()=>30,
+    getVisibleRange:()=>({from:1791158400,to:1791244800}),
     timeToCoordinate:()=>100,subscribeVisibleLogicalRangeChange(){},setVisibleLogicalRange(range){this.lastRange=range;}};
   const chart = {addCandlestickSeries:o=>add('candle',o),addHistogramSeries:o=>add('volume',o),
     addLineSeries:o=>add('line',o),priceScale:()=>({applyOptions(){}}),timeScale:()=>time,

@@ -1002,15 +1002,13 @@ with st.sidebar:
             key="adam_stock_query"
         ).strip()
         stock_list = load_tw_symbols()
-        matches = [
-            (code, name, ex) for code, name, ex in stock_list
-            if query and (query.lower() in code.lower() or query.lower() in name.lower())
-        ]
+        from stock_search import search_stocks, preferred_stock_index
+        matches = search_stocks(stock_list, query)
         if matches:
             choices = matches[:100]
             labels = [f"{code} {name}（{ex}）" for code, name, ex in choices]
             requested_symbol = st.session_state.get("analysis_context", {}).get("symbol","")
-            chosen_index = next((i for i,r in enumerate(choices) if r[0]+(".TW" if r[2]=="上市" else ".TWO")==requested_symbol),0)
+            chosen_index = preferred_stock_index(choices, query, requested_symbol)
             chosen = st.selectbox("選擇股票／ETF", range(len(choices)), index=chosen_index,
                                   format_func=lambda i: labels[i])
             code, stock_name, exchange = choices[chosen]

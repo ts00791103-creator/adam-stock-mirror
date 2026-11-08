@@ -65,5 +65,25 @@ test('reset clears offset and active drag', () => {
   pan.begin(0, 0); pan.move(0, 10); pan.reset(); pan.move(0, 30);
   assert.equal(pan.offset, 0); assert.deepEqual(changes, [20, 0]);
 });
+test('visible active boxes expand base range before pan and reset', () => {
+  const base={priceRange:{minValue:18.4,maxValue:20},margins:{above:4,below:28}};
+  const saved=JSON.stringify(base);
+  let boxes=[{active:true,start:1,end:100,bottom:18.05,top:21}];
+  let visible={from:40,to:110};
+  const pan=createPricePan({readPricePerPixel:()=>.01,onChange(){},
+    readAdditionalRange:()=>createPricePan.activeBoxRange(boxes,visible)});
+  assert.deepEqual(pan.autoscaleInfo(()=>base).priceRange,{minValue:18.05,maxValue:21});
+  pan.begin(0,0);pan.move(0,50);
+  assert.deepEqual(pan.autoscaleInfo(()=>base).priceRange,{minValue:18.55,maxValue:21.5});
+  pan.reset();assert.deepEqual(pan.autoscaleInfo(()=>base).priceRange,{minValue:18.05,maxValue:21});
+  visible={from:101,to:150};
+  assert.deepEqual(pan.autoscaleInfo(()=>base).priceRange,base.priceRange);
+  visible={from:1,to:100};boxes=[{active:false,status:'下破',start:1,end:100,bottom:1,top:99}];
+  assert.deepEqual(pan.autoscaleInfo(()=>base).priceRange,base.priceRange);
+  boxes=[{active:true,start:1,end:100,bottom:NaN,top:99}];
+  assert.deepEqual(pan.autoscaleInfo(()=>base).priceRange,base.priceRange);
+  assert.equal(JSON.stringify(base),saved);
+});
+
 console.log(`${passed} price pan behavior tests passed`);
 module.exports = {passed};

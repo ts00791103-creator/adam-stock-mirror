@@ -5,7 +5,7 @@
   else root.createAdamPricePan = createPricePan;
 })(typeof window === 'object' ? window : globalThis, function () {
   'use strict';
-  return function createPricePan({readPricePerPixel, onChange, initialOffset = 0}) {
+  function createPricePan({readPricePerPixel, onChange, initialOffset = 0, readAdditionalRange = () => null}) {
     let offset = Number.isFinite(initialOffset) ? initialOffset : 0;
     let drag = null;
     const setOffset = value => {
@@ -38,10 +38,26 @@
         if (!info || !info.priceRange) return info;
         const {minValue, maxValue} = info.priceRange;
         if (![minValue, maxValue].every(Number.isFinite)) return info;
+        // Include visible active overlays before applying the user's vertical offset.
+        const extra = readAdditionalRange();
+        const valid = extra && Number.isFinite(extra.minValue) && Number.isFinite(extra.maxValue)
+          && extra.maxValue >= extra.minValue;
+        const low = valid ? Math.min(minValue, extra.minValue) : minValue;
+        const high = valid ? Math.max(maxValue, extra.maxValue) : maxValue;
         // Shift the coordinate range, never the series data or the canvas itself.
         return {...info, priceRange: {...info.priceRange,
-          minValue: minValue + offset, maxValue: maxValue + offset}};
+          minValue: low + offset, maxValue: high + offset}};
       }
     };
+  }
+  createPricePan.activeBoxRange = (boxes, visible) => {
+    if (!visible || !Number.isFinite(visible.from) || !Number.isFinite(visible.to)) return null;
+    const relevant = (boxes || []).filter(b => (b.active === true || (b.active === undefined && b.status === '整理中'))
+      && [b.start,b.end,b.bottom,b.top].every(Number.isFinite)
+      && b.top >= b.bottom && b.start <= visible.to && b.end >= visible.from);
+    if (!relevant.length) return null;
+    return {minValue: Math.min(...relevant.map(b => b.bottom)),
+      maxValue: Math.max(...relevant.map(b => b.top))};
   };
+  return createPricePan;
 });
