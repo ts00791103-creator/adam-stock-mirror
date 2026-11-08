@@ -34,8 +34,8 @@ class VerifiedDailyTests(unittest.TestCase):
         return frame,verify_daily_closes(symbol,frame,fetch_month=kwargs.get("fetch_month",month),
                                          fetch_actions=kwargs.get("fetch_actions",actions))
 
-    def test_real_monthly_replay_eight_shared_basis_cases(self):
-        for symbol in ("3105.TWO","8299.TWO","3227.TWO","6274.TWO","1565.TWO","3211.TWO","3529.TWO","8358.TWO"):
+    def test_real_monthly_replay_seven_complete_shared_basis_cases(self):
+        for symbol in ("3105.TWO","8299.TWO","3227.TWO","6274.TWO","1565.TWO","3529.TWO","8358.TWO"):
             with self.subTest(symbol=symbol):
                 before,after=self.run_case(symbol)
                 self.assertTrue(invalid_candles(before))
@@ -55,6 +55,15 @@ class VerifiedDailyTests(unittest.TestCase):
                 self.assertTrue(after.equals(before))
                 self.assertEqual(after.attrs["official_close_verification"]["ledger"],[])
                 self.assertEqual(invalid_candles(after),invalid_candles(before))
+
+    def test_real_3211_missing_makeup_trading_day_remains_blocked(self):
+        before,after=self.run_case("3211.TWO")
+        self.assertEqual(invalid_candles(after),["2017-06-27"])
+        report=after.attrs["official_close_verification"]
+        june=next(m for m in report["months"] if m["month"]=="2017-06")
+        self.assertEqual(june["source_missing_official_dates"],["2017-06-03"])
+        self.assertEqual(len(report["ledger"]),1)
+        self.assertEqual(len(after),len(before))
 
     def test_other_anomalies_without_action_anchor_remain(self):
         before,after=self.run_case("6530.TWO")

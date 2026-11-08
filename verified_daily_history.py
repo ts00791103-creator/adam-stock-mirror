@@ -121,6 +121,8 @@ def verify_daily_closes(symbol, frame, fetch_month=None, fetch_actions=None):
                 source.attrs.update(symbol=symbol, price_basis="yahoo_auto_adjust_false")
                 official, evidence, payload = fetch_month(symbol, month)
                 attempt["official_evidence"] = evidence
+                attempt["source_missing_official_dates"] = [str(t.date()) for t in official.index.difference(source.index)]
+                attempt["source_extra_dates"] = [str(t.date()) for t in source.index.difference(official.index)]
                 if not source.index.equals(official.index):
                     raise OfficialHistoryError("本月原始與官方日K日期不完全相同，未混補")
                 proposed, ledger = preview_close_repairs(source, official, evidence)
