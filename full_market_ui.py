@@ -93,7 +93,8 @@ def show_full_market(production=False, analysis_options=None):
         candidates = state["candidates"]
         total, cursor = len(candidates), state["cursor"]
         if not production:
-            st.info(f"初選取得狀態：{'部分市場資料' if errors else '成功'}｜{total}檔符合官方當日價格／量條件；不是完整個股分析的通過名單。")
+            label='部分市場資料' if errors else ('上次成功初選（本次取得失敗）' if st.session_state.get('market_attempt_error') else '初選取得成功')
+            st.info(f"目前顯示清單：{label}｜{total}檔符合官方當日價格／量條件；不是完整個股分析的通過名單。")
             st.caption("複選使用一年日K；個股分析使用側欄所選期間。資料可用性須另行核對，且不代表投資勝率。")
         st.write(f"初選 {total} 檔｜已檢查 {cursor} 檔｜待檢查 {total-cursor} 檔")
         if candidates:

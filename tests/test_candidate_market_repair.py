@@ -114,6 +114,17 @@ class AcquisitionRecoveryTests(unittest.TestCase):
             self.assertEqual(app.session_state["market_scan"]["timestamp"],"fixture time")
             self.assertTrue(any("部分失敗" in e.value for e in app.error))
 
+    def test_first_partial_snapshot_is_explicit_and_next_retry_can_recover(self):
+        good=snapshot();partial=([good[0][0]],[{"市場":"上櫃","原因":"temporary"}],"partial")
+        with patch("full_market_ui.official_snapshot",side_effect=[partial,good]):
+            app=self.app();app.button(key="market_start").click().run()
+            self.assertTrue(any("資料範圍不完整" in e.value for e in app.warning))
+            self.assertTrue(any("部分市場資料" in e.value for e in app.info))
+            self.assertEqual(len(app.session_state["market_scan"]["candidates"]),11)
+            app.button(key="market_start").click().run()
+            self.assertEqual(len(app.session_state["market_scan"]["candidates"]),12)
+            self.assertEqual(app.session_state["market_scan"]["errors"],[])
+
     def test_empty_source_is_not_a_zero_matching_result(self):
         with patch("full_market_ui.official_snapshot",return_value=([],[{"市場":"上市","原因":"offline"}],"now")):
             app=self.app();app.button(key="market_start").click().run()
