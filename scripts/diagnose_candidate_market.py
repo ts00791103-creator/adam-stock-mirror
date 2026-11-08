@@ -9,13 +9,14 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from official_history import fetch_official_month, invalid_candles
 out=ROOT/"candidate-market-output";out.mkdir(exist_ok=True)
-report={"request":{"period":"10y","interval":"1d","auto_adjust":False,"actions":True},
+report={"request":{"period":"10y","interval":"1d","auto_adjust":False,"actions":False},
         "retrieved_at_utc":pd.Timestamp.now(tz="UTC").isoformat(),"stocks":[],"official_months":[]}
 histories={}
+action_histories={}
 for symbol in ("1815.TWO","2330.TW","2887.TW"):
     row={"symbol":symbol}
     try:
-        raw=yf.download(symbol,period="10y",interval="1d",auto_adjust=False,actions=True,progress=False,threads=False)
+        raw=yf.download(symbol,period="10y",interval="1d",auto_adjust=False,progress=False,threads=False)
         if isinstance(raw.columns,pd.MultiIndex):raw.columns=raw.columns.get_level_values(0)
         if raw.empty:raise ValueError("empty full-period response")
         row["raw_bars"]=len(raw);row["raw_duplicates"]=int(raw.index.duplicated().sum())
@@ -29,7 +30,17 @@ for symbol in ("1815.TWO","2330.TW","2887.TW"):
                    latest_close=float(data.Close.iloc[-1]),invalid_dates=invalid_candles(data))
         row["invalid_rows"]=[{"date":str(t.date()),**{c:float(data.loc[t,c]) for c in ("Open","High","Low","Close")}}
                              for t in data.index if str(t.date()) in row["invalid_dates"]]
-        row["split_events"]=[{"date":str(t.date()),"value":float(v)} for t,v in data.get("Stock Splits",pd.Series(dtype=float)).items() if v!=0]
+        if symbol=="1815.TWO":
+            metadata=yf.download(symbol,period="10y",interval="1d",auto_adjust=False,actions=True,progress=False,threads=False)
+            if isinstance(metadata.columns,pd.MultiIndex):metadata.columns=metadata.columns.get_level_values(0)
+            metadata.index=pd.to_datetime(metadata.index)
+            if metadata.index.tz is not None:metadata.index=metadata.index.tz_localize(None)
+            action_histories[symbol]=metadata
+            cols=["Open","High","Low","Close"]
+            row["action_metadata_matches_primary_prices"]=bool(data[cols].equals(metadata[cols]))
+            row["action_metadata_request"]={"period":"10y","interval":"1d","auto_adjust":False,"actions":True}
+        action_data=action_histories.get(symbol,data)
+        row["split_events"]=[{"date":str(t.date()),"value":float(v)} for t,v in action_data.get("Stock Splits",pd.Series(dtype=float)).items() if v!=0]
         row["status"]="full request inspected"
     except Exception as exc:row.update(status="unconfirmed",error=type(exc).__name__+": "+str(exc)[:240])
     report["stocks"].append(row)
@@ -46,7 +57,8 @@ for month,target in (("2017-07","2017-07-21"),("2018-07","2018-07-26")):
         ratios=[float(data.loc[t,c])/float(official.loc[t,c]) for t in official.index if t in data.index
                 for c in ("Open","High","Low")]
         item["month_ohl_ratio_range"]=[min(ratios),max(ratios)] if ratios else []
-        split=data.loc[data.index>stamp,"Stock Splits"] if "Stock Splits" in data else pd.Series(dtype=float)
+        actions=action_histories.get("1815.TWO",data)
+        split=actions.loc[actions.index>stamp,"Stock Splits"] if "Stock Splits" in actions else pd.Series(dtype=float)
         events=[float(v) for v in split if float(v)!=0]
         item["provider_split_factor_after_date"]=1/math.prod(events) if events else 1
         item["basis_assessment"]="Compare observed OHL ratios with provider action metadata only; no official corporate-action conversion asserted or applied."
