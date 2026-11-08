@@ -1,0 +1,79 @@
+{
+  "scope": "additional_seven_only",
+  "note": "correctionNotice denotes verification UI presence, not applied correction count. Counts are in backend report.",
+  "results": [
+    {
+      "symbol": "3324.TWO",
+      "result": "available",
+      "expectedMatches": true,
+      "correctionNotice": true,
+      "bars2430": true,
+      "chart": true,
+      "gate": []
+    },
+    {
+      "symbol": "5483.TWO",
+      "result": "available",
+      "expectedMatches": true,
+      "correctionNotice": true,
+      "bars2430": true,
+      "chart": true,
+      "gate": []
+    },
+    {
+      "symbol": "6146.TWO",
+      "result": "blocked",
+      "expectedMatches": true,
+      "correctionNotice": true,
+      "bars2430": true,
+      "chart": false,
+      "gate": [
+        "      - paragraph: 行情資料品質異常，已停止鏡像分析：存在 3 根高低價關係異常 K 線"
+      ]
+    },
+    {
+      "symbol": "8086.TWO",
+      "result": "blocked",
+      "expectedMatches": true,
+      "correctionNotice": true,
+      "bars2430": true,
+      "chart": false,
+      "gate": [
+        "      - paragraph: 行情資料品質異常，已停止鏡像分析：存在 3 根高低價關係異常 K 線"
+      ]
+    },
+    {
+      "symbol": "6121.TWO",
+      "result": "blocked",
+      "expectedMatches": true,
+      "correctionNotice": true,
+      "bars2430": true,
+      "chart": false,
+      "gate": [
+        "      - paragraph: 行情資料品質異常，已停止鏡像分析：存在 1 根高低價關係異常 K 線"
+      ]
+    },
+    {
+      "symbol": "6223.TWO",
+      "result": "blocked",
+      "expectedMatches": true,
+      "correctionNotice": true,
+      "bars2430": true,
+      "chart": false,
+      "gate": [
+        "      - paragraph: 行情資料品質異常，已停止鏡像分析：存在 1 根高低價關係異常 K 線"
+      ]
+    },
+    {
+      "symbol": "3552.TWO",
+      "result": "blocked",
+      "expectedMatches": true,
+      "correctionNotice": true,
+      "bars2430": true,
+      "chart": false,
+      "gate": [
+        "      - paragraph: 行情資料品質異常，已停止鏡像分析：存在 2 根高低價關係異常 K 線"
+      ]
+    }
+  ]
+}

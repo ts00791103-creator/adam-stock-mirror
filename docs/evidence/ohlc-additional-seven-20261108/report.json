@@ -1,0 +1,3169 @@
+{
+  "retrieved_at_utc": "2026-11-08T05:38:07.154133+00:00",
+  "sample": "New seven only; separate from previous twelve and original thirty.",
+  "request": {
+    "period": "10y",
+    "interval": "1d",
+    "auto_adjust": false,
+    "repair": false
+  },
+  "runtime_source_sha256": {
+    "app.py": "d70fd8c3cf2d36e495c9d6a798f5a08f38e98824f020fd1b18c0ee0bd3c01c9f",
+    "verified_daily_history.py": "29ab162b80d0ffb0157e78148caaa7452dd34617c849deaccf0778346b4f0c4e",
+    "analysis_availability.py": "4c2cfca8962edd73c403b07523094e765eae79523363a6d754269045228192b6"
+  },
+  "stocks": [
+    {
+      "symbol": "5483.TWO",
+      "reported_dates": [
+        "2017-07-21"
+      ],
+      "raw_bars": 2430,
+      "processed_bars": 2430,
+      "candidate_bars": 2430,
+      "first": "2016-11-07",
+      "last": "2026-11-06",
+      "raw_gate": [
+        "存在 1 根高低價關係異常 K 線"
+      ],
+      "candidate_gate": [],
+      "raw_invalid_dates": [
+        "2017-07-21"
+      ],
+      "candidate_invalid_dates": [],
+      "reported_not_reproduced": [],
+      "additional_raw_invalid_dates": [],
+      "original_processed_prices_identical": true,
+      "non_close_fields_unchanged": true,
+      "original_frame_restorable": true,
+      "verification": {
+        "symbol": "5483.TWO",
+        "interval": "1d",
+        "raw_invalid_dates": [
+          "2017-07-21"
+        ],
+        "ledger": [
+          {
+            "symbol": "5483.TWO",
+            "date": "2017-07-21",
+            "original_close": 49.5,
+            "official_close": 51,
+            "applied_close": 51,
+            "float_alignment_delta": 0,
+            "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+            "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+            "payload_sha256": "dda76aa94463d272874323d253ec45772e0bd6a2d8d166fb6da8ce375d552720",
+            "ex_date": "2017-07-24",
+            "official_previous_close": 51,
+            "official_reference_price": 49.5,
+            "cash_dividend": 1.5,
+            "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+            "action_payload_sha256": "59ebdef980daa7f8c37eccadc1905d51a1ac9f6bf2b036f2bb2c46e9800fcd71",
+            "original_ohlc": {
+              "Open": 50.29999923706055,
+              "High": 51.20000076293945,
+              "Low": 49.79999923706055,
+              "Close": 49.5
+            },
+            "source_reference_difference": 0
+          }
+        ],
+        "months": [
+          {
+            "month": "2017-07",
+            "status": "verified",
+            "official_evidence": {
+              "symbol": "5483.TWO",
+              "month": "2017-07",
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+              "request": {
+                "code": "5483",
+                "date": "2017/07/01",
+                "response": "json"
+              },
+              "payload_sha256": "dda76aa94463d272874323d253ec45772e0bd6a2d8d166fb6da8ce375d552720",
+              "parsed_frame_sha256": "115cb2dcfeefe0778aad1a9c361b78763eb3c5c86541ccc3c237125966dbc59b",
+              "price_basis": "official_raw_unadjusted",
+              "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+              "unavailable_rows": [],
+              "bars": 21,
+              "retrieved_at_utc": "2026-11-08T05:38:08.488723+00:00"
+            },
+            "source_missing_official_dates": [],
+            "source_extra_dates": [],
+            "count": 1
+          }
+        ],
+        "source_request": {
+          "symbol": "5483.TWO",
+          "period": "10y",
+          "interval": "1d",
+          "auto_adjust": false,
+          "repair": false
+        },
+        "scope": "Only reported invalid Close rows; not full-history price verification.",
+        "adjusted_close": "Yahoo Adj Close retained, not recomputed or used by this correction.",
+        "remaining_invalid_dates": [],
+        "original_price_sha256": "b13f711b64149db615ef28c22448d8ff956cecb54f16fd7783f84ff1baacbaa8",
+        "analysis_price_sha256": "d2097d739b6aad9956d7d252f569c50bb09b06e10175c6a7aef8a5bbe80afcdf"
+      },
+      "prices": [
+        {
+          "date": "2017-07-21",
+          "original": {
+            "Open": 50.29999923706055,
+            "High": 51.20000076293945,
+            "Low": 49.79999923706055,
+            "Close": 49.5,
+            "Adj Close": 32.52652359008789,
+            "Volume": 18777750
+          },
+          "processed": {
+            "Open": 50.29999923706055,
+            "High": 51.20000076293945,
+            "Low": 49.79999923706055,
+            "Close": 49.5,
+            "Adj Close": 32.52652359008789,
+            "Volume": 18777750
+          },
+          "candidate": {
+            "Open": 50.29999923706055,
+            "High": 51.20000076293945,
+            "Low": 49.79999923706055,
+            "Close": 51,
+            "Adj Close": 32.52652359008789,
+            "Volume": 18777750
+          }
+        }
+      ],
+      "provider_actions": [
+        {
+          "date": "2017-07-24",
+          "dividend": 1.5,
+          "split": 0
+        },
+        {
+          "date": "2018-07-23",
+          "dividend": 3,
+          "split": 0
+        },
+        {
+          "date": "2019-07-23",
+          "dividend": 3,
+          "split": 0
+        },
+        {
+          "date": "2020-07-23",
+          "dividend": 5,
+          "split": 0
+        },
+        {
+          "date": "2021-01-26",
+          "dividend": 3.5,
+          "split": 0
+        },
+        {
+          "date": "2021-07-22",
+          "dividend": 5.5,
+          "split": 0
+        },
+        {
+          "date": "2022-01-13",
+          "dividend": 3.5,
+          "split": 0
+        },
+        {
+          "date": "2022-07-19",
+          "dividend": 4.5,
+          "split": 0
+        },
+        {
+          "date": "2023-01-12",
+          "dividend": 5.57,
+          "split": 0
+        },
+        {
+          "date": "2023-07-25",
+          "dividend": 5.8,
+          "split": 0
+        },
+        {
+          "date": "2024-01-25",
+          "dividend": 3.5,
+          "split": 0
+        },
+        {
+          "date": "2024-07-26",
+          "dividend": 5.3,
+          "split": 0
+        },
+        {
+          "date": "2025-01-20",
+          "dividend": 3,
+          "split": 0
+        },
+        {
+          "date": "2025-07-23",
+          "dividend": 3.5,
+          "split": 0
+        },
+        {
+          "date": "2026-01-08",
+          "dividend": 1,
+          "split": 0
+        },
+        {
+          "date": "2026-07-23",
+          "dividend": 2.5,
+          "split": 0
+        }
+      ],
+      "direct_yahoo": {
+        "endpoint": "https://query1.finance.yahoo.com/v8/finance/chart/5483.TWO",
+        "request": {
+          "period1": 1478361600,
+          "period2": 1794116290,
+          "interval": "1d",
+          "events": "div,splits",
+          "includeAdjustedClose": "true"
+        },
+        "target_rows": [
+          {
+            "date": "2017-07-21",
+            "Open": 50.29999923706055,
+            "High": 51.20000076293945,
+            "Low": 49.79999923706055,
+            "Close": 49.5
+          }
+        ],
+        "all_reported_targets_present": true,
+        "matches_library": true
+      },
+      "status": "available"
+    },
+    {
+      "symbol": "6146.TWO",
+      "reported_dates": [
+        "2017-08-01",
+        "2018-07-18",
+        "2021-04-22"
+      ],
+      "raw_bars": 2430,
+      "processed_bars": 2430,
+      "candidate_bars": 2430,
+      "first": "2016-11-07",
+      "last": "2026-11-06",
+      "raw_gate": [
+        "存在 3 根高低價關係異常 K 線"
+      ],
+      "candidate_gate": [
+        "存在 3 根高低價關係異常 K 線"
+      ],
+      "raw_invalid_dates": [
+        "2017-08-01",
+        "2018-07-18",
+        "2021-04-22"
+      ],
+      "candidate_invalid_dates": [
+        "2017-08-01",
+        "2018-07-18",
+        "2021-04-22"
+      ],
+      "reported_not_reproduced": [],
+      "additional_raw_invalid_dates": [],
+      "original_processed_prices_identical": true,
+      "non_close_fields_unchanged": true,
+      "original_frame_restorable": true,
+      "verification": {
+        "symbol": "6146.TWO",
+        "interval": "1d",
+        "raw_invalid_dates": [
+          "2017-08-01",
+          "2018-07-18",
+          "2021-04-22"
+        ],
+        "ledger": [],
+        "months": [
+          {
+            "month": "2017-08",
+            "status": "unresolved",
+            "official_evidence": {
+              "symbol": "6146.TWO",
+              "month": "2017-08",
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+              "request": {
+                "code": "6146",
+                "date": "2017/08/01",
+                "response": "json"
+              },
+              "payload_sha256": "ac5b346622fd8336c141a84fb6a9cdd820eb073028faefcde274f7edd047cce0",
+              "parsed_frame_sha256": "c23fc9d4e25dad70b5e5a36bdaab9dff1c3a8a44c8928bd6f95137762df8a855",
+              "price_basis": "official_raw_unadjusted",
+              "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+              "unavailable_rows": [],
+              "bars": 23,
+              "retrieved_at_utc": "2026-11-08T05:38:11.926695+00:00"
+            },
+            "source_missing_official_dates": [],
+            "source_extra_dates": [],
+            "reason": "OfficialHistoryError: 同日開高低不吻合或並非可證實的收盤越界，未改價"
+          },
+          {
+            "month": "2018-07",
+            "status": "unresolved",
+            "official_evidence": {
+              "symbol": "6146.TWO",
+              "month": "2018-07",
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+              "request": {
+                "code": "6146",
+                "date": "2018/07/01",
+                "response": "json"
+              },
+              "payload_sha256": "ea0389c87124a9bc0cb29fb461cf07759a53c89262ce3a139143ac50854f9cf1",
+              "parsed_frame_sha256": "5d4828fe643193485703816ac844baef4f46f5b26c7398fe259c4fee78cdb53e",
+              "price_basis": "official_raw_unadjusted",
+              "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+              "unavailable_rows": [],
+              "bars": 22,
+              "retrieved_at_utc": "2026-11-08T05:38:12.214283+00:00"
+            },
+            "source_missing_official_dates": [],
+            "source_extra_dates": [],
+            "reason": "OfficialHistoryError: 同日開高低不吻合或並非可證實的收盤越界，未改價"
+          },
+          {
+            "month": "2021-04",
+            "status": "unresolved",
+            "official_evidence": {
+              "symbol": "6146.TWO",
+              "month": "2021-04",
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+              "request": {
+                "code": "6146",
+                "date": "2021/04/01",
+                "response": "json"
+              },
+              "payload_sha256": "4413727e50a36b26cfefe053b2e55d8f280daca6378f92a10a3007fdd1f06f7c",
+              "parsed_frame_sha256": "98fdea5ad4b98b3922d352c1598f80488e7079aa5dacf0b72a35dba5b91832aa",
+              "price_basis": "official_raw_unadjusted",
+              "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+              "unavailable_rows": [],
+              "bars": 19,
+              "retrieved_at_utc": "2026-11-08T05:38:12.530517+00:00"
+            },
+            "source_missing_official_dates": [
+              "2021-04-06"
+            ],
+            "source_extra_dates": [],
+            "reason": "OfficialHistoryError: 本月原始與官方日K日期不完全相同，未混補"
+          }
+        ],
+        "source_request": {
+          "symbol": "6146.TWO",
+          "period": "10y",
+          "interval": "1d",
+          "auto_adjust": false,
+          "repair": false
+        },
+        "scope": "Only reported invalid Close rows; not full-history price verification.",
+        "adjusted_close": "Yahoo Adj Close retained, not recomputed or used by this correction.",
+        "remaining_invalid_dates": [
+          "2017-08-01",
+          "2018-07-18",
+          "2021-04-22"
+        ],
+        "original_price_sha256": "137dabbcb0a7c1a2afc9baf45e60e6200684892ca0a42aafdcb1acd8362ec811",
+        "analysis_price_sha256": "137dabbcb0a7c1a2afc9baf45e60e6200684892ca0a42aafdcb1acd8362ec811"
+      },
+      "prices": [
+        {
+          "date": "2017-08-01",
+          "original": {
+            "Open": 133.8181915283203,
+            "High": 134.7073516845703,
+            "Low": 132.4844512939453,
+            "Close": 128.03866577148438,
+            "Adj Close": 81.20735931396484,
+            "Volume": 391341
+          },
+          "processed": {
+            "Open": 133.8181915283203,
+            "High": 134.7073516845703,
+            "Low": 132.4844512939453,
+            "Close": 128.03866577148438,
+            "Adj Close": 81.20735931396484,
+            "Volume": 391341
+          },
+          "candidate": {
+            "Open": 133.8181915283203,
+            "High": 134.7073516845703,
+            "Low": 132.4844512939453,
+            "Close": 128.03866577148438,
+            "Adj Close": 81.20735931396484,
+            "Volume": 391341
+          }
+        },
+        {
+          "date": "2018-07-18",
+          "original": {
+            "Open": 134.25831604003906,
+            "High": 134.7073516845703,
+            "Low": 133.3602752685547,
+            "Close": 127.52295684814453,
+            "Adj Close": 84.45801544189453,
+            "Volume": 112169
+          },
+          "processed": {
+            "Open": 134.25831604003906,
+            "High": 134.7073516845703,
+            "Low": 133.3602752685547,
+            "Close": 127.52295684814453,
+            "Adj Close": 84.45801544189453,
+            "Volume": 112169
+          },
+          "candidate": {
+            "Open": 134.25831604003906,
+            "High": 134.7073516845703,
+            "Low": 133.3602752685547,
+            "Close": 127.52295684814453,
+            "Adj Close": 84.45801544189453,
+            "Volume": 112169
+          }
+        },
+        {
+          "date": "2021-04-22",
+          "original": {
+            "Open": 226.7573699951172,
+            "High": 226.7573699951172,
+            "Low": 222.22222900390625,
+            "Close": 221.76870727539062,
+            "Adj Close": 162.85574340820312,
+            "Volume": 42997
+          },
+          "processed": {
+            "Open": 226.7573699951172,
+            "High": 226.7573699951172,
+            "Low": 222.22222900390625,
+            "Close": 221.76870727539062,
+            "Adj Close": 162.85574340820312,
+            "Volume": 42997
+          },
+          "candidate": {
+            "Open": 226.7573699951172,
+            "High": 226.7573699951172,
+            "Low": 222.22222900390625,
+            "Close": 221.76870727539062,
+            "Adj Close": 162.85574340820312,
+            "Volume": 42997
+          }
+        }
+      ],
+      "provider_actions": [
+        {
+          "date": "2017-08-02",
+          "dividend": 5.42386,
+          "split": 1.01
+        },
+        {
+          "date": "2018-07-19",
+          "dividend": 5.53288,
+          "split": 1.01
+        },
+        {
+          "date": "2019-07-04",
+          "dividend": 5.623583,
+          "split": 0
+        },
+        {
+          "date": "2020-07-02",
+          "dividend": 5.442177,
+          "split": 0
+        },
+        {
+          "date": "2021-08-19",
+          "dividend": 6,
+          "split": 1.05
+        },
+        {
+          "date": "2022-06-28",
+          "dividend": 8.571429,
+          "split": 0
+        },
+        {
+          "date": "2023-07-04",
+          "dividend": 11,
+          "split": 1.05
+        },
+        {
+          "date": "2024-06-13",
+          "dividend": 10.5,
+          "split": 0
+        },
+        {
+          "date": "2025-06-05",
+          "dividend": 10.1,
+          "split": 0
+        },
+        {
+          "date": "2026-06-11",
+          "dividend": 12,
+          "split": 0
+        },
+        {
+          "date": "2026-09-03",
+          "dividend": 5.5,
+          "split": 0
+        }
+      ],
+      "direct_yahoo": {
+        "endpoint": "https://query1.finance.yahoo.com/v8/finance/chart/6146.TWO",
+        "request": {
+          "period1": 1478361600,
+          "period2": 1794116293,
+          "interval": "1d",
+          "events": "div,splits",
+          "includeAdjustedClose": "true"
+        },
+        "target_rows": [
+          {
+            "date": "2017-08-01",
+            "Open": 133.8181915283203,
+            "High": 134.7073516845703,
+            "Low": 132.4844512939453,
+            "Close": 128.03866577148438
+          },
+          {
+            "date": "2018-07-18",
+            "Open": 134.25831604003906,
+            "High": 134.7073516845703,
+            "Low": 133.3602752685547,
+            "Close": 127.52295684814453
+          },
+          {
+            "date": "2021-04-22",
+            "Open": 226.7573699951172,
+            "High": 226.7573699951172,
+            "Low": 222.22222900390625,
+            "Close": 221.76870727539062
+          }
+        ],
+        "all_reported_targets_present": true,
+        "matches_library": true
+      },
+      "status": "blocked"
+    },
+    {
+      "symbol": "8086.TWO",
+      "reported_dates": [
+        "2017-06-23",
+        "2018-06-25",
+        "2019-06-24"
+      ],
+      "raw_bars": 2430,
+      "processed_bars": 2430,
+      "candidate_bars": 2430,
+      "first": "2016-11-07",
+      "last": "2026-11-06",
+      "raw_gate": [
+        "存在 3 根高低價關係異常 K 線"
+      ],
+      "candidate_gate": [
+        "存在 3 根高低價關係異常 K 線"
+      ],
+      "raw_invalid_dates": [
+        "2017-06-23",
+        "2018-06-25",
+        "2019-06-24"
+      ],
+      "candidate_invalid_dates": [
+        "2017-06-23",
+        "2018-06-25",
+        "2019-06-24"
+      ],
+      "reported_not_reproduced": [],
+      "additional_raw_invalid_dates": [],
+      "original_processed_prices_identical": true,
+      "non_close_fields_unchanged": true,
+      "original_frame_restorable": true,
+      "verification": {
+        "symbol": "8086.TWO",
+        "interval": "1d",
+        "raw_invalid_dates": [
+          "2017-06-23",
+          "2018-06-25",
+          "2019-06-24"
+        ],
+        "ledger": [],
+        "months": [
+          {
+            "month": "2017-06",
+            "status": "unresolved",
+            "official_evidence": {
+              "symbol": "8086.TWO",
+              "month": "2017-06",
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+              "request": {
+                "code": "8086",
+                "date": "2017/06/01",
+                "response": "json"
+              },
+              "payload_sha256": "d5009acfa0defa924e34543a8854d4e482a45d21d8fa72e437bb17b28dfe42ce",
+              "parsed_frame_sha256": "1fd1e071b721a30e60d314636a72d6fc96b19ae6184e2dc1257e7efaa08eb7e3",
+              "price_basis": "official_raw_unadjusted",
+              "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+              "unavailable_rows": [],
+              "bars": 23,
+              "retrieved_at_utc": "2026-11-08T05:38:16.246854+00:00"
+            },
+            "source_missing_official_dates": [
+              "2017-06-03"
+            ],
+            "source_extra_dates": [],
+            "reason": "OfficialHistoryError: 本月原始與官方日K日期不完全相同，未混補"
+          },
+          {
+            "month": "2018-06",
+            "status": "unresolved",
+            "official_evidence": {
+              "symbol": "8086.TWO",
+              "month": "2018-06",
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+              "request": {
+                "code": "8086",
+                "date": "2018/06/01",
+                "response": "json"
+              },
+              "payload_sha256": "55c6e9bb90d5d5680177e228ad9e40cdb21d1c39d610434907332f91c459ea21",
+              "parsed_frame_sha256": "9332035761af6afd4dfe8189ad0b58c34c18c894b7da00f6d486bf08d41754ef",
+              "price_basis": "official_raw_unadjusted",
+              "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+              "unavailable_rows": [],
+              "bars": 20,
+              "retrieved_at_utc": "2026-11-08T05:38:16.514450+00:00"
+            },
+            "source_missing_official_dates": [],
+            "source_extra_dates": [],
+            "reason": "OfficialHistoryError: 同日開高低不吻合或並非可證實的收盤越界，未改價"
+          },
+          {
+            "month": "2019-06",
+            "status": "unresolved",
+            "official_evidence": {
+              "symbol": "8086.TWO",
+              "month": "2019-06",
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+              "request": {
+                "code": "8086",
+                "date": "2019/06/01",
+                "response": "json"
+              },
+              "payload_sha256": "9081b574cfff565c5d2d76c48cefffadcec37868d8812f7968502359284a6541",
+              "parsed_frame_sha256": "f9f9a53068a6e77d859d001e3cd894a087ed01f3ff2cd93cb578c597330239b2",
+              "price_basis": "official_raw_unadjusted",
+              "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+              "unavailable_rows": [],
+              "bars": 19,
+              "retrieved_at_utc": "2026-11-08T05:38:16.808984+00:00"
+            },
+            "source_missing_official_dates": [],
+            "source_extra_dates": [],
+            "reason": "OfficialHistoryError: 同日開高低不吻合或並非可證實的收盤越界，未改價"
+          }
+        ],
+        "source_request": {
+          "symbol": "8086.TWO",
+          "period": "10y",
+          "interval": "1d",
+          "auto_adjust": false,
+          "repair": false
+        },
+        "scope": "Only reported invalid Close rows; not full-history price verification.",
+        "adjusted_close": "Yahoo Adj Close retained, not recomputed or used by this correction.",
+        "remaining_invalid_dates": [
+          "2017-06-23",
+          "2018-06-25",
+          "2019-06-24"
+        ],
+        "original_price_sha256": "3da3fa52654438394eefeb842625d32e2c2dc9c06d023c49ed126527cb191b4e",
+        "analysis_price_sha256": "3da3fa52654438394eefeb842625d32e2c2dc9c06d023c49ed126527cb191b4e"
+      },
+      "prices": [
+        {
+          "date": "2017-06-23",
+          "original": {
+            "Open": 60.43692398071289,
+            "High": 60.83193588256836,
+            "Low": 60.041908264160156,
+            "Close": 57.671836853027344,
+            "Adj Close": 47.331058502197266,
+            "Volume": 2612540
+          },
+          "processed": {
+            "Open": 60.43692398071289,
+            "High": 60.83193588256836,
+            "Low": 60.041908264160156,
+            "Close": 57.671836853027344,
+            "Adj Close": 47.331058502197266,
+            "Volume": 2612540
+          },
+          "candidate": {
+            "Open": 60.43692398071289,
+            "High": 60.83193588256836,
+            "Low": 60.041908264160156,
+            "Close": 57.671836853027344,
+            "Adj Close": 47.331058502197266,
+            "Volume": 2612540
+          }
+        },
+        {
+          "date": "2018-06-25",
+          "original": {
+            "Open": 74.8548812866211,
+            "High": 76.43492889404297,
+            "Low": 72.28730010986328,
+            "Close": 71.69477844238281,
+            "Adj Close": 61.36131286621094,
+            "Volume": 10179053
+          },
+          "processed": {
+            "Open": 74.8548812866211,
+            "High": 76.43492889404297,
+            "Low": 72.28730010986328,
+            "Close": 71.69477844238281,
+            "Adj Close": 61.36131286621094,
+            "Volume": 10179053
+          },
+          "candidate": {
+            "Open": 74.8548812866211,
+            "High": 76.43492889404297,
+            "Low": 72.28730010986328,
+            "Close": 71.69477844238281,
+            "Adj Close": 61.36131286621094,
+            "Volume": 10179053
+          }
+        },
+        {
+          "date": "2019-06-24",
+          "original": {
+            "Open": 55.79552459716797,
+            "High": 57.37557601928711,
+            "Low": 55.499267578125,
+            "Close": 55.203006744384766,
+            "Adj Close": 48.17533493041992,
+            "Volume": 5863476
+          },
+          "processed": {
+            "Open": 55.79552459716797,
+            "High": 57.37557601928711,
+            "Low": 55.499267578125,
+            "Close": 55.203006744384766,
+            "Adj Close": 48.17533493041992,
+            "Volume": 5863476
+          },
+          "candidate": {
+            "Open": 55.79552459716797,
+            "High": 57.37557601928711,
+            "Low": 55.499267578125,
+            "Close": 55.203006744384766,
+            "Adj Close": 48.17533493041992,
+            "Volume": 5863476
+          }
+        }
+      ],
+      "provider_actions": [
+        {
+          "date": "2017-06-26",
+          "dividend": 2.370075,
+          "split": 0
+        },
+        {
+          "date": "2018-06-26",
+          "dividend": 1.382249,
+          "split": 0
+        },
+        {
+          "date": "2019-06-25",
+          "dividend": 1.481297,
+          "split": 0
+        },
+        {
+          "date": "2020-06-30",
+          "dividend": 1.7,
+          "split": 0
+        },
+        {
+          "date": "2021-07-16",
+          "dividend": 2.8,
+          "split": 0
+        },
+        {
+          "date": "2022-07-06",
+          "dividend": 2.8,
+          "split": 0
+        },
+        {
+          "date": "2024-08-27",
+          "dividend": 1,
+          "split": 0
+        },
+        {
+          "date": "2025-08-27",
+          "dividend": 1.19,
+          "split": 0
+        },
+        {
+          "date": "2026-09-01",
+          "dividend": 1.68,
+          "split": 0
+        }
+      ],
+      "direct_yahoo": {
+        "endpoint": "https://query1.finance.yahoo.com/v8/finance/chart/8086.TWO",
+        "request": {
+          "period1": 1478361600,
+          "period2": 1794116297,
+          "interval": "1d",
+          "events": "div,splits",
+          "includeAdjustedClose": "true"
+        },
+        "target_rows": [
+          {
+            "date": "2017-06-23",
+            "Open": 60.43692398071289,
+            "High": 60.83193588256836,
+            "Low": 60.041908264160156,
+            "Close": 57.671836853027344
+          },
+          {
+            "date": "2018-06-25",
+            "Open": 74.8548812866211,
+            "High": 76.43492889404297,
+            "Low": 72.28730010986328,
+            "Close": 71.69477844238281
+          },
+          {
+            "date": "2019-06-24",
+            "Open": 55.79552459716797,
+            "High": 57.37557601928711,
+            "Low": 55.499267578125,
+            "Close": 55.203006744384766
+          }
+        ],
+        "all_reported_targets_present": true,
+        "matches_library": true
+      },
+      "status": "blocked"
+    },
+    {
+      "symbol": "3324.TWO",
+      "reported_dates": [
+        "2017-07-06",
+        "2018-07-23"
+      ],
+      "raw_bars": 2430,
+      "processed_bars": 2430,
+      "candidate_bars": 2430,
+      "first": "2016-11-07",
+      "last": "2026-11-06",
+      "raw_gate": [
+        "存在 2 根高低價關係異常 K 線"
+      ],
+      "candidate_gate": [],
+      "raw_invalid_dates": [
+        "2017-07-06",
+        "2018-07-23"
+      ],
+      "candidate_invalid_dates": [],
+      "reported_not_reproduced": [],
+      "additional_raw_invalid_dates": [],
+      "original_processed_prices_identical": true,
+      "non_close_fields_unchanged": true,
+      "original_frame_restorable": true,
+      "verification": {
+        "symbol": "3324.TWO",
+        "interval": "1d",
+        "raw_invalid_dates": [
+          "2017-07-06",
+          "2018-07-23"
+        ],
+        "ledger": [
+          {
+            "symbol": "3324.TWO",
+            "date": "2017-07-06",
+            "original_close": 83.19999694824219,
+            "official_close": 86.8,
+            "applied_close": 86.8,
+            "float_alignment_delta": 0,
+            "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+            "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+            "payload_sha256": "25d908075bc8ceaf98853ffeabf075f4ea4dca8a699cfc7b24228f70789ea076",
+            "ex_date": "2017-07-07",
+            "official_previous_close": 86.8,
+            "official_reference_price": 83.25,
+            "cash_dividend": 3.55106133,
+            "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+            "action_payload_sha256": "59ebdef980daa7f8c37eccadc1905d51a1ac9f6bf2b036f2bb2c46e9800fcd71",
+            "original_ohlc": {
+              "Open": 86.5,
+              "High": 87.19999694824219,
+              "Low": 86,
+              "Close": 83.19999694824219
+            },
+            "source_reference_difference": -0.0500030517578125
+          },
+          {
+            "symbol": "3324.TWO",
+            "date": "2018-07-23",
+            "original_close": 68.5999984741211,
+            "official_close": 70.6,
+            "applied_close": 70.6,
+            "float_alignment_delta": 0,
+            "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+            "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+            "payload_sha256": "26815cb1574b4c63a160b107fe4f7b09e2c294aaa31475d86bcdffce405ee438",
+            "ex_date": "2018-07-24",
+            "official_previous_close": 70.6,
+            "official_reference_price": 68.57,
+            "cash_dividend": 2.02595097,
+            "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+            "action_payload_sha256": "a433f3cb8b6527e8bc23ac2cab8ac7aa4130b95449a52e71870e9073e1cb5f1f",
+            "original_ohlc": {
+              "Open": 72.69999694824219,
+              "High": 72.69999694824219,
+              "Low": 70,
+              "Close": 68.5999984741211
+            },
+            "source_reference_difference": 0.02999847412110057
+          }
+        ],
+        "months": [
+          {
+            "month": "2017-07",
+            "status": "verified",
+            "official_evidence": {
+              "symbol": "3324.TWO",
+              "month": "2017-07",
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+              "request": {
+                "code": "3324",
+                "date": "2017/07/01",
+                "response": "json"
+              },
+              "payload_sha256": "25d908075bc8ceaf98853ffeabf075f4ea4dca8a699cfc7b24228f70789ea076",
+              "parsed_frame_sha256": "b63cbc404a9324ad360a969bb98cbf17830c7425e853240bf6ab152a35efb0dd",
+              "price_basis": "official_raw_unadjusted",
+              "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+              "unavailable_rows": [],
+              "bars": 21,
+              "retrieved_at_utc": "2026-11-08T05:38:19.450669+00:00"
+            },
+            "source_missing_official_dates": [],
+            "source_extra_dates": [],
+            "count": 1
+          },
+          {
+            "month": "2018-07",
+            "status": "verified",
+            "official_evidence": {
+              "symbol": "3324.TWO",
+              "month": "2018-07",
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+              "request": {
+                "code": "3324",
+                "date": "2018/07/01",
+                "response": "json"
+              },
+              "payload_sha256": "26815cb1574b4c63a160b107fe4f7b09e2c294aaa31475d86bcdffce405ee438",
+              "parsed_frame_sha256": "9a4147a07549a1f69604f405d85fcbb37c265b96ccbec0f7f188c4674b1d8038",
+              "price_basis": "official_raw_unadjusted",
+              "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+              "unavailable_rows": [],
+              "bars": 22,
+              "retrieved_at_utc": "2026-11-08T05:38:19.758638+00:00"
+            },
+            "source_missing_official_dates": [],
+            "source_extra_dates": [],
+            "count": 1
+          }
+        ],
+        "source_request": {
+          "symbol": "3324.TWO",
+          "period": "10y",
+          "interval": "1d",
+          "auto_adjust": false,
+          "repair": false
+        },
+        "scope": "Only reported invalid Close rows; not full-history price verification.",
+        "adjusted_close": "Yahoo Adj Close retained, not recomputed or used by this correction.",
+        "remaining_invalid_dates": [],
+        "original_price_sha256": "4f732db72461146f231f5c4e8fb679947fde8830371952f1b8c710b2ab54e07f",
+        "analysis_price_sha256": "ec9f591c5a40508e2b74a1aa479a1a8147fa044686dc323ec77376570a259bfc"
+      },
+      "prices": [
+        {
+          "date": "2017-07-06",
+          "original": {
+            "Open": 86.5,
+            "High": 87.19999694824219,
+            "Low": 86,
+            "Close": 83.19999694824219,
+            "Adj Close": 65.21054077148438,
+            "Volume": 1731871
+          },
+          "processed": {
+            "Open": 86.5,
+            "High": 87.19999694824219,
+            "Low": 86,
+            "Close": 83.19999694824219,
+            "Adj Close": 65.21054077148438,
+            "Volume": 1731871
+          },
+          "candidate": {
+            "Open": 86.5,
+            "High": 87.19999694824219,
+            "Low": 86,
+            "Close": 86.8,
+            "Adj Close": 65.21054077148438,
+            "Volume": 1731871
+          }
+        },
+        {
+          "date": "2018-07-23",
+          "original": {
+            "Open": 72.69999694824219,
+            "High": 72.69999694824219,
+            "Low": 70,
+            "Close": 68.5999984741211,
+            "Adj Close": 56.16450500488281,
+            "Volume": 973089
+          },
+          "processed": {
+            "Open": 72.69999694824219,
+            "High": 72.69999694824219,
+            "Low": 70,
+            "Close": 68.5999984741211,
+            "Adj Close": 56.16450500488281,
+            "Volume": 973089
+          },
+          "candidate": {
+            "Open": 72.69999694824219,
+            "High": 72.69999694824219,
+            "Low": 70,
+            "Close": 70.6,
+            "Adj Close": 56.16450500488281,
+            "Volume": 973089
+          }
+        }
+      ],
+      "provider_actions": [
+        {
+          "date": "2017-07-07",
+          "dividend": 3.551061,
+          "split": 0
+        },
+        {
+          "date": "2018-07-24",
+          "dividend": 2.02595,
+          "split": 0
+        },
+        {
+          "date": "2019-07-04",
+          "dividend": 1.524535,
+          "split": 0
+        },
+        {
+          "date": "2020-07-13",
+          "dividend": 5.042768,
+          "split": 0
+        },
+        {
+          "date": "2021-08-17",
+          "dividend": 5.600041,
+          "split": 0
+        },
+        {
+          "date": "2022-06-30",
+          "dividend": 6,
+          "split": 0
+        },
+        {
+          "date": "2023-07-03",
+          "dividend": 6.5,
+          "split": 0
+        },
+        {
+          "date": "2024-07-30",
+          "dividend": 6.347975,
+          "split": 0
+        },
+        {
+          "date": "2025-06-16",
+          "dividend": 9.998651,
+          "split": 0
+        },
+        {
+          "date": "2026-06-17",
+          "dividend": 11.903306,
+          "split": 0
+        }
+      ],
+      "direct_yahoo": {
+        "endpoint": "https://query1.finance.yahoo.com/v8/finance/chart/3324.TWO",
+        "request": {
+          "period1": 1478361600,
+          "period2": 1794116300,
+          "interval": "1d",
+          "events": "div,splits",
+          "includeAdjustedClose": "true"
+        },
+        "target_rows": [
+          {
+            "date": "2017-07-06",
+            "Open": 86.5,
+            "High": 87.19999694824219,
+            "Low": 86,
+            "Close": 83.19999694824219
+          },
+          {
+            "date": "2018-07-23",
+            "Open": 72.69999694824219,
+            "High": 72.69999694824219,
+            "Low": 70,
+            "Close": 68.5999984741211
+          }
+        ],
+        "all_reported_targets_present": true,
+        "matches_library": true
+      },
+      "status": "available"
+    },
+    {
+      "symbol": "6121.TWO",
+      "reported_dates": [
+        "2017-07-12",
+        "2018-07-11"
+      ],
+      "raw_bars": 2430,
+      "processed_bars": 2430,
+      "candidate_bars": 2430,
+      "first": "2016-11-07",
+      "last": "2026-11-06",
+      "raw_gate": [
+        "存在 2 根高低價關係異常 K 線"
+      ],
+      "candidate_gate": [
+        "存在 1 根高低價關係異常 K 線"
+      ],
+      "raw_invalid_dates": [
+        "2017-07-12",
+        "2018-07-11"
+      ],
+      "candidate_invalid_dates": [
+        "2017-07-12"
+      ],
+      "reported_not_reproduced": [],
+      "additional_raw_invalid_dates": [],
+      "original_processed_prices_identical": true,
+      "non_close_fields_unchanged": true,
+      "original_frame_restorable": true,
+      "verification": {
+        "symbol": "6121.TWO",
+        "interval": "1d",
+        "raw_invalid_dates": [
+          "2017-07-12",
+          "2018-07-11"
+        ],
+        "ledger": [
+          {
+            "symbol": "6121.TWO",
+            "date": "2018-07-11",
+            "original_close": 168,
+            "official_close": 178,
+            "applied_close": 178,
+            "float_alignment_delta": 0,
+            "anchor": "same-date O/H/L within 0.005; boundary float alignment at most 0.00001",
+            "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+            "payload_sha256": "7b822e4d8a5139dc4770cb483ebbb84c95f1dce7dd194f669a95a6244c861075",
+            "ex_date": "2018-07-12",
+            "official_previous_close": 178,
+            "official_reference_price": 168,
+            "cash_dividend": 10,
+            "action_endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+            "action_payload_sha256": "a433f3cb8b6527e8bc23ac2cab8ac7aa4130b95449a52e71870e9073e1cb5f1f",
+            "original_ohlc": {
+              "Open": 177.5,
+              "High": 178,
+              "Low": 175.5,
+              "Close": 168
+            },
+            "source_reference_difference": 0
+          }
+        ],
+        "months": [
+          {
+            "month": "2017-07",
+            "status": "unresolved",
+            "official_evidence": {
+              "symbol": "6121.TWO",
+              "month": "2017-07",
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+              "request": {
+                "code": "6121",
+                "date": "2017/07/01",
+                "response": "json"
+              },
+              "payload_sha256": "8b6550937b5032751c985fc853561678d4888995e2f9a74e208602bea2fd079e",
+              "parsed_frame_sha256": "3849a6b95fc0aa32b3d03fe90078f7a31bd948431f3db6a34ade4d81f164bca3",
+              "price_basis": "official_raw_unadjusted",
+              "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+              "unavailable_rows": [],
+              "bars": 21,
+              "retrieved_at_utc": "2026-11-08T05:38:21.623598+00:00"
+            },
+            "source_missing_official_dates": [],
+            "source_extra_dates": [],
+            "reason": "OfficialHistoryError: 同日開高低不吻合或並非可證實的收盤越界，未改價"
+          },
+          {
+            "month": "2018-07",
+            "status": "verified",
+            "official_evidence": {
+              "symbol": "6121.TWO",
+              "month": "2018-07",
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+              "request": {
+                "code": "6121",
+                "date": "2018/07/01",
+                "response": "json"
+              },
+              "payload_sha256": "7b822e4d8a5139dc4770cb483ebbb84c95f1dce7dd194f669a95a6244c861075",
+              "parsed_frame_sha256": "7f0f33b726031f6cdd4b9af34a3da921360179971c7a623b42aae13f0ccf59e9",
+              "price_basis": "official_raw_unadjusted",
+              "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+              "unavailable_rows": [],
+              "bars": 22,
+              "retrieved_at_utc": "2026-11-08T05:38:21.902628+00:00"
+            },
+            "source_missing_official_dates": [],
+            "source_extra_dates": [],
+            "count": 1
+          }
+        ],
+        "source_request": {
+          "symbol": "6121.TWO",
+          "period": "10y",
+          "interval": "1d",
+          "auto_adjust": false,
+          "repair": false
+        },
+        "scope": "Only reported invalid Close rows; not full-history price verification.",
+        "adjusted_close": "Yahoo Adj Close retained, not recomputed or used by this correction.",
+        "remaining_invalid_dates": [
+          "2017-07-12"
+        ],
+        "original_price_sha256": "a5776512a50e6cdf4674240d5e500efbf618512852d5e9bce479abe1d8fe4bda",
+        "analysis_price_sha256": "79a4493e3598274c31bb15ca4d8ff95cf26d8e6e609fd1422370b9f5d950dadc"
+      },
+      "prices": [
+        {
+          "date": "2017-07-12",
+          "original": {
+            "Open": 171.6666717529297,
+            "High": 171.6666717529297,
+            "Low": 170,
+            "Close": 160.8333282470703,
+            "Adj Close": 86.09164428710938,
+            "Volume": 2022809
+          },
+          "processed": {
+            "Open": 171.6666717529297,
+            "High": 171.6666717529297,
+            "Low": 170,
+            "Close": 160.8333282470703,
+            "Adj Close": 86.09164428710938,
+            "Volume": 2022809
+          },
+          "candidate": {
+            "Open": 171.6666717529297,
+            "High": 171.6666717529297,
+            "Low": 170,
+            "Close": 160.8333282470703,
+            "Adj Close": 86.09164428710938,
+            "Volume": 2022809
+          }
+        },
+        {
+          "date": "2018-07-11",
+          "original": {
+            "Open": 177.5,
+            "High": 178,
+            "Low": 175.5,
+            "Close": 168,
+            "Adj Close": 95.88992309570312,
+            "Volume": 868672
+          },
+          "processed": {
+            "Open": 177.5,
+            "High": 178,
+            "Low": 175.5,
+            "Close": 168,
+            "Adj Close": 95.88992309570312,
+            "Volume": 868672
+          },
+          "candidate": {
+            "Open": 177.5,
+            "High": 178,
+            "Low": 175.5,
+            "Close": 178,
+            "Adj Close": 95.88992309570312,
+            "Volume": 868672
+          }
+        }
+      ],
+      "provider_actions": [
+        {
+          "date": "2017-07-13",
+          "dividend": 10,
+          "split": 0
+        },
+        {
+          "date": "2017-09-14",
+          "dividend": 0,
+          "split": 0.6
+        },
+        {
+          "date": "2018-07-12",
+          "dividend": 10,
+          "split": 0
+        },
+        {
+          "date": "2019-07-16",
+          "dividend": 11.5,
+          "split": 0
+        },
+        {
+          "date": "2020-07-16",
+          "dividend": 14.5,
+          "split": 0
+        },
+        {
+          "date": "2021-08-13",
+          "dividend": 19.1,
+          "split": 0
+        },
+        {
+          "date": "2022-07-13",
+          "dividend": 26,
+          "split": 0
+        },
+        {
+          "date": "2022-12-21",
+          "dividend": 13.1,
+          "split": 0
+        },
+        {
+          "date": "2023-07-06",
+          "dividend": 14.5,
+          "split": 0
+        },
+        {
+          "date": "2023-12-21",
+          "dividend": 10,
+          "split": 0
+        },
+        {
+          "date": "2024-07-04",
+          "dividend": 11.7,
+          "split": 0
+        },
+        {
+          "date": "2024-12-25",
+          "dividend": 9.1,
+          "split": 0
+        },
+        {
+          "date": "2025-07-02",
+          "dividend": 11.4,
+          "split": 0
+        },
+        {
+          "date": "2025-12-17",
+          "dividend": 9.5,
+          "split": 0
+        },
+        {
+          "date": "2026-07-13",
+          "dividend": 12.3,
+          "split": 0
+        }
+      ],
+      "direct_yahoo": {
+        "endpoint": "https://query1.finance.yahoo.com/v8/finance/chart/6121.TWO",
+        "request": {
+          "period1": 1478361600,
+          "period2": 1794116302,
+          "interval": "1d",
+          "events": "div,splits",
+          "includeAdjustedClose": "true"
+        },
+        "target_rows": [
+          {
+            "date": "2017-07-12",
+            "Open": 171.6666717529297,
+            "High": 171.6666717529297,
+            "Low": 170,
+            "Close": 160.8333282470703
+          },
+          {
+            "date": "2018-07-11",
+            "Open": 177.5,
+            "High": 178,
+            "Low": 175.5,
+            "Close": 168
+          }
+        ],
+        "all_reported_targets_present": true,
+        "matches_library": true
+      },
+      "status": "blocked"
+    },
+    {
+      "symbol": "6223.TWO",
+      "reported_dates": [
+        "2017-09-06"
+      ],
+      "raw_bars": 2430,
+      "processed_bars": 2430,
+      "candidate_bars": 2430,
+      "first": "2016-11-07",
+      "last": "2026-11-06",
+      "raw_gate": [
+        "存在 1 根高低價關係異常 K 線"
+      ],
+      "candidate_gate": [
+        "存在 1 根高低價關係異常 K 線"
+      ],
+      "raw_invalid_dates": [
+        "2017-09-06"
+      ],
+      "candidate_invalid_dates": [
+        "2017-09-06"
+      ],
+      "reported_not_reproduced": [],
+      "additional_raw_invalid_dates": [],
+      "original_processed_prices_identical": true,
+      "non_close_fields_unchanged": true,
+      "original_frame_restorable": true,
+      "verification": {
+        "symbol": "6223.TWO",
+        "interval": "1d",
+        "raw_invalid_dates": [
+          "2017-09-06"
+        ],
+        "ledger": [],
+        "months": [
+          {
+            "month": "2017-09",
+            "status": "unresolved",
+            "official_evidence": {
+              "symbol": "6223.TWO",
+              "month": "2017-09",
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+              "request": {
+                "code": "6223",
+                "date": "2017/09/01",
+                "response": "json"
+              },
+              "payload_sha256": "ba813da3d7e212899ea79a04ce2a5fa281af10b2be465abbea2e5f4b6afeb427",
+              "parsed_frame_sha256": "a70b0228552d9e69c15c50de726911e53682bb61cdcb606b9c35a584ee2248a1",
+              "price_basis": "official_raw_unadjusted",
+              "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+              "unavailable_rows": [],
+              "bars": 22,
+              "retrieved_at_utc": "2026-11-08T05:38:23.773786+00:00"
+            },
+            "source_missing_official_dates": [
+              "2017-09-30"
+            ],
+            "source_extra_dates": [],
+            "reason": "OfficialHistoryError: 本月原始與官方日K日期不完全相同，未混補"
+          }
+        ],
+        "source_request": {
+          "symbol": "6223.TWO",
+          "period": "10y",
+          "interval": "1d",
+          "auto_adjust": false,
+          "repair": false
+        },
+        "scope": "Only reported invalid Close rows; not full-history price verification.",
+        "adjusted_close": "Yahoo Adj Close retained, not recomputed or used by this correction.",
+        "remaining_invalid_dates": [
+          "2017-09-06"
+        ],
+        "original_price_sha256": "95cf677736630e70933e5374e96be438bc39904414d95fbcbd31dda77ab22380",
+        "analysis_price_sha256": "95cf677736630e70933e5374e96be438bc39904414d95fbcbd31dda77ab22380"
+      },
+      "prices": [
+        {
+          "date": "2017-09-06",
+          "original": {
+            "Open": 85.5999984741211,
+            "High": 86.5999984741211,
+            "Low": 85,
+            "Close": 80.80000305175781,
+            "Adj Close": 61.677391052246094,
+            "Volume": 1925614
+          },
+          "processed": {
+            "Open": 85.5999984741211,
+            "High": 86.5999984741211,
+            "Low": 85,
+            "Close": 80.80000305175781,
+            "Adj Close": 61.677391052246094,
+            "Volume": 1925614
+          },
+          "candidate": {
+            "Open": 85.5999984741211,
+            "High": 86.5999984741211,
+            "Low": 85,
+            "Close": 80.80000305175781,
+            "Adj Close": 61.677391052246094,
+            "Volume": 1925614
+          }
+        }
+      ],
+      "provider_actions": [
+        {
+          "date": "2017-09-07",
+          "dividend": 4.184441,
+          "split": 0
+        },
+        {
+          "date": "2018-08-30",
+          "dividend": 0.5,
+          "split": 0
+        },
+        {
+          "date": "2019-09-04",
+          "dividend": 1.999649,
+          "split": 0
+        },
+        {
+          "date": "2020-07-20",
+          "dividend": 2.489561,
+          "split": 0
+        },
+        {
+          "date": "2021-07-12",
+          "dividend": 4.470063,
+          "split": 0
+        },
+        {
+          "date": "2022-07-14",
+          "dividend": 4,
+          "split": 0
+        },
+        {
+          "date": "2023-07-13",
+          "dividend": 7,
+          "split": 0
+        },
+        {
+          "date": "2024-07-11",
+          "dividend": 7.5,
+          "split": 0
+        },
+        {
+          "date": "2025-07-10",
+          "dividend": 16.013596,
+          "split": 0
+        },
+        {
+          "date": "2026-07-09",
+          "dividend": 22,
+          "split": 0
+        }
+      ],
+      "direct_yahoo": {
+        "endpoint": "https://query1.finance.yahoo.com/v8/finance/chart/6223.TWO",
+        "request": {
+          "period1": 1478361600,
+          "period2": 1794116304,
+          "interval": "1d",
+          "events": "div,splits",
+          "includeAdjustedClose": "true"
+        },
+        "target_rows": [
+          {
+            "date": "2017-09-06",
+            "Open": 85.5999984741211,
+            "High": 86.5999984741211,
+            "Low": 85,
+            "Close": 80.80000305175781
+          }
+        ],
+        "all_reported_targets_present": true,
+        "matches_library": true
+      },
+      "status": "blocked"
+    },
+    {
+      "symbol": "3552.TWO",
+      "reported_dates": [
+        "2017-08-23",
+        "2018-08-15"
+      ],
+      "raw_bars": 2430,
+      "processed_bars": 2430,
+      "candidate_bars": 2430,
+      "first": "2016-11-07",
+      "last": "2026-11-06",
+      "raw_gate": [
+        "存在 2 根高低價關係異常 K 線"
+      ],
+      "candidate_gate": [
+        "存在 2 根高低價關係異常 K 線"
+      ],
+      "raw_invalid_dates": [
+        "2017-08-23",
+        "2018-08-15"
+      ],
+      "candidate_invalid_dates": [
+        "2017-08-23",
+        "2018-08-15"
+      ],
+      "reported_not_reproduced": [],
+      "additional_raw_invalid_dates": [],
+      "original_processed_prices_identical": true,
+      "non_close_fields_unchanged": true,
+      "original_frame_restorable": true,
+      "verification": {
+        "symbol": "3552.TWO",
+        "interval": "1d",
+        "raw_invalid_dates": [
+          "2017-08-23",
+          "2018-08-15"
+        ],
+        "ledger": [],
+        "months": [
+          {
+            "month": "2017-08",
+            "status": "unresolved",
+            "official_evidence": {
+              "symbol": "3552.TWO",
+              "month": "2017-08",
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+              "request": {
+                "code": "3552",
+                "date": "2017/08/01",
+                "response": "json"
+              },
+              "payload_sha256": "b35db23d90e595b7ec1c342c378fb5b92da52b86a1240b076f0c3ed8931043dc",
+              "parsed_frame_sha256": "9c7fb4aa54fb7a9c7e0881a3907c273f044852dd30886c993a5f2a3f2f2709e5",
+              "price_basis": "official_raw_unadjusted",
+              "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+              "unavailable_rows": [],
+              "bars": 23,
+              "retrieved_at_utc": "2026-11-08T05:38:25.919737+00:00"
+            },
+            "source_missing_official_dates": [],
+            "source_extra_dates": [],
+            "reason": "OfficialHistoryError: 同日開高低不吻合或並非可證實的收盤越界，未改價"
+          },
+          {
+            "month": "2018-08",
+            "status": "unresolved",
+            "official_evidence": {
+              "symbol": "3552.TWO",
+              "month": "2018-08",
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+              "request": {
+                "code": "3552",
+                "date": "2018/08/01",
+                "response": "json"
+              },
+              "payload_sha256": "67f54cbb3e93c7b939f0b86654e4a1a7ea5ab710e32f29829c17e90bd376dfa7",
+              "parsed_frame_sha256": "23e2e337589d8502686b2ee485cd371474ab69668025cd65e6279a521fb331bc",
+              "price_basis": "official_raw_unadjusted",
+              "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+              "unavailable_rows": [],
+              "bars": 23,
+              "retrieved_at_utc": "2026-11-08T05:38:26.171321+00:00"
+            },
+            "source_missing_official_dates": [],
+            "source_extra_dates": [],
+            "reason": "OfficialHistoryError: 同日開高低不吻合或並非可證實的收盤越界，未改價"
+          }
+        ],
+        "source_request": {
+          "symbol": "3552.TWO",
+          "period": "10y",
+          "interval": "1d",
+          "auto_adjust": false,
+          "repair": false
+        },
+        "scope": "Only reported invalid Close rows; not full-history price verification.",
+        "adjusted_close": "Yahoo Adj Close retained, not recomputed or used by this correction.",
+        "remaining_invalid_dates": [
+          "2017-08-23",
+          "2018-08-15"
+        ],
+        "original_price_sha256": "c5c9a2cc5c283f6ff3d7df104267979eb04b6e6069fce8c3211a37f4b4881f1f",
+        "analysis_price_sha256": "c5c9a2cc5c283f6ff3d7df104267979eb04b6e6069fce8c3211a37f4b4881f1f"
+      },
+      "prices": [
+        {
+          "date": "2017-08-23",
+          "original": {
+            "Open": 165.6468505859375,
+            "High": 165.6468505859375,
+            "Low": 158.21678161621094,
+            "Close": 151.6608428955078,
+            "Adj Close": 129.64999389648438,
+            "Volume": 2199863
+          },
+          "processed": {
+            "Open": 165.6468505859375,
+            "High": 165.6468505859375,
+            "Low": 158.21678161621094,
+            "Close": 151.6608428955078,
+            "Adj Close": 129.64999389648438,
+            "Volume": 2199863
+          },
+          "candidate": {
+            "Open": 165.6468505859375,
+            "High": 165.6468505859375,
+            "Low": 158.21678161621094,
+            "Close": 151.6608428955078,
+            "Adj Close": 129.64999389648438,
+            "Volume": 2199863
+          }
+        },
+        {
+          "date": "2018-08-15",
+          "original": {
+            "Open": 96.15384674072266,
+            "High": 97.02796936035156,
+            "Low": 91.78321838378906,
+            "Close": 90.47203063964844,
+            "Adj Close": 80.82212829589844,
+            "Volume": 1782366
+          },
+          "processed": {
+            "Open": 96.15384674072266,
+            "High": 97.02796936035156,
+            "Low": 91.78321838378906,
+            "Close": 90.47203063964844,
+            "Adj Close": 80.82212829589844,
+            "Volume": 1782366
+          },
+          "candidate": {
+            "Open": 96.15384674072266,
+            "High": 97.02796936035156,
+            "Low": 91.78321838378906,
+            "Close": 90.47203063964844,
+            "Adj Close": 80.82212829589844,
+            "Volume": 1782366
+          }
+        }
+      ],
+      "provider_actions": [
+        {
+          "date": "2017-08-24",
+          "dividend": 6.531068,
+          "split": 0
+        },
+        {
+          "date": "2018-08-16",
+          "dividend": 1.748252,
+          "split": 0
+        },
+        {
+          "date": "2021-09-13",
+          "dividend": 1.311189,
+          "split": 0
+        },
+        {
+          "date": "2022-08-16",
+          "dividend": 2.185315,
+          "split": 0
+        },
+        {
+          "date": "2023-08-10",
+          "dividend": 3.059441,
+          "split": 0
+        },
+        {
+          "date": "2024-07-26",
+          "dividend": 1.748252,
+          "split": 0
+        },
+        {
+          "date": "2024-08-19",
+          "dividend": 0,
+          "split": 1.1
+        },
+        {
+          "date": "2025-07-21",
+          "dividend": 0.769231,
+          "split": 0
+        },
+        {
+          "date": "2025-08-22",
+          "dividend": 0,
+          "split": 1.04
+        },
+        {
+          "date": "2026-07-27",
+          "dividend": 0.5,
+          "split": 0
+        }
+      ],
+      "direct_yahoo": {
+        "endpoint": "https://query1.finance.yahoo.com/v8/finance/chart/3552.TWO",
+        "request": {
+          "period1": 1478361600,
+          "period2": 1794116306,
+          "interval": "1d",
+          "events": "div,splits",
+          "includeAdjustedClose": "true"
+        },
+        "target_rows": [
+          {
+            "date": "2017-08-23",
+            "Open": 165.6468505859375,
+            "High": 165.6468505859375,
+            "Low": 158.21678161621094,
+            "Close": 151.6608428955078
+          },
+          {
+            "date": "2018-08-15",
+            "Open": 96.15384674072266,
+            "High": 97.02796936035156,
+            "Low": 91.78321838378906,
+            "Close": 90.47203063964844
+          }
+        ],
+        "all_reported_targets_present": true,
+        "matches_library": true
+      },
+      "status": "blocked"
+    }
+  ],
+  "official_months": [
+    {
+      "symbol": "5483.TWO",
+      "month": "2017-07",
+      "targets": [
+        {
+          "date": "2017-07-21",
+          "official": {
+            "Open": 50.3,
+            "High": 51.2,
+            "Low": 49.8,
+            "Close": 51,
+            "Volume": 18778000
+          },
+          "original": {
+            "Open": 50.29999923706055,
+            "High": 51.20000076293945,
+            "Low": 49.79999923706055,
+            "Close": 49.5,
+            "Adj Close": 32.52652359008789,
+            "Volume": 18777750
+          },
+          "candidate": {
+            "Open": 50.29999923706055,
+            "High": 51.20000076293945,
+            "Low": 49.79999923706055,
+            "Close": 51,
+            "Adj Close": 32.52652359008789,
+            "Volume": 18777750
+          },
+          "official_corporate_actions": {
+            "expected_next_source_date": "2017-07-24",
+            "records": [
+              {
+                "除權息日期": "106/07/24",
+                "代號": "5483",
+                "名稱": "中美晶",
+                "除權息前收盤價": "51.00",
+                "除權息參考價": "49.50",
+                "權值": "0.00",
+                "息值": "1.50000000",
+                "權值+息值": "1.50",
+                "權/息": "除息",
+                "漲停價": "54.40",
+                "跌停價": "44.55",
+                "開始交易基準價": "49.50",
+                "減除股利參考價": "49.50",
+                "現金股利": "1.50000000",
+                "每仟股無償配股": "0.00000000",
+                "現金增資股數": "0",
+                "現金增資認購價": "0.00",
+                "公開承銷股數": "0",
+                "員工認購股數": "0",
+                "原股東認購股數": "0",
+                "按持股比例仟股認購": "0.00000000"
+              }
+            ],
+            "evidence": {
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+              "month": "2017-07",
+              "request": {
+                "startDate": "2017/07/01",
+                "endDate": "2017/07/31",
+                "response": "json"
+              },
+              "payload_sha256": "59ebdef980daa7f8c37eccadc1905d51a1ac9f6bf2b036f2bb2c46e9800fcd71",
+              "retrieved_at_utc": "2026-11-08T05:38:09.629552+00:00"
+            }
+          }
+        }
+      ],
+      "evidence": {
+        "symbol": "5483.TWO",
+        "month": "2017-07",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "5483",
+          "date": "2017/07/01",
+          "response": "json"
+        },
+        "payload_sha256": "dda76aa94463d272874323d253ec45772e0bd6a2d8d166fb6da8ce375d552720",
+        "parsed_frame_sha256": "115cb2dcfeefe0778aad1a9c361b78763eb3c5c86541ccc3c237125966dbc59b",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 21,
+        "retrieved_at_utc": "2026-11-08T05:38:08.488723+00:00"
+      },
+      "source_missing_dates": [],
+      "source_extra_dates": [],
+      "month_ohl_max_difference": 0.0000015258789076710855,
+      "status": "official queried; unchanged candidate rules"
+    },
+    {
+      "symbol": "6146.TWO",
+      "month": "2017-08",
+      "targets": [
+        {
+          "date": "2017-08-01",
+          "official": {
+            "Open": 150.5,
+            "High": 151.5,
+            "Low": 149,
+            "Close": 151.5,
+            "Volume": 348000
+          },
+          "original": {
+            "Open": 133.8181915283203,
+            "High": 134.7073516845703,
+            "Low": 132.4844512939453,
+            "Close": 128.03866577148438,
+            "Adj Close": 81.20735931396484,
+            "Volume": 391341
+          },
+          "candidate": {
+            "Open": 133.8181915283203,
+            "High": 134.7073516845703,
+            "Low": 132.4844512939453,
+            "Close": 128.03866577148438,
+            "Adj Close": 81.20735931396484,
+            "Volume": 391341
+          },
+          "official_corporate_actions": {
+            "expected_next_source_date": "2017-08-02",
+            "records": [
+              {
+                "除權息日期": "106/08/02",
+                "代號": "6146",
+                "名稱": "耕興",
+                "除權息前收盤價": "151.50",
+                "除權息參考價": "143.96",
+                "權值": "1.44",
+                "息值": "6.10000000",
+                "權值+息值": "7.54",
+                "權/息": "除權息",
+                "漲停價": "158.00",
+                "跌停價": "130.00",
+                "開始交易基準價": "144.00",
+                "減除股利參考價": "143.96",
+                "現金股利": "6.10000000",
+                "每仟股無償配股": "9.99999801",
+                "現金增資股數": "0",
+                "現金增資認購價": "0.00",
+                "公開承銷股數": "0",
+                "員工認購股數": "0",
+                "原股東認購股數": "0",
+                "按持股比例仟股認購": "0.00000000"
+              }
+            ],
+            "evidence": {
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+              "month": "2017-08",
+              "request": {
+                "startDate": "2017/08/01",
+                "endDate": "2017/08/31",
+                "response": "json"
+              },
+              "payload_sha256": "d7f0174f2743a0bab67c41f116a892ecc6ad1167e57f472049d0e85083350c59",
+              "retrieved_at_utc": "2026-11-08T05:38:13.937050+00:00"
+            }
+          }
+        }
+      ],
+      "evidence": {
+        "symbol": "6146.TWO",
+        "month": "2017-08",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "6146",
+          "date": "2017/08/01",
+          "response": "json"
+        },
+        "payload_sha256": "ac5b346622fd8336c141a84fb6a9cdd820eb073028faefcde274f7edd047cce0",
+        "parsed_frame_sha256": "c23fc9d4e25dad70b5e5a36bdaab9dff1c3a8a44c8928bd6f95137762df8a855",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 23,
+        "retrieved_at_utc": "2026-11-08T05:38:11.926695+00:00"
+      },
+      "source_missing_dates": [],
+      "source_extra_dates": [],
+      "month_ohl_max_difference": 16.792648315429688,
+      "status": "official queried; unchanged candidate rules"
+    },
+    {
+      "symbol": "6146.TWO",
+      "month": "2018-07",
+      "targets": [
+        {
+          "date": "2018-07-18",
+          "official": {
+            "Open": 149.5,
+            "High": 150,
+            "Low": 148.5,
+            "Close": 149.5,
+            "Volume": 101000
+          },
+          "original": {
+            "Open": 134.25831604003906,
+            "High": 134.7073516845703,
+            "Low": 133.3602752685547,
+            "Close": 127.52295684814453,
+            "Adj Close": 84.45801544189453,
+            "Volume": 112169
+          },
+          "candidate": {
+            "Open": 134.25831604003906,
+            "High": 134.7073516845703,
+            "Low": 133.3602752685547,
+            "Close": 127.52295684814453,
+            "Adj Close": 84.45801544189453,
+            "Volume": 112169
+          },
+          "official_corporate_actions": {
+            "expected_next_source_date": "2018-07-19",
+            "records": [
+              {
+                "除權息日期": "107/07/19",
+                "代號": "6146",
+                "名稱": "耕興              ",
+                "除權息前收盤價": "    149.50",
+                "除權息參考價": "    141.98",
+                "權值": "      1.42",
+                "息值": "            6.10000000",
+                "權值+息值": "      7.52",
+                "權/息": "除權息",
+                "漲停價": "    156.00",
+                "跌停價": "    128.00",
+                "開始交易基準價": "    142.00",
+                "減除股利參考價": "    141.98",
+                "現金股利": "            6.10000000",
+                "每仟股無償配股": "           10.00000033",
+                "現金增資股數": "0",
+                "現金增資認購價": "      0.00",
+                "公開承銷股數": "0",
+                "員工認購股數": "0",
+                "原股東認購股數": "0",
+                "按持股比例仟股認購": "      0.00000000"
+              }
+            ],
+            "evidence": {
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+              "month": "2018-07",
+              "request": {
+                "startDate": "2018/07/01",
+                "endDate": "2018/07/31",
+                "response": "json"
+              },
+              "payload_sha256": "a433f3cb8b6527e8bc23ac2cab8ac7aa4130b95449a52e71870e9073e1cb5f1f",
+              "retrieved_at_utc": "2026-11-08T05:38:14.397943+00:00"
+            }
+          }
+        }
+      ],
+      "evidence": {
+        "symbol": "6146.TWO",
+        "month": "2018-07",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "6146",
+          "date": "2018/07/01",
+          "response": "json"
+        },
+        "payload_sha256": "ea0389c87124a9bc0cb29fb461cf07759a53c89262ce3a139143ac50854f9cf1",
+        "parsed_frame_sha256": "5d4828fe643193485703816ac844baef4f46f5b26c7398fe259c4fee78cdb53e",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 22,
+        "retrieved_at_utc": "2026-11-08T05:38:12.214283+00:00"
+      },
+      "source_missing_dates": [],
+      "source_extra_dates": [],
+      "month_ohl_max_difference": 15.5985107421875,
+      "status": "official queried; unchanged candidate rules"
+    },
+    {
+      "symbol": "6146.TWO",
+      "month": "2021-04",
+      "targets": [
+        {
+          "date": "2021-04-22",
+          "official": {
+            "Open": 250,
+            "High": 250,
+            "Low": 245,
+            "Close": 245,
+            "Volume": 40000
+          },
+          "original": {
+            "Open": 226.7573699951172,
+            "High": 226.7573699951172,
+            "Low": 222.22222900390625,
+            "Close": 221.76870727539062,
+            "Adj Close": 162.85574340820312,
+            "Volume": 42997
+          },
+          "candidate": {
+            "Open": 226.7573699951172,
+            "High": 226.7573699951172,
+            "Low": 222.22222900390625,
+            "Close": 221.76870727539062,
+            "Adj Close": 162.85574340820312,
+            "Volume": 42997
+          },
+          "official_corporate_actions": {
+            "expected_next_source_date": "2021-04-23",
+            "records": [],
+            "evidence": {
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+              "month": "2021-04",
+              "request": {
+                "startDate": "2021/04/01",
+                "endDate": "2021/04/30",
+                "response": "json"
+              },
+              "payload_sha256": "c1ed134a7182e774b4539ebf4b69d3d35042746612d8a641026e4d64d6b9f576",
+              "retrieved_at_utc": "2026-11-08T05:38:14.700258+00:00"
+            }
+          }
+        }
+      ],
+      "evidence": {
+        "symbol": "6146.TWO",
+        "month": "2021-04",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "6146",
+          "date": "2021/04/01",
+          "response": "json"
+        },
+        "payload_sha256": "4413727e50a36b26cfefe053b2e55d8f280daca6378f92a10a3007fdd1f06f7c",
+        "parsed_frame_sha256": "98fdea5ad4b98b3922d352c1598f80488e7079aa5dacf0b72a35dba5b91832aa",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 19,
+        "retrieved_at_utc": "2026-11-08T05:38:12.530517+00:00"
+      },
+      "source_missing_dates": [
+        "2021-04-06"
+      ],
+      "source_extra_dates": [],
+      "month_ohl_max_difference": 24.265304565429688,
+      "status": "official queried; unchanged candidate rules"
+    },
+    {
+      "symbol": "8086.TWO",
+      "month": "2017-06",
+      "targets": [
+        {
+          "date": "2017-06-23",
+          "official": {
+            "Open": 61.2,
+            "High": 61.6,
+            "Low": 60.8,
+            "Close": 60.8,
+            "Volume": 2580000
+          },
+          "original": {
+            "Open": 60.43692398071289,
+            "High": 60.83193588256836,
+            "Low": 60.041908264160156,
+            "Close": 57.671836853027344,
+            "Adj Close": 47.331058502197266,
+            "Volume": 2612540
+          },
+          "candidate": {
+            "Open": 60.43692398071289,
+            "High": 60.83193588256836,
+            "Low": 60.041908264160156,
+            "Close": 57.671836853027344,
+            "Adj Close": 47.331058502197266,
+            "Volume": 2612540
+          },
+          "official_corporate_actions": {
+            "expected_next_source_date": "2017-06-26",
+            "records": [
+              {
+                "除權息日期": "106/06/26",
+                "代號": "8086",
+                "名稱": "宏捷科",
+                "除權息前收盤價": "60.80",
+                "除權息參考價": "58.40",
+                "權值": "0.00",
+                "息值": "2.39999999",
+                "權值+息值": "2.40",
+                "權/息": "除息",
+                "漲停價": "64.20",
+                "跌停價": "52.60",
+                "開始交易基準價": "58.40",
+                "減除股利參考價": "58.40",
+                "現金股利": "2.39999999",
+                "每仟股無償配股": "0.00000000",
+                "現金增資股數": "0",
+                "現金增資認購價": "0.00",
+                "公開承銷股數": "0",
+                "員工認購股數": "0",
+                "原股東認購股數": "0",
+                "按持股比例仟股認購": "0.00000000"
+              }
+            ],
+            "evidence": {
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+              "month": "2017-06",
+              "request": {
+                "startDate": "2017/06/01",
+                "endDate": "2017/06/30",
+                "response": "json"
+              },
+              "payload_sha256": "3e1a8301758d28fa74a3d03884a844ffe0b232f628d2f3724d3e33c7945040a7",
+              "retrieved_at_utc": "2026-11-08T05:38:17.967840+00:00"
+            }
+          }
+        }
+      ],
+      "evidence": {
+        "symbol": "8086.TWO",
+        "month": "2017-06",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "8086",
+          "date": "2017/06/01",
+          "response": "json"
+        },
+        "payload_sha256": "d5009acfa0defa924e34543a8854d4e482a45d21d8fa72e437bb17b28dfe42ce",
+        "parsed_frame_sha256": "1fd1e071b721a30e60d314636a72d6fc96b19ae6184e2dc1257e7efaa08eb7e3",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 23,
+        "retrieved_at_utc": "2026-11-08T05:38:16.246854+00:00"
+      },
+      "source_missing_dates": [
+        "2017-06-03"
+      ],
+      "source_extra_dates": [],
+      "month_ohl_max_difference": 0.8179412841796818,
+      "status": "official queried; unchanged candidate rules"
+    },
+    {
+      "symbol": "8086.TWO",
+      "month": "2018-06",
+      "targets": [
+        {
+          "date": "2018-06-25",
+          "official": {
+            "Open": 75.8,
+            "High": 77.4,
+            "Low": 73.2,
+            "Close": 74,
+            "Volume": 10052000
+          },
+          "original": {
+            "Open": 74.8548812866211,
+            "High": 76.43492889404297,
+            "Low": 72.28730010986328,
+            "Close": 71.69477844238281,
+            "Adj Close": 61.36131286621094,
+            "Volume": 10179053
+          },
+          "candidate": {
+            "Open": 74.8548812866211,
+            "High": 76.43492889404297,
+            "Low": 72.28730010986328,
+            "Close": 71.69477844238281,
+            "Adj Close": 61.36131286621094,
+            "Volume": 10179053
+          },
+          "official_corporate_actions": {
+            "expected_next_source_date": "2018-06-26",
+            "records": [
+              {
+                "除權息日期": "107/06/26",
+                "代號": "8086",
+                "名稱": "宏捷科             ",
+                "除權息前收盤價": "     74.00",
+                "除權息參考價": "     72.60",
+                "權值": "      0.00",
+                "息值": "            1.39970157",
+                "權值+息值": "      1.40",
+                "權/息": "除息",
+                "漲停價": "     79.80",
+                "跌停價": "     65.40",
+                "開始交易基準價": "     72.60",
+                "減除股利參考價": "     72.60",
+                "現金股利": "            1.39970157",
+                "每仟股無償配股": "            0.00000000",
+                "現金增資股數": "0",
+                "現金增資認購價": "      0.00",
+                "公開承銷股數": "0",
+                "員工認購股數": "0",
+                "原股東認購股數": "0",
+                "按持股比例仟股認購": "      0.00000000"
+              }
+            ],
+            "evidence": {
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+              "month": "2018-06",
+              "request": {
+                "startDate": "2018/06/01",
+                "endDate": "2018/06/30",
+                "response": "json"
+              },
+              "payload_sha256": "3b95aa04da9e8418b61f87828ee0a5458477ba6c7bea583d291fd5a1a5a3e38d",
+              "retrieved_at_utc": "2026-11-08T05:38:18.263908+00:00"
+            }
+          }
+        }
+      ],
+      "evidence": {
+        "symbol": "8086.TWO",
+        "month": "2018-06",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "8086",
+          "date": "2018/06/01",
+          "response": "json"
+        },
+        "payload_sha256": "55c6e9bb90d5d5680177e228ad9e40cdb21d1c39d610434907332f91c459ea21",
+        "parsed_frame_sha256": "9332035761af6afd4dfe8189ad0b58c34c18c894b7da00f6d486bf08d41754ef",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 20,
+        "retrieved_at_utc": "2026-11-08T05:38:16.514450+00:00"
+      },
+      "source_missing_dates": [],
+      "source_extra_dates": [],
+      "month_ohl_max_difference": 1.008711242675787,
+      "status": "official queried; unchanged candidate rules"
+    },
+    {
+      "symbol": "8086.TWO",
+      "month": "2019-06",
+      "targets": [
+        {
+          "date": "2019-06-24",
+          "official": {
+            "Open": 56.5,
+            "High": 58.1,
+            "Low": 56.2,
+            "Close": 57.4,
+            "Volume": 5790000
+          },
+          "original": {
+            "Open": 55.79552459716797,
+            "High": 57.37557601928711,
+            "Low": 55.499267578125,
+            "Close": 55.203006744384766,
+            "Adj Close": 48.17533493041992,
+            "Volume": 5863476
+          },
+          "candidate": {
+            "Open": 55.79552459716797,
+            "High": 57.37557601928711,
+            "Low": 55.499267578125,
+            "Close": 55.203006744384766,
+            "Adj Close": 48.17533493041992,
+            "Volume": 5863476
+          },
+          "official_corporate_actions": {
+            "expected_next_source_date": "2019-06-25",
+            "records": [
+              {
+                "除權息日期": "108/06/25",
+                "代號": "8086",
+                "名稱": "宏捷科             ",
+                "除權息前收盤價": "     57.40",
+                "除權息參考價": "     55.90",
+                "權值": "      0.00",
+                "息值": "            1.50000000",
+                "權值+息值": "      1.50",
+                "權/息": "除息",
+                "漲停價": "     61.40",
+                "跌停價": "     50.40",
+                "開始交易基準價": "     55.90",
+                "減除股利參考價": "     55.90",
+                "現金股利": "            1.50000000",
+                "每仟股無償配股": "            0.00000000",
+                "現金增資股數": "0",
+                "現金增資認購價": "      0.00",
+                "公開承銷股數": "0",
+                "員工認購股數": "0",
+                "原股東認購股數": "0",
+                "按持股比例仟股認購": "      0.00000000"
+              }
+            ],
+            "evidence": {
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+              "month": "2019-06",
+              "request": {
+                "startDate": "2019/06/01",
+                "endDate": "2019/06/30",
+                "response": "json"
+              },
+              "payload_sha256": "3881c29e1edccf25bc2d4f3862adcef16bbf0c30f8678a0ffd29d95c09199fbf",
+              "retrieved_at_utc": "2026-11-08T05:38:18.552184+00:00"
+            }
+          }
+        }
+      ],
+      "evidence": {
+        "symbol": "8086.TWO",
+        "month": "2019-06",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "8086",
+          "date": "2019/06/01",
+          "response": "json"
+        },
+        "payload_sha256": "9081b574cfff565c5d2d76c48cefffadcec37868d8812f7968502359284a6541",
+        "parsed_frame_sha256": "f9f9a53068a6e77d859d001e3cd894a087ed01f3ff2cd93cb578c597330239b2",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 19,
+        "retrieved_at_utc": "2026-11-08T05:38:16.808984+00:00"
+      },
+      "source_missing_dates": [],
+      "source_extra_dates": [],
+      "month_ohl_max_difference": 0.8117080688476506,
+      "status": "official queried; unchanged candidate rules"
+    },
+    {
+      "symbol": "3324.TWO",
+      "month": "2017-07",
+      "targets": [
+        {
+          "date": "2017-07-06",
+          "official": {
+            "Open": 86.5,
+            "High": 87.2,
+            "Low": 86,
+            "Close": 86.8,
+            "Volume": 1732000
+          },
+          "original": {
+            "Open": 86.5,
+            "High": 87.19999694824219,
+            "Low": 86,
+            "Close": 83.19999694824219,
+            "Adj Close": 65.21054077148438,
+            "Volume": 1731871
+          },
+          "candidate": {
+            "Open": 86.5,
+            "High": 87.19999694824219,
+            "Low": 86,
+            "Close": 86.8,
+            "Adj Close": 65.21054077148438,
+            "Volume": 1731871
+          },
+          "official_corporate_actions": {
+            "expected_next_source_date": "2017-07-07",
+            "records": [
+              {
+                "除權息日期": "106/07/07",
+                "代號": "3324",
+                "名稱": "雙鴻",
+                "除權息前收盤價": "86.80",
+                "除權息參考價": "83.25",
+                "權值": "0.00",
+                "息值": "3.55106133",
+                "權值+息值": "3.55",
+                "權/息": "除息",
+                "漲停價": "91.50",
+                "跌停價": "75.00",
+                "開始交易基準價": "83.20",
+                "減除股利參考價": "83.25",
+                "現金股利": "3.55106133",
+                "每仟股無償配股": "0.00000000",
+                "現金增資股數": "0",
+                "現金增資認購價": "0.00",
+                "公開承銷股數": "0",
+                "員工認購股數": "0",
+                "原股東認購股數": "0",
+                "按持股比例仟股認購": "0.00000000"
+              }
+            ],
+            "evidence": {
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+              "month": "2017-07",
+              "request": {
+                "startDate": "2017/07/01",
+                "endDate": "2017/07/31",
+                "response": "json"
+              },
+              "payload_sha256": "59ebdef980daa7f8c37eccadc1905d51a1ac9f6bf2b036f2bb2c46e9800fcd71",
+              "retrieved_at_utc": "2026-11-08T05:38:09.629552+00:00"
+            }
+          }
+        }
+      ],
+      "evidence": {
+        "symbol": "3324.TWO",
+        "month": "2017-07",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "3324",
+          "date": "2017/07/01",
+          "response": "json"
+        },
+        "payload_sha256": "25d908075bc8ceaf98853ffeabf075f4ea4dca8a699cfc7b24228f70789ea076",
+        "parsed_frame_sha256": "b63cbc404a9324ad360a969bb98cbf17830c7425e853240bf6ab152a35efb0dd",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 21,
+        "retrieved_at_utc": "2026-11-08T05:38:19.450669+00:00"
+      },
+      "source_missing_dates": [],
+      "source_extra_dates": [],
+      "month_ohl_max_difference": 0.000003051757815342171,
+      "status": "official queried; unchanged candidate rules"
+    },
+    {
+      "symbol": "3324.TWO",
+      "month": "2018-07",
+      "targets": [
+        {
+          "date": "2018-07-23",
+          "official": {
+            "Open": 72.7,
+            "High": 72.7,
+            "Low": 70,
+            "Close": 70.6,
+            "Volume": 973000
+          },
+          "original": {
+            "Open": 72.69999694824219,
+            "High": 72.69999694824219,
+            "Low": 70,
+            "Close": 68.5999984741211,
+            "Adj Close": 56.16450500488281,
+            "Volume": 973089
+          },
+          "candidate": {
+            "Open": 72.69999694824219,
+            "High": 72.69999694824219,
+            "Low": 70,
+            "Close": 70.6,
+            "Adj Close": 56.16450500488281,
+            "Volume": 973089
+          },
+          "official_corporate_actions": {
+            "expected_next_source_date": "2018-07-24",
+            "records": [
+              {
+                "除權息日期": "107/07/24",
+                "代號": "3324",
+                "名稱": "雙鴻              ",
+                "除權息前收盤價": "     70.60",
+                "除權息參考價": "     68.57",
+                "權值": "      0.00",
+                "息值": "            2.02595097",
+                "權值+息值": "      2.03",
+                "權/息": "除息",
+                "漲停價": "     75.40",
+                "跌停價": "     61.80",
+                "開始交易基準價": "     68.60",
+                "減除股利參考價": "     68.57",
+                "現金股利": "            2.02595097",
+                "每仟股無償配股": "            0.00000000",
+                "現金增資股數": "0",
+                "現金增資認購價": "      0.00",
+                "公開承銷股數": "0",
+                "員工認購股數": "0",
+                "原股東認購股數": "0",
+                "按持股比例仟股認購": "      0.00000000"
+              }
+            ],
+            "evidence": {
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+              "month": "2018-07",
+              "request": {
+                "startDate": "2018/07/01",
+                "endDate": "2018/07/31",
+                "response": "json"
+              },
+              "payload_sha256": "a433f3cb8b6527e8bc23ac2cab8ac7aa4130b95449a52e71870e9073e1cb5f1f",
+              "retrieved_at_utc": "2026-11-08T05:38:14.397943+00:00"
+            }
+          }
+        }
+      ],
+      "evidence": {
+        "symbol": "3324.TWO",
+        "month": "2018-07",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "3324",
+          "date": "2018/07/01",
+          "response": "json"
+        },
+        "payload_sha256": "26815cb1574b4c63a160b107fe4f7b09e2c294aaa31475d86bcdffce405ee438",
+        "parsed_frame_sha256": "9a4147a07549a1f69604f405d85fcbb37c265b96ccbec0f7f188c4674b1d8038",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 22,
+        "retrieved_at_utc": "2026-11-08T05:38:19.758638+00:00"
+      },
+      "source_missing_dates": [],
+      "source_extra_dates": [],
+      "month_ohl_max_difference": 0.000003051757815342171,
+      "status": "official queried; unchanged candidate rules"
+    },
+    {
+      "symbol": "6121.TWO",
+      "month": "2017-07",
+      "targets": [
+        {
+          "date": "2017-07-12",
+          "official": {
+            "Open": 103,
+            "High": 103,
+            "Low": 102,
+            "Close": 102.5,
+            "Volume": 3371000
+          },
+          "original": {
+            "Open": 171.6666717529297,
+            "High": 171.6666717529297,
+            "Low": 170,
+            "Close": 160.8333282470703,
+            "Adj Close": 86.09164428710938,
+            "Volume": 2022809
+          },
+          "candidate": {
+            "Open": 171.6666717529297,
+            "High": 171.6666717529297,
+            "Low": 170,
+            "Close": 160.8333282470703,
+            "Adj Close": 86.09164428710938,
+            "Volume": 2022809
+          },
+          "official_corporate_actions": {
+            "expected_next_source_date": "2017-07-13",
+            "records": [
+              {
+                "除權息日期": "106/07/13",
+                "代號": "6121",
+                "名稱": "新普",
+                "除權息前收盤價": "102.50",
+                "除權息參考價": "96.50",
+                "權值": "0.00",
+                "息值": "6.00000000",
+                "權值+息值": "6.00",
+                "權/息": "除息",
+                "漲停價": "106.00",
+                "跌停價": "86.90",
+                "開始交易基準價": "96.50",
+                "減除股利參考價": "96.50",
+                "現金股利": "6.00000000",
+                "每仟股無償配股": "0.00000000",
+                "現金增資股數": "0",
+                "現金增資認購價": "0.00",
+                "公開承銷股數": "0",
+                "員工認購股數": "0",
+                "原股東認購股數": "0",
+                "按持股比例仟股認購": "0.00000000"
+              }
+            ],
+            "evidence": {
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+              "month": "2017-07",
+              "request": {
+                "startDate": "2017/07/01",
+                "endDate": "2017/07/31",
+                "response": "json"
+              },
+              "payload_sha256": "59ebdef980daa7f8c37eccadc1905d51a1ac9f6bf2b036f2bb2c46e9800fcd71",
+              "retrieved_at_utc": "2026-11-08T05:38:09.629552+00:00"
+            }
+          }
+        }
+      ],
+      "evidence": {
+        "symbol": "6121.TWO",
+        "month": "2017-07",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "6121",
+          "date": "2017/07/01",
+          "response": "json"
+        },
+        "payload_sha256": "8b6550937b5032751c985fc853561678d4888995e2f9a74e208602bea2fd079e",
+        "parsed_frame_sha256": "3849a6b95fc0aa32b3d03fe90078f7a31bd948431f3db6a34ade4d81f164bca3",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 21,
+        "retrieved_at_utc": "2026-11-08T05:38:21.623598+00:00"
+      },
+      "source_missing_dates": [],
+      "source_extra_dates": [],
+      "month_ohl_max_difference": 70,
+      "status": "official queried; unchanged candidate rules"
+    },
+    {
+      "symbol": "6121.TWO",
+      "month": "2018-07",
+      "targets": [
+        {
+          "date": "2018-07-11",
+          "official": {
+            "Open": 177.5,
+            "High": 178,
+            "Low": 175.5,
+            "Close": 178,
+            "Volume": 869000
+          },
+          "original": {
+            "Open": 177.5,
+            "High": 178,
+            "Low": 175.5,
+            "Close": 168,
+            "Adj Close": 95.88992309570312,
+            "Volume": 868672
+          },
+          "candidate": {
+            "Open": 177.5,
+            "High": 178,
+            "Low": 175.5,
+            "Close": 178,
+            "Adj Close": 95.88992309570312,
+            "Volume": 868672
+          },
+          "official_corporate_actions": {
+            "expected_next_source_date": "2018-07-12",
+            "records": [
+              {
+                "除權息日期": "107/07/12",
+                "代號": "6121",
+                "名稱": "新普              ",
+                "除權息前收盤價": "    178.00",
+                "除權息參考價": "    168.00",
+                "權值": "      0.00",
+                "息值": "           10.00000000",
+                "權值+息值": "     10.00",
+                "權/息": "除息",
+                "漲停價": "    184.50",
+                "跌停價": "    151.50",
+                "開始交易基準價": "    168.00",
+                "減除股利參考價": "    168.00",
+                "現金股利": "           10.00000000",
+                "每仟股無償配股": "            0.00000000",
+                "現金增資股數": "0",
+                "現金增資認購價": "      0.00",
+                "公開承銷股數": "0",
+                "員工認購股數": "0",
+                "原股東認購股數": "0",
+                "按持股比例仟股認購": "      0.00000000"
+              }
+            ],
+            "evidence": {
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+              "month": "2018-07",
+              "request": {
+                "startDate": "2018/07/01",
+                "endDate": "2018/07/31",
+                "response": "json"
+              },
+              "payload_sha256": "a433f3cb8b6527e8bc23ac2cab8ac7aa4130b95449a52e71870e9073e1cb5f1f",
+              "retrieved_at_utc": "2026-11-08T05:38:14.397943+00:00"
+            }
+          }
+        }
+      ],
+      "evidence": {
+        "symbol": "6121.TWO",
+        "month": "2018-07",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "6121",
+          "date": "2018/07/01",
+          "response": "json"
+        },
+        "payload_sha256": "7b822e4d8a5139dc4770cb483ebbb84c95f1dce7dd194f669a95a6244c861075",
+        "parsed_frame_sha256": "7f0f33b726031f6cdd4b9af34a3da921360179971c7a623b42aae13f0ccf59e9",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 22,
+        "retrieved_at_utc": "2026-11-08T05:38:21.902628+00:00"
+      },
+      "source_missing_dates": [],
+      "source_extra_dates": [],
+      "month_ohl_max_difference": 0,
+      "status": "official queried; unchanged candidate rules"
+    },
+    {
+      "symbol": "6223.TWO",
+      "month": "2017-09",
+      "targets": [
+        {
+          "date": "2017-09-06",
+          "official": {
+            "Open": 85.6,
+            "High": 86.6,
+            "Low": 85,
+            "Close": 85,
+            "Volume": 1926000
+          },
+          "original": {
+            "Open": 85.5999984741211,
+            "High": 86.5999984741211,
+            "Low": 85,
+            "Close": 80.80000305175781,
+            "Adj Close": 61.677391052246094,
+            "Volume": 1925614
+          },
+          "candidate": {
+            "Open": 85.5999984741211,
+            "High": 86.5999984741211,
+            "Low": 85,
+            "Close": 80.80000305175781,
+            "Adj Close": 61.677391052246094,
+            "Volume": 1925614
+          },
+          "official_corporate_actions": {
+            "expected_next_source_date": "2017-09-07",
+            "records": [
+              {
+                "除權息日期": "106/09/07",
+                "代號": "6223",
+                "名稱": "旺矽",
+                "除權息前收盤價": "85.00",
+                "除權息參考價": "80.82",
+                "權值": "0.00",
+                "息值": "4.18444102",
+                "權值+息值": "4.18",
+                "權/息": "除息",
+                "漲停價": "88.90",
+                "跌停價": "72.80",
+                "開始交易基準價": "80.80",
+                "減除股利參考價": "80.82",
+                "現金股利": "4.18444102",
+                "每仟股無償配股": "0.00000000",
+                "現金增資股數": "0",
+                "現金增資認購價": "0.00",
+                "公開承銷股數": "0",
+                "員工認購股數": "0",
+                "原股東認購股數": "0",
+                "按持股比例仟股認購": "0.00000000"
+              }
+            ],
+            "evidence": {
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+              "month": "2017-09",
+              "request": {
+                "startDate": "2017/09/01",
+                "endDate": "2017/09/30",
+                "response": "json"
+              },
+              "payload_sha256": "a9fe3dedc7c9aa0cb0db0f23c3ab26ed4e523e3591e5f7e80d696f641ea003bf",
+              "retrieved_at_utc": "2026-11-08T05:38:25.053897+00:00"
+            }
+          }
+        }
+      ],
+      "evidence": {
+        "symbol": "6223.TWO",
+        "month": "2017-09",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "6223",
+          "date": "2017/09/01",
+          "response": "json"
+        },
+        "payload_sha256": "ba813da3d7e212899ea79a04ce2a5fa281af10b2be465abbea2e5f4b6afeb427",
+        "parsed_frame_sha256": "a70b0228552d9e69c15c50de726911e53682bb61cdcb606b9c35a584ee2248a1",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 22,
+        "retrieved_at_utc": "2026-11-08T05:38:23.773786+00:00"
+      },
+      "source_missing_dates": [
+        "2017-09-30"
+      ],
+      "source_extra_dates": [],
+      "month_ohl_max_difference": 0.000003051757815342171,
+      "status": "official queried; unchanged candidate rules"
+    },
+    {
+      "symbol": "3552.TWO",
+      "month": "2017-08",
+      "targets": [
+        {
+          "date": "2017-08-23",
+          "official": {
+            "Open": 189.5,
+            "High": 189.5,
+            "Low": 181,
+            "Close": 181,
+            "Volume": 1923000
+          },
+          "original": {
+            "Open": 165.6468505859375,
+            "High": 165.6468505859375,
+            "Low": 158.21678161621094,
+            "Close": 151.6608428955078,
+            "Adj Close": 129.64999389648438,
+            "Volume": 2199863
+          },
+          "candidate": {
+            "Open": 165.6468505859375,
+            "High": 165.6468505859375,
+            "Low": 158.21678161621094,
+            "Close": 151.6608428955078,
+            "Adj Close": 129.64999389648438,
+            "Volume": 2199863
+          },
+          "official_corporate_actions": {
+            "expected_next_source_date": "2017-08-24",
+            "records": [
+              {
+                "除權息日期": "106/08/24",
+                "代號": "3552",
+                "名稱": "同致",
+                "除權息前收盤價": "181.00",
+                "除權息參考價": "173.53",
+                "權值": "0.00",
+                "息值": "7.47154232",
+                "權值+息值": "7.47",
+                "權/息": "除息",
+                "漲停價": "190.50",
+                "跌停價": "156.50",
+                "開始交易基準價": "173.50",
+                "減除股利參考價": "173.53",
+                "現金股利": "7.47154232",
+                "每仟股無償配股": "0.00000000",
+                "現金增資股數": "0",
+                "現金增資認購價": "0.00",
+                "公開承銷股數": "0",
+                "員工認購股數": "0",
+                "原股東認購股數": "0",
+                "按持股比例仟股認購": "0.00000000"
+              }
+            ],
+            "evidence": {
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+              "month": "2017-08",
+              "request": {
+                "startDate": "2017/08/01",
+                "endDate": "2017/08/31",
+                "response": "json"
+              },
+              "payload_sha256": "d7f0174f2743a0bab67c41f116a892ecc6ad1167e57f472049d0e85083350c59",
+              "retrieved_at_utc": "2026-11-08T05:38:13.937050+00:00"
+            }
+          }
+        }
+      ],
+      "evidence": {
+        "symbol": "3552.TWO",
+        "month": "2017-08",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "3552",
+          "date": "2017/08/01",
+          "response": "json"
+        },
+        "payload_sha256": "b35db23d90e595b7ec1c342c378fb5b92da52b86a1240b076f0c3ed8931043dc",
+        "parsed_frame_sha256": "9c7fb4aa54fb7a9c7e0881a3907c273f044852dd30886c993a5f2a3f2f2709e5",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 23,
+        "retrieved_at_utc": "2026-11-08T05:38:25.919737+00:00"
+      },
+      "source_missing_dates": [],
+      "source_extra_dates": [],
+      "month_ohl_max_difference": 27.81817626953125,
+      "status": "official queried; unchanged candidate rules"
+    },
+    {
+      "symbol": "3552.TWO",
+      "month": "2018-08",
+      "targets": [
+        {
+          "date": "2018-08-15",
+          "official": {
+            "Open": 110,
+            "High": 111,
+            "Low": 105,
+            "Close": 105.5,
+            "Volume": 1558000
+          },
+          "original": {
+            "Open": 96.15384674072266,
+            "High": 97.02796936035156,
+            "Low": 91.78321838378906,
+            "Close": 90.47203063964844,
+            "Adj Close": 80.82212829589844,
+            "Volume": 1782366
+          },
+          "candidate": {
+            "Open": 96.15384674072266,
+            "High": 97.02796936035156,
+            "Low": 91.78321838378906,
+            "Close": 90.47203063964844,
+            "Adj Close": 80.82212829589844,
+            "Volume": 1782366
+          },
+          "official_corporate_actions": {
+            "expected_next_source_date": "2018-08-16",
+            "records": [
+              {
+                "除權息日期": "107/08/16",
+                "代號": "3552",
+                "名稱": "同致              ",
+                "除權息前收盤價": "    105.50",
+                "除權息參考價": "    103.50",
+                "權值": "      0.00",
+                "息值": "            2.00000000",
+                "權值+息值": "      2.00",
+                "權/息": "除息",
+                "漲停價": "    113.50",
+                "跌停價": "     93.20",
+                "開始交易基準價": "    103.50",
+                "減除股利參考價": "    103.50",
+                "現金股利": "            2.00000000",
+                "每仟股無償配股": "            0.00000000",
+                "現金增資股數": "0",
+                "現金增資認購價": "      0.00",
+                "公開承銷股數": "0",
+                "員工認購股數": "0",
+                "原股東認購股數": "0",
+                "按持股比例仟股認購": "      0.00000000"
+              }
+            ],
+            "evidence": {
+              "method": "POST",
+              "endpoint": "https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",
+              "month": "2018-08",
+              "request": {
+                "startDate": "2018/08/01",
+                "endDate": "2018/08/31",
+                "response": "json"
+              },
+              "payload_sha256": "9d8baab404c0a42bd74316079c37d6f01216716537d78114ad9911531468f599",
+              "retrieved_at_utc": "2026-11-08T05:38:27.593740+00:00"
+            }
+          }
+        }
+      ],
+      "evidence": {
+        "symbol": "3552.TWO",
+        "month": "2018-08",
+        "method": "POST",
+        "endpoint": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+        "request": {
+          "code": "3552",
+          "date": "2018/08/01",
+          "response": "json"
+        },
+        "payload_sha256": "67f54cbb3e93c7b939f0b86654e4a1a7ea5ab710e32f29829c17e90bd376dfa7",
+        "parsed_frame_sha256": "23e2e337589d8502686b2ee485cd371474ab69668025cd65e6279a521fb331bc",
+        "price_basis": "official_raw_unadjusted",
+        "volume_precision": "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元",
+        "unavailable_rows": [],
+        "bars": 23,
+        "retrieved_at_utc": "2026-11-08T05:38:26.171321+00:00"
+      },
+      "source_missing_dates": [],
+      "source_extra_dates": [],
+      "month_ohl_max_difference": 15.797203063964844,
+      "status": "official queried; unchanged candidate rules"
+    }
+  ]
+}

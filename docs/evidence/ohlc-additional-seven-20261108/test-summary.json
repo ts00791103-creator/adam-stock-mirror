@@ -1,0 +1,30 @@
+{
+  "scope": "additional_seven_only",
+  "date": "2026-11-08",
+  "symbols": [
+    "5483.TWO",
+    "6146.TWO",
+    "8086.TWO",
+    "3324.TWO",
+    "6121.TWO",
+    "6223.TWO",
+    "3552.TWO"
+  ],
+  "replayRun": 42451511435,
+  "regressionRun": 42451511522,
+  "regressionTests": 278,
+  "pricePanTests": 10,
+  "runtimeChanged": false,
+  "reportedDates": 14,
+  "correctedCloses": 4,
+  "available": 2,
+  "blocked": 5,
+  "allBarsPreserved": true,
+  "allNonCloseFieldsUnchanged": true,
+  "allOriginalRestorable": true,
+  "runtimeSourceSha256": {
+    "app.py": "d70fd8c3cf2d36e495c9d6a798f5a08f38e98824f020fd1b18c0ee0bd3c01c9f",
+    "verified_daily_history.py": "29ab162b80d0ffb0157e78148caaa7452dd34617c849deaccf0778346b4f0c4e",
+    "analysis_availability.py": "4c2cfca8962edd73c403b07523094e765eae79523363a6d754269045228192b6"
+  }
+}
