@@ -11,6 +11,8 @@ from test_verified_daily_history import source, month, actions
 ROOT=Path(__file__).resolve().parents[1]
 
 class ReleaseNavigationTests(original.InitialNavigationTests):
+    def test_exact_staged_production_app(self):
+        self.assertEqual((ROOT/"production_quality_preview.py").read_bytes(),b"PRODUCTION_MODE = True\n"+(ROOT/"release-preview/v1.0.8/app.py").read_bytes())
     def make_app(self):
         app=AppTest.from_file(str(ROOT/"production_quality_preview.py"),default_timeout=45)
         app.session_state["market_scan"]=original.seed()

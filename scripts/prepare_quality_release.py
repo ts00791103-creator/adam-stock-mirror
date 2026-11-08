@@ -12,4 +12,5 @@ for filename in ("official_history.py","verified_daily_history.py","analysis_ava
 for filename in ("test_production_quality_release.py","test_initial_navigation.py","test_verified_daily_history.py"):
     shutil.copy2(ROOT/"tests"/filename,OUT/"tests"/filename)
 shutil.copytree(ROOT/"tests/fixtures",OUT/"tests/fixtures",dirs_exist_ok=True)
+shutil.copytree(ROOT/"release-preview/v1.0.8",OUT/"release-preview/v1.0.8",dirs_exist_ok=True)
 assert (OUT/"production_quality_preview.py").read_bytes()==b"PRODUCTION_MODE = True\n"+(OUT/"app.py").read_bytes()
