@@ -1,65 +1,109 @@
-"""Read-only full-period OHLC evidence for four stocks; never repairs prices."""
-import json
-import math
-import sys
+"""Read-only raw/provider/adjustment/official corporate-action diagnosis."""
+import ast, hashlib, json, sys, types, calendar
 from pathlib import Path
+from urllib.request import Request, urlopen
+from urllib.parse import urlencode
 import pandas as pd
+import numpy as np
 import yfinance as yf
-ROOT=Path(__file__).resolve().parents[1]
-sys.path.insert(0,str(ROOT))
+from curl_cffi import requests
+ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from official_history import fetch_official_month, invalid_candles, request_spec
-out=ROOT/"candidate-market-output";out.mkdir(exist_ok=True)
-report={"retrieved_at_utc":pd.Timestamp.now(tz="UTC").isoformat(),
-        "request":{"period":"10y","interval":"1d","auto_adjust":False,"actions":False},
-        "policy":"Read-only evidence; no guessed prices, removed candles, shortened request, mixed-basis replacements or weakened gate.",
-        "stocks":[],"official_months":[]}
-for symbol in ("6488.TWO","5347.TWO","8069.TWO","6147.TWO"):
-    row={"symbol":symbol}
+OUT=ROOT/"candidate-market-output";OUT.mkdir(exist_ok=True)
+SUBJECTS=["3105.TWO","3260.TWO","5274.TWO","8299.TWO","3227.TWO","6182.TWO","4123.TWO","6274.TWO","1565.TWO","3211.TWO","3529.TWO","8358.TWO"]
+CONTROLS=["2330.TW","2002.TW","6643.TWO","6530.TWO"]
+REPORT={"retrieved_at_utc":pd.Timestamp.now(tz="UTC").isoformat(),"request":{"period":"10y","interval":"1d","auto_adjust":False,"actions":False},"subjects":SUBJECTS,"controls":CONTROLS,"stocks":[],"official_months":[],"policy":"Read only; no source repairs or deletion. Original and actual get_data-normalized frames retained."}
+# Execute only the repository's real daily-normalization and audit functions.
+tree=ast.parse((ROOT/"app.py").read_text(encoding="utf-8"))
+nodes=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in ("get_data","raw_quote_summary","audit_ohlc_data")]
+for n in nodes:n.decorator_list=[]
+scope={"pd":pd,"np":np}
+exec(compile(ast.Module(body=nodes,type_ignores=[]),"app_daily_pipeline","exec"),scope)
+def flat(df):
+    df=df.copy()
+    if isinstance(df.columns,pd.MultiIndex):df.columns=df.columns.get_level_values(0)
+    df.index=pd.to_datetime(df.index)
+    if df.index.tz is not None:df.index=df.index.tz_localize(None)
+    return df
+def vals(row):
+    return {c:float(row[c]) if pd.notna(row[c]) else None for c in ("Open","High","Low","Close","Adj Close") if c in row}
+def post(endpoint,params):
+    req=Request(endpoint,data=urlencode(params).encode(),headers={"User-Agent":"Mozilla/5.0","Accept":"application/json"})
+    with urlopen(req,timeout=25) as response:return json.load(response)
+actions={}
+def official_actions(month):
+    if month not in actions:
+        year,mon=map(int,month.split("-"))
+        params={"startDate":f"{year}/{mon:02}/01","endDate":f"{year}/{mon:02}/{calendar.monthrange(year,mon)[1]}","response":"json"}
+        payload=post("https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ",params)
+        (OUT/("official_actions_"+month+".json")).write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding="utf-8")
+        records=[]
+        for table in payload.get("tables",[]):
+            fields=table.get("fields",[])
+            for values in table.get("data",[]):records.append(dict(zip(fields,values)))
+        actions[month]={"records":records,"endpoint":"https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ","request":params,"sha256":hashlib.sha256(json.dumps(payload,ensure_ascii=False,sort_keys=True,separators=(",",":")).encode()).hexdigest()}
+    return actions[month]
+for symbol in SUBJECTS+CONTROLS:
+    row={"symbol":symbol,"sample":"subject" if symbol in SUBJECTS else "control"}
     try:
-        raw=yf.download(symbol,period="10y",interval="1d",auto_adjust=False,progress=False,threads=False)
-        if isinstance(raw.columns,pd.MultiIndex):raw.columns=raw.columns.get_level_values(0)
-        if raw.empty:raise ValueError("empty full-period response")
-        raw.index=pd.to_datetime(raw.index)
-        if raw.index.tz is not None:raw.index=raw.index.tz_localize(None)
-        raw.to_csv(out/(symbol+"_10y_source.csv"))
-        row.update(bars=len(raw),first=str(raw.index[0].date()),last=str(raw.index[-1].date()),
-                   duplicate_dates=int(raw.index.duplicated().sum()),missing_ohlc=int(raw[["Open","High","Low","Close"]].isna().any(axis=1).sum()),
-                   latest_close=float(raw.Close.iloc[-1]),invalid_dates=invalid_candles(raw))
-        row["invalid_rows"]=[{"date":str(t.date()),**{c:float(raw.loc[t,c]) for c in ("Open","High","Low","Close")}}
-                             for t in raw.index if str(t.date()) in row["invalid_dates"]]
-        metadata=yf.download(symbol,period="10y",interval="1d",auto_adjust=False,actions=True,progress=False,threads=False)
-        if isinstance(metadata.columns,pd.MultiIndex):metadata.columns=metadata.columns.get_level_values(0)
-        metadata.index=pd.to_datetime(metadata.index)
-        if metadata.index.tz is not None:metadata.index=metadata.index.tz_localize(None)
-        cols=["Open","High","Low","Close"]
-        row["action_metadata_matches_primary_prices"]=bool(raw[cols].equals(metadata[cols]))
-        row["split_events"]=[{"date":str(t.date()),"value":float(v)} for t,v in metadata.get("Stock Splits",pd.Series(dtype=float)).items() if v!=0]
-        row["status"]="unresolved source OHLC anomalies" if row["invalid_dates"] else "no OHLC anomaly in this response; not a historical repair claim"
-        for month in sorted(set(day[:7] for day in row["invalid_dates"])):
-            item={"symbol":symbol,"month":month,"request_spec":request_spec(symbol,month),"targets":[]}
+        raw=flat(yf.download(symbol,period="10y",interval="1d",auto_adjust=False,progress=False,threads=False))
+        if raw.empty:raise ValueError("empty primary response")
+        raw.to_csv(OUT/(symbol+"_raw.csv"))
+        scope["yf"]=types.SimpleNamespace(download=lambda *a,**kw:raw.copy(deep=True))
+        processed=scope["get_data"](symbol,"10y","1d")
+        processed.to_csv(OUT/(symbol+"_processed.csv"))
+        bad=invalid_candles(processed)
+        row.update(bars=len(raw),processed_bars=len(processed),first=str(raw.index[0].date()),last=str(raw.index[-1].date()),
+            invalid_dates=bad,gate_messages=scope["audit_ohlc_data"](processed),
+            finite_ohlc_unchanged=bool(raw[["Open","High","Low","Close"]].equals(processed[["Open","High","Low","Close"]])),
+            invalid_rows=[{"date":str(t.date()),"original":vals(raw.loc[t]),"processed":vals(processed.loc[t])} for t in processed.index if str(t.date()) in bad])
+        variants={}
+        meta=None
+        for mode,kwargs in (("actions_metadata",{"auto_adjust":False,"actions":True}),("auto_adjust",{"auto_adjust":True}),("back_adjust",{"auto_adjust":False,"back_adjust":True}),("repair",{"auto_adjust":False,"repair":True})):
+            try:
+                frame=flat(yf.download(symbol,period="10y",interval="1d",progress=False,threads=False,**kwargs))
+                frame.to_csv(OUT/(symbol+"_"+mode+".csv"))
+                if mode=="actions_metadata":meta=frame
+                variants[mode]={"bars":len(frame),"invalid_dates":invalid_candles(frame),"target_rows":[{"date":d,**vals(frame.loc[pd.Timestamp(d)])} for d in bad if pd.Timestamp(d) in frame.index]}
+            except Exception as exc:variants[mode]={"error":type(exc).__name__+": "+str(exc)[:220]}
+        row["variants"]=variants
+        if meta is not None:
+            row["provider_actions"]=[{"date":str(t.date()),"dividend":float(r.get("Dividends",0)),"split":float(r.get("Stock Splits",0))}
+                for t,r in meta.iterrows() if r.get("Dividends",0)!=0 or r.get("Stock Splits",0)!=0]
+        try:
+            params={"period1":int((raw.index[0]-pd.Timedelta(days=1)).tz_localize("Asia/Taipei").timestamp()),"period2":int(pd.Timestamp.now(tz="UTC").timestamp()),"interval":"1d","events":"div,splits","includeAdjustedClose":"true"}
+            url="https://query1.finance.yahoo.com/v8/finance/chart/"+symbol
+            response=requests.get(url,params=params,impersonate="chrome",timeout=25);response.raise_for_status()
+            payload=response.json();(OUT/(symbol+"_yahoo_chart.json")).write_text(json.dumps(payload,ensure_ascii=False),encoding="utf-8")
+            result=payload["chart"]["result"][0];quote=result["indicators"]["quote"][0]
+            dates=pd.to_datetime(result["timestamp"],unit="s",utc=True).tz_convert("Asia/Taipei").tz_localize(None).normalize()
+            direct=pd.DataFrame({c:quote[c.lower()] for c in ("Open","High","Low","Close")},index=dates)
+            row["direct_yahoo"]={"endpoint":url,"request":params,"target_rows":[{"date":d,**vals(direct.loc[pd.Timestamp(d)])} for d in bad if pd.Timestamp(d) in direct.index],
+                "matches_library_at_targets":all(all(abs(float(direct.loc[pd.Timestamp(d),c])-float(raw.loc[pd.Timestamp(d),c]))<1e-8 for c in ("Open","High","Low","Close")) for d in bad if pd.Timestamp(d) in direct.index)}
+        except Exception as exc:row["direct_yahoo"]={"error":type(exc).__name__+": "+str(exc)[:220]}
+        for month in sorted(set(d[:7] for d in bad)):
+            item={"symbol":symbol,"month":month,"targets":[]}
             try:
                 official,evidence,payload=fetch_official_month(symbol,month)
-                (out/("official_"+symbol+"_"+month+".json")).write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding="utf-8")
+                (OUT/("official_"+symbol+"_"+month+".json")).write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding="utf-8")
                 item["evidence"]=evidence
-                ratios=[float(raw.loc[t,c])/float(official.loc[t,c]) for t in official.index if t in raw.index
-                        for c in ("Open","High","Low") if float(official.loc[t,c])!=0]
-                item["month_ohl_ratio_range"]=[min(ratios),max(ratios)] if ratios else []
-                for source in row["invalid_rows"]:
-                    if source["date"][:7]!=month:continue
-                    stamp=pd.Timestamp(source["date"]);target={"date":source["date"],"source":source}
-                    if stamp in official.index:
-                        target["official_raw"]={c:float(official.loc[stamp,c]) for c in cols}
-                        target["source_over_official"]={c:source[c]/target["official_raw"][c] if target["official_raw"][c] else None for c in cols}
-                    else:target["official_status"]="date unavailable in official ordinary OHLC rows"
-                    split=metadata.loc[metadata.index>stamp,"Stock Splits"] if "Stock Splits" in metadata else pd.Series(dtype=float)
-                    events=[float(v) for v in split if float(v)!=0]
-                    target["provider_inverse_split_product_after_date"]=1/math.prod(events) if events else 1
-                    target["basis_status"]="Official is unadjusted raw price; Yahoo auto_adjust=False may still have split-adjusted OHLC. Provider action metadata is not an official complete adjustment chain. No conversion or replacement applied."
+                item["month_ohl_max_difference"]=max(abs(float(raw.loc[t,c])-float(official.loc[t,c])) for t in official.index if t in raw.index for c in ("Open","High","Low"))
+                event_months=[month,(pd.Timestamp(month+"-01")+pd.DateOffset(months=1)).strftime("%Y-%m")]
+                event_records=[]
+                for event_month in event_months:
+                    evidence_actions=official_actions(event_month)
+                    event_records.extend([{**event,"_source_endpoint":evidence_actions["endpoint"],"_payload_sha256":evidence_actions["sha256"]} for event in evidence_actions["records"] if str(event.get("代號","")).strip()==symbol.split(".")[0]])
+                for d in bad:
+                    if d[:7]!=month:continue
+                    stamp=pd.Timestamp(d);target={"date":d,"original":vals(raw.loc[stamp]),"processed":vals(processed.loc[stamp])}
+                    if stamp in official.index:target["official"]=vals(official.loc[stamp])
+                    target["official_corporate_actions"]=event_records
                     item["targets"].append(target)
-                item["status"]="official month queried; basis unresolved; no repair"
-            except Exception as exc:item.update(status="official verification incomplete",error=type(exc).__name__+": "+str(exc)[:240])
-            report["official_months"].append(item)
-    except Exception as exc:row.update(status="source verification incomplete",error=type(exc).__name__+": "+str(exc)[:240])
-    report["stocks"].append(row)
-(out/"report.json").write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
-print("CANDIDATE_MARKET_DIAGNOSTIC="+json.dumps(report,ensure_ascii=False),flush=True)
+                item["status"]="official prices and action records queried; no source change"
+            except Exception as exc:item.update(status="official verification incomplete",error=type(exc).__name__+": "+str(exc)[:220])
+            REPORT["official_months"].append(item)
+        row["status"]="blocked" if row["gate_messages"] else "price quality passed"
+    except Exception as exc:row.update(status="unconfirmed",error=type(exc).__name__+": "+str(exc)[:240])
+    REPORT["stocks"].append(row)
+(OUT/"report.json").write_text(json.dumps(REPORT,ensure_ascii=False,indent=2),encoding="utf-8")
+print("CANDIDATE_MARKET_DIAGNOSTIC="+json.dumps(REPORT,ensure_ascii=False),flush=True)
