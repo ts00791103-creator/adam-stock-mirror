@@ -1,0 +1,8 @@
+V1.0.8: official historical Close verification on stable V1.0.7 production UI.
+Only app.py, studio_layout.py, official_history.py, verified_daily_history.py, analysis_availability.py change at runtime.
+Original source retained; monthly date and price basis plus cash-ex-dividend prior Close must agree. Remaining anomalies block charts. No date filling, deleting rows, guessed prices or relaxed gate.
+Price quality is not full ten-year verification. 3105 missing 2025-08-01 and other known makeup-day gaps remain.
+No private watchlist, alerts, universe, main, B3 or full-market workflow changes.
+Previous production: 6ef07921465a9b4f50a2dce8c4c71935ef10b6be. Rollback by new non-force commit restoring these five runtime paths from that immutable source, retaining release evidence. Reboot only this production app if necessary and revalidate.
+Backup: production-before-6ef0792.zip, outputs/release-v1-0-8.
+Exact release acceptance is staged on development; deployment must wait for final successful CI.

@@ -14,7 +14,7 @@ apply_studio_layout(st, production=PRODUCTION_MODE)
 st.title("亞當鏡像分析 V1.0" if PRODUCTION_MODE else "亞當鏡像股票分析")
 st.caption("A 模式左右鏡像｜短、中、長三波｜歷史路徑情境分析")
 if PRODUCTION_MODE:
-    st.caption("V1.0.7｜完整歷史K線・初選個股直接開圖・自動財報")
+    st.caption("V1.0.8｜官方歷史收盤核對・完整歷史K線・初選直接開圖")
 st.info("鏡像右側為歷史路徑反向排列的情境示意，並非即時行情或未來價格預測；未來日期為示意刻度，未完整排除台股休市日及盤中休市時段。")
 
 MARKETS = {
@@ -130,6 +130,7 @@ def get_data(symbol, period, interval):
         period=period,
         interval=source_interval,
         auto_adjust=False,
+        repair=False,
         progress=False,
         threads=False
     )
@@ -164,8 +165,19 @@ def get_data(symbol, period, interval):
             parts.append(bars)
         df = pd.concat(parts).sort_index() if parts else df.iloc[0:0]
     df.attrs["raw_quote_notes"] = raw_notes
+    df.attrs["price_basis"] = "yahoo_auto_adjust_false"
+    df.attrs["source_request"] = {"symbol":symbol,"period":period,"interval":source_interval,"auto_adjust":False,"repair":False}
     return df
 
+
+
+@st.cache_data(ttl=900, show_spinner=False)
+def get_analysis_data(symbol, period, interval):
+    frame = get_data(symbol, period, interval)
+    if interval != "1d":
+        return frame
+    from verified_daily_history import verify_daily_closes
+    return verify_daily_closes(symbol, frame)
 
 
 @st.cache_data(ttl=1800, show_spinner=False)
@@ -1669,7 +1681,7 @@ if analysis_requested or initial_chart:
                     raise ValueError("CSV 模式請先上傳期交所歷史資料")
                 df, roll_dates = merge_tx_history(history, pd.DataFrame())
         else:
-            df = get_data(
+            df = get_analysis_data(
                 symbol,
                 period,
                 interval
@@ -1689,6 +1701,11 @@ if analysis_requested or initial_chart:
     for note in df.attrs.get("raw_quote_notes", []):
         st.warning("原始行情資料提醒：" + note)
 
+    from verified_daily_history import show_verification
+    show_verification(st, df)
+    from analysis_availability import inspect_history, show_availability
+    show_availability(st, inspect_history(symbol, period, interval, df, audit_ohlc_data), navigation=False)
+    st.caption("歷史完整性限制：本次只核對列出的異常收盤，尚未完整回補所有交易日；已知穩懋3105缺2025-08-01，部分個股另有補班交易日缺漏或價格基準不一致。未自動補列，價格品質通過不代表十年完整覆蓋。")
     quality_issues = audit_ohlc_data(df)
     if quality_issues:
         st.error("行情資料品質異常，已停止鏡像分析：" + "；".join(quality_issues))
@@ -1697,7 +1714,7 @@ if analysis_requested or initial_chart:
         if invalid_rows:
             st.caption("異常行情明細（最多列20根）：以下保留資料來源數值，未推測哪一個價格正確。")
             st.dataframe(pd.DataFrame(invalid_rows), hide_index=True)
-        st.info("可將「歷史資料長度」縮短後重新分析，或稍後重試。縮短期間可能無法涵蓋完整中、長波，請保留資料不足提示；系統不會自動刪除異常K線或改寫價格。")
+        st.info("原請求期間保持不變。證據不足的價格基準差異、交易日缺漏與剩餘異常維持阻擋；未猜價、未刪除或混補K線，也未放寬品質閘門。")
         st.stop()
 
     if roll_dates:
