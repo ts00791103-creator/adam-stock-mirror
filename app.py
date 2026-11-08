@@ -172,7 +172,19 @@ def get_data(symbol, period, interval):
             parts.append(bars)
         df = pd.concat(parts).sort_index() if parts else df.iloc[0:0]
     df.attrs["raw_quote_notes"] = raw_notes
+    df.attrs["price_basis"] = "yahoo_auto_adjust_false"
+    df.attrs["source_request"] = {"symbol": symbol, "period": period, "interval": source_interval,
+                                  "auto_adjust": False, "repair": False}
     return df
+
+
+@st.cache_data(ttl=900, show_spinner=False)
+def get_analysis_data(symbol, period, interval):
+    frame = get_data(symbol, period, interval)
+    if PRODUCTION_MODE or interval != "1d":
+        return frame
+    from verified_daily_history import verify_daily_closes
+    return verify_daily_closes(symbol, frame)
 
 
 
@@ -976,7 +988,7 @@ with st.container(key="stock_results_panel"):
     candidate_analysis_options=None if PRODUCTION_MODE else {
         "period":st.session_state.get("analysis_period","10y"),
         "interval":INTERVALS.get(st.session_state.get("analysis_interval_name","日K"),"1d"),
-        "loader":get_data,"auditor":audit_ohlc_data}
+        "loader":get_analysis_data,"auditor":audit_ohlc_data}
     show_full_market(production=PRODUCTION_MODE,analysis_options=candidate_analysis_options)
 
     if not PRODUCTION_MODE:
@@ -1714,7 +1726,7 @@ if analysis_clicked or analysis_page:
                     raise ValueError("CSV 模式請先上傳期交所歷史資料")
                 df, roll_dates = merge_tx_history(history, pd.DataFrame())
         else:
-            df = get_data(
+            df = get_analysis_data(
                 symbol,
                 period,
                 interval
@@ -1743,6 +1755,10 @@ if analysis_clicked or analysis_page:
 
     for note in df.attrs.get("raw_quote_notes", []):
         st.warning("原始行情資料提醒：" + note)
+
+    if not PRODUCTION_MODE:
+        from verified_daily_history import show_verification
+        show_verification(st, df)
 
     quality_issues = audit_ohlc_data(df)
     if not PRODUCTION_MODE:

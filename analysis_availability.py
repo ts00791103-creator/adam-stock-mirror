@@ -20,6 +20,11 @@ def inspect_history(symbol, period, interval, frame, auditor):
     result["issues"] = list(auditor(frame))
     result["invalid_rows"] = invalid_price_rows(frame, limit=20)
     result["status"] = "blocked" if result["issues"] else "available"
+    verification = frame.attrs.get("official_close_verification")
+    if verification:
+        result["official_verified_closes"] = len(verification["ledger"])
+        result["original_invalid_dates"] = verification["raw_invalid_dates"]
+        result["source"] += "；列出的異常收盤另經官方月表與除息前收盤價核對，原始資料保留"
     columns = [c for c in ("Open", "High", "Low", "Close") if c in frame]
     result["price_frame_sha256"] = hashlib.sha256(pd.util.hash_pandas_object(frame[columns], index=True).values.tobytes()).hexdigest()
     return result

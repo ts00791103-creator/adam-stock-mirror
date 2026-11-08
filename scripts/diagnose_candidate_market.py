@@ -62,9 +62,10 @@ for symbol in SUBJECTS+CONTROLS:
         for mode,kwargs in (("actions_metadata",{"auto_adjust":False,"actions":True}),("auto_adjust",{"auto_adjust":True}),("back_adjust",{"auto_adjust":False,"back_adjust":True}),("repair",{"auto_adjust":False,"repair":True})):
             try:
                 frame=flat(yf.download(symbol,period="10y",interval="1d",progress=False,threads=False,**kwargs))
+                if frame.empty:raise ValueError("empty adjusted or repair response; verification incomplete")
                 frame.to_csv(OUT/(symbol+"_"+mode+".csv"))
                 if mode=="actions_metadata":meta=frame
-                variants[mode]={"bars":len(frame),"invalid_dates":invalid_candles(frame),"target_rows":[{"date":d,**vals(frame.loc[pd.Timestamp(d)])} for d in bad if pd.Timestamp(d) in frame.index]}
+                variants[mode]={"bars":len(frame),"invalid_count":len(invalid_candles(frame)),"invalid_dates":invalid_candles(frame)[:20],"target_rows":[{"date":d,**vals(frame.loc[pd.Timestamp(d)])} for d in bad if pd.Timestamp(d) in frame.index]}
             except Exception as exc:variants[mode]={"error":type(exc).__name__+": "+str(exc)[:220]}
         row["variants"]=variants
         if meta is not None:
@@ -102,6 +103,10 @@ for symbol in SUBJECTS+CONTROLS:
                 item["status"]="official prices and action records queried; no source change"
             except Exception as exc:item.update(status="official verification incomplete",error=type(exc).__name__+": "+str(exc)[:220])
             REPORT["official_months"].append(item)
+        from verified_daily_history import verify_daily_closes
+        verified=verify_daily_closes(symbol,processed)
+        verified.to_csv(OUT/(symbol+"_candidate.csv"))
+        row["candidate"]={"bars":len(verified),"gate_messages":scope["audit_ohlc_data"](verified),"invalid_dates":invalid_candles(verified),"verification":verified.attrs.get("official_close_verification"),"all_non_close_fields_unchanged":bool(processed.drop(columns="Close").equals(verified.drop(columns="Close")))}
         row["status"]="blocked" if row["gate_messages"] else "price quality passed"
     except Exception as exc:row.update(status="unconfirmed",error=type(exc).__name__+": "+str(exc)[:240])
     REPORT["stocks"].append(row)

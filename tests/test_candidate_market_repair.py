@@ -155,6 +155,7 @@ class CandidateNavigationIntegrationTests(unittest.TestCase):
     def patches(self):
         stack=ExitStack()
         stack.enter_context(patch("urllib.request.urlopen",side_effect=OSError("offline")))
+        stack.enter_context(patch("verified_daily_history.fetch_official_month",side_effect=OSError("offline official source")))
         stack.enter_context(patch("full_market_ui.official_snapshot",return_value=snapshot()))
         stack.enter_context(patch("full_market_ui.screening_data",return_value=bars().tail(260)))
         stack.enter_context(patch("yfinance.download",side_effect=lambda symbol,**kw:bars(symbol,bad=symbol=="1815.TWO")))
