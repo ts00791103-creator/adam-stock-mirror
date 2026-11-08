@@ -1,0 +1,30 @@
+name: Freeze Adam pre-open baseline 20261108
+on:
+  push:
+    branches: [release/v1.0-development]
+    paths:
+      - scripts/freeze_adam_20261108.py
+      - .github/workflows/freeze-adam-20261108.yml
+permissions:
+  contents: read
+jobs:
+  freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: 8b6cefc70a84a856b793f29df2553f0e00a248b6
+          path: production-source
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r production-source/requirements.txt
+      - run: python scripts/freeze_adam_20261108.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: adam-frozen-baseline-20261108
+          path: forecast-output/
+          retention-days: 90
