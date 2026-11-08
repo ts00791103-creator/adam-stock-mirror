@@ -19,7 +19,10 @@ st.info("鏡像右側為歷史路徑反向排列的情境示意，並非即時�
 
 if not PRODUCTION_MODE:
     from official_history_preview import show_official_history_preview
-    show_official_history_preview()
+    hide_source_preview=bool(st.session_state.get("analysis_page_open") or st.session_state.get("stock_analysis_request"))
+    st.markdown('<style>.st-key-official_history_preview_panel{display:'+('none' if hide_source_preview else 'block')+'}</style>',unsafe_allow_html=True)
+    with st.container(key="official_history_preview_panel"):
+        show_official_history_preview()
 
 
 MARKETS = {
@@ -942,13 +945,27 @@ def load_tw_symbols():
 from stock_navigation import consume_request, preserve_scanner_inputs, reset_stock_pricing, return_to_results, scroll_main_to_top
 navigation_request = consume_request(st.session_state) if not PRODUCTION_MODE else None
 analysis_page = bool(not PRODUCTION_MODE and st.session_state.get("analysis_page_open"))
+if not PRODUCTION_MODE:
+    st.session_state.setdefault("analysis_interval_name","日K")
+    st.session_state.setdefault("analysis_period","10y")
+    analysis_back_slot=st.empty()
+    analysis_heading_slot=st.empty()
+    analysis_style_slot=st.empty()
+    analysis_scroll_slot=st.empty()
 if analysis_page:
     preserve_scanner_inputs(st.session_state)
     context = st.session_state.get("analysis_context", {})
-    st.button("← 返回選股結果", key="analysis_back", on_click=return_to_results)
-    analysis_heading_slot = st.container()
+    with analysis_back_slot.container():
+        st.button("← 返回選股結果", key="analysis_back", on_click=return_to_results)
 if analysis_page:
-    st.markdown('<style>.st-key-stock_results_panel{display:none}</style>', unsafe_allow_html=True)
+    with analysis_style_slot.container():
+        st.markdown('<style>.st-key-stock_results_panel{display:none}</style>', unsafe_allow_html=True)
+if not PRODUCTION_MODE:
+    jump=st.session_state.pop("analysis_jump_top",False)
+    returned=st.session_state.pop("results_jump_top",False)
+    if jump or returned:
+        with analysis_scroll_slot.container():
+            scroll_main_to_top(st.session_state.get("analysis_jump_sequence",0),target="stock_results_panel" if returned else "candidate_analysis_heading")
 with st.container(key="stock_results_panel"):
     if not PRODUCTION_MODE:
         from entry_alerts_ui import show_entry_alerts
@@ -958,7 +975,11 @@ with st.container(key="stock_results_panel"):
         st.subheader("尋找股票")
         st.caption("全台股選股與自選名單在這裡；查詢單一股票，請展開左上角側欄輸入代號或中文名稱。")
     from full_market_ui import show_full_market
-    show_full_market(production=PRODUCTION_MODE)
+    candidate_analysis_options=None if PRODUCTION_MODE else {
+        "period":st.session_state.get("analysis_period","10y"),
+        "interval":INTERVALS.get(st.session_state.get("analysis_interval_name","日K"),"1d"),
+        "loader":get_data,"auditor":audit_ohlc_data}
+    show_full_market(production=PRODUCTION_MODE,analysis_options=candidate_analysis_options)
 
     if not PRODUCTION_MODE:
         from composite_strategy_ui import show_composite_strategy
@@ -1046,10 +1067,16 @@ with st.sidebar:
     if not PRODUCTION_MODE and symbol:
         reset_stock_pricing(st.session_state, symbol)
         if analysis_page:
-            st.session_state["analysis_context"] = {**st.session_state.get("analysis_context",{}), "symbol":symbol}
-            with analysis_heading_slot:
+            old_context=st.session_state.get("analysis_context",{})
+            st.session_state["analysis_context"] = {**(old_context if old_context.get("symbol")==symbol else {}), "symbol":symbol}
+            with analysis_heading_slot.container(key="candidate_analysis_heading"):
                 st.subheader("個股分析｜" + symbol)
                 st.caption("線型、箱型與估價均使用目前個股；分析讀取目前所選週期的最新歷史資料，可能與選股資料日不同。")
+                ref=st.session_state.get("analysis_context",{})
+                if ref.get("official_close") is not None:
+                    st.caption(f"官方初選收盤：{ref['official_close']:,.2f}｜日期：{ref.get('official_date','')}（非即時）。下方異常表是歷史資料，不是目前報價。")
+                if ref.get("screen_stage"):
+                    st.caption("來源階段："+ref["screen_stage"]+"；所選期間的資料可用性另外檢查。")
     c1, c2 = st.columns(2)
 
     with c1:
@@ -1064,7 +1091,7 @@ with st.sidebar:
             interval_name = st.selectbox(
                 "K線週期",
                 list(INTERVALS),
-                index=6
+                index=6,key="analysis_interval_name"
             )
 
     with c2:
@@ -1077,11 +1104,13 @@ with st.sidebar:
             )
         else:
             options = PERIODS[interval]
+            if not PRODUCTION_MODE and st.session_state.get("analysis_period") not in options:
+                st.session_state["analysis_period"]=options[-1]
 
             period = st.selectbox(
                 "歷史資料長度",
                 options,
-                index=len(options)-1
+                index=len(options)-1,key=None if PRODUCTION_MODE else "analysis_period"
             )
 
 
@@ -1663,6 +1692,7 @@ analysis_clicked = st.sidebar.button(
 if analysis_clicked and not PRODUCTION_MODE:
     st.session_state["analysis_page_open"] = True
     st.session_state["analysis_jump_top"] = True
+    st.session_state["analysis_jump_sequence"] = st.session_state.get("analysis_jump_sequence",0)+1
     st.session_state["analysis_context"] = {"symbol":symbol}
     st.rerun()
 if analysis_clicked or analysis_page:
@@ -1697,12 +1727,22 @@ if analysis_clicked or analysis_page:
             roll_dates = []
 
     except Exception as exc:
+        if not PRODUCTION_MODE:
+            from analysis_availability import failed_history,save_availability,show_availability
+            report=failed_history(symbol,period,interval,exc)
+            save_availability(st.session_state,report)
+            show_availability(st,report,navigation=bool(analysis_page))
         st.error(
             f"資料下載失敗：{exc}"
         )
         st.stop()
 
     if df.empty:
+        if not PRODUCTION_MODE:
+            from analysis_availability import inspect_history,save_availability,show_availability
+            report=inspect_history(symbol,period,interval,df,audit_ohlc_data)
+            save_availability(st.session_state,report)
+            show_availability(st,report,navigation=bool(analysis_page))
         st.error("查無資料")
         st.stop()
 
@@ -1710,6 +1750,11 @@ if analysis_clicked or analysis_page:
         st.warning("原始行情資料提醒：" + note)
 
     quality_issues = audit_ohlc_data(df)
+    if not PRODUCTION_MODE:
+        from analysis_availability import inspect_history,save_availability,show_availability
+        report=inspect_history(symbol,period,interval,df,audit_ohlc_data)
+        save_availability(st.session_state,report)
+        show_availability(st,report,navigation=bool(analysis_page))
     if quality_issues:
         st.error("行情資料品質異常，已停止鏡像分析：" + "；".join(quality_issues))
         from quote_quality import invalid_price_rows
@@ -1717,7 +1762,10 @@ if analysis_clicked or analysis_page:
         if invalid_rows:
             st.caption("異常行情明細（最多列20根）：以下保留資料來源數值，未推測哪一個價格正確。")
             st.dataframe(pd.DataFrame(invalid_rows), hide_index=True)
-        st.info("可將「歷史資料長度」縮短後重新分析，或稍後重試。縮短期間可能無法涵蓋完整中、長波，請保留資料不足提示；系統不會自動刪除異常K線或改寫價格。")
+        if PRODUCTION_MODE:
+            st.info("可將「歷史資料長度」縮短後重新分析，或稍後重試。縮短期間可能無法涵蓋完整中、長波，請保留資料不足提示；系統不會自動刪除異常K線或改寫價格。")
+        else:
+            st.info("原請求期間保持不變，未猜價、未刪除異常K線，也未放寬品質閘門。請返回選股結果查看資料可用性；尚無可信完整資料的個股維持未判定。")
         st.stop()
 
     valuation_result_slot = st.container()
@@ -2212,5 +2260,3 @@ if analysis_clicked or analysis_page:
 
 
 
-if not PRODUCTION_MODE and (st.session_state.pop("analysis_jump_top", False) or st.session_state.pop("results_jump_top", False)):
-    scroll_main_to_top()
