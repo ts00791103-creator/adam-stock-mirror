@@ -75,6 +75,9 @@ def export_csv(items):
 def show_tx_reference(st, market, production=False):
     if not enabled(market, production):
         return
+    from tx_replay_demo import show_demo
+
+    show_demo(st)
     with st.expander("台指期｜亞當點位參考（人工來源）", expanded=True):
         st.caption("僅供台指期研究；不套用個股、加權指數或選股評分。與自動鏡像分開。")
         st.warning("以下為影片展示的歷史案例，不是目前有效訊號。未核對原訊息日期、契約與日夜盤、換月還原，暫不自動判定達標或失效，也不疊入目前K線。")
