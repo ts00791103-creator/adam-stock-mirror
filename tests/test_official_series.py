@@ -8,16 +8,26 @@ from unittest.mock import Mock
 import pandas as pd
 from pandas.testing import assert_frame_equal
 from official_history import parse_official_month, OfficialHistoryError
-from official_series import OfficialArchive, assemble_official_series, aggregate_official_weeks, compare_provider, parse_bundle
+from official_series import OfficialArchive, assemble_official_series, aggregate_official_weeks, compare_provider, parse_bundle, parse_series_month, payload_hash
 
 FIXTURES=Path(__file__).parent/"fixtures/official-series"
 
 def bundle(symbol="3211.TWO",month="2017-06"):
     payload=json.loads((FIXTURES/f"{symbol}_{month}.json").read_text(encoding="utf8"))
-    _,evidence=parse_official_month(payload,symbol,month)
+    _,evidence=parse_series_month(payload,symbol,month)
     return {"symbol":symbol,"month":month,"payload":payload,"evidence":evidence,"retrieved_at_utc":"saved fixture, not fresh request"}
 
 class OfficialSeriesTests(unittest.TestCase):
+    def test_real_lots_schema_retains_raw_payload_and_precision(self):
+        data=bundle("3105.TWO","2025-08")
+        original=copy.deepcopy(data["payload"])
+        frame,evidence=parse_series_month(original,"3105.TWO","2025-08")
+        self.assertEqual(frame.loc["2025-08-01","Volume"],5387000)
+        self.assertEqual(original,data["payload"])
+        self.assertEqual(evidence["payload_sha256"],payload_hash(original))
+        self.assertEqual(evidence["raw_volume_field"],"成交張數")
+        self.assertIn("不宣稱單股精度",evidence["volume_precision"])
+        with self.assertRaises(OfficialHistoryError):parse_series_month(original,"9999.TWO","2025-08")
     def test_all_seven_previously_missing_days_are_real_official_rows(self):
         for code,month,day in [("3105","2025-08","2025-08-01"),("3211","2017-06","2017-06-03"),("5274","2017-06","2017-06-03"),("8086","2017-06","2017-06-03"),("4123","2017-09","2017-09-30"),("6223","2017-09","2017-09-30"),("6146","2021-04","2021-04-06")]:
             with self.subTest(code=code):

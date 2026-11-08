@@ -10,12 +10,46 @@ import json
 from pathlib import Path
 import time
 from urllib.error import HTTPError
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlencode
+from urllib.request import Request, urlopen
+import re
 import pandas as pd
 from official_history import (OfficialHistoryError, fetch_official_month,
                               parse_official_month, request_spec, invalid_candles)
 
 COLS = ["Open", "High", "Low", "Close", "Volume", "Turnover"]
+STANDARD_LOT_RESEARCH_SYMBOLS={code+".TWO" for code in ("3105","3211","5274","8086","4123","6223","6146","6121","3552","3260","6182")}
+LOT_RULE_SOURCE="https://www.tpex.org.tw/zh-tw/mainboard/trading/rules/system.html"
+
+
+def parse_series_month(payload,symbol,month):
+    """An explicit research adapter; production's strict parser stays unchanged."""
+    tables=payload.get("tables",[]) if isinstance(payload,dict) else []
+    fields=[re.sub(r"\s+","",str(v)) for v in tables[0].get("fields",[])] if len(tables)==1 else []
+    if symbol.endswith(".TWO") and "成交張數" in fields:
+        if symbol not in STANDARD_LOT_RESEARCH_SYMBOLS or "成交仟股" in fields:
+            raise OfficialHistoryError("成交張數換算只限本輪明確列名的一千股普通股；拒絕未知交易單位")
+        adapted=copy.deepcopy(payload)
+        position=fields.index("成交張數")
+        adapted["tables"][0]["fields"][position]="成交仟股"
+        frame,evidence=parse_official_month(adapted,symbol,month)
+        evidence.update(payload_sha256=payload_hash(payload),raw_volume_field="成交張數",parser_variant="tpex_lots_research_v1",
+                        units_per_lot=1000,unit_rule_source=LOT_RULE_SOURCE,
+                        volume_precision="官方成交張數×1000（本輪指定普通股每張1000股）；保留張數發布精度，不宣稱單股精度")
+        frame.attrs["official_evidence"]=evidence
+        return frame,evidence
+    return parse_official_month(payload,symbol,month)
+
+
+def fetch_series_month(symbol,month):
+    method,endpoint,params=request_spec(symbol,month)
+    body=urlencode(params).encode() if method=="POST" else None
+    url=endpoint+("?"+urlencode(params) if method=="GET" else "")
+    request=Request(url,data=body,method=method,headers={"User-Agent":"Mozilla/5.0","Accept":"application/json"})
+    with urlopen(request,timeout=20) as response:payload=json.load(response)
+    frame,evidence=parse_series_month(payload,symbol,month)
+    evidence["retrieved_at_utc"]=datetime.now(timezone.utc).isoformat()
+    return frame,evidence,payload
 
 
 def series_fingerprint(frame):
@@ -36,7 +70,7 @@ def payload_hash(payload):
 
 class OfficialArchive:
     """Serial, persistent monthly cache. 403/429 stops that host for this run."""
-    def __init__(self, folder, delay=3.0, fetcher=fetch_official_month):
+    def __init__(self, folder, delay=3.0, fetcher=fetch_series_month):
         self.folder = Path(folder)
         self.folder.mkdir(parents=True, exist_ok=True)
         self.delay = max(3.0, float(delay))  # Engineering throttle, not an official quota.
@@ -77,9 +111,9 @@ class OfficialArchive:
 
 
 def parse_bundle(bundle):
-    frame, calculated = parse_official_month(bundle["payload"], bundle["symbol"], bundle["month"])
+    frame, calculated = parse_series_month(bundle["payload"], bundle["symbol"], bundle["month"])
     saved = bundle.get("evidence", {})
-    for key in ("symbol", "month", "method", "endpoint", "request", "payload_sha256", "parsed_frame_sha256", "price_basis", "volume_precision"):
+    for key in ("symbol", "month", "method", "endpoint", "request", "payload_sha256", "parsed_frame_sha256", "price_basis", "volume_precision", "raw_volume_field", "parser_variant", "units_per_lot", "unit_rule_source"):
         if saved.get(key) != calculated.get(key):
             raise OfficialHistoryError("月表證據已變更或不相符：" + key)
     return frame, calculated

@@ -11,7 +11,7 @@ import yfinance as yf
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from official_series import OfficialArchive, assemble_official_series, aggregate_official_weeks, compare_provider, month_range
+from official_series import OfficialArchive, assemble_official_series, aggregate_official_weeks, compare_provider, month_range, parse_series_month
 from official_history import invalid_candles, parse_official_month
 from market_universe import read_json
 from live_tw_mirror_smoke import load_mirror_engine, validate_projection
@@ -66,7 +66,7 @@ def gap_probe():
         row={"symbol":symbol,"month":month}
         try:
             data=ARCHIVE.get(symbol,month)
-            official,evidence=parse_official_month(data["payload"],symbol,month)
+            official,evidence=parse_series_month(data["payload"],symbol,month)
             official.to_csv(OUT/f"{symbol}_{month}_official.csv")
             if symbol not in original:original[symbol]=provider(symbol)
             left=pd.Timestamp(month+"-01");right=left+pd.offsets.MonthBegin(1)
