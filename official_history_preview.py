@@ -68,8 +68,9 @@ def show_official_history_preview():
         else:
             figure = go.Figure(go.Candlestick(x=frame.index, open=frame.Open, high=frame.High,
                                                low=frame.Low, close=frame.Close, name=view))
-            figure.update_layout(height=430, xaxis_rangeslider_visible=False, yaxis_title="元", title=symbol + "｜" + view)
-            st.plotly_chart(figure, use_container_width=True, key="hsrc_chart")
+            figure.update_layout(height=430, xaxis_rangeslider_visible=False, dragmode="pan",
+                                 yaxis_title="元", title=symbol + "｜" + view)
+            st.plotly_chart(figure, use_container_width=True, key="hsrc_chart", config={"scrollZoom": True})
         with st.expander("官方來源證據與未提供OHLC的日期"):
             st.json(evidence)
             st.dataframe(official, width="stretch")

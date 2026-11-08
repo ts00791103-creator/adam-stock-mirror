@@ -128,8 +128,8 @@ def show_volume_profile(frame, symbol, interval, window=60, bins=40, area_pct=70
         st.plotly_chart(chart, use_container_width=True, config={"scrollZoom": True})
         histogram = go.Figure(go.Bar(x=profile["volumes"], y=profile["prices"], orientation="h",
                                    marker_color=["#d6ad62" if flag else "#536c79" for flag in profile["area_mask"]], name="估算分配量"))
-        histogram.update_layout(height=300, xaxis_title="估算分配量（來源原始單位）", yaxis_title="價位格中心", margin=dict(l=10,r=10,t=10,b=30))
-        st.plotly_chart(histogram, use_container_width=True)
+        histogram.update_layout(height=300, dragmode="pan", xaxis_title="估算分配量（來源原始單位）", yaxis_title="價位格中心", margin=dict(l=10,r=10,t=10,b=30))
+        st.plotly_chart(histogram, use_container_width=True, config={"scrollZoom": True})
         audit = pd.DataFrame({"價位下緣": profile["lower"], "價位上緣": profile["upper"], "中心價": profile["prices"], "估算分配量": profile["volumes"], "價值區內": profile["area_mask"]})
         st.download_button("下載成交量分布估算CSV", audit.to_csv(index=False).encode("utf-8-sig"),
                            file_name="adam_volume_profile_estimate.csv", mime="text/csv")
