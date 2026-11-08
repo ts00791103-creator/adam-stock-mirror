@@ -1,0 +1,363 @@
+{
+    "created_utc":  "2026-11-08T13:14:20.9407231Z",
+    "scope":  "Two stocks, nine predefined difference dates; not whole-market or full-calendar audit",
+    "production_ready":  false,
+    "applied_to_data":  false,
+    "full_calendar_certified":  false,
+    "input_fingerprints":  [
+                               {
+                                   "symbol":  "2330.TW",
+                                   "official_sha256":  "ce4e6efa8d4057d9b51e5dd76a31ff108ace5adf9c97b871255218becf6d4187",
+                                   "provider_sha256":  "38dd2e44a34b144f72febfd74c787d49f0c3c32858a425f876f1dabd1c274164"
+                               },
+                               {
+                                   "symbol":  "3105.TWO",
+                                   "official_sha256":  "67d3286cf5398e6fd6f8a88f9fc877c4dd28d2d4a805d37d4e119ee6cc21a9e6",
+                                   "provider_sha256":  "1d1a23a6792eb9b2878dcfc8b09aa5d01644e0af2ec80d56c08bef84c6cc22d5"
+                               }
+                           ],
+    "closure_evidence":  {
+                             "date":  "2026-10-23",
+                             "market":  "TWSE",
+                             "publication_date":  "2026-10-22",
+                             "url":  "https://investoredu.twse.com.tw/FileSystem/FileUpload/c91c7dff-afb0-42cc-9949-9f072bece31d.pdf",
+                             "verification":  "Official PDF independently read via web browser tool; typhoon full-day closure. OTC-specific notice still pending."
+                         },
+    "sources":  [
+                    {
+                        "month":  "2017-02",
+                        "url":  "https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK?date=20170201\u0026response=json",
+                        "sha256":  "bbe8c0bd9c12ef018b404fb533a61106c28f1a9738d3f84d63b3fecb54df9e98",
+                        "fields":  [
+                                       "日期",
+                                       "成交股數",
+                                       "成交金額",
+                                       "成交筆數",
+                                       "發行量加權股價指數",
+                                       "漲跌點數"
+                                   ],
+                        "notes":  [
+                                      "當日統計資訊含大盤、零股、盤後定價及鉅額交易，不含拍賣、標購。",
+                                      "外幣成交值係以本公司當日下午3時30分公告匯率換算後加入成交金額。公告匯率請參考本公司首頁\u003e產品與服務\u003e交易系統\u003e雙幣ETF專區\u003e代號對應及每日公告匯率。"
+                                  ]
+                    },
+                    {
+                        "month":  "2017-06",
+                        "url":  "https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK?date=20170601\u0026response=json",
+                        "sha256":  "7e52f34aa7b8bdbbb89437c39b4c17210c077f179eb246ff58405f49b22f51e0",
+                        "fields":  [
+                                       "日期",
+                                       "成交股數",
+                                       "成交金額",
+                                       "成交筆數",
+                                       "發行量加權股價指數",
+                                       "漲跌點數"
+                                   ],
+                        "notes":  [
+                                      "當日統計資訊含大盤、零股、盤後定價及鉅額交易，不含拍賣、標購。",
+                                      "外幣成交值係以本公司當日下午3時30分公告匯率換算後加入成交金額。公告匯率請參考本公司首頁\u003e產品與服務\u003e交易系統\u003e雙幣ETF專區\u003e代號對應及每日公告匯率。"
+                                  ]
+                    },
+                    {
+                        "month":  "2017-09",
+                        "url":  "https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK?date=20170901\u0026response=json",
+                        "sha256":  "dc5097b46534b552074ee4adb1dea5268a666bc78064eb14036eb634615a3d76",
+                        "fields":  [
+                                       "日期",
+                                       "成交股數",
+                                       "成交金額",
+                                       "成交筆數",
+                                       "發行量加權股價指數",
+                                       "漲跌點數"
+                                   ],
+                        "notes":  [
+                                      "當日統計資訊含大盤、零股、盤後定價及鉅額交易，不含拍賣、標購。",
+                                      "外幣成交值係以本公司當日下午3時30分公告匯率換算後加入成交金額。公告匯率請參考本公司首頁\u003e產品與服務\u003e交易系統\u003e雙幣ETF專區\u003e代號對應及每日公告匯率。"
+                                  ]
+                    },
+                    {
+                        "month":  "2018-03",
+                        "url":  "https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK?date=20180301\u0026response=json",
+                        "sha256":  "6650bc2ab2aaed163c3a992881343eec78245b9436934d5f46b9e84b5511ce4c",
+                        "fields":  [
+                                       "日期",
+                                       "成交股數",
+                                       "成交金額",
+                                       "成交筆數",
+                                       "發行量加權股價指數",
+                                       "漲跌點數"
+                                   ],
+                        "notes":  [
+                                      "當日統計資訊含大盤、零股、盤後定價及鉅額交易，不含拍賣、標購。",
+                                      "外幣成交值係以本公司當日下午3時30分公告匯率換算後加入成交金額。公告匯率請參考本公司首頁\u003e產品與服務\u003e交易系統\u003e雙幣ETF專區\u003e代號對應及每日公告匯率。"
+                                  ]
+                    },
+                    {
+                        "month":  "2018-12",
+                        "url":  "https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK?date=20181201\u0026response=json",
+                        "sha256":  "a59259c16653b81597533cc88ed6a8e78b123c218b59f133e96f40ee21f72d9f",
+                        "fields":  [
+                                       "日期",
+                                       "成交股數",
+                                       "成交金額",
+                                       "成交筆數",
+                                       "發行量加權股價指數",
+                                       "漲跌點數"
+                                   ],
+                        "notes":  [
+                                      "當日統計資訊含大盤、零股、盤後定價及鉅額交易，不含拍賣、標購。",
+                                      "外幣成交值係以本公司當日下午3時30分公告匯率換算後加入成交金額。公告匯率請參考本公司首頁\u003e產品與服務\u003e交易系統\u003e雙幣ETF專區\u003e代號對應及每日公告匯率。"
+                                  ]
+                    },
+                    {
+                        "month":  "2019-09",
+                        "url":  "https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK?date=20190901\u0026response=json",
+                        "sha256":  "3d5d250b7f43f58697e0a79dfb0bae2bcb7d64ff4fca8240c309b496c11de50c",
+                        "fields":  [
+                                       "日期",
+                                       "成交股數",
+                                       "成交金額",
+                                       "成交筆數",
+                                       "發行量加權股價指數",
+                                       "漲跌點數"
+                                   ],
+                        "notes":  [
+                                      "當日統計資訊含大盤、零股、盤後定價及鉅額交易，不含拍賣、標購。",
+                                      "外幣成交值係以本公司當日下午3時30分公告匯率換算後加入成交金額。公告匯率請參考本公司首頁\u003e產品與服務\u003e交易系統\u003e雙幣ETF專區\u003e代號對應及每日公告匯率。"
+                                  ]
+                    },
+                    {
+                        "month":  "2021-04",
+                        "url":  "https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK?date=20210401\u0026response=json",
+                        "sha256":  "814b0df3ee5d7ab824ab4136307630d33633fabe21aaf5082bc70d454788ee0a",
+                        "fields":  [
+                                       "日期",
+                                       "成交股數",
+                                       "成交金額",
+                                       "成交筆數",
+                                       "發行量加權股價指數",
+                                       "漲跌點數"
+                                   ],
+                        "notes":  [
+                                      "當日統計資訊含大盤、零股、盤後定價及鉅額交易，不含拍賣、標購。",
+                                      "外幣成交值係以本公司當日下午3時30分公告匯率換算後加入成交金額。公告匯率請參考本公司首頁\u003e產品與服務\u003e交易系統\u003e雙幣ETF專區\u003e代號對應及每日公告匯率。"
+                                  ]
+                    },
+                    {
+                        "month":  "2025-08",
+                        "url":  "https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK?date=20250801\u0026response=json",
+                        "sha256":  "db9a3812d7f33e5826a4837a880116b78b0489785275596dda264a9610b68a61",
+                        "fields":  [
+                                       "日期",
+                                       "成交股數",
+                                       "成交金額",
+                                       "成交筆數",
+                                       "發行量加權股價指數",
+                                       "漲跌點數"
+                                   ],
+                        "notes":  [
+                                      "當日統計資訊含大盤、零股、盤後定價及鉅額交易，不含拍賣、標購。",
+                                      "外幣成交值係以本公司當日下午3時30分公告匯率換算後加入成交金額。公告匯率請參考本公司首頁\u003e產品與服務\u003e交易系統\u003e雙幣ETF專區\u003e代號對應及每日公告匯率。"
+                                  ]
+                    },
+                    {
+                        "month":  "2026-10",
+                        "url":  "https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK?date=20261001\u0026response=json",
+                        "sha256":  "23c2920bfdb3f891c6d5aed655262b5ea6d9c289752a7b0e2a434ac8d272bab9",
+                        "fields":  [
+                                       "日期",
+                                       "成交股數",
+                                       "成交金額",
+                                       "成交筆數",
+                                       "發行量加權股價指數",
+                                       "漲跌點數"
+                                   ],
+                        "notes":  [
+                                      "當日統計資訊含大盤、零股、盤後定價及鉅額交易，不含拍賣、標購。",
+                                      "外幣成交值係以本公司當日下午3時30分公告匯率換算後加入成交金額。公告匯率請參考本公司首頁\u003e產品與服務\u003e交易系統\u003e雙幣ETF專區\u003e代號對應及每日公告匯率。"
+                                  ]
+                    }
+                ],
+    "rows":  [
+                 {
+                     "symbol":  "2330.TW",
+                     "date":  "2017-02-18",
+                     "weekday":  "Saturday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market plus stock-month comparison; not full calendar certification."
+                 },
+                 {
+                     "symbol":  "2330.TW",
+                     "date":  "2017-06-03",
+                     "weekday":  "Saturday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market plus stock-month comparison; not full calendar certification."
+                 },
+                 {
+                     "symbol":  "2330.TW",
+                     "date":  "2017-09-30",
+                     "weekday":  "Saturday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market plus stock-month comparison; not full calendar certification."
+                 },
+                 {
+                     "symbol":  "2330.TW",
+                     "date":  "2018-03-31",
+                     "weekday":  "Saturday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market plus stock-month comparison; not full calendar certification."
+                 },
+                 {
+                     "symbol":  "2330.TW",
+                     "date":  "2018-12-22",
+                     "weekday":  "Saturday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market plus stock-month comparison; not full calendar certification."
+                 },
+                 {
+                     "symbol":  "2330.TW",
+                     "date":  "2019-09-09",
+                     "weekday":  "Monday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market plus stock-month comparison; not full calendar certification."
+                 },
+                 {
+                     "symbol":  "2330.TW",
+                     "date":  "2021-04-06",
+                     "weekday":  "Tuesday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market plus stock-month comparison; not full calendar certification."
+                 },
+                 {
+                     "symbol":  "2330.TW",
+                     "date":  "2025-08-01",
+                     "weekday":  "Friday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market plus stock-month comparison; not full calendar certification."
+                 },
+                 {
+                     "symbol":  "2330.TW",
+                     "date":  "2026-10-23",
+                     "weekday":  "Friday",
+                     "twse_market_row_present":  false,
+                     "official_stock_row_present":  false,
+                     "provider_row_present":  true,
+                     "classification":  "provider_extra_on_twse_announced_closure",
+                     "scope_note":  "TWSE market plus stock-month comparison; not full calendar certification."
+                 },
+                 {
+                     "symbol":  "3105.TWO",
+                     "date":  "2017-02-18",
+                     "weekday":  "Saturday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market evidence corroborates date only; OTC-specific closure announcement not yet independently fetched."
+                 },
+                 {
+                     "symbol":  "3105.TWO",
+                     "date":  "2017-06-03",
+                     "weekday":  "Saturday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market evidence corroborates date only; OTC-specific closure announcement not yet independently fetched."
+                 },
+                 {
+                     "symbol":  "3105.TWO",
+                     "date":  "2017-09-30",
+                     "weekday":  "Saturday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market evidence corroborates date only; OTC-specific closure announcement not yet independently fetched."
+                 },
+                 {
+                     "symbol":  "3105.TWO",
+                     "date":  "2018-03-31",
+                     "weekday":  "Saturday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market evidence corroborates date only; OTC-specific closure announcement not yet independently fetched."
+                 },
+                 {
+                     "symbol":  "3105.TWO",
+                     "date":  "2018-12-22",
+                     "weekday":  "Saturday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market evidence corroborates date only; OTC-specific closure announcement not yet independently fetched."
+                 },
+                 {
+                     "symbol":  "3105.TWO",
+                     "date":  "2019-09-09",
+                     "weekday":  "Monday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market evidence corroborates date only; OTC-specific closure announcement not yet independently fetched."
+                 },
+                 {
+                     "symbol":  "3105.TWO",
+                     "date":  "2021-04-06",
+                     "weekday":  "Tuesday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market evidence corroborates date only; OTC-specific closure announcement not yet independently fetched."
+                 },
+                 {
+                     "symbol":  "3105.TWO",
+                     "date":  "2025-08-01",
+                     "weekday":  "Friday",
+                     "twse_market_row_present":  true,
+                     "official_stock_row_present":  true,
+                     "provider_row_present":  false,
+                     "classification":  "provider_missing_observed_session",
+                     "scope_note":  "TWSE market evidence corroborates date only; OTC-specific closure announcement not yet independently fetched."
+                 },
+                 {
+                     "symbol":  "3105.TWO",
+                     "date":  "2026-10-23",
+                     "weekday":  "Friday",
+                     "twse_market_row_present":  false,
+                     "official_stock_row_present":  false,
+                     "provider_row_present":  true,
+                     "classification":  "provider_extra_on_twse_announced_closure",
+                     "scope_note":  "TWSE market evidence corroborates date only; OTC-specific closure announcement not yet independently fetched."
+                 }
+             ]
+}
