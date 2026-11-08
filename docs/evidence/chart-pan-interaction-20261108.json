@@ -1,0 +1,67 @@
+[
+  {
+    "case": "cold entry Plotly 2308 daily",
+    "result": "pass",
+    "active": "Pan for all four rendered charts"
+  },
+  {
+    "case": "desktop main right/down and left/up drags",
+    "result": "pass",
+    "bothAxesTicksChanged": true,
+    "selectionBox": false
+  },
+  {
+    "case": "desktop main zoom in and reset",
+    "result": "pass"
+  },
+  {
+    "case": "manually selected Zoom then switch 2308 to 2330",
+    "result": "pass",
+    "newChartDefault": "Pan"
+  },
+  {
+    "case": "manually selected Zoom then switch daily to weekly",
+    "result": "pass",
+    "scope": "2330 1wk/10y",
+    "newChartDefault": "Pan"
+  },
+  {
+    "case": "official source daily chart desktop",
+    "result": "pass",
+    "default": "Pan",
+    "directions": "right/down,left/up",
+    "zoomAndReset": true
+  },
+  {
+    "case": "official chart 390x844",
+    "result": "pass (mouse at mobile viewport only)",
+    "drag": "both axes",
+    "zoomAndReset": true,
+    "outsidePageScroll": true,
+    "touchVerified": false
+  },
+  {
+    "case": "reload then re-enter Plotly analysis",
+    "result": "pass",
+    "symbol": "2308.TW",
+    "default": "all four Pan",
+    "note": "reload restores default lightweight engine; explicitly entered Plotly for this check"
+  },
+  {
+    "case": "volume histogram desktop",
+    "result": "pass",
+    "default": "Pan",
+    "directions": "right/down,left/up",
+    "zoomAndReset": true
+  },
+  {
+    "case": "main chart 390x844",
+    "result": "pass (mouse at mobile viewport only)",
+    "default": "Pan",
+    "directions": "right/down,left/up",
+    "zoomAndReset": true,
+    "chartDragDidNotScrollPage": true,
+    "outsidePageScroll": true,
+    "touchVerified": false
+  }
+]

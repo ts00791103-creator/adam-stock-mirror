@@ -1,0 +1,35 @@
+亞當候選站圖表拖曳修正與驗收
+日期：2026-11-08；程式commit 5eaeda198b0534dbb63b57e4f8dad11f007912dd
+範圍：只release/v1.0-development與 https://adam-v1-candidate.streamlit.app/
+未修改正式站、main、release/v1.0-production、b3-speed-test；未合併或正式發布。
+
+問題與修改：
+主Plotly線圖、支撐壓力圖及成交量集中區K線已有dragmode=pan。
+官方歷史日K來源驗證圖與成交量分布長條圖未設dragmode，會沿用Plotly框選預設。
+僅修改official_history_preview.py、volume_profile_estimate.py，共5新增/4刪除：
+這兩圖設定dragmode=pan及scrollZoom=True；原有Zoom/Pan/Zoom in/out/Autoscale/Reset axes仍保留。
+未改行情、選股、估價、來源比對／修正預覽、價格品質阻擋或輕量圖表引擎。
+
+實際候選站：
+必要重啟一次，確認dev分支入口app.py。
+桌面1128x786：
+2308日K主Plotly線圖初次開啟預設Pan；右下與左上拖曳均改變時間及價格刻度，無框選；縮放及重設通過。
+刻意點Zoom後切2308→2330，新股票圖預設Pan。
+刻意點Zoom後切日K→週K，2330 1wk/10y圖預設Pan。
+重新整理會回到網站原有輕量引擎預設；再明確進入Plotly分析模式，2308主圖及三張輔圖均預設Pan。
+官方8358 2018-06月圖：預設Pan，左右上下拖曳、縮放、重設通過。
+成交量分布長條圖：預設Pan，左右上下拖曳、縮放、重設通過。
+390x844窄螢幕：
+官方月圖與主Plotly線圖，用滑鼠模擬的雙軸拖曳、縮放及重設通過；主圖拖曳時圖的頁面位置未移動，圖外仍可捲動頁面。已還原桌面尺寸。
+這是手機尺寸下的滑鼠操作模擬，不是觸控模擬或真機測試。
+
+未驗證／限制：
+1. 目前工具未提供觸控輸入；未驗證單指、雙指縮放、實機觸控與頁面捲動衝突。
+2. 收到原問題截圖ID libfile_080e1197a6f08191abdf2dd9c8125c1b，但本機技能清單及插件快取無Library技能，工具也沒有prepare_materialize。未猜網址或跨環境讀取，未看到該截圖，不能判定原圖身分。
+3. 本輪未重現主線圖自行從Pan變Zoom，也未發現切換股票／週期保留框選狀態；不能宣稱使用者原現象已完全根治。使用者手動選Zoom時仍可框選，點Pan可回到直接平移，這是保留功能。
+4. 非Plotly輕量圖表引擎未修改；本輪直接操作聚焦Plotly。
+
+回歸：GitHub Actions 42442872436，Python3.11、3.14與worker package均成功；3.14日誌264 tests/OK；既有價格平移JS檢查通過。
+https://github.com/ts00791103-creator/adam-stock-mirror/actions/runs/42442872436
+完整結果interaction-results.json；截圖final-main-pan.png、desktop-main-pan.png、official-source-pan.png、mobile-viewport-main.png等。
+原始程式備份與修正程式備份已保留本機；本交接與結果另存雲端開發分支。
