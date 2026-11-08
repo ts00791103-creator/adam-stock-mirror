@@ -1,0 +1,31 @@
+{
+  "research_date_taipei": "2026-11-08",
+  "purpose": "台指期影片研究；不參與個股選股、實盤或推播",
+  "records": [
+    {
+      "id": "video-20260914-2457-60m-short",
+      "instrument_family": "TAIFEX_TX",
+      "period": "60分K",
+      "direction": "空方",
+      "target": 45558,
+      "invalidation_reference": 46623,
+      "source_url": "https://www.youtube.com/watch?v=COJp_b9w4ys&t=1497s",
+      "source_title": "2026/9/14 線上直播",
+      "evidence": "瀏覽器暫停畫面中作者展示的聊天訊息；可見60k空方亞當、45558、收回46623失敗",
+      "evidence_status": "畫面文字已確認",
+      "current_validity": "待核對；歷史回顧不是現行訊號",
+      "original_publication_datetime": null,
+      "contract_month": null,
+      "session": null,
+      "price_adjustment_basis": null,
+      "invalidation_close_period_and_bar_count": null,
+      "automatic_signal_enabled": false,
+      "formula_verified": false,
+      "notes": [
+        "背景券商圖不能自動證明原訊息的契約及全部口徑",
+        "沒有可靠逐字稿或聲音轉錄，未核對作者口述補充",
+        "不以今日價位代判歷史是否達標或失效"
+      ]
+    }
+  ]
+}

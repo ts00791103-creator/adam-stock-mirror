@@ -1,0 +1,13 @@
+{
+  "authorization": "同頻道影片與直播均可自主連續研究，無須逐片等回覆；不新增背景排程",
+  "selection_policy": "依實際內容查證，不假定日期順序或只憑標題",
+  "pending": [
+    {"title":"2026/8/24 線上直播","url":"https://www.youtube.com/watch?v=c4uSALB0pNI","status":"目錄已見，內容未查"},
+    {"title":"2026/7/29線上直播","url":"https://www.youtube.com/watch?v=8qvG9t53cDw","status":"目錄已見，內容未查"},
+    {"title":"2026/7/25 線上直播","url":"https://www.youtube.com/watch?v=D3JzO_CfQp8","status":"目錄已見，內容未查"},
+    {"title":"《100倍的歷程、示範短停損下實單》20221130線上直播","url":"https://www.youtube.com/watch?v=Uty3xuOnES4","status":"目錄已見，內容未查"},
+    {"title":"《大盤看法、當沖的多空選擇》20220926線上直播","url":"https://www.youtube.com/watch?v=1Tvx8t-DynA","status":"目錄已見，內容未查"}
+  ],
+  "needs_spoken_rule_verification": ["OlCDPHD__ec","Q5-Lu_ImLTc","COJp_b9w4ys"],
+  "not_a_full_channel_completion_claim": true
+}
