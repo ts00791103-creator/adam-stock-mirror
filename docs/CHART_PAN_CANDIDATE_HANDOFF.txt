@@ -33,3 +33,5 @@
 https://github.com/ts00791103-creator/adam-stock-mirror/actions/runs/42442872436
 完整結果interaction-results.json；截圖final-main-pan.png、desktop-main-pan.png、official-source-pan.png、mobile-viewport-main.png等。
 原始程式備份與修正程式備份已保留本機；本交接與結果另存雲端開發分支。
+
+來源端後續圖像觀察：原圖檔名IMG_5250.png；來源端確認網址為候選站，第一張可見Plotly圖正在框選，工具列可見四向箭頭，下方部分可見另一張圖的價格中心軸；無可辨識標題，無法確認是哪張圖或原縮放程度。本執行端未直接看到像素，以上明確歸屬來源端觀察，未推定主圖或附圖。無需再嘗試未支援取圖途徑。
