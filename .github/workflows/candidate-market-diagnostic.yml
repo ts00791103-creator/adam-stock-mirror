@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: '3.14'
       - run: python -m pip install -r requirements.txt
-      - run: python -m pip install scipy
+      - run: python -m pip install scipy scikit-learn
       - run: python scripts/diagnose_candidate_market.py
       - uses: actions/upload-artifact@v4
         if: always()
