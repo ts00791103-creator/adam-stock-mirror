@@ -35,3 +35,5 @@ TPEx端點 https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock （POST c
 https://github.com/ts00791103-creator/adam-stock-mirror/actions/runs/42429862509
 
 後續：繼續比對可信的完整調整因子／資料來源，再考慮1815完整序列修復；任何正式發布需另按使用者最新範圍處理。保留價格品質門檻。
+
+最後版本bec0冷啟動複驗完成：08:33:58初選713；2330與2887均正確導航且十年資料可分析；十檔複選符合1／無法判定0；開2887後返回仍已檢查10。證據 actual-ui-tests.json 與 最新版_初選713與十檔進度.png。最後新增僅文件，不影響程式。

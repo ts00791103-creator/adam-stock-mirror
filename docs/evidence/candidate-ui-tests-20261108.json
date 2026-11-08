@@ -1,0 +1,120 @@
+[
+  {
+    "test": "initial acquisition 1",
+    "status": "passed",
+    "count": 713,
+    "cursor": 0,
+    "date": "2026-11-06",
+    "retrieved": "2026-11-08 08:19:45",
+    "period": "10y",
+    "interval": "1d"
+  },
+  {
+    "test": "1815 preflight",
+    "status": "expected blocked",
+    "period": "10y",
+    "interval": "1d",
+    "bars": 2430,
+    "invalid_count": 2,
+    "scan_count": 713,
+    "cursor": 0
+  },
+  {
+    "test": "1815 navigation and ten-year gate",
+    "status": "navigation passed; analysis correctly blocked",
+    "symbol": "1815.TWO",
+    "official_close": 117.5,
+    "bars": 2430,
+    "period": "10y",
+    "interval": "1d",
+    "invalid_dates": [
+      "2017-07-21",
+      "2018-07-26"
+    ],
+    "back_button": true
+  },
+  {
+    "test": "1815 back to results",
+    "status": "passed",
+    "count": 713,
+    "cursor": 0,
+    "availability_preserved": true
+  },
+  {
+    "test": "table direct click 1815 first",
+    "status": "passed; gate retained"
+  },
+  {
+    "test": "table direct click 1815 repeated after back",
+    "status": "passed; still 10y and blocked 2 bars"
+  },
+  {
+    "test": "2330 full analysis",
+    "status": "passed",
+    "symbol": "2330.TW",
+    "period": "10y",
+    "interval": "1d",
+    "date": "2026-11-06",
+    "close": 2135,
+    "mirror_sources_visible": true
+  },
+  {
+    "case": "2887 daily 10y analysis",
+    "result": "pass",
+    "close": 38.45,
+    "bars": 2430
+  },
+  {
+    "case": "secondary screening 10",
+    "result": "pass",
+    "initial": 713,
+    "checked": 10,
+    "matched": 1,
+    "unconfirmed": 0
+  },
+  {
+    "case": "invalid initial conditions",
+    "result": "pass",
+    "retained": 713,
+    "cursor": 10,
+    "nextBatchDisabled": true
+  },
+  {
+    "case": "restore last successful conditions",
+    "result": "pass",
+    "cursor": 10
+  },
+  {
+    "case": "repeat official acquisition",
+    "result": "pass",
+    "retrieved": "2026-11-08 08:31:59",
+    "initial": 713,
+    "cursor": 0
+  },
+  {
+    "case": "latest bec0 cold boot navigation",
+    "result": "pass",
+    "symbol": "2330.TW",
+    "bars": 2430,
+    "close": 2135,
+    "retrieved": "2026-11-08 08:33:58"
+  },
+  {
+    "case": "latest cold boot secondary screening",
+    "result": "pass",
+    "checked": 10,
+    "matched": 1,
+    "unconfirmed": 0
+  },
+  {
+    "case": "latest selection change 2330 to 2887",
+    "result": "pass",
+    "symbol": "2887.TW",
+    "close": 38.45
+  },
+  {
+    "case": "latest back preserves secondary progress",
+    "result": "pass",
+    "cursor": 10
+  }
+]
