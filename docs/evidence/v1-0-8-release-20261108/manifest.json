@@ -1,0 +1,29 @@
+{
+  "version": "V1.0.8",
+  "productionCommit": "8b6cefc70a84a856b793f29df2553f0e00a248b6",
+  "previousProduction": "6ef07921465a9b4f50a2dce8c4c71935ef10b6be",
+  "deploymentTarget": "adam-mirror-v1.streamlit.app",
+  "entrypoint": "production_app.py",
+  "runtime": [
+    {
+      "path": "app.py",
+      "sha256": "db01581633003a3395334c656d53c7c443336eb427509e5847f938b6cabeebe1"
+    },
+    {
+      "path": "studio_layout.py",
+      "sha256": "6363374572b9e56dc52a933f413bddff99bff882fab52b6fb66c90d4bcdc437c"
+    },
+    {
+      "path": "official_history.py",
+      "sha256": "6206ba5e0a24d5de685fd3c5254132eb17248f18b1160841a5026ffa4157dc7c"
+    },
+    {
+      "path": "verified_daily_history.py",
+      "sha256": "29ab162b80d0ffb0157e78148caaa7452dd34617c849deaccf0778346b4f0c4e"
+    },
+    {
+      "path": "analysis_availability.py",
+      "sha256": "4c2cfca8962edd73c403b07523094e765eae79523363a6d754269045228192b6"
+    }
+  ]
+}

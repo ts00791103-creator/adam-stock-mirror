@@ -1,0 +1,18 @@
+{
+  "version": "V1.0.8",
+  "stagedSource": "29dcee37306f818986b4655c360d27dbcde9b303",
+  "productionRuntimeCommit": "8b6cefc70a84a856b793f29df2553f0e00a248b6",
+  "acceptanceRun": 42459245852,
+  "generalRun": 42459245880,
+  "python": [
+    "3.11",
+    "3.14"
+  ],
+  "regressions": 286,
+  "isolatedProductionTests": 8,
+  "note": "286 includes the eight new release tests; eight were also executed independently against exact stable production dependencies.",
+  "privateConfigBefore": "da5d30f90727495c5f49b0d4fcf06674bb6429df",
+  "privateConfigAfter": "da5d30f90727495c5f49b0d4fcf06674bb6429df",
+  "mainUnchanged": "00aac7e0f18b7273c69027dcfaeb42da808985c3",
+  "b3Unchanged": "0239e3c374297a1d312a773ccdadb553946a1f1b"
+}

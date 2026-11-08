@@ -1,0 +1,159 @@
+{
+  "version": "V1.0.8",
+  "checks": [
+    {
+      "symbol": "2308.TW",
+      "interval": "1d",
+      "available": true,
+      "chart": true,
+      "gate": "- paragraph: 所選期間資料可分析：價格品質檢查通過｜2308.TW｜1d／10y",
+      "bars": "- paragraph: 完整請求回傳 2430 根｜實際範圍：2016-11-07 00:00:00 ～ 2026-11-06 00:00:00。未縮短期間或刪除異常K線。",
+      "corrections": null,
+      "limitsVisible": true,
+      "errors": []
+    },
+    {
+      "symbol": "2308.TW",
+      "interval": "1wk",
+      "available": true,
+      "chart": true,
+      "gate": "- paragraph: 所選期間資料可分析：價格品質檢查通過｜2308.TW｜1wk／10y",
+      "bars": "- paragraph: 完整請求回傳 522 根｜實際範圍：2016-11-07 00:00:00 ～ 2026-11-02 00:00:00。未縮短期間或刪除異常K線。",
+      "corrections": null,
+      "limitsVisible": true,
+      "errors": []
+    },
+    {
+      "symbol": "2330.TW",
+      "interval": "1wk",
+      "available": true,
+      "chart": true,
+      "gate": "- paragraph: 所選期間資料可分析：價格品質檢查通過｜2330.TW｜1wk／10y",
+      "bars": "- paragraph: 完整請求回傳 522 根｜實際範圍：2016-11-07 00:00:00 ～ 2026-11-02 00:00:00。未縮短期間或刪除異常K線。",
+      "corrections": null,
+      "limitsVisible": true,
+      "errors": []
+    },
+    {
+      "symbol": "3324.TWO",
+      "interval": "1d",
+      "available": true,
+      "chart": true,
+      "gate": "- paragraph: 所選期間資料可分析：價格品質檢查通過｜3324.TWO｜1d／10y",
+      "bars": "- paragraph: 完整請求回傳 2430 根｜實際範圍：2016-11-07 00:00:00 ～ 2026-11-06 00:00:00。未縮短期間或刪除異常K線。",
+      "corrections": "- paragraph: 已依官方月表與除息前收盤價，逐根核對更正 2 根歷史收盤；原始資料保留。",
+      "limitsVisible": true,
+      "errors": []
+    },
+    {
+      "symbol": "5483.TWO",
+      "interval": "1d",
+      "available": true,
+      "chart": true,
+      "gate": "- paragraph: 所選期間資料可分析：價格品質檢查通過｜5483.TWO｜1d／10y",
+      "bars": "- paragraph: 完整請求回傳 2430 根｜實際範圍：2016-11-07 00:00:00 ～ 2026-11-06 00:00:00。未縮短期間或刪除異常K線。",
+      "corrections": "- paragraph: 已依官方月表與除息前收盤價，逐根核對更正 1 根歷史收盤；原始資料保留。",
+      "limitsVisible": true,
+      "errors": []
+    },
+    {
+      "symbol": "6121.TWO",
+      "interval": "1d",
+      "available": false,
+      "chart": false,
+      "gate": "- paragraph: 所選期間資料可分析：未通過／未判定｜6121.TWO｜1d／10y",
+      "bars": "- paragraph: 完整請求回傳 2430 根｜實際範圍：2016-11-07 00:00:00 ～ 2026-11-06 00:00:00。未縮短期間或刪除異常K線。",
+      "corrections": "- paragraph: 已依官方月表與除息前收盤價，逐根核對更正 1 根歷史收盤；原始資料保留。",
+      "limitsVisible": true,
+      "errors": []
+    },
+    {
+      "symbol": "6223.TWO",
+      "interval": "1d",
+      "available": false,
+      "chart": false,
+      "gate": "- paragraph: 所選期間資料可分析：未通過／未判定｜6223.TWO｜1d／10y",
+      "bars": "- paragraph: 完整請求回傳 2430 根｜實際範圍：2016-11-07 00:00:00 ～ 2026-11-06 00:00:00。未縮短期間或刪除異常K線。",
+      "corrections": null,
+      "limitsVisible": true,
+      "errors": []
+    },
+    {
+      "symbol": "6146.TWO",
+      "interval": "1d",
+      "available": false,
+      "chart": false,
+      "gate": "- paragraph: 所選期間資料可分析：未通過／未判定｜6146.TWO｜1d／10y",
+      "bars": "- paragraph: 完整請求回傳 2430 根｜實際範圍：2016-11-07 00:00:00 ～ 2026-11-06 00:00:00。未縮短期間或刪除異常K線。",
+      "corrections": null,
+      "limitsVisible": true,
+      "errors": []
+    },
+    {
+      "symbol": "8086.TWO",
+      "interval": "1d",
+      "available": false,
+      "chart": false,
+      "gate": "- paragraph: 所選期間資料可分析：未通過／未判定｜8086.TWO｜1d／10y",
+      "bars": "- paragraph: 完整請求回傳 2430 根｜實際範圍：2016-11-07 00:00:00 ～ 2026-11-06 00:00:00。未縮短期間或刪除異常K線。",
+      "corrections": null,
+      "limitsVisible": true,
+      "errors": []
+    },
+    {
+      "symbol": "3552.TWO",
+      "interval": "1d",
+      "available": false,
+      "chart": false,
+      "gate": "- paragraph: 所選期間資料可分析：未通過／未判定｜3552.TWO｜1d／10y",
+      "bars": "- paragraph: 完整請求回傳 2430 根｜實際範圍：2016-11-07 00:00:00 ～ 2026-11-06 00:00:00。未縮短期間或刪除異常K線。",
+      "corrections": null,
+      "limitsVisible": true,
+      "errors": []
+    },
+    {
+      "symbol": "8358.TWO",
+      "interval": "1d",
+      "available": true,
+      "chart": true,
+      "gate": "- paragraph: 所選期間資料可分析：價格品質檢查通過｜8358.TWO｜1d／10y",
+      "bars": "- paragraph: 完整請求回傳 2430 根｜實際範圍：2016-11-07 00:00:00 ～ 2026-11-06 00:00:00。未縮短期間或刪除異常K線。",
+      "corrections": "- paragraph: 已依官方月表與除息前收盤價，逐根核對更正 1 根歷史收盤；原始資料保留。",
+      "limitsVisible": true,
+      "errors": []
+    },
+    {
+      "symbol": "2330.TW",
+      "interval": "1d",
+      "available": true,
+      "chart": true,
+      "gate": "- paragraph: 所選期間資料可分析：價格品質檢查通過｜2330.TW｜1d／10y",
+      "bars": "- paragraph: 完整請求回傳 2430 根｜實際範圍：2016-11-07 00:00:00 ～ 2026-11-06 00:00:00。未縮短期間或刪除異常K線。",
+      "corrections": null,
+      "limitsVisible": true,
+      "errors": []
+    }
+  ],
+  "navigation": {
+    "symbols": [
+      "2330.TW",
+      "8358.TWO"
+    ],
+    "correctHeaders": true,
+    "officialAndChartCloseMatch": {
+      "2330.TW": 2135,
+      "8358.TWO": 303
+    },
+    "officialDate": "2026-11-06",
+    "backPreservedCandidates": 1963,
+    "screenedHistoricalCount": 0
+  },
+  "chartButtons": {
+    "historyView": true,
+    "latestReset": true
+  },
+  "mobile": {
+    "verified": false,
+    "reason": "Viewport override did not apply; no physical touch test claimed."
+  }
+}
