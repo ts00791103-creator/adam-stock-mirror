@@ -26,10 +26,11 @@ class ReleaseQualityTests(unittest.TestCase):
         self.assertIn("repair=False",app)
         self.assertIn("2025-08-01",app)
     def open_stock(self,symbol):
-        app=AppTest.from_file(str(ROOT/"production_quality_preview.py"),default_timeout=45).run()
-        app.text_input(key="adam_stock_query").set_value(symbol.split(".")[0]).run()
-        next(b for b in app.button if b.label=="開始亞當鏡像分析").click().run()
-        return app
+        from initial_navigation import queue_initial
+        app=AppTest.from_file(str(ROOT/"production_quality_preview.py"),default_timeout=45)
+        app.session_state["market_scan"]=original.seed()
+        queue_initial(app.session_state,{"Yahoo代號":symbol,"官方收盤":200.,"官方行情日期":"2026-11-06"})
+        return app.run()
     def test_official_replay_downloads_and_original_are_visible(self):
         with patch("urllib.request.urlopen",side_effect=OSError("offline")), patch("yfinance.download",side_effect=lambda *a,**k:source("8358.TWO")), patch("verified_daily_history.fetch_official_month",side_effect=month), patch("verified_daily_history.fetch_official_actions",side_effect=actions):
             app=self.open_stock("8358.TWO")
