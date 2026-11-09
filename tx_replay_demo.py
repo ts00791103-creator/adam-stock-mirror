@@ -7,6 +7,11 @@ from tx_provisional import replay, rotate_ohlc
 
 
 def show_demo(st):
+    with st.expander("台指期｜延遲行情查看"):
+        st.caption("TradingView 的期交所免費方案標示延遲 15 分鐘。資料時間、合約與交易時段請以來源畫面為準。")
+        st.markdown("[開啟 TradingView 台指期連續合約](https://tw.tradingview.com/symbols/TAIFEX-TXF1%21/)")
+        st.info("本站行情串接尚未啟用。下方真實 60 分 K 為固定歷史樣本。")
+
     with st.expander("台指期｜60 分 K 暫行規則試跑"):
         st.caption("使用固定模擬資料驗算觸發與失效。規則為研究假設，作者原始取點與失效條件仍待核對。")
         direction = st.radio("模擬方向", ("空方", "多方"), horizontal=True)
