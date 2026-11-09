@@ -10,6 +10,8 @@ def show_demo(st):
     with st.expander("台指期｜延遲行情查看"):
         st.caption("TradingView 的期交所免費方案標示延遲 15 分鐘。資料時間、合約與交易時段請以來源畫面為準。")
         st.markdown("[開啟 TradingView 台指期連續合約](https://tw.tradingview.com/symbols/TAIFEX-TXF1%21/)")
+        st.markdown("[在 TradingView 開啟台指期圖表](https://www.tradingview.com/chart/?symbol=TAIFEX%3ATXF1%21)")
+        st.caption("圖表連結帶入台指期連續合約。週期、交易時段及 Pine 指標請在 TradingView 設定。")
         st.info("本站行情串接尚未啟用。下方真實 60 分 K 為固定歷史樣本。")
 
     with st.expander("台指期｜60 分 K 暫行規則試跑"):
