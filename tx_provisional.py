@@ -39,3 +39,12 @@ def replay(bars):
                 setups.append(active)
                 break
     return setups
+
+
+def rotate_ohlc(bars, anchor):
+    """Rotate around the terminal close, placing that candle first."""
+    return [
+        {"open": 2 * anchor - bar["open"], "close": 2 * anchor - bar["close"],
+         "high": 2 * anchor - bar["low"], "low": 2 * anchor - bar["high"]}
+        for bar in reversed(bars)
+    ]
