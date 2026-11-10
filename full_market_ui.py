@@ -1,14 +1,14 @@
 """Two-stage scanner with explicit coverage and user-triggered batches."""
 import pandas as pd
 import streamlit as st
-from market_universe import fetch_universe, shortlist, history_as_of
+from market_universe import fetch_dated_universe, fetch_universe, shortlist, history_as_of
 from screener_ui import screening_data
 from stock_screener import screen_frame
 
 
 @st.cache_data(ttl=900, show_spinner=False)
-def official_snapshot(exchanges):
-    results, errors = fetch_universe(exchanges)
+def official_snapshot(exchanges, day):
+    results, errors = fetch_dated_universe(exchanges, day)
     return results, errors, pd.Timestamp.now(tz="Asia/Taipei").strftime("%Y-%m-%d %H:%M:%S")
 
 
@@ -23,10 +23,12 @@ def show_full_market(production=False):
         lots = st.number_input("複選最低20日平均成交量（張）", min_value=0., value=1000., key="market_avg")
         mode = st.selectbox("全市場箱型條件", ["接近箱底", "箱內整理", "不限箱型"], key="market_box")
         near = st.slider("全市場距箱底上限（%）", 1, 20, 5, key="market_near")
-        window = st.slider("全市場箱型觀察根數", 10, 60, 20, key="market_window")
-        width = st.slider("全市場箱型最大振幅（%）", 3, 25, 20, key="market_width")
+        window, width = 20, 20
+        st.caption("固定選股基準：日K、20根箱型、最大振幅20%。")
         st.caption("1張＝1000股。初選用官方當日量，複選用Yahoo 20日均量，兩者不同。複選截取至官方行情日期，不使用之後的K棒。資料快取最多15分鐘，官方行情可能尚未更新，請看日期。")
-        config = (scope, low, high, daily, lots, mode, near, window, width)
+        now = pd.Timestamp.now(tz="Asia/Taipei")
+        day = st.date_input("官方收盤行情日期", value=(now-pd.Timedelta(days=int(now.hour < 14))).date(), max_value=now.date(), key="market_close_day")
+        config = (scope, low, high, daily, lots, mode, near, window, width, day)
         if st.button("取得全市場初選", key="market_start"):
             st.session_state.pop("market_scan", None)
             if low > high:
@@ -34,7 +36,7 @@ def show_full_market(production=False):
                 return
             exchanges = ("上市", "上櫃") if scope == "上市＋上櫃" else (scope,)
             with st.spinner("讀取官方每日行情與公司名單…"):
-                results, errors, timestamp = official_snapshot(exchanges)
+                results, errors, timestamp = official_snapshot(exchanges, day)
             st.session_state["market_scan"] = {
                 "config": config, "results": results, "errors": errors,
                 "timestamp": timestamp, "candidates": shortlist(results, low, high, daily),
