@@ -1,15 +1,15 @@
 """Two-stage scanner with explicit coverage and user-triggered batches."""
 import pandas as pd
 import streamlit as st
-from market_universe import fetch_universe, shortlist, history_as_of
+from market_universe import fetch_dated_universe, fetch_universe, shortlist, history_as_of
 from screener_ui import screening_data
 from stock_screener import screen_frame
 from stock_navigation import stock_result_table, queue_analysis
 
 
 @st.cache_data(ttl=900, show_spinner=False,max_entries=32)
-def official_snapshot(exchanges, refresh_token=None):
-    results, errors = fetch_universe(exchanges)
+def official_snapshot(exchanges, refresh_token=None, day=None):
+    results, errors = fetch_universe(exchanges) if day is None else fetch_dated_universe(exchanges, day)
     return results, errors, pd.Timestamp.now(tz="Asia/Taipei").strftime("%Y-%m-%d %H:%M:%S")
 
 
@@ -28,6 +28,12 @@ def show_full_market(production=False, analysis_options=None):
         width = st.slider("全市場箱型最大振幅（%）", 3, 25, 20, key="market_width")
         st.caption("1張＝1000股。初選用官方當日量，複選用Yahoo 20日均量，兩者不同。複選截取至官方行情日期，不使用之後的K棒。資料快取最多15分鐘，官方行情可能尚未更新，請看日期。")
         config = (scope, low, high, daily, lots, mode, near, window, width)
+        if not production:
+            now = pd.Timestamp.now(tz="Asia/Taipei")
+            latest = now.date()
+            default = (now - pd.Timedelta(days=int(now.hour < 14))).date()
+            day = st.date_input("官方收盤行情日期", value=default, max_value=latest, key="market_close_day")
+            config += (day,)
         if st.button("取得全市場初選", key="market_start"):
             if production:st.session_state.pop("market_scan", None)
             if low > high:
@@ -42,7 +48,7 @@ def show_full_market(production=False, analysis_options=None):
                             results, errors, timestamp = official_snapshot(exchanges)
                         else:
                             import time
-                            results, errors, timestamp = official_snapshot(exchanges, refresh_token=time.time_ns())
+                            results, errors, timestamp = official_snapshot(exchanges, refresh_token=time.time_ns(), day=day)
                     if not any(result.get("rows") for result in results):
                         raise ValueError("指定市場未取得有效官方每日行情，這不是零檔符合選股條件")
                     previous=st.session_state.get("market_scan")
@@ -71,7 +77,7 @@ def show_full_market(production=False, analysis_options=None):
             st.info("條件已變更；目前仍顯示上次成功名單與進度，不把舊結果當成新條件結果。請重新取得初選，或恢復上次條件後繼續複選。")
             st.caption("上次成功條件："+str(state["config"]))
             def restore():
-                for key,value in zip(("market_scope","market_low","market_high","market_daily","market_avg","market_box","market_near","market_window","market_width"),state["config"]):
+                for key,value in zip(("market_scope","market_low","market_high","market_daily","market_avg","market_box","market_near","market_window","market_width","market_close_day"),state["config"]):
                     st.session_state[key]=value
                 st.session_state.pop("market_attempt_error",None)
             st.button("恢復上次成功初選條件",key="market_restore",on_click=restore)
