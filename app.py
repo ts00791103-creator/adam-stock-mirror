@@ -1124,100 +1124,107 @@ with st.sidebar:
         from wave_settings import show_wave_settings
         WAVES = show_wave_settings(interval)
 
-    mode = st.radio(
-        "顯示模式",
-        [
-            "三波同圖",
-            "單一波段",
-            "三波各自獨立放大"
-        ],
-        horizontal=True
-    )
+    from contextlib import nullcontext
 
-    selected = st.radio(
-        "單一波段選擇",
-        list(WAVES),
-        horizontal=True,
-        disabled=(mode != "單一波段")
-    )
+    with (nullcontext() if PRODUCTION_MODE else st.expander("進階圖表設定", expanded=False)):
+        mode = st.radio(
+            "顯示模式",
+            [
+                "三波同圖",
+                "單一波段",
+                "三波各自獨立放大"
+            ],
+            horizontal=True
+        )
 
-    chart_type = st.radio(
-        "圖表模式",
-        ["K線"] if PRODUCTION_MODE else ["K線", "線圖"],
-        horizontal=True
-    )
+        selected = st.radio(
+            "單一波段選擇",
+            list(WAVES),
+            horizontal=True,
+            disabled=(mode != "單一波段")
+        )
 
-    mobile_engine = True if PRODUCTION_MODE else st.checkbox("測試手機雙指縮放圖表（新版）", value=True, key="b3_mobile_engine_box1125", help="測試版預設開啟；取消勾選可回原本 Plotly 圖表。")
+        chart_type = st.radio(
+            "圖表模式",
+            ["K線"] if PRODUCTION_MODE else ["K線", "線圖"],
+            horizontal=True
+        )
 
-    chart_theme = st.radio(
-        "圖表配色",
-        ["券商深色", "原本淺色"],
-        horizontal=True
-    )
+        mobile_engine = True if PRODUCTION_MODE else st.checkbox("測試手機雙指縮放圖表（新版）", value=True, key="b3_mobile_engine_box1125", help="測試版預設開啟；取消勾選可回原本 Plotly 圖表。")
 
-    show_bollinger = st.checkbox("顯示布林軌道（BOLL）", value=True)
-    ma_periods = [] if PRODUCTION_MODE else st.multiselect("測試 MA 均線（可複選）", [5,10,20,60,120,240], default=[])
-    ema_periods = [] if PRODUCTION_MODE else st.multiselect("測試 EMA 均線（可複選）", [5,10,20,60,120,240], default=[])
-    st.caption(("正式版本 V1.0｜圖表：" if PRODUCTION_MODE else "候選版本 V1.0｜圖表：") + (RENDERER_VERSION if mobile_engine else "Plotly")
-               + "｜箱型不顯示價格標籤")
+        chart_theme = st.radio(
+            "圖表配色",
+            ["券商深色", "原本淺色"],
+            horizontal=True
+        )
 
-    auto_boxes = st.checkbox("自動箱型（箱頂／箱底／中線）" if PRODUCTION_MODE else "測試自動箱型（箱頂／箱底／中線）", value=True, key="b3_box_default_on_10_20")
-    box_window = st.slider("箱型觀察根數", 10, 60, 10, disabled=not auto_boxes, key="b3_box_window_default_10")
-    box_width = st.slider("箱型最大振幅（%）", 3.0, 25.0, 20.0, 0.5, disabled=not auto_boxes, key="b3_box_width_default_20")
-    box_options = None
-    if not PRODUCTION_MODE:
-        large_box_window = st.selectbox("大區間箱型觀察根數（同一K線週期）",
-                                       [n for n in [60, 120, 250] if n > box_window],
-                                       disabled=not auto_boxes, key="large_box_window")
-        box_history = st.checkbox("顯示歷史箱型（已突破淡色虛線）", value=False,
-                                  disabled=not auto_boxes, key="box_history")
-        box_options = dict(short_window=box_window, large_window=large_box_window,
-                           max_width_pct=box_width, history=box_history)
-        st.caption("圖上預設只保留目前整理箱型：青色小區間、橙色大區間。大小以K棒根數區分。")
+        show_bollinger = st.checkbox("顯示布林軌道（BOLL）", value=True)
+        ma_periods = [] if PRODUCTION_MODE else st.multiselect("測試 MA 均線（可複選）", [5,10,20,60,120,240], default=[])
+        ema_periods = [] if PRODUCTION_MODE else st.multiselect("測試 EMA 均線（可複選）", [5,10,20,60,120,240], default=[])
+        st.caption(("正式版本 V1.0｜圖表：" if PRODUCTION_MODE else "候選版本 V1.0｜圖表：") + (RENDERER_VERSION if mobile_engine else "Plotly")
+                   + "｜箱型不顯示價格標籤")
 
-    boll_period = st.number_input("布林均線週期", min_value=5, max_value=120, value=20, step=1, disabled=not show_bollinger)
-    boll_std = st.number_input("標準差倍數", min_value=0.5, max_value=4.0, value=2.0, step=0.5, disabled=not show_bollinger)
+        auto_boxes = st.checkbox("自動箱型（箱頂／箱底／中線）" if PRODUCTION_MODE else "測試自動箱型（箱頂／箱底／中線）", value=True, key="b3_box_default_on_10_20")
+        if PRODUCTION_MODE:
+            box_window = st.slider("箱型觀察根數", 10, 60, 10, disabled=not auto_boxes, key="b3_box_window_default_10")
+            box_width = st.slider("箱型最大振幅（%）", 3.0, 25.0, 20.0, 0.5, disabled=not auto_boxes, key="b3_box_width_default_20")
+        else:
+            box_window, box_width = 10, 20.0
+            st.caption("個股小區間固定10根，箱型最大振幅固定20%。自選名單另採日K 20根。")
+        box_options = None
+        if not PRODUCTION_MODE:
+            large_box_window = st.selectbox("大區間箱型觀察根數（同一K線週期）",
+                                           [n for n in [60, 120, 250] if n > box_window],
+                                           disabled=not auto_boxes, key="large_box_window")
+            box_history = st.checkbox("顯示歷史箱型（已突破淡色虛線）", value=False,
+                                      disabled=not auto_boxes, key="box_history")
+            box_options = dict(short_window=box_window, large_window=large_box_window,
+                               max_width_pct=box_width, history=box_history)
+            st.caption("圖上預設只保留目前整理箱型：青色小區間、橙色大區間。大小以K棒根數區分。")
 
-    threshold = st.slider(
-        "最小反轉幅度（%）",
-        1, 20, 3
-    )
+        boll_period = st.number_input("布林均線週期", min_value=5, max_value=120, value=20, step=1, disabled=not show_bollinger)
+        boll_std = st.number_input("標準差倍數", min_value=0.5, max_value=4.0, value=2.0, step=0.5, disabled=not show_bollinger)
 
-    zoom = st.selectbox(
-        "三波同圖／單波初始放大範圍",
-        ZOOMS,
-        index=4
-    )
+        threshold = st.slider(
+            "最小反轉幅度（%）",
+            1, 20, 3
+        )
 
-    individual_zoom = {
-        "短波": "最近30根",
-        "中波": "最近60根",
-        "長波": "最近60根"
-    }
+        zoom = st.selectbox(
+            "三波同圖／單波初始放大範圍",
+            ZOOMS,
+            index=4
+        )
 
-    if mode == "三波各自獨立放大":
-        z1, z2, z3 = st.columns(3)
+        individual_zoom = {
+            "短波": "最近30根",
+            "中波": "最近60根",
+            "長波": "最近60根"
+        }
 
-        with z1:
-            individual_zoom["短波"] = st.selectbox(
-                "短波放大",
-                ZOOMS,
-                index=3
-            )
+        if mode == "三波各自獨立放大":
+            z1, z2, z3 = st.columns(3)
 
-        with z2:
-            individual_zoom["中波"] = st.selectbox(
-                "中波放大",
-                ZOOMS,
-                index=4
-            )
+            with z1:
+                individual_zoom["短波"] = st.selectbox(
+                    "短波放大",
+                    ZOOMS,
+                    index=3
+                )
 
-        with z3:
-            individual_zoom["長波"] = st.selectbox(
-                "長波放大",
-                ZOOMS,
-                index=4
-            )
+            with z2:
+                individual_zoom["中波"] = st.selectbox(
+                    "中波放大",
+                    ZOOMS,
+                    index=4
+                )
+
+            with z3:
+                individual_zoom["長波"] = st.selectbox(
+                    "長波放大",
+                    ZOOMS,
+                    index=4
+                )
 
     show_personal_quote(market, symbol, production=PRODUCTION_MODE)
 
