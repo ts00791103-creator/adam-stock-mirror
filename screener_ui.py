@@ -7,8 +7,54 @@ from stock_screener import resolve_watchlist, screen_frame
 
 @st.cache_data(ttl=900, show_spinner=False)
 def screening_data(symbol):
-    return yf.download(symbol, period="1y", interval="1d", auto_adjust=False,
-                       progress=False, threads=False, timeout=12)
+    frame = yf.download(symbol, period="1y", interval="1d", auto_adjust=False,
+                        progress=False, threads=False, timeout=12)
+    return repair_missing_screening_closes(symbol, frame)
+
+
+def repair_missing_screening_closes(symbol, frame):
+    """Fill an absent historical close only when same-day official OHL agrees."""
+    import math
+    import re
+    from official_history import fetch_official_month
+
+    if not re.fullmatch(r"[1-9][0-9]{3}\.(TW|TWO)", symbol):
+        return frame
+    data = frame.copy()
+    if isinstance(data.columns, pd.MultiIndex):
+        data.columns = data.columns.get_level_values(0)
+    prices = ["Open", "High", "Low", "Close"]
+    if not data.columns.is_unique or not data.index.is_unique or not all(c in data for c in prices):
+        return frame
+    missing = data.index[data["Close"].isna()]
+    if not 0 < len(missing) <= 3:
+        return frame
+    today = pd.Timestamp.now(tz="Asia/Taipei").date()
+    months = {}
+    for stamp in missing:
+        local = pd.Timestamp(stamp)
+        if local.tz is not None:
+            local = local.tz_convert("Asia/Taipei").tz_localize(None)
+        day = local.normalize()
+        if day.date() >= today:
+            continue
+        month = day.strftime("%Y-%m")
+        if month not in months:
+            try:
+                months[month] = fetch_official_month(symbol, month)[0]
+            except (ValueError, OSError):
+                months[month] = None
+        official = months[month]
+        if official is None or day not in official.index:
+            continue
+        row = official.loc[day]
+        if all(math.isclose(float(data.at[stamp, col]), float(row[col]), rel_tol=0, abs_tol=0.005)
+               for col in prices[:-1]):
+            close = float(row["Close"])
+            if float(data.at[stamp, "Low"]) <= close <= float(data.at[stamp, "High"]):
+                data.at[stamp, "Close"] = close
+    return data
+
 
 
 def show_screener(stock_list, production=False):
