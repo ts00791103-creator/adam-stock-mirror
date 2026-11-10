@@ -23,9 +23,13 @@ def show_screener(stock_list, production=False):
         lots = st.number_input("最低20日平均成交量（張）", min_value=0.0, value=1000.0, key="screen_lots")
         mode = st.selectbox("箱型條件", ["不限箱型", "箱內整理", "接近箱底"], key="screen_mode")
         near = st.slider("接近箱底的最大距離（%）", 1, 20, 5, key="screen_near")
-        window = st.slider("選股箱型觀察根數", 10, 60, 20, key="screen_window")
-        width = st.slider("選股箱型最大振幅（%）", 3, 25, 20, key="screen_width")
-        st.caption("箱型使用與個股相同的演算法；比較時請將個股箱型參數設為相同值。成交量1張＝1000股，20日均量含最新一根。盤中日K尚未收盤，數值可能變動。資料快取最多15分鐘。")
+        if production:
+            window = st.slider("選股箱型觀察根數", 10, 60, 20, key="screen_window")
+            width = st.slider("選股箱型最大振幅（%）", 3, 25, 20, key="screen_width")
+            st.caption("箱型使用與個股相同的演算法；比較時請將個股箱型參數設為相同值。成交量1張＝1000股，20日均量含最新一根。盤中日K尚未收盤，數值可能變動。資料快取最多15分鐘。")
+        else:
+            window, width = 20, 20
+            st.caption("固定選股基準：日K、20根箱型、最大振幅20%。20日均量含最新一根，盤中數值可能變動。")
         config = (text, low, high, lots, mode, near, window, width)
         if st.button("開始篩選自選名單", key="screen_run"):
             st.session_state.pop("screen_result", None)
