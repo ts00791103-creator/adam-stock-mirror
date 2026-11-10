@@ -955,7 +955,8 @@ def load_tw_symbols():
 # ===== 操作介面 =====
 
 from stock_navigation import consume_request, preserve_scanner_inputs, reset_stock_pricing, return_to_results, scroll_main_to_top
-navigation_request = consume_request(st.session_state) if not PRODUCTION_MODE else None
+if not PRODUCTION_MODE:
+    consume_request(st.session_state)
 analysis_page = bool(not PRODUCTION_MODE and st.session_state.get("analysis_page_open"))
 if not PRODUCTION_MODE:
     analysis_back_slot=st.empty()
@@ -1254,7 +1255,7 @@ with st.sidebar:
             valuation_enabled = st.checkbox("啟用估價", value=False, key="b3_valuation_enabled_v1")
             valuation_mode = st.radio("估價模式", ["參考價值投資分區（可調參數）", "自訂本益比"], horizontal=True, key="b3_valuation_mode_v1")
             from valuation_io import bounded_fetch
-            valuation_load_requested = st.button("讀取／更新估價資料", key="valuation_load", disabled=not valuation_enabled) or bool(navigation_request)
+            valuation_load_requested = st.button("讀取／更新估價資料", key="valuation_load", disabled=not valuation_enabled)
             st.caption("勾選不會自動連線。先按「讀取／更新估價資料」，再按「開始亞當鏡像分析」；估價缺資料不影響一般股價與鏡像。")
             eps_cache = st.session_state.setdefault("valuation_eps_cache", {})
             pe_cache = st.session_state.setdefault("valuation_pe_cache", {})
