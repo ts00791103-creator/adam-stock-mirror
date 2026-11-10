@@ -107,6 +107,9 @@ def parse_official_month(payload, symbol, month):
         volume_scale, turnover_scale = 1000, 1000
         precision = "官方月表仟股／仟元乘1000；不宣稱精確到單股／單元"
     fields = [re.sub(r"\s+", "", str(v)) for v in table.get("fields", [])]
+    if market == "TWO" and "成交張數" in fields and "成交仟股" not in fields:
+        field_map["成交張數"] = field_map.pop("成交仟股")
+        precision = "官方月表張數／仟元乘1000；不宣稱精確到單股／單元"
     if len(fields) != len(set(fields)) or not set(field_map).issubset(fields):
         raise OfficialHistoryError("官方欄位已變更或重複，停止解析")
     data = table.get("data", [])
