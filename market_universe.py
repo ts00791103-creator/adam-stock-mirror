@@ -112,3 +112,52 @@ def history_as_of(frame, day):
     if data.empty or data.index[-1].normalize() != target:
         raise ValueError("歷史日K缺少官方行情日期，本次不判定")
     return data
+
+
+def fetch_dated_market(exchange, day):
+    """Load the requested completed session from an exchange's dated report."""
+    listed = exchange == "上市"
+    digits = day.strftime("%Y%m%d")
+    if listed:
+        url = f"https://www.twse.com.tw/exchangeReport/MI_INDEX?date={digits}&response=json&type=ALLBUT0999"
+        fields = ("證券代號", "收盤價", "成交股數")
+        keys = ("Code", "ClosingPrice", "TradeVolume")
+    else:
+        formatted = day.strftime("%Y/%m/%d")
+        url = f"https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes?date={formatted}&response=json"
+        fields = ("代號", "收盤", "成交股數")
+        keys = ("SecuritiesCompanyCode", "Close", "TradingShares")
+    try:
+        companies = read_json(SOURCES[exchange][0])
+    except (ValueError, OSError) as exc:
+        raise ValueError("官方公司名單讀取失敗") from exc
+    try:
+        request = Request(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
+        with urlopen(request, timeout=12) as response:
+            payload = json.load(response)
+    except (ValueError, OSError) as exc:
+        raise ValueError("指定日期收盤報表讀取失敗") from exc
+    if str(payload.get("stat", "")).lower() != "ok" or payload.get("date") != digits:
+        raise ValueError("指定日期尚無收盤報表或來源日期不符")
+    table = next((t for t in payload.get("tables", [])
+                  if t.get("data") and set(fields).issubset(t.get("fields", []))), None)
+    if table is None:
+        raise ValueError("指定日期收盤報表缺少必要欄位或行情")
+    indices = [table["fields"].index(field) for field in fields]
+    quotes = [dict(zip(keys, (row[i] for i in indices)), Date=digits)
+              for row in table["data"]]
+    return normalize_market(companies, quotes, exchange)
+
+
+def fetch_dated_universe(exchanges, day):
+    results, errors = [], []
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        jobs = {exchange: pool.submit(fetch_dated_market, exchange, day) for exchange in exchanges}
+        for exchange, future in jobs.items():
+            try:
+                results.append(future.result())
+            except ValueError as exc:
+                errors.append({"市場": exchange, "原因": f"{day}｜{exc}"})
+            except Exception as exc:
+                errors.append({"市場": exchange, "原因": f"{day}｜官方報表解析失敗（{type(exc).__name__}）"})
+    return results, errors
