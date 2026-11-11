@@ -12,6 +12,42 @@ import streamlit as st
 TZ = ZoneInfo("Asia/Taipei")
 
 
+def _render_quote_metrics(price, change, percent):
+    """Give sidebar quotes full-width rows without changing other metric cards."""
+    st.markdown("""
+    <style>
+    .st-key-live_quote_metrics [data-testid="stMetric"] {
+        padding:.75rem .875rem;
+    }
+    .st-key-live_quote_metrics [data-testid="stMetric"] > div:has(> [data-testid="stMetricLabel"]) {
+        display:flex;flex-direction:row;align-items:center;
+        justify-content:space-between;gap:.5rem;min-width:0;width:100%;
+    }
+    .st-key-live_quote_metrics [data-testid="stMetricLabel"] {
+        flex:0 0 auto;width:auto;margin:0;
+    }
+    .st-key-live_quote_metrics [data-testid="stMetricLabel"],
+    .st-key-live_quote_metrics [data-testid="stMetricLabel"] * {
+        white-space:nowrap!important;overflow:visible!important;
+        text-overflow:clip!important;overflow-wrap:normal;
+    }
+    .st-key-live_quote_metrics [data-testid="stMetricValue"],
+    .st-key-live_quote_metrics [data-testid="stMetricValue"] * {
+        white-space:nowrap!important;overflow-wrap:normal;word-break:normal;
+        font-size:1.25rem!important;line-height:1.3;
+        font-variant-numeric:tabular-nums;text-align:right;
+    }
+    .st-key-live_quote_metrics [data-testid="stMetricValue"] {
+        flex:0 0 auto;width:auto;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    with st.container(key="live_quote_metrics", gap="small"):
+        st.metric("最新成交價", f"{price:,.2f}")
+        st.metric("漲跌", f"{change:+,.2f}" if change is not None else "—")
+        st.metric("漲跌幅", f"{percent:+.2f}%" if percent is not None else "—")
+
+
 def _secret(name):
     try:
         return str(st.secrets.get(name, "")).strip()
@@ -56,10 +92,7 @@ def _render_quote(symbol, api_key):
             previous = None
         change = float(price) - previous if previous else None
         percent = change / float(previous) * 100 if change is not None else None
-        a, b, c = st.columns(3)
-        a.metric("最新成交價", f"{float(price):,.2f}")
-        b.metric("漲跌", f"{change:+,.2f}" if change is not None else "—")
-        c.metric("漲跌幅", f"{percent:+.2f}%" if percent is not None else "—")
+        _render_quote_metrics(float(price), change, percent)
         trade_time = _format_trade_time(last_trade.get("time") or quote.get("closeTime"))
         st.caption(f"富果行情｜{symbol}｜成交時間（台灣）：{trade_time}｜每 10 秒查詢一次")
         if quote.get("isTrial"):
