@@ -18,6 +18,13 @@ if PRODUCTION_MODE:
 st.info("鏡像右側為歷史路徑反向排列的情境示意，並非即時行情或未來價格預測；未來日期為示意刻度，未完整排除台股休市日及盤中休市時段。")
 
 if not PRODUCTION_MODE:
+    if st.query_params.get("view") == "fugle-history":
+        from fugle_history_preview import show_fugle_history_preview
+        show_fugle_history_preview()
+        st.stop()
+    if st.button("富果歷史日K驗證（受保護測試頁）", key="open_fugle_history"):
+        st.query_params["view"] = "fugle-history"
+        st.rerun()
     from official_history_preview import show_official_history_preview
     hide_source_preview=bool(st.session_state.get("analysis_page_open") or st.session_state.get("stock_analysis_request"))
     st.markdown('<style>.st-key-official_history_preview_panel{display:'+('none' if hide_source_preview else 'block')+'}</style>',unsafe_allow_html=True)
