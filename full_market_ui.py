@@ -105,9 +105,10 @@ def show_full_market(production=False):
             selected = st.selectbox("全市場結果帶入個股", symbols,
                                     format_func=lambda symbol: next(f"{r['代號']} {r['名稱']}（{r['市場']}）" for r in matched if r["Yahoo代號"] == symbol), key="market_choice")
             st.caption("選股以官方行情日期及一年日K複選；下方個股分析會依你選擇的期間重新讀取最新行情，日期與箱型可能不同。請核對兩邊日期與箱型參數。")
-            if st.button("帶入這檔股票查看鏡像", key="market_use"):
-                st.session_state["adam_stock_query"] = selected.split(".")[0]
-                st.success("已帶入下方個股查詢，請按「開始亞當鏡像分析」。")
+            from initial_navigation import queue_initial
+            selected_row = next(row for row in matched if row["Yahoo代號"] == selected)
+            st.button("開啟這檔股票線圖", key="market_use", on_click=queue_initial,
+                      args=(st.session_state, selected_row))
         elif cursor:
             st.info("目前已檢查的股票沒有符合者；待檢查或無法判定項目不算不符合。")
         if state["checked"]:
