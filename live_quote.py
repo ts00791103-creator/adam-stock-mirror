@@ -17,9 +17,11 @@ def _render_quote_metrics(price, change, percent):
     st.markdown("""
     <style>
     .st-key-live_quote_metrics [data-testid="stMetric"] {
-        display:flex;flex-direction:row;align-items:center;
-        justify-content:space-between;gap:.5rem;min-width:0;
         padding:.75rem .875rem;
+    }
+    .st-key-live_quote_metrics [data-testid="stMetric"] > div:has(> [data-testid="stMetricLabel"]) {
+        display:flex;flex-direction:row;align-items:center;
+        justify-content:space-between;gap:.5rem;min-width:0;width:100%;
     }
     .st-key-live_quote_metrics [data-testid="stMetricLabel"] {
         flex:0 0 auto;width:auto;margin:0;
