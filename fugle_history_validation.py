@@ -18,12 +18,16 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 import pandas as pd
 
 SYMBOLS = {"5474": "聰泰", "6708": "天擎", "9962": "有益"}
+EXPANDED_SYMBOLS = {"5276": "達輝-KY", "4153": "鈺緯", "1240": "茂生農經", "4121": "優盛",
+                    "8927": "北基", "6419": "京晨科", "8436": "大江", "3303": "岱稜",
+                    "3236": "千如", "1815": "富喬"}
+ALL_SYMBOLS = {**SYMBOLS, **EXPANDED_SYMBOLS}
 START, END = "2025-11-11", "2026-11-11"
 FIELDS = ("Open", "High", "Low", "Close")
 ENDPOINT = "https://api.fugle.tw/marketdata/v1.0/stock/historical/candles/"
 DOC_URL = "https://developer.fugle.tw/docs/data/http-api/historical/candles/"
 BASELINE = Path(__file__).parent / "docs/evidence/tpex-fugle-baseline-20261111"
-VERSION = "FUGLE-HISTORY-20261111-1"
+VERSION = "FUGLE-HISTORY-20261111-2"
 PRICE_TOLERANCE = 0.005
 VOLUME_NOTE = ("富果日K以股計、含鉅額交易；TPEx月表以張計且不含鉅額。"
                "張數乘1000僅對齊單位，不能還原逐股精度。未取得逐日鉅額明細，"
@@ -53,8 +57,8 @@ def chunks(start=START, end=END):
 
 
 def request_parameters(symbol, start, end):
-    if symbol not in SYMBOLS or (start, end) not in chunks():
-        raise ValidationError("僅允許本次三檔及固定一年區間。")
+    if symbol not in ALL_SYMBOLS or (start, end) not in chunks():
+        raise ValidationError("僅允許固定驗證樣本及固定一年分段。")
     return {"from": start, "to": end, "timeframe": "D", "adjusted": "false",
             "fields": "open,high,low,close,volume", "sort": "asc"}
 
@@ -122,11 +126,14 @@ def valid_ohlc(row):
 
 
 def load_baseline(symbol):
-    if symbol not in SYMBOLS:
+    if symbol not in ALL_SYMBOLS:
         raise ValidationError("不支援的驗證股票。")
-    manifest = json.loads((BASELINE / "manifest.json").read_text())
+    root = BASELINE if symbol in SYMBOLS else BASELINE.parent / "tpex-fugle-expanded-20261111"
+    manifest = json.loads((root / "manifest.json").read_text())
     info = manifest["baseline_files"][symbol]
-    raw = (BASELINE / info["name"]).read_bytes()
+    if info["name"] != f"tpex_{symbol}_1y.csv":
+        raise ValidationError("官方基準檔名不符。")
+    raw = (root / info["name"]).read_bytes()
     if hashlib.sha256(raw).hexdigest() != info["sha256"]:
         raise ValidationError("官方基準檔案校驗失敗。")
     frame = pd.read_csv(io.BytesIO(raw))
@@ -135,6 +142,17 @@ def load_baseline(symbol):
         raise ValidationError("官方基準筆數或日期不符。")
     if any(not START <= r["Date"] <= END for r in rows):
         raise ValidationError("官方基準日期超出本次範圍。")
+    if not rows or any(not set(("Date", *FIELDS, "Volume_lots", "Volume_shares_scaled")).issubset(r) for r in rows):
+        raise ValidationError("官方基準缺少必要欄位。")
+    for row in rows:
+        date.fromisoformat(row["Date"])
+        for field in FIELDS:
+            _number(row[field], nullable=True)
+        for field in ("Volume_lots", "Volume_shares_scaled"):
+            _number(row[field])
+    no_ohlc = sorted(r["Date"] for r in rows if not valid_ohlc(r))
+    if no_ohlc != sorted(manifest["known_no_ohlc_dates"][symbol]):
+        raise ValidationError("官方無OHLC日期未完整保留。")
     return rows, {"sha256": info["sha256"], "source": manifest["source"],
                   "retrieved_utc": manifest["retrieved_utc"],
                   "known_no_ohlc_dates": manifest["known_no_ohlc_dates"][symbol],
@@ -204,7 +222,7 @@ def compare_rows(symbol, fugle, official, evidence):
                             "TPEx_lots": ore["Volume_lots"], "TPEx_scaled_shares": ore["Volume_shares_scaled"],
                             "difference_shares": diff})
         day_rows.append(item)
-    summary = {"symbol": symbol, "name": SYMBOLS[symbol], "fugle_rows": len(f),
+    summary = {"symbol": symbol, "name": ALL_SYMBOLS[symbol], "fugle_rows": len(f),
                "fugle_valid_ohlc": len(valid_f), "official_rows": len(o),
                "official_valid_ohlc": len(valid_o), "shared_valid_dates": len(same),
                "price_fields_compared": len(same) * 4, "price_mismatch_fields": len(mismatches),
@@ -230,7 +248,7 @@ def run_validation(api_key, fetcher=fetch_segment, sleeper=time.sleep):
     """At most six serial read requests; first failure stops the entire batch."""
     report = {"version": VERSION, "range": {"from": START, "to": END},
               "started_at_utc": datetime.now(timezone.utc).isoformat(),
-              "status": "running", "requests": [], "samples": [], "errors": [],
+              "status": "running", "requests": [], "actual_http_attempts": 0, "samples": [], "errors": [],
               "limitations": [VOLUME_NOTE, "本次固定三個非隨機樣本，不能外推全市場或長期穩定性。",
                               "不改寫歷史、選股、提醒或交易。當日鉅額通常18:00後併入，延後公布可能更晚。"],
               "documentation": DOC_URL,
@@ -250,6 +268,7 @@ def run_validation(api_key, fetcher=fetch_segment, sleeper=time.sleep):
                     sleeper(1.1)
                 attempted = {"symbol": symbol, "from": start, "to": end, "status": "started"}
                 report["requests"].append(attempted)
+                report["actual_http_attempts"] += 1
                 data, evidence = fetcher(symbol, start, end, api_key)
                 attempted.update(evidence, status="completed")
                 rows.extend(data)
@@ -263,7 +282,7 @@ def run_validation(api_key, fetcher=fetch_segment, sleeper=time.sleep):
                           404: "富果此分段查無資料；不當作成功。"}.get(exc.code, "富果HTTP請求失敗。")
                 error = {"symbol": symbol, "http_status": exc.code, "reason": reason}
             elif isinstance(exc, ValidationError):
-                error = {"symbol": symbol, "reason": str(exc)}
+                error = {"symbol": symbol, "reason": "富果資料或官方基準檢核失敗；已停止。"}
             else:
                 error = {"symbol": symbol, "reason": "連線、JSON或基準讀取失敗；已停止，未自動重試。"}
             report["errors"].append(error)

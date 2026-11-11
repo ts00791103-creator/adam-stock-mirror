@@ -1,0 +1,2942 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-11-11",
+  "interval_start": "2025-11-11",
+  "interval_end": "2026-11-11",
+  "generated_utc": "2026-11-11T13:22:09.580575+00:00",
+  "status": "complete",
+  "sources": [
+    {
+      "label": "companies",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",
+      "retrieved_at_utc": "2026-11-11T13:07:43.900981+00:00",
+      "sha256": "352a78052ce4c9f4146d0153f2572c3d2bce392da164e97795e00107b1a25b98",
+      "http_status": 200
+    },
+    {
+      "label": "quotes",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes?date=2026%2F11%2F11&response=json",
+      "retrieved_at_utc": "2026-11-11T13:07:51.474077+00:00",
+      "sha256": "6f785285ebeebc1eb33095952fc064f113e8e8403852fea4f843e669c18f6bbe",
+      "http_status": 200
+    },
+    {
+      "label": "openapi_schema",
+      "url": "https://www.tpex.org.tw/openapi/swagger.json",
+      "retrieved_at_utc": "2026-11-11T13:07:57.418497+00:00",
+      "sha256": "05af7755d0d528626c104f7a8ccd7b00c6a0cf228d30bcb4669020e514eb0c7e",
+      "http_status": 200
+    },
+    {
+      "label": "tpex_cmode",
+      "url": "https://www.tpex.org.tw/openapi/v1/tpex_cmode",
+      "retrieved_at_utc": "2026-11-11T13:08:28.722341+00:00",
+      "sha256": "7c7f9d9346cb11be60b478a097c7d48d6dc87fff23869ef6e318e4011f731a7f",
+      "http_status": 200
+    },
+    {
+      "label": "tpex_spendi_today",
+      "url": "https://www.tpex.org.tw/openapi/v1/tpex_spendi_today",
+      "retrieved_at_utc": "2026-11-11T13:08:32.195309+00:00",
+      "sha256": "0e90aa6615ac686bff5099ed888b78d90ce209cb6ed6f8975304462052cc15d2",
+      "http_status": 200
+    },
+    {
+      "label": "tpex_spendi_history",
+      "url": "https://www.tpex.org.tw/openapi/v1/tpex_spendi_history",
+      "retrieved_at_utc": "2026-11-11T13:08:40.137470+00:00",
+      "sha256": "4e3747a4a27c1e45542ce476ff7ccd0384e5c420e9f2d5bbfd9257b9cc48e6a2",
+      "http_status": 200
+    },
+    {
+      "label": "tpex_5276_2025-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=5276&date=2025%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:09:39.154914+00:00",
+      "http_status": 200,
+      "sha256": "bbb5c60d5df4c53d8d9bbc9c6f2dc933764f0483b6ea7aff986143a41bdc107b",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_5276_2025-12",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=5276&date=2025%2F12%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:09:43.211707+00:00",
+      "http_status": 200,
+      "sha256": "3b39337472ff6c4181a5c92eaf80a9e4392db21473eed27b6a147438cec4ebc1",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_5276_2026-01",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=5276&date=2026%2F01%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:09:58.747161+00:00",
+      "http_status": 200,
+      "sha256": "9eda184aad86ff7557871379d26a78dea476c9d7d1bc21effff155e7c8f7b56d",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_5276_2026-02",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=5276&date=2026%2F02%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:10:03.196183+00:00",
+      "http_status": 200,
+      "sha256": "a4124f256df900b2d8c0887a3f205be1024e52a1136f91650926cec7ff2e2eeb",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_5276_2026-03",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=5276&date=2026%2F03%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:10:08.674290+00:00",
+      "http_status": 200,
+      "sha256": "63b2780c1bbbefaefb4a92a86f8d5392a28f96df7bdcfe4f5f630f735fb0ee11",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_5276_2026-04",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=5276&date=2026%2F04%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:10:12.987517+00:00",
+      "http_status": 200,
+      "sha256": "8c2e3cec609c67e8b65aef303bf2ef42f1f6d0bc175490d67ce4d8a6dc86d7d4",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_5276_2026-05",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=5276&date=2026%2F05%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:10:17.078152+00:00",
+      "http_status": 200,
+      "sha256": "eef1fedad40cf27c70a35db46ad290898b5e66996fc728268da5ef253cbc85e3",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_5276_2026-06",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=5276&date=2026%2F06%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:10:20.689675+00:00",
+      "http_status": 200,
+      "sha256": "22a56f32172843f108dd8eacd6449022f6efd3d28b796fc1cf1e6edbf0e1d3f1",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_5276_2026-07",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=5276&date=2026%2F07%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:10:24.305094+00:00",
+      "http_status": 200,
+      "sha256": "7f4a4aa080acd9fdd92ae8d1995945057bcdefd7ab0b640cdc7367444d751013",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_5276_2026-08",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=5276&date=2026%2F08%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:10:28.525453+00:00",
+      "http_status": 200,
+      "sha256": "400604fba8f60ec888666bd56c485ce62bc7525b81723ee05f7140b9aad47bb3",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_5276_2026-09",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=5276&date=2026%2F09%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:10:33.142629+00:00",
+      "http_status": 200,
+      "sha256": "d31dafcfd871b7ce92bdf4a0ca3a50c4d5a8a8f9747762cc48a369f0a3e3e086",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_5276_2026-10",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=5276&date=2026%2F10%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:10:38.588134+00:00",
+      "http_status": 200,
+      "sha256": "8b652c9ea82df0846275076b04e592e6aa63a0be966e8447cbcb6b91efe01338",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_5276_2026-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=5276&date=2026%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:10:42.072999+00:00",
+      "http_status": 200,
+      "sha256": "c3272bb2f2f3ca91ac178a1877db4ec77a7dc679bc6bb37f51485bff315377f1",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4153_2025-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4153&date=2025%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:10:45.898398+00:00",
+      "http_status": 200,
+      "sha256": "86c8dc9576c4eb925e8d9d8def29444069cfd0b8c979715f56aa36722e1bf9df",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4153_2025-12",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4153&date=2025%2F12%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:10:49.493661+00:00",
+      "http_status": 200,
+      "sha256": "daeef4e5d7dbb7fe4f9938604dc5868c1acf496df1401f545b93739d8ad370cd",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4153_2026-01",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4153&date=2026%2F01%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:10:53.031430+00:00",
+      "http_status": 200,
+      "sha256": "8901ef5cb83be3119585bc1252bb3ebe654bbe28bc98d3c7517ef0a469dfec27",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4153_2026-02",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4153&date=2026%2F02%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:10:56.618440+00:00",
+      "http_status": 200,
+      "sha256": "2247578b341eabad3199682caf2ea8a64d0e4f29f0ac3268f4196ce9e64a48ca",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4153_2026-03",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4153&date=2026%2F03%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:11:00.315652+00:00",
+      "http_status": 200,
+      "sha256": "52d2bcedd8735f28dbcc92c616d25285c5dc1ce5ba4472289272141a3161043c",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4153_2026-04",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4153&date=2026%2F04%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:11:04.287041+00:00",
+      "http_status": 200,
+      "sha256": "30b5c149d9396359c85d08ed932361bc40ce1e6f1bad562a7ebe1324b96f0679",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4153_2026-05",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4153&date=2026%2F05%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:11:12.973668+00:00",
+      "http_status": 200,
+      "sha256": "643790cbebcaa6d7331e730b98e56cddc65c4ed9511777b07e17ac37e6c60ab2",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4153_2026-06",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4153&date=2026%2F06%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:11:20.776234+00:00",
+      "http_status": 200,
+      "sha256": "4e2b904f6d7c26127ca0aa8176558992a81a1e23de556cecb9592c8d51b7d44c",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4153_2026-07",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4153&date=2026%2F07%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:11:26.664693+00:00",
+      "http_status": 200,
+      "sha256": "2b437a6150b3fcf0ed15fad238e10d39be5810731926afed437eca50c477712b",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4153_2026-08",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4153&date=2026%2F08%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:11:34.113939+00:00",
+      "http_status": 200,
+      "sha256": "2fc45ac681d66eeaf836258ee95642a24f219f6ef12f64a641e5db919dd9a4a4",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4153_2026-09",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4153&date=2026%2F09%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:11:40.928500+00:00",
+      "http_status": 200,
+      "sha256": "51226463560aa211dde042c0fc1a8194461dc204f42366eb4611f55823a49125",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4153_2026-10",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4153&date=2026%2F10%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:11:46.820588+00:00",
+      "http_status": 200,
+      "sha256": "52e027b49e92fa2c0299063e248d4662ab12fde6852c80b03a26373c3a2956c4",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4153_2026-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4153&date=2026%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:11:53.076249+00:00",
+      "http_status": 200,
+      "sha256": "d165b9d1ab76b505d78cf4592f94f305eb2b7f1be4df907d9ee2ebc07ef91fa4",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1240_2025-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1240&date=2025%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:11:57.662670+00:00",
+      "http_status": 200,
+      "sha256": "60b7a4e40f3dda35b0a31219626244eaf4ae1c0f3d97c875f29a9e1582cf8238",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1240_2025-12",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1240&date=2025%2F12%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:12:02.360130+00:00",
+      "http_status": 200,
+      "sha256": "c00dff58b6b126052768d485f133a735147e3e99f55ae176fbce7a301f0adeb0",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1240_2026-01",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1240&date=2026%2F01%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:12:08.077891+00:00",
+      "http_status": 200,
+      "sha256": "b05edb225656b600bd168688e1792991ac53b255ed7be538d3c1df74bee7d608",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1240_2026-02",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1240&date=2026%2F02%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:12:18.420995+00:00",
+      "http_status": 200,
+      "sha256": "fcfdae5c20f1485a2cb143ee80a44968fb7244df525f7128b58eada94651fc5e",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1240_2026-03",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1240&date=2026%2F03%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:12:23.963494+00:00",
+      "http_status": 200,
+      "sha256": "9aee44e6957567fb25ff2abf7a6d93b1490a6f693a5b5e26b1ebd5f1db514e2e",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1240_2026-04",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1240&date=2026%2F04%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:12:34.613545+00:00",
+      "http_status": 200,
+      "sha256": "c93106396b79f8109d7ae9131469027acc21e6f3b5825f190bcdd9a36ed16279",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1240_2026-05",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1240&date=2026%2F05%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:12:39.006894+00:00",
+      "http_status": 200,
+      "sha256": "2d8a6852a28334c6d4107c2512ea6859193f7846828afdf59bed933ad99776fb",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1240_2026-06",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1240&date=2026%2F06%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:12:45.883248+00:00",
+      "http_status": 200,
+      "sha256": "a0e10840ecb8303e256216f7b29e62d0ecf6f935f2e2ee0a3293ffc78f8d5823",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1240_2026-07",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1240&date=2026%2F07%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:12:50.141615+00:00",
+      "http_status": 200,
+      "sha256": "559aa9763b8125bc4ec99822f5cd33f3ad86056a96f600f4e55f62ba8740a4c5",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1240_2026-08",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1240&date=2026%2F08%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:12:54.668703+00:00",
+      "http_status": 200,
+      "sha256": "e360a76e864e2876b09d51866746611c2c40871bd2eb124f44d0085ed05e5f1c",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1240_2026-09",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1240&date=2026%2F09%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:12:58.734340+00:00",
+      "http_status": 200,
+      "sha256": "f0231d21faa3ea358ea8da109f6de8f9894e82c85d1d27340976a853d7ce1aef",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1240_2026-10",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1240&date=2026%2F10%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:13:07.067400+00:00",
+      "http_status": 200,
+      "sha256": "4245d3453c313c107bf12aa7f42f75ca2321052f8fcf1f94acf9bade71c0530e",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1240_2026-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1240&date=2026%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:13:11.224872+00:00",
+      "http_status": 200,
+      "sha256": "976686db9cfc9be1fd6eaabc5b7e797169c0da919d43781e23b7ea859c71eaa4",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4121_2025-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4121&date=2025%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:13:15.903580+00:00",
+      "http_status": 200,
+      "sha256": "a872d4aff77cd5b3a9dca8ee736dfed20c77471d6a7809731ed88c99315e257d",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4121_2025-12",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4121&date=2025%2F12%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:13:19.789569+00:00",
+      "http_status": 200,
+      "sha256": "e415d83620dd7e40ece7033294dbc030b9f3f70fe9918a9f0809bf0c0481f509",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4121_2026-01",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4121&date=2026%2F01%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:13:23.999742+00:00",
+      "http_status": 200,
+      "sha256": "74dd83d25d04080a323806b39beeddb99ce55af23100f58cb608454a704d16d6",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4121_2026-02",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4121&date=2026%2F02%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:13:28.807161+00:00",
+      "http_status": 200,
+      "sha256": "3e3f528fdc03d7f6340f619737f8e134d0f79cda9d97f949e3e154e716c6a456",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4121_2026-03",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4121&date=2026%2F03%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:13:33.218185+00:00",
+      "http_status": 200,
+      "sha256": "ac7ea522b0f01e630337567af7f0885cb849259f99612338e38d0cde4d0f22eb",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4121_2026-04",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4121&date=2026%2F04%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:13:50.296394+00:00",
+      "http_status": 200,
+      "sha256": "32f6517a13d6cdd204ff2b6cd9918931ca1a28e2451e43fcdf67910741b9f52e",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4121_2026-05",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4121&date=2026%2F05%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:13:54.180286+00:00",
+      "http_status": 200,
+      "sha256": "3562e787951231a2c8cc3358b5bb72c153449e46c51b1f57abcc28a6477445c2",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4121_2026-06",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4121&date=2026%2F06%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:13:58.249733+00:00",
+      "http_status": 200,
+      "sha256": "97cef57419a56a38f4dbe8fc528bdeddb875a49d98ca360aa277997ad62da94a",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4121_2026-07",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4121&date=2026%2F07%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:14:02.829443+00:00",
+      "http_status": 200,
+      "sha256": "82ad875f96ea9c4966bb73b7d2609ae5f39bd62787455cd21617e0270665714b",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4121_2026-08",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4121&date=2026%2F08%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:14:07.253224+00:00",
+      "http_status": 200,
+      "sha256": "79fcba21fe8e7317d50526b9b54ab83ed271353be1abce60e60066adc1587779",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4121_2026-09",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4121&date=2026%2F09%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:14:11.487173+00:00",
+      "http_status": 200,
+      "sha256": "5ad11b1b51544d638deb5dddb746016a285a18c2ab805f435e8145a1e97f5d73",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4121_2026-10",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4121&date=2026%2F10%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:14:16.071217+00:00",
+      "http_status": 200,
+      "sha256": "ccace721889cb4c268c19c96a4ed7809212079f399ca9fea11af42d57932e2a7",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_4121_2026-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=4121&date=2026%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:14:23.752251+00:00",
+      "http_status": 200,
+      "sha256": "a71761938e629a7d44775bf9cd508142c3b4534e6831c7de4edbadc54976de1d",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8927_2025-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8927&date=2025%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:14:28.018902+00:00",
+      "http_status": 200,
+      "sha256": "353a295fea349d256f0ee72a06c484ec2d02696a100eadb70d5f23470dd25c75",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8927_2025-12",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8927&date=2025%2F12%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:14:41.366144+00:00",
+      "http_status": 200,
+      "sha256": "ab841385bb0f7d23f1d8ffabe4aec721c8ff63fde27b71556ae04321b95dbc92",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8927_2026-01",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8927&date=2026%2F01%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:14:45.667520+00:00",
+      "http_status": 200,
+      "sha256": "eac510b3a4e5930d047f8289922b99efad58cebaca294c9f116bac4fc29e1380",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8927_2026-02",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8927&date=2026%2F02%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:14:50.589239+00:00",
+      "http_status": 200,
+      "sha256": "c2043a1d2981839a551083d4c85c53d841e1c460514e9302715d29c33c99632e",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8927_2026-03",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8927&date=2026%2F03%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:14:55.601966+00:00",
+      "http_status": 200,
+      "sha256": "8c71c02bac96b6ed3314f687af41d1e700c519f500dc166d0b314a05c9a2a808",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8927_2026-04",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8927&date=2026%2F04%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:15:00.988288+00:00",
+      "http_status": 200,
+      "sha256": "0904a1f900f8ce6539ed2cef6bc2fb6fe4691723aa8eae62a4645c69c343728e",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8927_2026-05",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8927&date=2026%2F05%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:15:06.140939+00:00",
+      "http_status": 200,
+      "sha256": "9c0932f7a72c83aa2e19a7af104a21d5f68080f30c870c715fb555978707cc94",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8927_2026-06",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8927&date=2026%2F06%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:15:15.945620+00:00",
+      "http_status": 200,
+      "sha256": "2eca0c771fb70e380590c89497068c09c21e7f95b8fbd97d80f2aafe50b239c7",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8927_2026-07",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8927&date=2026%2F07%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:15:20.082371+00:00",
+      "http_status": 200,
+      "sha256": "2f4f59240efa6c35ba4a34eb0616dcadd13439531289e39c5a6c539b0857ecbd",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8927_2026-08",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8927&date=2026%2F08%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:15:24.473664+00:00",
+      "http_status": 200,
+      "sha256": "3bd9d3271af12f67fad792598dfec6f461c53190cc93810780cb574259a437f0",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8927_2026-09",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8927&date=2026%2F09%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:15:37.402174+00:00",
+      "http_status": 200,
+      "sha256": "cf755455e996277cdf90239cb6f56d323a8ea836747b33bfeff92be0c0bcef63",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8927_2026-10",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8927&date=2026%2F10%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:15:41.872411+00:00",
+      "http_status": 200,
+      "sha256": "562357ebef66dea7d4d11445b9773929148b23959d73dc0fb203ed70a67dae83",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8927_2026-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8927&date=2026%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:15:46.050566+00:00",
+      "http_status": 200,
+      "sha256": "f66c69de7d79988cc5bd0f3610a189d3cafaff971fd9354772859804aff0923b",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_6419_2025-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=6419&date=2025%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:15:50.295522+00:00",
+      "http_status": 200,
+      "sha256": "714338752131d4c852a4b2ae453d75be9193b2839b5da42144982bb2ecee6dde",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_6419_2025-12",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=6419&date=2025%2F12%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:15:54.536301+00:00",
+      "http_status": 200,
+      "sha256": "042316404deec67ac4c428f63826277c7ff945da89866f95f829fc444be83ac9",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_6419_2026-01",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=6419&date=2026%2F01%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:15:59.128296+00:00",
+      "http_status": 200,
+      "sha256": "c429bb3e9dc56d5d79c9584c2d8a2be15bb03c13c5cec4c6c294335bd1849fd3",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_6419_2026-02",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=6419&date=2026%2F02%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:16:03.577053+00:00",
+      "http_status": 200,
+      "sha256": "88aa7bd934a4897f7c2aba3a3651e2d895aa447c136040e8409318a26aeb41d6",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_6419_2026-03",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=6419&date=2026%2F03%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:16:08.023627+00:00",
+      "http_status": 200,
+      "sha256": "d78854afd3b9f4659ff1958560ca5a8dabd8884ae38bb7609d3fa9cc1b444b6e",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_6419_2026-04",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=6419&date=2026%2F04%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:16:23.867545+00:00",
+      "http_status": 200,
+      "sha256": "aadcd0634335d01d3b33e0aa50e327acce7e90f8233986166e45eb9c5e0175da",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_6419_2026-05",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=6419&date=2026%2F05%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:16:28.867861+00:00",
+      "http_status": 200,
+      "sha256": "c73d5d460c0690c9233a5a9cb0505829193f9446830db282be1f664e6789cafe",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_6419_2026-06",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=6419&date=2026%2F06%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:16:33.330058+00:00",
+      "http_status": 200,
+      "sha256": "60fd4d7389695f5683bdb4ceb33f17c4500a7a087bf30ca1b762445dac2ecb26",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_6419_2026-07",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=6419&date=2026%2F07%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:16:37.796870+00:00",
+      "http_status": 200,
+      "sha256": "de899e7786b23ccac1a7cab45fd0703b3eea8356fa4e82efd8a27426f561bf16",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_6419_2026-08",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=6419&date=2026%2F08%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:16:42.838849+00:00",
+      "http_status": 200,
+      "sha256": "82d7090e5006c996470c66be40e2c9a12ea660304d6af5721a88c89b9031e431",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_6419_2026-09",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=6419&date=2026%2F09%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:16:47.239313+00:00",
+      "http_status": 200,
+      "sha256": "1e3e8736f278ac780bff1c4119e7c2aefcb1238075d7d42a6bd1ada21fe423e8",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_6419_2026-10",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=6419&date=2026%2F10%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:16:51.703233+00:00",
+      "http_status": 200,
+      "sha256": "42bd07a66a30691a0055846548b8e6c64f093cac88939163d9bb62997b726641",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_6419_2026-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=6419&date=2026%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:16:58.431887+00:00",
+      "http_status": 200,
+      "sha256": "969bac6f2352c45100220778213596e774944f8785d0c89efbf72962f66b1129",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8436_2025-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8436&date=2025%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:17:03.276148+00:00",
+      "http_status": 200,
+      "sha256": "5ef9080b71e53deed66217076e2a0956605b34d083470a12a9941adc3234a71c",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8436_2025-12",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8436&date=2025%2F12%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:17:07.699016+00:00",
+      "http_status": 200,
+      "sha256": "46419de2cd538784483c99778048a9cc28dd042bb6c98ee107d80beaf97530db",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8436_2026-01",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8436&date=2026%2F01%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:17:12.535890+00:00",
+      "http_status": 200,
+      "sha256": "a3627ffb8a488aedada3fbb3005de0b936e2d469eea81fad624212525c5aaec1",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8436_2026-02",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8436&date=2026%2F02%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:17:18.373030+00:00",
+      "http_status": 200,
+      "sha256": "fcda67630b9cb87d9a2ede70051b438e5bf9687610f11849cb9aad399dc401b6",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8436_2026-03",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8436&date=2026%2F03%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:17:22.927861+00:00",
+      "http_status": 200,
+      "sha256": "bfcdbe04098c52c1a37319356ae0063b8d90822d1055127e06180fff48fbcaed",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8436_2026-04",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8436&date=2026%2F04%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:17:32.241278+00:00",
+      "http_status": 200,
+      "sha256": "2e65dbbf6db13df6f337afe12b6cf94ba7c39e423fd5bd305038393cac8f0d6f",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8436_2026-05",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8436&date=2026%2F05%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:17:38.556184+00:00",
+      "http_status": 200,
+      "sha256": "bfbf57e0caa5eb5ed592c8138098f3ff7a9f05b5e22ae8877c9755a3cb5e647d",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8436_2026-06",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8436&date=2026%2F06%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:17:43.512558+00:00",
+      "http_status": 200,
+      "sha256": "b819e1c6a333977ecd1545978e93cf69e4a5c786d931521996905c6cd4c78c02",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8436_2026-07",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8436&date=2026%2F07%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:17:47.990059+00:00",
+      "http_status": 200,
+      "sha256": "8f43e17723ee1655ef5afa374dcca6f01726d1fb4ee33f84491981948f4c7789",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8436_2026-08",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8436&date=2026%2F08%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:17:55.631210+00:00",
+      "http_status": 200,
+      "sha256": "75b8a1f01751fba172e4923d1763a74b42889e3a72afc7e874fc887661f53dd6",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8436_2026-09",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8436&date=2026%2F09%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:18:03.036377+00:00",
+      "http_status": 200,
+      "sha256": "64404ba6ac887fa75a5108bcd5ff8039a4b2d5e4d8d8739ad4991f615f3a66ff",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8436_2026-10",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8436&date=2026%2F10%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:18:08.111910+00:00",
+      "http_status": 200,
+      "sha256": "41fcc7b6c0cd1e22bc61c78580cb4f4ef61b629a8727ad27618121630efc4459",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_8436_2026-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=8436&date=2026%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:18:14.331712+00:00",
+      "http_status": 200,
+      "sha256": "bae6a84c604823f876bd7938ee55a0e8b028b2b2623f455aa135794f10407ce0",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3303_2025-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3303&date=2025%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:18:19.996221+00:00",
+      "http_status": 200,
+      "sha256": "26524a80c2f1c66f96e8f362673f9c6a0480729a08d9f09a74d788b164d8c752",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3303_2025-12",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3303&date=2025%2F12%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:18:25.115442+00:00",
+      "http_status": 200,
+      "sha256": "749bd06e67b1037aeec1d437415f6765a22053abd812543769065080b9771996",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3303_2026-01",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3303&date=2026%2F01%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:18:34.426957+00:00",
+      "http_status": 200,
+      "sha256": "32bf0a4d64045530ea9c4ab7b621ccdc637ab38c080c818b40471cfc19921b43",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3303_2026-02",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3303&date=2026%2F02%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:18:38.376375+00:00",
+      "http_status": 200,
+      "sha256": "b71ad97aad9d11f76a1aaa234399332221eb6603811e810bbea2ffff743ecf5c",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3303_2026-03",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3303&date=2026%2F03%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:18:42.988932+00:00",
+      "http_status": 200,
+      "sha256": "190dc05d7db4bd220756b47f73098fcc1511a382a51b7a32f18e9079f369198f",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3303_2026-04",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3303&date=2026%2F04%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:18:50.043952+00:00",
+      "http_status": 200,
+      "sha256": "440f20003c8ed26fdb89575fec82737469d6d5e4c28a4de53800b57b5ac0b333",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3303_2026-05",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3303&date=2026%2F05%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:18:59.523366+00:00",
+      "http_status": 200,
+      "sha256": "2e8b697bd4440f69c2231a0d8fc9f78cc3eb7933da6fcea1bf38b88f0273dd52",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3303_2026-06",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3303&date=2026%2F06%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:19:04.637053+00:00",
+      "http_status": 200,
+      "sha256": "9d30c294fe1b3530fdccd2aa04bb5020d8a54d93451289c9ecd65b4de9078bef",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3303_2026-07",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3303&date=2026%2F07%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:19:08.351817+00:00",
+      "http_status": 200,
+      "sha256": "0cb1da8445ee578b6d067e9b0d02a4f3c305bd63bc365df2b1e9681b724564b0",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3303_2026-08",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3303&date=2026%2F08%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:19:24.812793+00:00",
+      "http_status": 200,
+      "sha256": "c1e28dbb17a920539ddcbf3c43a53714b91f7133b492db59e3187b6a9b34db9f",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3303_2026-09",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3303&date=2026%2F09%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:19:28.832712+00:00",
+      "http_status": 200,
+      "sha256": "b4d4a20c65c9a55340977406d8a60761e36f718b3e1c503ace944ddfc8f987e7",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3303_2026-10",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3303&date=2026%2F10%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:19:33.222742+00:00",
+      "http_status": 200,
+      "sha256": "1b6aed4ed429b57135f0f3e561f51d9bed1ffdb0a44f6aaabc78db3b284155f3",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3303_2026-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3303&date=2026%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:19:37.165345+00:00",
+      "http_status": 200,
+      "sha256": "f34e223991e723689f776b38f800891d4f09fae0214ca96fc306a6f17adc02d1",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3236_2025-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3236&date=2025%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:19:41.131419+00:00",
+      "http_status": 200,
+      "sha256": "645a546c3346ee393fb231639fb41ea831271089e0bf183d4f8333f860a7b6ce",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3236_2025-12",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3236&date=2025%2F12%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:19:45.613262+00:00",
+      "http_status": 200,
+      "sha256": "4a08ba3dde8554997ffec611ef11dc06e9366a32fbce202b278b6066caa15b69",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3236_2026-01",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3236&date=2026%2F01%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:19:50.440382+00:00",
+      "http_status": 200,
+      "sha256": "5525fc3dabb6fb320f7c7dbeba0b96ccbd0f954ccb0d0bf633cc6712121a2f47",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3236_2026-02",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3236&date=2026%2F02%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:19:54.416288+00:00",
+      "http_status": 200,
+      "sha256": "ad0c5cd44e0ae945a96639244ee212a3c601d3fc024fcd8cfb39aaa8cca01621",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3236_2026-03",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3236&date=2026%2F03%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:19:58.389108+00:00",
+      "http_status": 200,
+      "sha256": "5581beba5df6cf172756f99eb1edcacd97e1017ba1abc4b8c00d8c3060db740d",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3236_2026-04",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3236&date=2026%2F04%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:20:02.479885+00:00",
+      "http_status": 200,
+      "sha256": "3020ae66e4e35e9a81a4e88504aab181364204a591dfa7960d73a0af9afb9974",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3236_2026-05",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3236&date=2026%2F05%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:20:08.110279+00:00",
+      "http_status": 200,
+      "sha256": "be1821aacec07ca7212c1ed29258ab44058d82343236773e12595d8c90133b1a",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3236_2026-06",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3236&date=2026%2F06%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:20:13.739013+00:00",
+      "http_status": 200,
+      "sha256": "d09ca493a686f99a63f141e5ba0ddf2755c4d63bc6fb2705da90e0120b33457a",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3236_2026-07",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3236&date=2026%2F07%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:20:17.989247+00:00",
+      "http_status": 200,
+      "sha256": "141653f2a763b43d7252eafd70b6dd4ae84666470bccfe728eef70be46a342de",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3236_2026-08",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3236&date=2026%2F08%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:20:26.273140+00:00",
+      "http_status": 200,
+      "sha256": "18133324a6d2f48975e9aca5fb4781d03ee6c7d6d50350a83145262c01c64b0b",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3236_2026-09",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3236&date=2026%2F09%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:20:30.389594+00:00",
+      "http_status": 200,
+      "sha256": "0b6bb39046307faee49cfecc3bf06038221a25f633c6041281a8501287ba55dd",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3236_2026-10",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3236&date=2026%2F10%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:20:35.556500+00:00",
+      "http_status": 200,
+      "sha256": "d1eafa4115be75c5ec17d6032f23e4da5efc56434700d6f48e99aa48059ee931",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_3236_2026-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=3236&date=2026%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:20:40.390327+00:00",
+      "http_status": 200,
+      "sha256": "7c69297c4c27ad0e7a39aae742c1ba0af303e00ae77cf51e4f48adc14d79c254",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1815_2025-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1815&date=2025%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:20:44.399837+00:00",
+      "http_status": 200,
+      "sha256": "3f78c4b43432fd50ab61285d958c5821a157ac1125712ba674d4f335915f32fb",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1815_2025-12",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1815&date=2025%2F12%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:20:48.627531+00:00",
+      "http_status": 200,
+      "sha256": "1763a2980712fd338bc81581687512e6d8324019510e95967194efb524c37bf8",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1815_2026-01",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1815&date=2026%2F01%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:20:52.692974+00:00",
+      "http_status": 200,
+      "sha256": "8c20804a8133a57706f0034ae09146114fdeecf14c1743ce169492f20740ba77",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1815_2026-02",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1815&date=2026%2F02%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:20:57.097291+00:00",
+      "http_status": 200,
+      "sha256": "23b44f9adafc1f0f01ba0c141fd7da557a4492109829f29dd2a1b2e4f828383d",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1815_2026-03",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1815&date=2026%2F03%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:21:01.244117+00:00",
+      "http_status": 200,
+      "sha256": "0cc3cdc9341e039a0dd0e035b0a5294a391377cd94c9174a44d0fc530cf761d0",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1815_2026-04",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1815&date=2026%2F04%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:21:05.759600+00:00",
+      "http_status": 200,
+      "sha256": "427b5cded4f12ad16c973482aaec7b29fb78761ad42e847f4c89a7db81725153",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1815_2026-05",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1815&date=2026%2F05%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:21:09.835771+00:00",
+      "http_status": 200,
+      "sha256": "570d7a78b1f20154f38a5eef8e928b65629a80a19c3c8093b057dd4969fdb01d",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1815_2026-06",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1815&date=2026%2F06%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:21:17.639167+00:00",
+      "http_status": 200,
+      "sha256": "6469ee1d418c3d88dc338633b30bd463e62abb1839919f4d075d8f7027e1e612",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1815_2026-07",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1815&date=2026%2F07%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:21:21.957509+00:00",
+      "http_status": 200,
+      "sha256": "5b77aac255ba51721baf9b861ad8648f1e8ee17d321bd14381b4a060f4dfd32a",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1815_2026-08",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1815&date=2026%2F08%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:21:26.803214+00:00",
+      "http_status": 200,
+      "sha256": "c30712524833a5f31999ec254363fd870f7d668138e93e169fb0063ae20a2f0e",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1815_2026-09",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1815&date=2026%2F09%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:21:30.826959+00:00",
+      "http_status": 200,
+      "sha256": "8472c9a0cd16b4191872447df7ba64643d4401079f61a6a182c7b130c4460bae",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1815_2026-10",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1815&date=2026%2F10%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:21:35.294174+00:00",
+      "http_status": 200,
+      "sha256": "beeee31dc296c3333248986a1ed36dbebfe45136d00a1f76471d90a5d83619bf",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "tpex_1815_2026-11",
+      "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=1815&date=2026%2F11%2F01&response=json",
+      "method": "GET",
+      "retrieved_at_utc": "2026-11-11T13:21:39.457710+00:00",
+      "http_status": 200,
+      "sha256": "49e6d40b6e79d7d9d3bbd27cd86a2c1a1840cb5fb9728d755dee74c81fa9015e",
+      "fields": [
+        "日 期",
+        "成交張數",
+        "成交仟元",
+        "開盤",
+        "最高",
+        "最低",
+        "收盤",
+        "漲跌",
+        "筆數"
+      ]
+    },
+    {
+      "label": "isin_otc",
+      "url": "https://isin.twse.com.tw/isin/C_public.jsp?strMode=4",
+      "retrieved_at_utc": "2026-11-11T13:09:55.218440+00:00",
+      "http_status": 200,
+      "sha256": "ad1774a620f0b06e8f430b92ea4c8f5e2ecb1a5c84adc42dd72f6ca864a7f4a4"
+    }
+  ],
+  "denominator": {
+    "official_issuer_count": 897,
+    "ordinary_equity_candidate_count": 897,
+    "instrument_classification_complete": false,
+    "official_report_listed_companies": 897,
+    "all_quote_security_count": 13752,
+    "issuer_quote_intersection_count": 895,
+    "valid_close_count": 872,
+    "missing_close_present_quote_count": 23,
+    "absent_quote_count": 2,
+    "official_suspended_codes": [
+      "4534",
+      "4804"
+    ],
+    "new_listing_count": 45,
+    "excluded_quote_security_count": 12857,
+    "classification_rule": "Official 上櫃股票基本資料 issuer-code roster, with exact-code join to dated quotes; provisional ordinary-equity candidates, not an independently verified instrument-class denominator.",
+    "count": 897
+  },
+  "sampling": {
+    "method": "deterministic stratified rank grid, not random",
+    "pool_count": 824,
+    "exclude_existing_codes": [
+      "5474",
+      "6708",
+      "9962"
+    ],
+    "eligibility": "Issuer roster; listing_date <= 2025-11-11; positive same-date close and volume; not prior three samples",
+    "sort": "volume_shares ascending, then code ascending",
+    "indices_zero_based": [
+      0,
+      91,
+      183,
+      274,
+      366,
+      457,
+      549,
+      640,
+      732,
+      823
+    ],
+    "activity_labels": "indices 0-2 low, 3-6 medium, 7-9 high",
+    "volume_reference": "2026-11-11 dailyQuotes 成交股數 (exact reported daily quote shares), distinct from monthly lots-based volume"
+  },
+  "samples": [
+    {
+      "code": "5276",
+      "symbol": "5276.TWO",
+      "name": "達輝-KY",
+      "listing_date": "2014-06-12",
+      "classification": "ordinary_equity_candidate_by_official_issuer_code",
+      "close": 16.65,
+      "volume_shares": 1000.0,
+      "quote_status": "valid_close",
+      "new_listing": false,
+      "status_evidence": null,
+      "reference_date": "2026-11-11",
+      "ascending_volume_rank": 1,
+      "activity_stratum": "low",
+      "classification_verified_instrument_level": false
+    },
+    {
+      "code": "4153",
+      "symbol": "4153.TWO",
+      "name": "鈺緯",
+      "listing_date": "2013-05-23",
+      "classification": "ordinary_equity_candidate_by_official_issuer_code",
+      "close": 30.85,
+      "volume_shares": 8245.0,
+      "quote_status": "valid_close",
+      "new_listing": false,
+      "status_evidence": null,
+      "reference_date": "2026-11-11",
+      "ascending_volume_rank": 92,
+      "activity_stratum": "low",
+      "classification_verified_instrument_level": false
+    },
+    {
+      "code": "1240",
+      "symbol": "1240.TWO",
+      "name": "茂生農經",
+      "listing_date": "2018-08-08",
+      "classification": "ordinary_equity_candidate_by_official_issuer_code",
+      "close": 53.7,
+      "volume_shares": 20853.0,
+      "quote_status": "valid_close",
+      "new_listing": false,
+      "status_evidence": null,
+      "reference_date": "2026-11-11",
+      "ascending_volume_rank": 184,
+      "activity_stratum": "low",
+      "classification_verified_instrument_level": false
+    },
+    {
+      "code": "4121",
+      "symbol": "4121.TWO",
+      "name": "優盛",
+      "listing_date": "2003-07-25",
+      "classification": "ordinary_equity_candidate_by_official_issuer_code",
+      "close": 12.25,
+      "volume_shares": 42601.0,
+      "quote_status": "valid_close",
+      "new_listing": false,
+      "status_evidence": null,
+      "reference_date": "2026-11-11",
+      "ascending_volume_rank": 275,
+      "activity_stratum": "medium",
+      "classification_verified_instrument_level": false
+    },
+    {
+      "code": "8927",
+      "symbol": "8927.TWO",
+      "name": "北基",
+      "listing_date": "2000-11-02",
+      "classification": "ordinary_equity_candidate_by_official_issuer_code",
+      "close": 15.0,
+      "volume_shares": 79507.0,
+      "quote_status": "valid_close",
+      "new_listing": false,
+      "status_evidence": null,
+      "reference_date": "2026-11-11",
+      "ascending_volume_rank": 367,
+      "activity_stratum": "medium",
+      "classification_verified_instrument_level": false
+    },
+    {
+      "code": "6419",
+      "symbol": "6419.TWO",
+      "name": "京晨科",
+      "listing_date": "2014-12-29",
+      "classification": "ordinary_equity_candidate_by_official_issuer_code",
+      "close": 125.5,
+      "volume_shares": 145205.0,
+      "quote_status": "valid_close",
+      "new_listing": false,
+      "status_evidence": null,
+      "reference_date": "2026-11-11",
+      "ascending_volume_rank": 458,
+      "activity_stratum": "medium",
+      "classification_verified_instrument_level": false
+    },
+    {
+      "code": "8436",
+      "symbol": "8436.TWO",
+      "name": "大江",
+      "listing_date": "2013-09-12",
+      "classification": "ordinary_equity_candidate_by_official_issuer_code",
+      "close": 91.4,
+      "volume_shares": 280392.0,
+      "quote_status": "valid_close",
+      "new_listing": false,
+      "status_evidence": null,
+      "reference_date": "2026-11-11",
+      "ascending_volume_rank": 550,
+      "activity_stratum": "medium",
+      "classification_verified_instrument_level": false
+    },
+    {
+      "code": "3303",
+      "symbol": "3303.TWO",
+      "name": "岱稜",
+      "listing_date": "2007-05-28",
+      "classification": "ordinary_equity_candidate_by_official_issuer_code",
+      "close": 50.9,
+      "volume_shares": 554214.0,
+      "quote_status": "valid_close",
+      "new_listing": false,
+      "status_evidence": null,
+      "reference_date": "2026-11-11",
+      "ascending_volume_rank": 641,
+      "activity_stratum": "high",
+      "classification_verified_instrument_level": false
+    },
+    {
+      "code": "3236",
+      "symbol": "3236.TWO",
+      "name": "千如",
+      "listing_date": "2004-12-02",
+      "classification": "ordinary_equity_candidate_by_official_issuer_code",
+      "close": 41.35,
+      "volume_shares": 1952849.0,
+      "quote_status": "valid_close",
+      "new_listing": false,
+      "status_evidence": null,
+      "reference_date": "2026-11-11",
+      "ascending_volume_rank": 733,
+      "activity_stratum": "high",
+      "classification_verified_instrument_level": false
+    },
+    {
+      "code": "1815",
+      "symbol": "1815.TWO",
+      "name": "富喬",
+      "listing_date": "2006-01-23",
+      "classification": "ordinary_equity_candidate_by_official_issuer_code",
+      "close": 140.5,
+      "volume_shares": 122349779.0,
+      "quote_status": "valid_close",
+      "new_listing": false,
+      "status_evidence": null,
+      "reference_date": "2026-11-11",
+      "ascending_volume_rank": 824,
+      "activity_stratum": "high",
+      "classification_verified_instrument_level": false
+    }
+  ],
+  "baseline_files": {
+    "5276": {
+      "name": "tpex_5276_1y.csv",
+      "sha256": "65cbe625ef5ab89db69016c85b11fcc0a5c27a9ff1587809aa476a0f8ccfe9c7",
+      "rows": 242,
+      "source_csv_sha256_before_newline_normalization": "5fb6ac2701a26c266678718c847e02adbb68c867f1ff3af9ab64a42e08e72e57",
+      "storage_normalization": "CRLF to LF only; cells unchanged"
+    },
+    "4153": {
+      "name": "tpex_4153_1y.csv",
+      "sha256": "0752a65b453579adbe658a3b8a01afd3eb6cad7794a1b7bbc5577341586058ab",
+      "rows": 242,
+      "source_csv_sha256_before_newline_normalization": "89c0df6841b3d818ff30ff84f6fac2f0cdd8cd815d2dd5c795abb6999f0688f2",
+      "storage_normalization": "CRLF to LF only; cells unchanged"
+    },
+    "1240": {
+      "name": "tpex_1240_1y.csv",
+      "sha256": "e33b05551d6fbae56a985cc14d642cf99be105a9ab5b71932d464c6dec6e6723",
+      "rows": 242,
+      "source_csv_sha256_before_newline_normalization": "907d6ad2fb55d66fc2949e13c32580fcd86c2d1e7adb39db3d7ef16e82699c7c",
+      "storage_normalization": "CRLF to LF only; cells unchanged"
+    },
+    "4121": {
+      "name": "tpex_4121_1y.csv",
+      "sha256": "6b992e6b8647c328d2bd7a28ac260c7159301f2c0e25d960fca8b531a346d886",
+      "rows": 242,
+      "source_csv_sha256_before_newline_normalization": "1fbe09a7d55a21c050eb282de025779fda79a6f9f44cf6c12ef9b3f2f8765a6c",
+      "storage_normalization": "CRLF to LF only; cells unchanged"
+    },
+    "8927": {
+      "name": "tpex_8927_1y.csv",
+      "sha256": "d0a184b31a2a3948ab138205e3f61e5d75e872f7475446681b7c602e51fd170d",
+      "rows": 242,
+      "source_csv_sha256_before_newline_normalization": "6f14e767a3cad5e4ab682bd9d6a99a4c22885155b65041863dd03694c288adce",
+      "storage_normalization": "CRLF to LF only; cells unchanged"
+    },
+    "6419": {
+      "name": "tpex_6419_1y.csv",
+      "sha256": "54af1fb96e7a46ebbf3095e0e7a0b1d6e4e87e8d4966791f88956f3ada8c6e60",
+      "rows": 242,
+      "source_csv_sha256_before_newline_normalization": "cf4ede809063a9d02e5ff82161993dc075f7928b58b90e6105f1ca1ba85249ed",
+      "storage_normalization": "CRLF to LF only; cells unchanged"
+    },
+    "8436": {
+      "name": "tpex_8436_1y.csv",
+      "sha256": "163ba9b28f120c8697ac3570440f112352af0639f63300c12f60e863f9c4e3a0",
+      "rows": 242,
+      "source_csv_sha256_before_newline_normalization": "6af7a15c11c213cf9b1c2e2b573f8c6d0552f97829ff354163402ba75db6f451",
+      "storage_normalization": "CRLF to LF only; cells unchanged"
+    },
+    "3303": {
+      "name": "tpex_3303_1y.csv",
+      "sha256": "a835c901e18e532ffccbf1cdcb7e53e5b3a55de269b887090eef5c44e0a3ee80",
+      "rows": 242,
+      "source_csv_sha256_before_newline_normalization": "ce2f653394989c0629e39fd1ad81ebd9136c2cfe841143a253ec0066504aa31a",
+      "storage_normalization": "CRLF to LF only; cells unchanged"
+    },
+    "3236": {
+      "name": "tpex_3236_1y.csv",
+      "sha256": "3b2ab5b799a0db7babb3ea001a5ba687e0be64c5dcc37bee5cb5e50ec42181d5",
+      "rows": 242,
+      "source_csv_sha256_before_newline_normalization": "a748f81368da0074dc60391aaa6ae1301fdf34e94baec5abdc9d8107c9ae4fdd",
+      "storage_normalization": "CRLF to LF only; cells unchanged"
+    },
+    "1815": {
+      "name": "tpex_1815_1y.csv",
+      "sha256": "1c6a0ce2c78e2dcbce907a837f7bf5fca8b8d8d7a8822c757f058d788043bb10",
+      "rows": 242,
+      "source_csv_sha256_before_newline_normalization": "1781d412bc0416c957af9d1ed35ea6d13670513db014a234a505c125da0d500c",
+      "storage_normalization": "CRLF to LF only; cells unchanged"
+    }
+  },
+  "known_no_ohlc_dates": {
+    "5276": [
+      "2025-11-14",
+      "2025-11-20",
+      "2025-11-21",
+      "2025-11-24",
+      "2025-12-02",
+      "2025-12-05",
+      "2025-12-08",
+      "2026-01-06",
+      "2026-01-07",
+      "2026-01-20",
+      "2026-01-21",
+      "2026-02-06",
+      "2026-03-02",
+      "2026-03-03",
+      "2026-03-09",
+      "2026-03-30",
+      "2026-07-08",
+      "2026-07-17",
+      "2026-07-29",
+      "2026-08-31",
+      "2026-09-03",
+      "2026-09-09",
+      "2026-09-11",
+      "2026-09-14",
+      "2026-09-17",
+      "2026-09-21",
+      "2026-09-23",
+      "2026-09-29",
+      "2026-10-08",
+      "2026-10-12",
+      "2026-10-20",
+      "2026-10-28",
+      "2026-11-03",
+      "2026-11-05",
+      "2026-11-09"
+    ],
+    "4153": [
+      "2026-11-02",
+      "2026-11-03"
+    ],
+    "1240": [
+      "2026-08-27",
+      "2026-09-18",
+      "2026-09-21"
+    ],
+    "4121": [],
+    "8927": [],
+    "6419": [],
+    "8436": [],
+    "3303": [],
+    "3236": [],
+    "1815": []
+  },
+  "known_market_closure_dates": [
+    "2026-10-23"
+  ],
+  "universe_file": {
+    "name": "universe.json",
+    "sha256": "618da12c4a35c8265898b08c267a99fd1e7e0376f6ed5cf09994d8861b8e3a32",
+    "rows": 897
+  },
+  "limitations": [
+    "897 is the official OTC stock-company issuer-code roster, not an independently ISIN-classified security universe. The official schema describes common-stock par value, preferred-stock shares separately, and issued common shares or underlying TDR shares. All 897 codes are four-digit issuer codes; this alone is not instrument-class proof.",
+    "Exact issuer-code membership excludes ETF/warrant/preferred-series securities not present in the stock-company roster. Emerging companies have a separate official directory endpoint mopsfin_t187ap03_R and are outside this source. Per-instrument class of all excluded quote securities was not established.",
+    "Official ISIN classification lookup returned an HTTP 200 security-denial HTML page; no retry or alternative access flow was attempted. Independent exhaustive ordinary-equity classification is unavailable.",
+    "The 25 missing/absent normal-session closes remain in the 897 denominator. Only 4534 and 4804 are explicitly marked suspended by same-day tpex_cmode. A missing close does not mean suspension or zero shares, as odd-lot or other activity can exist.",
+    "45 issuers listed after 2025-11-11 remain in the roster, separately flagged and excluded only from the seasoned historical sampling pool. DateOfListing is officially documented as 上市日期 even in this OTC dataset.",
+    "Suspension history contains multiple years and non-equity securities. It is preserved verbatim rather than used to infer a complete daily status timeline. Same-day cmode only identifies flags present in that source; absence is not a guarantee of trading availability.",
+    "Monthly Volume_lots is official reported 成交張數 excluding block trades; Volume and Volume_shares_scaled equal reported lots*1000, not exact transaction shares. Turnover is reported thousands*1000. Do not compare volume to exact-share feeds with zero tolerance.",
+    "Missing OHLC rows are recorded separately and never synthesized. Historical interval is inclusive 2025-11-11 to 2026-11-11, 13 calendar-month queries per sample. No 2026-10-23 bar is inserted; known market closure is retained as absent.",
+    "This evidence verifies the official reference side only. It does not establish Fugle support, coverage, equivalence, or permission to use paid APIs."
+  ],
+  "universe_sha256": "618da12c4a35c8265898b08c267a99fd1e7e0376f6ed5cf09994d8861b8e3a32",
+  "source": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock",
+  "retrieved_utc": "2026-11-11T13:21:39.457710+00:00",
+  "known_nontrading_date": "2026-10-23",
+  "storage_normalization": {
+    "tpex_1815_1y.csv": {
+      "original_sha256": "1781d412bc0416c957af9d1ed35ea6d13670513db014a234a505c125da0d500c",
+      "sha256": "1c6a0ce2c78e2dcbce907a837f7bf5fca8b8d8d7a8822c757f058d788043bb10",
+      "change": "CRLF to LF only; cells unchanged"
+    },
+    "universe.csv": {
+      "original_sha256": "61e5ad462ef4be03e50d667b15dab67869abf4183a2ba4f8fe191194a1ae86a6",
+      "sha256": "813db9cbaa21464950f3fd921943f71a083953bb9f14c9cfb625ec88e2126f30",
+      "change": "CRLF to LF only; cells unchanged"
+    },
+    "tpex_8436_1y.csv": {
+      "original_sha256": "6af7a15c11c213cf9b1c2e2b573f8c6d0552f97829ff354163402ba75db6f451",
+      "sha256": "163ba9b28f120c8697ac3570440f112352af0639f63300c12f60e863f9c4e3a0",
+      "change": "CRLF to LF only; cells unchanged"
+    },
+    "tpex_3236_1y.csv": {
+      "original_sha256": "a748f81368da0074dc60391aaa6ae1301fdf34e94baec5abdc9d8107c9ae4fdd",
+      "sha256": "3b2ab5b799a0db7babb3ea001a5ba687e0be64c5dcc37bee5cb5e50ec42181d5",
+      "change": "CRLF to LF only; cells unchanged"
+    },
+    "tpex_8927_1y.csv": {
+      "original_sha256": "6f14e767a3cad5e4ab682bd9d6a99a4c22885155b65041863dd03694c288adce",
+      "sha256": "d0a184b31a2a3948ab138205e3f61e5d75e872f7475446681b7c602e51fd170d",
+      "change": "CRLF to LF only; cells unchanged"
+    },
+    "tpex_6419_1y.csv": {
+      "original_sha256": "cf4ede809063a9d02e5ff82161993dc075f7928b58b90e6105f1ca1ba85249ed",
+      "sha256": "54af1fb96e7a46ebbf3095e0e7a0b1d6e4e87e8d4966791f88956f3ada8c6e60",
+      "change": "CRLF to LF only; cells unchanged"
+    },
+    "tpex_5276_1y.csv": {
+      "original_sha256": "5fb6ac2701a26c266678718c847e02adbb68c867f1ff3af9ab64a42e08e72e57",
+      "sha256": "65cbe625ef5ab89db69016c85b11fcc0a5c27a9ff1587809aa476a0f8ccfe9c7",
+      "change": "CRLF to LF only; cells unchanged"
+    },
+    "tpex_4153_1y.csv": {
+      "original_sha256": "89c0df6841b3d818ff30ff84f6fac2f0cdd8cd815d2dd5c795abb6999f0688f2",
+      "sha256": "0752a65b453579adbe658a3b8a01afd3eb6cad7794a1b7bbc5577341586058ab",
+      "change": "CRLF to LF only; cells unchanged"
+    },
+    "tpex_4121_1y.csv": {
+      "original_sha256": "1fbe09a7d55a21c050eb282de025779fda79a6f9f44cf6c12ef9b3f2f8765a6c",
+      "sha256": "6b992e6b8647c328d2bd7a28ac260c7159301f2c0e25d960fca8b531a346d886",
+      "change": "CRLF to LF only; cells unchanged"
+    },
+    "tpex_3303_1y.csv": {
+      "original_sha256": "ce2f653394989c0629e39fd1ad81ebd9136c2cfe841143a253ec0066504aa31a",
+      "sha256": "a835c901e18e532ffccbf1cdcb7e53e5b3a55de269b887090eef5c44e0a3ee80",
+      "change": "CRLF to LF only; cells unchanged"
+    },
+    "tpex_1240_1y.csv": {
+      "original_sha256": "907d6ad2fb55d66fc2949e13c32580fcd86c2d1e7adb39db3d7ef16e82699c7c",
+      "sha256": "e33b05551d6fbae56a985cc14d642cf99be105a9ab5b71932d464c6dec6e6723",
+      "change": "CRLF to LF only; cells unchanged"
+    }
+  }
+}
