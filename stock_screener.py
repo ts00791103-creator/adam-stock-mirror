@@ -56,6 +56,8 @@ def screen_frame(frame, *, min_price=0, max_price=100000, min_lots=0,
         raise ValueError("K線高低價不一致")
     df[required] = values
     close = float(df.Close.iloc[-1])
+    # Quote providers can return float32 artifacts for prices shown to two decimals.
+    price_in_range = min_price <= round(close, 2) <= max_price
     avg_lots = float(df.Volume.tail(20).mean() / 1000)
     previous_volume = float(df.Volume.iloc[-21:-1].mean())
     ratio = float(df.Volume.iloc[-1] / previous_volume) if previous_volume > 0 else None
@@ -76,7 +78,7 @@ def screen_frame(frame, *, min_price=0, max_price=100000, min_lots=0,
                        and float(last.High) > prior_box["top"]
                        and prior_box["bottom"] <= close <= prior_box["top"]
                        and close_position <= 0.25
-                       and min_price <= close <= max_price and avg_lots >= min_lots)
+                       and price_in_range and avg_lots >= min_lots)
         return {"符合": matched, "資料日期": str(pd.Timestamp(df.index[-1]).date()),
                 "收盤": close, "20日均量（張）": round(avg_lots, 2),
                 "當日量／前20日均量": round(ratio, 2) if ratio is not None else None,
@@ -86,7 +88,7 @@ def screen_frame(frame, *, min_price=0, max_price=100000, min_lots=0,
                 "箱型狀態": "突破後收弱（試驗）" if matched else "未觸發"}
     if mode not in ("不限箱型", "箱內整理", "接近箱底"):
         raise ValueError("不支援的箱型條件")
-    matched = min_price <= close <= max_price and avg_lots >= min_lots
+    matched = price_in_range and avg_lots >= min_lots
     if mode != "不限箱型":
         matched = matched and active is not None
     if mode == "接近箱底":
