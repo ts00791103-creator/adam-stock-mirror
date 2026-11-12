@@ -3,6 +3,7 @@ import json
 import math
 import re
 from datetime import date
+from statistics import median
 from urllib.request import Request, urlopen
 from concurrent.futures import ThreadPoolExecutor
 
@@ -114,6 +115,60 @@ def history_as_of(frame, day):
     return data
 
 
+def add_industry_strength(result, companies, changes, day):
+    """Compare eligible stocks against other same-market industry members."""
+    listed = result["市場"] == "上市"
+    code_key, industry_key, date_key = (("公司代號", "產業別", "出表日期") if listed else
+                                        ("SecuritiesCompanyCode", "SecuritiesIndustryCode", "Date"))
+    industries = {}
+    for company in companies:
+        industry = str(company.get(industry_key) or "").strip()
+        if not re.fullmatch(r"[0-9]{2}", industry):
+            continue
+        try:
+            if trading_date(company.get(date_key)) != day:
+                continue
+        except ValueError:
+            continue
+        industries[str(company.get(code_key, "")).strip()] = industry
+
+    groups = {}
+    returns = {}
+    for row in result["rows"]:
+        code = row["代號"]
+        industry = industries.get(code)
+        change = changes.get(code)
+        close = row["官方收盤"]
+        if (industry is not None and change is not None and close > change
+                and row["官方當日成交量（張）"] > 0 and row["官方行情日期"] == day):
+            returns[code] = 100 * change / (close - change)
+            groups.setdefault(industry, {})[code] = returns[code]
+
+    for row in result["rows"]:
+        code = row["代號"]
+        industry = industries.get(code)
+        peers = [value for peer, value in groups.get(industry, {}).items() if peer != code]
+        row["產業代碼"] = industry
+        row["相對族群強弱（百分點）"] = (
+            round(returns[code] - median(peers), 2) if code in returns and peers else None
+        )
+
+
+def official_change(raw_change, raw_sign=None):
+    """Parse comparable signed changes and leave exchange markers unclassified."""
+    try:
+        change = number(raw_change)
+    except (TypeError, ValueError, OverflowError):
+        return None
+    if raw_sign is None:
+        token = str(raw_change).strip()
+        return change if change == 0 or token.startswith(("+", "-")) else None
+    sign = re.sub(r"<[^>]*>", "", str(raw_sign)).strip()
+    if sign in ("+", "-") and change > 0:
+        return change if sign == "+" else -change
+    return 0.0 if sign == "" and change == 0 else None
+
+
 def fetch_dated_market(exchange, day):
     """Load the requested completed session from an exchange's dated report."""
     listed = exchange == "上市"
@@ -137,7 +192,8 @@ def fetch_dated_market(exchange, day):
             payload = json.load(response)
     except (ValueError, OSError) as exc:
         raise ValueError("指定日期收盤報表讀取失敗") from exc
-    if str(payload.get("stat", "")).lower() != "ok" or payload.get("date") != digits:
+    status = payload.get("stat", "" if listed else "ok")
+    if str(status).lower() != "ok" or payload.get("date") != digits:
         raise ValueError("指定日期尚無收盤報表或來源日期不符")
     table = next((t for t in payload.get("tables", [])
                   if t.get("data") and set(fields).issubset(t.get("fields", []))), None)
@@ -146,7 +202,20 @@ def fetch_dated_market(exchange, day):
     indices = [table["fields"].index(field) for field in fields]
     quotes = [dict(zip(keys, (row[i] for i in indices)), Date=digits)
               for row in table["data"]]
-    return normalize_market(companies, quotes, exchange)
+    result = normalize_market(companies, quotes, exchange)
+    headers = table["fields"]
+    change_field = "漲跌價差" if listed else "漲跌"
+    changes = {}
+    if change_field in headers and (not listed or "漲跌(+/-)" in headers):
+        change_index = headers.index(change_field)
+        sign_index = headers.index("漲跌(+/-)") if listed else None
+        for row in table["data"]:
+            if change_index < len(row) and (sign_index is None or sign_index < len(row)):
+                changes[str(row[indices[0]]).strip()] = official_change(
+                    row[change_index], row[sign_index] if sign_index is not None else None
+                )
+    add_industry_strength(result, companies, changes, day.isoformat())
+    return result
 
 
 def fetch_dated_universe(exchanges, day):
