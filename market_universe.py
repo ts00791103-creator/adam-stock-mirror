@@ -1,4 +1,6 @@
 """Official Taiwan daily snapshots followed by bounded historical screening."""
+import csv
+import io
 import json
 import math
 import re
@@ -215,6 +217,17 @@ def fetch_dated_market(exchange, day):
                     row[change_index], row[sign_index] if sign_index is not None else None
                 )
     add_industry_strength(result, companies, changes, day.isoformat())
+    if listed and changes and not any(row["產業代碼"] for row in result["rows"]):
+        # The listed JSON and CSV directories can publish different snapshot dates.
+        csv_url = "https://mopsfin.twse.com.tw/opendata/t187ap03_L.csv"
+        request = Request(csv_url, headers={"User-Agent": "Mozilla/5.0"})
+        try:
+            with urlopen(request, timeout=8) as response:
+                with io.TextIOWrapper(response, encoding="utf-8-sig") as stream:
+                    listed_directory = list(csv.DictReader(stream))
+            add_industry_strength(result, listed_directory, changes, day.isoformat())
+        except (OSError, UnicodeError, csv.Error):
+            pass  # Classification is optional; retain the valid official quotes.
     return result
 
 
