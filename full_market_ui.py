@@ -22,7 +22,12 @@ def show_full_market(production=False, analysis_options=None):
         high = b.number_input("全市場最高股價", min_value=0., value=10000., key="market_high")
         daily = st.number_input("初選最低當日成交量（張）", min_value=0., value=1000., key="market_daily")
         lots = st.number_input("複選最低20日平均成交量（張）", min_value=0., value=1000., key="market_avg")
-        mode = st.selectbox("全市場箱型條件", ["接近箱底", "箱內整理", "不限箱型"], key="market_box")
+        modes = ["接近箱底", "箱內整理", "不限箱型"]
+        if not production:
+            modes.append("突破後收弱（試驗）")
+        mode = st.selectbox("全市場箱型條件", modes, key="market_box")
+        if mode == "突破後收弱（試驗）":
+            st.caption("以截至前一交易日的有效箱型為準。當日最高價越過箱頂、收盤回到箱內，且落在日內區間最低 25% 時列入觀察。")
         near = st.slider("全市場距箱底上限（%）", 1, 20, 5, key="market_near")
         window = st.slider("全市場箱型觀察根數", 10, 60, 20, key="market_window")
         width = st.slider("全市場箱型最大振幅（%）", 3, 25, 20, key="market_width")
