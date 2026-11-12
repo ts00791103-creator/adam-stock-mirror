@@ -64,6 +64,26 @@ def screen_frame(frame, *, min_price=0, max_price=100000, min_lots=0,
     bottom = float(active["bottom"]) if active else None
     top = float(active["top"]) if active else None
     distance = (close / bottom - 1) * 100 if active else None
+    if mode == "突破後收弱（試驗）":
+        prior = df.iloc[:-1]
+        prior_boxes = detect_boxes(prior, window=window, max_width_pct=width_pct, max_boxes=5)
+        prior_box = next((box for box in reversed(prior_boxes)
+                          if box["status"] == "整理中" and box["end"] == len(prior)-1), None)
+        last = df.iloc[-1]
+        day_range = float(last.High - last.Low)
+        close_position = (close - float(last.Low)) / day_range if day_range > 0 else None
+        matched = bool(prior_box and close_position is not None
+                       and float(last.High) > prior_box["top"]
+                       and prior_box["bottom"] <= close <= prior_box["top"]
+                       and close_position <= 0.25
+                       and min_price <= close <= max_price and avg_lots >= min_lots)
+        return {"符合": matched, "資料日期": str(pd.Timestamp(df.index[-1]).date()),
+                "收盤": close, "20日均量（張）": round(avg_lots, 2),
+                "當日量／前20日均量": round(ratio, 2) if ratio is not None else None,
+                "前日箱底": prior_box["bottom"] if prior_box else None,
+                "前日箱頂": prior_box["top"] if prior_box else None,
+                "日內收盤位置（%）": round(close_position * 100, 2) if close_position is not None else None,
+                "箱型狀態": "突破後收弱（試驗）" if matched else "未觸發"}
     if mode not in ("不限箱型", "箱內整理", "接近箱底"):
         raise ValueError("不支援的箱型條件")
     matched = min_price <= close <= max_price and avg_lots >= min_lots
