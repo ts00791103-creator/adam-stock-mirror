@@ -3,7 +3,7 @@ import csv
 import json
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -66,7 +66,7 @@ def main():
     day = now.date().isoformat()
     if now.weekday() >= 5 or now.hour < 14:
         raise SystemExit("Only weekday after-close scans; no scan performed")
-    settings = AlertSettings()
+    settings = replace(AlertSettings(), volume_ratio=2.0)
     universe, directory_failures = [], []
     for exchange in ("上市", "上櫃"):
         try:
@@ -91,10 +91,10 @@ def main():
             if len(results) % 100 == 0:
                 print("SCAN_PROGRESS " + str(len(results)), flush=True)
     results.sort(key=lambda row: row["股票"])
-    events.sort(key=lambda event: event["股票"])
+    events.sort(key=lambda event: (-float(event["相對成交量"]), event["股票"]))
     summary = {"as_of": day, "companies": len(universe), "processed": len(results),
                "unconfirmed": sum(r["狀態"] == "未判定" for r in results),
-               "triggered": len(events), "directory_failures": directory_failures,
+               "triggered": len(events), "strategy": "量能激增突破", "directory_failures": directory_failures,
                "settings": asdict(settings), "completed_at": datetime.now(ZoneInfo("Asia/Taipei")).isoformat()}
     output = Path("reports/all-breakouts")
     output.mkdir(parents=True, exist_ok=True)
