@@ -32,10 +32,14 @@ def scenario_prices(eps, pe, eps_cut_pct, pe_cut_pct):
     return {"基準估值": base, "情境估值": base * (1 - eps_cut_pct / 100) * (1 - pe_cut_pct / 100)}
 
 
-def show_sun_valuation(st):
+def show_sun_valuation(st, symbol=None):
     with st.expander("價值投資｜357、PEG 與情境估價"):
-        st.caption("請填入同一檔台股的資料。試算價位依輸入而變動。")
+        st.caption("可自動讀取目前選定個股，或手動填入個股資料。")
         method = st.radio("試算方法", ("357 現金股利法", "PEG（日報 2021-10-06 版）", "EPS／本益比下修情境"))
+        auto = symbol and st.radio("估價資料來源", ("自動線上", "手動輸入"), horizontal=True) == "自動線上"
+        if auto:
+            show_online_valuation(st, symbol, method)
+            return
         if method.startswith("357"):
             st.markdown("[五年現金股利來源](https://www.sie.com.tw/Luckylong/article.do?id=A20240411954337J55)")
             values = st.text_input("最近五個完整年度每股現金股利（元，以逗號分隔）",
@@ -67,3 +71,57 @@ def show_sun_valuation(st):
                 st.table({name: [f"{price:,.2f} 元"] for name, price in prices.items()})
             except ValueError as exc:
                 st.warning(str(exc))
+
+
+def show_online_valuation(st, symbol, method):
+    import pandas as pd
+    from full_market_ui import VALUE_MODES, value_inputs
+
+    mode = VALUE_MODES[0] if method.startswith("357") else VALUE_MODES[1] if method.startswith("PEG") else VALUE_MODES[2]
+    day = pd.Timestamp.now(tz="Asia/Taipei").date().isoformat()
+    st.caption(f"{symbol}｜Yahoo Finance 線上資料")
+    scenario = ()
+    if mode == VALUE_MODES[0]:
+        st.caption("使用最近五個完整曆年的每股現金股利。")
+    elif mode == VALUE_MODES[1]:
+        st.caption("使用近四季 EPS 與 ROE，ROE 作為成長率代理。")
+    else:
+        scenario = (
+            st.number_input("基準本益比（倍）", min_value=0.1, value=15.0, key="single_value_pe"),
+            st.number_input("EPS 下修（%）", min_value=0.0, max_value=100.0, key="single_value_eps_cut"),
+            st.number_input("本益比下修（%）", min_value=0.0, max_value=100.0, key="single_value_pe_cut"),
+        )
+    key = (symbol, mode, day, scenario)
+    if st.button("抓取線上資料並試算"):
+        st.session_state.pop("single_value_result", None)
+        try:
+            with st.spinner("讀取線上股利或財報…"):
+                data = value_inputs(symbol, mode, day)
+            if mode == VALUE_MODES[0]:
+                prices = dividend_prices(data["dividends"])
+                detail = "各年度現金股利：" + "、".join(
+                    f"{int(day[:4]) - 5 + index} 年 {value:g} 元"
+                    for index, value in enumerate(data["dividends"])
+                )
+            else:
+                if data.get("eps") is None:
+                    raise ValueError("缺少近四季 EPS")
+                eps = float(data["eps"])
+                detail = f"近四季 EPS {eps:g} 元｜財報快照擷取 {data['financial_snapshot']}"
+                if mode == VALUE_MODES[1]:
+                    if data.get("roe") is None:
+                        raise ValueError("缺少 ROE")
+                    roe = float(data["roe"]) * 100
+                    detail += f"｜ROE {roe:.2f}%"
+                    prices = peg_prices(eps, roe)
+                else:
+                    prices = scenario_prices(eps, *scenario)
+            st.session_state["single_value_result"] = (key, detail, prices)
+        except ValueError as exc:
+            st.warning(str(exc))
+        except Exception:
+            st.warning("線上行情或財報暫時無法取得，可稍後重試或切換手動輸入。")
+    saved = st.session_state.get("single_value_result")
+    if saved and saved[0] == key:
+        st.caption(saved[1])
+        st.table({name: [f"{price:,.2f} 元"] for name, price in saved[2].items()})
