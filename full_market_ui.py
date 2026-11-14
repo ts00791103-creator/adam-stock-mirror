@@ -1,4 +1,5 @@
 """Two-stage scanner with explicit coverage and user-triggered batches."""
+from math import isfinite
 import pandas as pd
 import streamlit as st
 from market_universe import fetch_dated_universe, fetch_universe, shortlist, history_as_of
@@ -6,6 +7,73 @@ from screener_ui import screening_data
 from stock_screener import screen_frame
 from entry_alerts import AlertSettings, evaluate_entry_alerts
 from stock_navigation import stock_result_table, queue_analysis
+from sun_valuation import dividend_prices, peg_prices, scenario_prices
+
+
+VALUE_MODES = ("價值投資｜357", "價值投資｜PEG", "價值投資｜情境估價")
+
+
+@st.cache_data(ttl=900, show_spinner=False, max_entries=2048)
+def value_inputs(symbol, method, as_of):
+    import yfinance as yf
+
+    ticker = yf.Ticker(symbol)
+    if method == VALUE_MODES[0]:
+        cutoff = pd.Timestamp(as_of)
+        start = pd.Timestamp(year=cutoff.year - 5, month=1, day=1)
+        end = pd.Timestamp(year=cutoff.year, month=1, day=1)
+        history = ticker.history(start=start.date(), end=end.date(), auto_adjust=False,
+                                 actions=True, timeout=12, raise_errors=True)
+        if history.empty or "Dividends" not in history:
+            raise ValueError("缺少五年股利紀錄")
+        index = pd.DatetimeIndex(history.index)
+        if index.tz is not None:
+            index = index.tz_convert("Asia/Taipei").tz_localize(None)
+        dividends = pd.to_numeric(history["Dividends"], errors="coerce")
+        if (set(index.year) != set(range(start.year, end.year)) or
+                index.min() > start + pd.Timedelta(days=7) or
+                index.max() < end - pd.Timedelta(days=7) or dividends.isna().any()):
+            raise ValueError("五個完整年度的股利紀錄不足")
+        return {"dividends": [float(dividends[index.year == year].sum())
+                              for year in range(start.year, end.year)]}
+    info = ticker.get_info()
+    if info.get("financialCurrency") != "TWD":
+        raise ValueError("缺少可核對的 TWD 財報幣別")
+    return {"eps": info.get("trailingEps"), "roe": info.get("returnOnEquity"),
+            "financial_snapshot": pd.Timestamp.now(tz="Asia/Taipei").isoformat()}
+
+
+def evaluate_market_value(item, method, inputs, scenario):
+    close = float(item["官方收盤"])
+    if not isfinite(close) or close <= 0:
+        raise ValueError("官方收盤價無效")
+    detail = {"估價方法": method, "資料日期": item["官方行情日期"], "收盤": close,
+              "財報／股利來源": "Yahoo Finance", "財報擷取時間": inputs.get("financial_snapshot", "")}
+    if method == VALUE_MODES[0]:
+        dividends = inputs["dividends"]
+        prices = dividend_prices(dividends)
+        threshold = prices["便宜價"]
+        detail["五年平均現金股利"] = sum(dividends) / 5
+    else:
+        if inputs.get("eps") is None:
+            raise ValueError("缺少近四季 EPS")
+        eps = float(inputs["eps"])
+        detail["近四季 EPS"] = eps
+        if method == VALUE_MODES[1]:
+            if inputs.get("roe") is None:
+                raise ValueError("缺少近四季 ROE")
+            growth = float(inputs["roe"]) * 100
+            prices = peg_prices(eps, growth)
+            threshold = prices["便宜價"]
+            detail["ROE（%）"] = growth
+        else:
+            prices = scenario_prices(eps, *scenario)
+            threshold = prices["情境估值"]
+    threshold = round(threshold, 2)
+    detail.update({name: round(price, 2) for name, price in prices.items()})
+    detail["符合"] = threshold > 0 and close <= threshold
+    detail["距選股門檻（%）"] = (close / threshold - 1) * 100 if threshold > 0 else None
+    return detail
 
 
 @st.cache_data(ttl=900, show_spinner=False,max_entries=32)
@@ -25,9 +93,9 @@ def show_full_market(production=False, analysis_options=None):
         lots = st.number_input("複選最低20日平均成交量（張）", min_value=0., value=1000., key="market_avg")
         modes = ["接近箱底", "箱內整理", "不限箱型"]
         if not production:
-            modes.extend(["量能激增突破", "突破後收弱（試驗）"])
+            modes.extend(["量能激增突破", "突破後收弱（試驗）", *VALUE_MODES])
 
-        mode = st.selectbox("全市場箱型條件", modes, key="market_box")
+        mode = st.selectbox("全市場選股模式" if not production else "全市場箱型條件", modes, key="market_box")
         if mode == "突破後收弱（試驗）":
             st.caption("以截至前一交易日的有效箱型為準。當日最高價越過箱頂、收盤回到箱內，且落在日內區間最低 25% 時列入觀察。")
         if mode == "量能激增突破":
@@ -36,13 +104,31 @@ def show_full_market(production=False, analysis_options=None):
         window = st.slider("全市場箱型觀察根數", 10, 60, 20, key="market_window")
         width = st.slider("全市場箱型最大振幅（%）", 3, 25, 20, key="market_width")
         st.caption("1張＝1000股。初選用官方當日量，複選用Yahoo 20日均量，兩者不同。複選截取至官方行情日期，不使用之後的K棒。資料快取最多15分鐘，官方行情可能尚未更新，請看日期。")
+        value_mode = mode in VALUE_MODES
+        scenario = ()
+        if value_mode:
+            st.caption("價值複選涵蓋所選市場所有有效官方收盤個股，套用股價範圍。上方成交量、箱型條件在此模式停用。357／PEG 以收盤不高於便宜價篩選；情境以收盤不高於情境估值篩選。")
+            if mode != VALUE_MODES[0]:
+                st.caption("以目前可取得的近四季財報搭配最新官方收盤，限當前快照估價。PEG 使用 ROE 作成長率代理。")
+            if mode == VALUE_MODES[2]:
+                scenario = (
+                    st.number_input("基準本益比（倍）", min_value=0.1, value=15.0, key="market_value_pe"),
+                    st.number_input("EPS 下修（%）", min_value=0.0, max_value=100.0, key="market_value_eps_cut"),
+                    st.number_input("本益比下修（%）", min_value=0.0, max_value=100.0, key="market_value_pe_cut"),
+                )
         config = (scope, low, high, daily, lots, mode, near, window, width)
         if not production:
             now = pd.Timestamp.now(tz="Asia/Taipei")
             latest = now.date()
             default = (now - pd.Timedelta(days=int(now.hour < 14))).date()
-            day = st.date_input("官方收盤行情日期", value=default, max_value=latest, key="market_close_day")
+            if value_mode and mode != VALUE_MODES[0]:
+                day = None
+                st.caption("行情日期由最新官方收盤快照決定。")
+            else:
+                day = st.date_input("官方收盤行情日期", value=default, max_value=latest, key="market_close_day")
             config += (day,)
+        if scenario:
+            config += scenario
         if st.button("取得全市場初選", key="market_start"):
             if production:st.session_state.pop("market_scan", None)
             if low > high:
@@ -57,7 +143,8 @@ def show_full_market(production=False, analysis_options=None):
                             results, errors, timestamp = official_snapshot(exchanges)
                         else:
                             import time
-                            results, errors, timestamp = official_snapshot(exchanges, refresh_token=time.time_ns(), day=day)
+                            results, errors, timestamp = official_snapshot(exchanges, refresh_token=time.time_ns(),
+                                day=day)
                     if not any(result.get("rows") for result in results):
                         raise ValueError("指定市場未取得有效官方每日行情，這不是零檔符合選股條件")
                     previous=st.session_state.get("market_scan")
@@ -66,7 +153,7 @@ def show_full_market(production=False, analysis_options=None):
                     else:
                         st.session_state["market_scan"] = {
                             "config": config, "results": results, "errors": errors,
-                            "timestamp": timestamp, "candidates": shortlist(results, low, high, daily),
+                            "timestamp": timestamp, "candidates": shortlist(results, low, high, 0 if value_mode else daily),
                             "cursor": 0, "checked": [], "failed": []}
                         st.session_state.pop("market_attempt_error",None)
                 except Exception as exc:
@@ -86,8 +173,9 @@ def show_full_market(production=False, analysis_options=None):
             st.info("條件已變更；目前仍顯示上次成功名單與進度，不把舊結果當成新條件結果。請重新取得初選，或恢復上次條件後繼續複選。")
             st.caption("上次成功條件："+str(state["config"]))
             def restore():
-                for key,value in zip(("market_scope","market_low","market_high","market_daily","market_avg","market_box","market_near","market_window","market_width","market_close_day"),state["config"]):
-                    st.session_state[key]=value
+                for key,value in zip(("market_scope","market_low","market_high","market_daily","market_avg","market_box","market_near","market_window","market_width","market_close_day","market_value_pe","market_value_eps_cut","market_value_pe_cut"),state["config"]):
+                    if value is not None or key != "market_close_day":
+                        st.session_state[key]=value
                 st.session_state.pop("market_attempt_error",None)
             st.button("恢復上次成功初選條件",key="market_restore",on_click=restore)
         results, errors = state["results"], state["errors"]
@@ -110,7 +198,8 @@ def show_full_market(production=False, analysis_options=None):
         if not production:
             label='部分市場資料' if errors else ('上次成功初選（本次取得失敗）' if st.session_state.get('market_attempt_error') else '初選取得成功')
             st.info(f"目前顯示清單：{label}｜{total}檔符合官方當日價格／量條件；不是完整個股分析的通過名單。")
-            st.caption("複選使用一年日K；個股分析使用側欄所選期間。資料可用性須另行核對，且不代表投資勝率。")
+            if state["config"][5] not in VALUE_MODES:
+                st.caption("複選使用一年日K；個股分析使用側欄所選期間。資料可用性須另行核對，且不代表投資勝率。")
         st.write(f"初選 {total} 檔｜已檢查 {cursor} 檔｜待檢查 {total-cursor} 檔")
         if candidates:
             with st.expander("查看初選股票（尚未驗證20日均量與箱型）"):
@@ -129,7 +218,11 @@ def show_full_market(production=False, analysis_options=None):
             checked_batch, failed_batch = [], []
             for index, item in enumerate(batch):
                 try:
-                    history = history_as_of(screening_data(item["Yahoo代號"]), item["官方行情日期"])
+                    if value_mode:
+                        inputs = value_inputs(item["Yahoo代號"], mode, item["官方行情日期"])
+                        row = evaluate_market_value(item, mode, inputs, scenario)
+                    else:
+                        history = history_as_of(screening_data(item["Yahoo代號"]), item["官方行情日期"])
                     if mode == "量能激增突破":
                         settings = AlertSettings(box_window=window, box_width_pct=width,
                                                  min_average_lots=lots, volume_ratio=2.0)
@@ -139,7 +232,7 @@ def show_full_market(production=False, analysis_options=None):
                         row = {"符合": bool(events) and low <= close <= high, "資料日期": as_of, "收盤": close}
                         if events:
                             row.update(events[0])
-                    else:
+                    elif not value_mode:
                         row = screen_frame(history, min_price=low, max_price=high,
                                            min_lots=lots, mode=mode, near_pct=near, window=window, width_pct=width)
                     if row["資料日期"] != item["官方行情日期"]:
@@ -147,7 +240,8 @@ def show_full_market(production=False, analysis_options=None):
                     checked_batch.append({**item, **row})
                 except Exception as exc:
                     failed_batch.append({"代號": item["代號"], "名稱": item["名稱"],
-                                             "原因": "一年日K複選未判定："+type(exc).__name__+"："+str(exc)[:160]})
+                                             "原因": ("估價複選未判定：" if value_mode else "一年日K複選未判定：")
+                                             + type(exc).__name__ + "：" + str(exc)[:160]})
                 progress.progress((index+1)/len(batch), text=f"本批已分析 {index+1}/{len(batch)} 檔")
             st.session_state["market_scan"] = {
                 **state, "cursor": cursor + len(batch),
@@ -157,6 +251,8 @@ def show_full_market(production=False, analysis_options=None):
             progress.empty()
             st.rerun()
         matched = [r for r in state["checked"] if r["符合"]]
+        if state["config"][5] in VALUE_MODES:
+            matched.sort(key=lambda row: (row["距選股門檻（%）"], row["Yahoo代號"]))
         if state["config"][5] == "量能激增突破":
             matched.sort(key=lambda row: (-row["相對成交量"], row["Yahoo代號"]))
         if cursor < total:
@@ -183,5 +279,9 @@ def show_full_market(production=False, analysis_options=None):
             st.download_button("下載已檢查結果CSV", pd.DataFrame(state["checked"]).to_csv(index=False).encode("utf-8-sig"),
                                file_name="adam_market_checked.csv", mime="text/csv", key="market_checked_csv")
         if state["failed"]:
-            st.dataframe(pd.DataFrame(state["failed"]), hide_index=True)
+            failures = pd.DataFrame(state["failed"])
+            st.dataframe(failures, hide_index=True)
+            if state["config"][5] in VALUE_MODES:
+                st.download_button("下載未判定CSV", failures.to_csv(index=False).encode("utf-8-sig"),
+                                   file_name="adam_market_unconfirmed.csv", mime="text/csv")
         st.caption("名單與進度僅保留於本次瀏覽器工作階段；可下載CSV保存。若要重試失敗或更新資料，請重新取得初選。")
