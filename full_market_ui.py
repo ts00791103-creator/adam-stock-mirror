@@ -126,6 +126,7 @@ def show_full_market(production=False, analysis_options=None):
         if cursor < total and st.button("分析下一批（最多10檔）", key="market_next",disabled=bool(not production and config_changed)):
             progress = st.progress(0., text="開始複選")
             batch = candidates[cursor:cursor+10]
+            checked_batch, failed_batch = [], []
             for index, item in enumerate(batch):
                 try:
                     history = history_as_of(screening_data(item["Yahoo代號"]), item["官方行情日期"])
@@ -143,12 +144,16 @@ def show_full_market(production=False, analysis_options=None):
                                            min_lots=lots, mode=mode, near_pct=near, window=window, width_pct=width)
                     if row["資料日期"] != item["官方行情日期"]:
                         raise ValueError(f"來源日期不同：官方{item['官方行情日期']}／日K{row['資料日期']}，本次不判定")
-                    state["checked"].append({**item, **row})
+                    checked_batch.append({**item, **row})
                 except Exception as exc:
-                    state["failed"].append({"代號": item["代號"], "名稱": item["名稱"],
+                    failed_batch.append({"代號": item["代號"], "名稱": item["名稱"],
                                              "原因": "一年日K複選未判定："+type(exc).__name__+"："+str(exc)[:160]})
-                state["cursor"] += 1
-                progress.progress((index+1)/len(batch), text=f"已檢查 {state['cursor']}/{total} 檔")
+                progress.progress((index+1)/len(batch), text=f"本批已分析 {index+1}/{len(batch)} 檔")
+            st.session_state["market_scan"] = {
+                **state, "cursor": cursor + len(batch),
+                "checked": state["checked"] + checked_batch,
+                "failed": state["failed"] + failed_batch,
+            }
             progress.empty()
             st.rerun()
         matched = [r for r in state["checked"] if r["符合"]]
