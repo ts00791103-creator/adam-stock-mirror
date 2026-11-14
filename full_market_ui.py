@@ -40,6 +40,7 @@ def value_inputs(symbol, method, as_of):
     if info.get("financialCurrency") != "TWD":
         raise ValueError("缺少可核對的 TWD 財報幣別")
     return {"eps": info.get("trailingEps"), "roe": info.get("returnOnEquity"),
+            "pe": info.get("trailingPE"),
             "financial_snapshot": pd.Timestamp.now(tz="Asia/Taipei").isoformat()}
 
 
@@ -67,7 +68,13 @@ def evaluate_market_value(item, method, inputs, scenario):
             threshold = prices["便宜價"]
             detail["ROE（%）"] = growth
         else:
-            prices = scenario_prices(eps, *scenario)
+            pe, eps_cut, pe_cut = scenario
+            if pe == 0:
+                if inputs.get("pe") is None:
+                    raise ValueError("缺少線上本益比")
+                pe = float(inputs["pe"])
+            prices = scenario_prices(eps, pe, eps_cut, pe_cut)
+            detail["基準本益比"] = pe
             threshold = prices["情境估值"]
     threshold = round(threshold, 2)
     detail.update({name: round(price, 2) for name, price in prices.items()})
@@ -112,7 +119,7 @@ def show_full_market(production=False, analysis_options=None):
                 st.caption("以目前可取得的近四季財報搭配最新官方收盤，限當前快照估價。PEG 使用 ROE 作成長率代理。")
             if mode == VALUE_MODES[2]:
                 scenario = (
-                    st.number_input("基準本益比（倍）", min_value=0.1, value=15.0, key="market_value_pe"),
+                    st.number_input("基準本益比（倍，0 為自動）", min_value=0.0, value=0.0, key="market_value_pe"),
                     st.number_input("EPS 下修（%）", min_value=0.0, max_value=100.0, key="market_value_eps_cut"),
                     st.number_input("本益比下修（%）", min_value=0.0, max_value=100.0, key="market_value_pe_cut"),
                 )
