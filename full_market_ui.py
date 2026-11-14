@@ -4,6 +4,7 @@ import streamlit as st
 from market_universe import fetch_dated_universe, fetch_universe, shortlist, history_as_of
 from screener_ui import screening_data
 from stock_screener import screen_frame
+from entry_alerts import AlertSettings, evaluate_entry_alerts
 from stock_navigation import stock_result_table, queue_analysis
 
 
@@ -24,10 +25,13 @@ def show_full_market(production=False, analysis_options=None):
         lots = st.number_input("複選最低20日平均成交量（張）", min_value=0., value=1000., key="market_avg")
         modes = ["接近箱底", "箱內整理", "不限箱型"]
         if not production:
-            modes.append("突破後收弱（試驗）")
+            modes.extend(["量能激增突破", "突破後收弱（試驗）"])
+
         mode = st.selectbox("全市場箱型條件", modes, key="market_box")
         if mode == "突破後收弱（試驗）":
             st.caption("以截至前一交易日的有效箱型為準。當日最高價越過箱頂、收盤回到箱內，且落在日內區間最低 25% 時列入觀察。")
+        if mode == "量能激增突破":
+            st.caption("收盤高於前一交易日有效箱頂 0.5% 至 5%，且當日量至少為此前 20 日日均量 2 倍。最低均量使用前 20 日，結果按量比排序。")
         near = st.slider("全市場距箱底上限（%）", 1, 20, 5, key="market_near")
         window = st.slider("全市場箱型觀察根數", 10, 60, 20, key="market_window")
         width = st.slider("全市場箱型最大振幅（%）", 3, 25, 20, key="market_width")
@@ -125,8 +129,18 @@ def show_full_market(production=False, analysis_options=None):
             for index, item in enumerate(batch):
                 try:
                     history = history_as_of(screening_data(item["Yahoo代號"]), item["官方行情日期"])
-                    row = screen_frame(history, min_price=low, max_price=high,
-                                       min_lots=lots, mode=mode, near_pct=near, window=window, width_pct=width)
+                    if mode == "量能激增突破":
+                        settings = AlertSettings(box_window=window, box_width_pct=width,
+                                                 min_average_lots=lots, volume_ratio=2.0)
+                        as_of = item["官方行情日期"]
+                        events = evaluate_entry_alerts(history, item["Yahoo代號"], as_of, settings, rules=("箱頂突破",))
+                        close = float(history["Close"].iloc[-1].item()) if isinstance(history.columns, pd.MultiIndex) else float(history["Close"].iloc[-1])
+                        row = {"符合": bool(events) and low <= close <= high, "資料日期": as_of, "收盤": close}
+                        if events:
+                            row.update(events[0])
+                    else:
+                        row = screen_frame(history, min_price=low, max_price=high,
+                                           min_lots=lots, mode=mode, near_pct=near, window=window, width_pct=width)
                     if row["資料日期"] != item["官方行情日期"]:
                         raise ValueError(f"來源日期不同：官方{item['官方行情日期']}／日K{row['資料日期']}，本次不判定")
                     state["checked"].append({**item, **row})
@@ -138,6 +152,8 @@ def show_full_market(production=False, analysis_options=None):
             progress.empty()
             st.rerun()
         matched = [r for r in state["checked"] if r["符合"]]
+        if state["config"][5] == "量能激增突破":
+            matched.sort(key=lambda row: (-row["相對成交量"], row["Yahoo代號"]))
         if cursor < total:
             st.warning(f"尚未檢查全部初選股票。以下僅已檢查部分結果：符合{len(matched)}檔、無法判定{len(state['failed'])}檔。初選依當日成交量由高到低處理，不代表投資排序。")
         elif total:
