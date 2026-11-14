@@ -1708,7 +1708,7 @@ render_auto_fundamentals(st.sidebar, symbol, market)
 
 if not PRODUCTION_MODE and market == "台灣股票／ETF":
     from sun_valuation import show_sun_valuation
-    show_sun_valuation(st)
+    show_sun_valuation(st, symbol=symbol)
 
 if not PRODUCTION_MODE and market == "台指期 TX（官方 CSV）":
     from tx_reference import show_tx_reference
