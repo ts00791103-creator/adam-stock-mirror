@@ -86,8 +86,11 @@ def show_online_valuation(st, symbol, method):
     elif mode == VALUE_MODES[1]:
         st.caption("使用近四季 EPS 與 ROE，ROE 作為成長率代理。")
     else:
+        automatic_pe = st.radio("基準本益比來源", ("自動取得目前本益比", "手動設定"), horizontal=True) == "自動取得目前本益比"
+        if automatic_pe:
+            st.caption("使用 Yahoo Finance 的目前本益比（TTM）。兩項下修是可調的情境假設。")
         scenario = (
-            st.number_input("基準本益比（倍）", min_value=0.1, value=15.0, key="single_value_pe"),
+            None if automatic_pe else st.number_input("基準本益比（倍）", min_value=0.1, value=15.0, key="single_value_pe"),
             st.number_input("EPS 下修（%）", min_value=0.0, max_value=100.0, key="single_value_eps_cut"),
             st.number_input("本益比下修（%）", min_value=0.0, max_value=100.0, key="single_value_pe_cut"),
         )
@@ -115,7 +118,13 @@ def show_online_valuation(st, symbol, method):
                     detail += f"｜ROE {roe:.2f}%"
                     prices = peg_prices(eps, roe)
                 else:
-                    prices = scenario_prices(eps, *scenario)
+                    pe, eps_cut, pe_cut = scenario
+                    if pe is None:
+                        if data.get("pe") is None:
+                            raise ValueError("線上缺少有效本益比，可切換手動設定基準本益比。")
+                        pe = float(data["pe"])
+                    prices = scenario_prices(eps, pe, eps_cut, pe_cut)
+                    detail += f"｜基準本益比 {pe:.2f} 倍"
             st.session_state["single_value_result"] = (key, detail, prices)
         except ValueError as exc:
             st.warning(str(exc))
