@@ -8,7 +8,7 @@ from fugle_intraday_check import run_intraday_check
 from live_quote import _secret
 
 
-VERSION = "FUGLE-INTRADAY-20261116-2"
+VERSION = "FUGLE-INTRADAY-20261116-3"
 SYMBOL = "2330.TW"
 PASSWORD_KEY = "fugle_intraday_preview_password"
 
@@ -45,6 +45,8 @@ def show_fugle_intraday_preview():
         st.info(report["status"])
         if "quote_time" in report:
             st.caption("統計時間的資料年齡與服務延遲需分開核實。")
+        if report.get("auction_window_gap_times"):
+            st.caption("收盤集合競價時間格另列。缺口仍保留，成交量相等也無法證明每根分 K 完整。")
         if "quote_time" in report or "code" in report:
             st.json(report)
     st.warning("當沖不可判定。交易行情延遲及收棒狀態尚待實測。")

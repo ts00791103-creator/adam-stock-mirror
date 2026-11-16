@@ -117,6 +117,61 @@ class FugleIntradayCheckTest(unittest.TestCase):
         self.assertEqual(result["code"], "SESSION_CLOSED")
         self.assertNotIn("difference", result)
 
+    def test_auction_window_gap_does_not_hide_closed_session_or_make_a_fake_end(self):
+        candles, quote = self.closed_five_minute_fixture()
+        result = check_snapshot(candles, quote, "2308.TW", 5, START.replace(hour=22))
+        self.assertEqual((result["code"], result["session_state"]), ("SESSION_CLOSED", "closed"))
+        self.assertEqual(result["last_bar_kind"], "closing_auction")
+        self.assertIsNone(result["expected_bar_end"])
+        self.assertEqual(result["missing_bar_times"], [])
+        self.assertEqual(result["auction_window_gap_times"], ["2026-11-16T13:25:00+08:00"])
+        self.assertEqual((result["candles_volume"], result["quote_volume"]), (43378, 43378))
+        self.assertNotIn("difference", result)
+
+    def test_interior_gap_is_reported_even_when_session_is_closed(self):
+        candles, quote = self.closed_five_minute_fixture()
+        del candles["data"][3]
+        result = check_snapshot(candles, quote, "2308.TW", 5, START.replace(hour=22))
+        self.assertEqual(result["code"], "SESSION_CLOSED")
+        self.assertEqual(result["gap_code"], "MISSING_BARS")
+        self.assertEqual(result["missing_bar_times"], ["2026-11-16T09:15:00+08:00"])
+
+    def test_delayed_auction_accepts_observed_1333_as_event_not_regular_bar(self):
+        candles, quote = self.closed_five_minute_fixture()
+        match = START.replace(hour=13, minute=33)
+        candles["data"][-1]["date"] = match.isoformat()
+        quote.update(isDelayedClose=True, closeTime=int(match.timestamp() * 1_000_000))
+        quote["total"]["time"] = quote["closeTime"]
+        result = check_snapshot(candles, quote, "2308.TW", 5, START.replace(hour=22))
+        self.assertEqual(result["session_state"], "closed")
+        self.assertEqual(result["reported_close_time"], match.isoformat())
+        self.assertIsNone(result["expected_bar_end"])
+
+    def test_pending_delayed_close_and_open_bar_are_not_reconciled(self):
+        candles, quote = self.closed_five_minute_fixture()
+        del candles["data"][-1]
+        quote.update(isClose=False, isDelayedClose=True)
+        result = check_snapshot(candles, quote, "2308.TW", 5, START.replace(hour=13, minute=31))
+        self.assertEqual(result["session_state"], "delayed_close_pending")
+        self.assertEqual(result["code"], "DELAYED_CLOSE_PENDING")
+        self.assertNotIn("difference", result)
+        candles, quote = fixture()
+        result = self.run_snapshot(candles, quote, NOW - timedelta(seconds=15))
+        self.assertEqual(result["code"], "BAR_NOT_CLOSED")
+        self.assertNotIn("difference", result)
+
+    @staticmethod
+    def closed_five_minute_fixture():
+        candles, quote = fixture()
+        candles["timeframe"] = "5"
+        candles["data"] = [{**candles["data"][0], "date": (START + timedelta(minutes=i * 5)).isoformat()}
+                           for i in [*range(53), 54]]
+        candles["data"][-1]["volume"] = 38078
+        close = START.replace(hour=13, minute=30)
+        quote.update(isClose=True, closeTime=int(close.timestamp() * 1_000_000))
+        quote["total"].update(time=quote["closeTime"], tradeVolume=43378)
+        return candles, quote
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -131,7 +186,7 @@ class CloudRouteTest(unittest.TestCase):
             app.query_params["view"] = "fugle-intraday"
             app.run()
             self.assertFalse(app.exception)
-            self.assertTrue(any("FUGLE-INTRADAY-20261116-2" in item.value for item in app.caption))
+            self.assertTrue(any("FUGLE-INTRADAY-20261116-3" in item.value for item in app.caption))
             probe.assert_not_called()
             app.text_input(key="fugle_intraday_preview_password").input("錯誤").run()
             probe.assert_not_called()

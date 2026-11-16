@@ -85,6 +85,19 @@ def _quote_stats(quote):
         raise CheckError("quote", "INVALID_STAT_TIME", "total.time") from None
 
 
+def _reported_close(quote, scheduled_close, last_possible_close, now):
+    value = quote.get("closeTime")
+    if quote.get("isClose") is not True or type(value) is not int or value <= 0:
+        return None
+    try:
+        stamp = datetime.fromtimestamp(value / 1_000_000, TAIPEI)
+    except (ValueError, OverflowError, OSError):
+        return None
+    if scheduled_close <= stamp <= min(last_possible_close, now):
+        return stamp.isoformat()
+    return None
+
+
 def check_snapshot(candles, quote, symbol, timeframe, now):
     code, market = _identity(symbol, timeframe)
     if now.utcoffset() is None:
@@ -100,7 +113,9 @@ def check_snapshot(candles, quote, symbol, timeframe, now):
 
     interval = timedelta(minutes=timeframe)
     opening = datetime.combine(trade_day, time(9), TAIPEI)
+    auction = datetime.combine(trade_day, time(13, 25), TAIPEI)
     closing = datetime.combine(trade_day, time(13, 30), TAIPEI)
+    latest_close = closing + timedelta(minutes=3)
     bars = []
     for item in items:
         value = _required(item, "date", "candles", "data[].date")
@@ -111,7 +126,8 @@ def check_snapshot(candles, quote, symbol, timeframe, now):
         if stamp.utcoffset() is None:
             raise CheckError("candles", "BAR_TIMEZONE_MISSING", "data[].date")
         stamp = stamp.astimezone(TAIPEI)
-        if not opening <= stamp <= min(closing, now) or (stamp - opening) % interval:
+        if (not opening <= stamp <= min(latest_close, now)
+                or (stamp < closing and (stamp - opening) % interval)):
             raise CheckError("candles", "BAR_TIME_OFF_GRID", "data[].date")
         if bars and stamp <= bars[-1][0]:
             raise CheckError("candles", "BAR_TIME_ORDER", "data[].date", bar_count=len(items))
@@ -125,30 +141,59 @@ def check_snapshot(candles, quote, symbol, timeframe, now):
         volume = _required(item, "volume", "candles", "data[].volume")
         bars.append((stamp, _regular_quantity(volume, "candles", "data[].volume")))
 
-    missing = (bars[-1][0] - opening) // interval + 1 - len(bars)
-    coverage = dict(data_date=trade_day.isoformat(), first_bar=bars[0][0].isoformat(),
-                    last_bar_start=bars[-1][0].isoformat(), bar_count=len(bars), missing_bars=missing)
+    first_start, last_start = bars[0][0], bars[-1][0]
+    present = {stamp for stamp, _ in bars}
+    last_regular = min(last_start, closing - interval)
+    expected = [opening + i * interval for i in range((last_regular - opening) // interval + 1)]
+    missing = [stamp for stamp in expected if stamp not in present]
+    regular_gaps = [stamp.isoformat() for stamp in missing if stamp < auction]
+    auction_gaps = [stamp.isoformat() for stamp in missing if stamp >= auction]
+    coverage = dict(data_date=trade_day.isoformat(), first_bar=first_start.isoformat(),
+                    last_bar_start=last_start.isoformat(), bar_count=len(bars), missing_bars=len(missing),
+                    missing_bar_times=regular_gaps, auction_window_gap_times=auction_gaps)
     try:
         _validate_header(quote, "quote", code, market, trade_day)
         quote_volume, quote_time = _quote_stats(quote)
     except CheckError as exc:
         exc.report.update({k: v for k, v in coverage.items() if k not in exc.report})
         raise
-    end = bars[-1][0] + interval
-    result = dict(symbol=symbol, timeframe=timeframe, unit="張", expected_bar_end=end.isoformat(),
+    end = last_start + interval if last_start < closing else None
+    kind = "closing_auction" if end is None else "closing_auction_window" if last_start >= auction else "regular"
+    state = "regular_session"
+    if quote.get("isClose") is True:
+        state = "closed"
+    elif quote.get("isDelayedClose") is True:
+        state = "delayed_close_pending" if now <= latest_close else "delayed_close_unconfirmed"
+    elif now > closing:
+        state = "after_scheduled_close"
+    elif now >= auction:
+        state = "closing_auction_window"
+    result = dict(symbol=symbol, timeframe=timeframe, unit="張",
+                  expected_bar_end=end.isoformat() if end else None, last_bar_kind=kind, session_state=state,
+                  scheduled_regular_close=closing.isoformat(),
+                  reported_close_time=_reported_close(quote, closing, latest_close, now),
                   stage="reconcile",
                   obtained_at=now.isoformat(), quote_time=quote_time.isoformat(),
                   quote_age_seconds=(now - quote_time).total_seconds(), quote_volume=quote_volume,
                   candles_volume=sum(volume for _, volume in bars), eligibility=UNVERIFIED, **coverage)
 
-    if missing:
-        result.update(status="待核：分 K 序列有缺棒", code="MISSING_BARS", endpoint="candles")
-    elif quote.get("isClose") is True or now > closing:
-        result.update(status="待核：日內報價已收盤，僅供回看", code="SESSION_CLOSED", endpoint="quote")
-    elif bars[-1][0] >= closing or not bars[-1][0] <= quote_time < end or quote_time > now:
+    if regular_gaps:
+        result["gap_code"] = "MISSING_BARS"
+    elif auction_gaps:
+        result["gap_code"] = "AUCTION_WINDOW_GAPS"
+
+    if state in ("delayed_close_pending", "delayed_close_unconfirmed"):
+        result.update(status="待核：延後收盤尚未確認", code="DELAYED_CLOSE_PENDING", endpoint="quote")
+    elif state in ("closed", "after_scheduled_close"):
+        result.update(status="盤後資料，僅供回看", code="SESSION_CLOSED", endpoint="quote")
+    elif missing:
+        result.update(status="待核：分 K 時間格有缺口", code=result["gap_code"], endpoint="candles")
+    elif end is None or not last_start <= quote_time < end or quote_time > now:
         result.update(status="待核：分 K 與統計截點不同", code="CUTOFF_MISMATCH")
     elif end > now:
         result.update(status="待核：最新分 K 時間尚未結束", code="BAR_NOT_CLOSED", endpoint="candles")
+    elif state == "closing_auction_window":
+        result.update(status="待核：收盤集合競價時段", code="CLOSING_AUCTION", endpoint="quote")
     elif now - quote_time > interval:
         result.update(status="待核：統計時間已過期", code="STALE_QUOTE", endpoint="quote")
     else:
