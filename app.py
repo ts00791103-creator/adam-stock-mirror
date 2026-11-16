@@ -18,6 +18,13 @@ if PRODUCTION_MODE:
 st.info("鏡像右側為歷史路徑反向排列的情境示意，並非即時行情或未來價格預測；未來日期為示意刻度，未完整排除台股休市日及盤中休市時段。")
 
 if not PRODUCTION_MODE:
+    if st.query_params.get("view") == "fugle-intraday":
+        from fugle_intraday_preview import show_fugle_intraday_preview
+        show_fugle_intraday_preview()
+        st.stop()
+    if st.button("富果分 K 單次驗收（受保護測試頁）", key="open_fugle_intraday"):
+        st.query_params["view"] = "fugle-intraday"
+        st.rerun()
     if st.query_params.get("view") == "fugle-history":
         from fugle_history_preview import show_fugle_history_preview
         show_fugle_history_preview()
