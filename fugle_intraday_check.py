@@ -3,16 +3,34 @@
 import json
 import re
 from math import isfinite
-from datetime import datetime, time, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, build_opener
 
-from fugle_history_validation import NoRedirect
-
-
+from fugle_history_validation import NoRedirect, ValidationError
 
 TAIPEI = timezone(timedelta(hours=8))
 BASE = "https://api.fugle.tw/marketdata/v1.0/stock/intraday/"
+UNVERIFIED = "延遲及收棒狀態未核實，當沖不可判定。"
+
+
+class CheckError(ValueError):
+    """Transportable diagnostic fields are assigned by this module, never by Fugle."""
+
+    def __init__(self, endpoint, code, field=None, **details):
+        super().__init__(code)
+        self.report = {"endpoint": endpoint, "code": code, **details}
+        if field:
+            self.report["field"] = field
+
+
+def _required(payload, key, endpoint, field=None):
+    name = field or key
+    if not isinstance(payload, dict):
+        raise CheckError(endpoint, "INVALID_OBJECT", name)
+    if key not in payload or payload[key] is None:
+        raise CheckError(endpoint, "MISSING_FIELD", name)
+    return payload[key]
 
 
 def _request(path, api_key):
@@ -29,11 +47,42 @@ def _identity(symbol, timeframe):
     return code, ("TWSE", "TSE") if market == "TW" else ("TPEx", "OTC")
 
 
-def _regular_quantity(value):
-    # Both endpoints count only on-session whole-lot trades in this request.
-    if type(value) is not int or value < 0:
-        raise ValueError("整股成交量缺漏或不是非負整數。")
-    return value
+def _regular_quantity(value, endpoint, field):
+    # JSON number can be written as 200 or 200.0; neither permits fractional lots.
+    if type(value) not in (int, float) or not isfinite(value) or value < 0 or value != int(value):
+        raise CheckError(endpoint, "INVALID_LOTS", field)
+    return int(value)
+
+
+def _validate_header(payload, endpoint, code, market, trade_day):
+    value = _required(payload, "date", endpoint)
+    try:
+        source_day = date.fromisoformat(value)
+    except (ValueError, TypeError):
+        raise CheckError(endpoint, "INVALID_DATE", "date") from None
+    if source_day != trade_day:
+        raise CheckError(endpoint, "DATE_MISMATCH", "date", data_date=source_day.isoformat(),
+                         requested_date=trade_day.isoformat())
+    if _required(payload, "symbol", endpoint) != code:
+        raise CheckError(endpoint, "SYMBOL_MISMATCH", "symbol")
+    if _required(payload, "exchange", endpoint) != market[0]:
+        raise CheckError(endpoint, "EXCHANGE_MISMATCH", "exchange")
+    market_value = payload.get("market")
+    if market_value != market[1] and (endpoint == "quote" or market_value is not None):
+        raise CheckError(endpoint, "MISSING_FIELD" if market_value is None else "MARKET_MISMATCH", "market")
+
+
+def _quote_stats(quote):
+    total = _required(quote, "total", "quote")
+    volume = _required(total, "tradeVolume", "quote", "total.tradeVolume")
+    lots = _regular_quantity(volume, "quote", "total.tradeVolume")
+    microseconds = _required(total, "time", "quote", "total.time")
+    if type(microseconds) is not int or microseconds <= 0:
+        raise CheckError("quote", "INVALID_STAT_TIME", "total.time")
+    try:
+        return lots, datetime.fromtimestamp(microseconds / 1_000_000, TAIPEI)
+    except (ValueError, OverflowError, OSError):
+        raise CheckError("quote", "INVALID_STAT_TIME", "total.time") from None
 
 
 def check_snapshot(candles, quote, symbol, timeframe, now):
@@ -42,49 +91,66 @@ def check_snapshot(candles, quote, symbol, timeframe, now):
         raise ValueError("查核時間缺時區。")
     now = now.astimezone(TAIPEI)
     trade_day = now.date()
-    for payload in (candles, quote):
-        if (not isinstance(payload, dict) or payload.get("symbol") != code
-                or (payload.get("exchange"), payload.get("market")) != market
-                or payload.get("date") != trade_day.isoformat()):
-            raise ValueError("富果商品、交易所、盤別或交易日不符。")
-    if str(candles.get("timeframe")) != str(timeframe) or not candles.get("data"):
-        raise ValueError("富果週期或分 K 資料不符。")
+    _validate_header(candles, "candles", code, market, trade_day)
+    if str(_required(candles, "timeframe", "candles")) != str(timeframe):
+        raise CheckError("candles", "TIMEFRAME_MISMATCH", "timeframe")
+    items = _required(candles, "data", "candles")
+    if not isinstance(items, list) or not items:
+        raise CheckError("candles", "INVALID_OR_EMPTY_BARS", "data")
 
     interval = timedelta(minutes=timeframe)
     opening = datetime.combine(trade_day, time(9), TAIPEI)
     closing = datetime.combine(trade_day, time(13, 30), TAIPEI)
     bars = []
-    for i, item in enumerate(candles["data"]):
-        stamp = datetime.fromisoformat(item["date"])
-        if stamp.utcoffset() is None or stamp != opening + i * interval:
-            raise ValueError("分 K 開棒時間缺時區、缺棒、重複或未依序。")
-        prices = tuple(item[field] for field in ("open", "high", "low", "close"))
+    for item in items:
+        value = _required(item, "date", "candles", "data[].date")
+        try:
+            stamp = datetime.fromisoformat(value)
+        except (ValueError, TypeError):
+            raise CheckError("candles", "INVALID_BAR_TIME", "data[].date") from None
+        if stamp.utcoffset() is None:
+            raise CheckError("candles", "BAR_TIMEZONE_MISSING", "data[].date")
+        stamp = stamp.astimezone(TAIPEI)
+        if not opening <= stamp <= min(closing, now) or (stamp - opening) % interval:
+            raise CheckError("candles", "BAR_TIME_OFF_GRID", "data[].date")
+        if bars and stamp <= bars[-1][0]:
+            raise CheckError("candles", "BAR_TIME_ORDER", "data[].date", bar_count=len(items))
+        prices = tuple(_required(item, field, "candles", f"data[].{field}")
+                       for field in ("open", "high", "low", "close"))
         if not all(type(value) in (int, float) and isfinite(value) for value in prices):
-            raise ValueError("分 K OHLC 無效。")
+            raise CheckError("candles", "INVALID_OHLC", "data[].OHLC")
         first, high, low, last = prices
         if not 0 < low <= min(first, last) <= max(first, last) <= high:
-            raise ValueError("分 K OHLC 無效。")
-        bars.append((stamp, _regular_quantity(item["volume"])))
-    total = quote["total"]
-    quote_volume = _regular_quantity(total["tradeVolume"])
-    seconds = total["time"]
-    if type(seconds) is not int or seconds <= 0:
-        raise ValueError("日內報價缺少有效統計時間。")
-    quote_time = datetime.fromtimestamp(seconds / 1_000_000, TAIPEI)
+            raise CheckError("candles", "INVALID_OHLC", "data[].OHLC")
+        volume = _required(item, "volume", "candles", "data[].volume")
+        bars.append((stamp, _regular_quantity(volume, "candles", "data[].volume")))
+
+    missing = (bars[-1][0] - opening) // interval + 1 - len(bars)
+    coverage = dict(data_date=trade_day.isoformat(), first_bar=bars[0][0].isoformat(),
+                    last_bar_start=bars[-1][0].isoformat(), bar_count=len(bars), missing_bars=missing)
+    try:
+        _validate_header(quote, "quote", code, market, trade_day)
+        quote_volume, quote_time = _quote_stats(quote)
+    except CheckError as exc:
+        exc.report.update({k: v for k, v in coverage.items() if k not in exc.report})
+        raise
     end = bars[-1][0] + interval
-    result = dict(symbol=symbol, timeframe=timeframe, unit="張", first_bar=bars[0][0].isoformat(),
-                  last_bar_start=bars[-1][0].isoformat(), expected_bar_end=end.isoformat(),
+    result = dict(symbol=symbol, timeframe=timeframe, unit="張", expected_bar_end=end.isoformat(),
+                  stage="reconcile",
                   obtained_at=now.isoformat(), quote_time=quote_time.isoformat(),
                   quote_age_seconds=(now - quote_time).total_seconds(), quote_volume=quote_volume,
-                  bar_count=len(bars), candles_volume=sum(volume for _, volume in bars),
-                  eligibility="延遲及收棒狀態未核實，當沖不可判定。")
+                  candles_volume=sum(volume for _, volume in bars), eligibility=UNVERIFIED, **coverage)
 
-    if bars[-1][0] >= closing or not bars[-1][0] <= quote_time < end or quote_time > now:
-        result["status"] = "待核：分 K 與統計截點不同"
+    if missing:
+        result.update(status="待核：分 K 序列有缺棒", code="MISSING_BARS", endpoint="candles")
+    elif quote.get("isClose") is True or now > closing:
+        result.update(status="待核：日內報價已收盤，僅供回看", code="SESSION_CLOSED", endpoint="quote")
+    elif bars[-1][0] >= closing or not bars[-1][0] <= quote_time < end or quote_time > now:
+        result.update(status="待核：分 K 與統計截點不同", code="CUTOFF_MISMATCH")
     elif end > now:
-        result["status"] = "待核：最新分 K 時間尚未結束"
+        result.update(status="待核：最新分 K 時間尚未結束", code="BAR_NOT_CLOSED", endpoint="candles")
     elif now - quote_time > interval:
-        result["status"] = "待核：統計時間已過期"
+        result.update(status="待核：統計時間已過期", code="STALE_QUOTE", endpoint="quote")
     else:
         result["difference"] = result["candles_volume"] - quote_volume
         result["status"] = "同時段量一致" if result["difference"] == 0 else "待核：同時段量不符"
@@ -96,10 +162,25 @@ def run_intraday_check(symbol, timeframe, api_key):
         return {"status": "本機沒有可用的富果授權設定"}
     try:
         code, _ = _identity(symbol, timeframe)
-        candles = _request(f"candles/{code}?timeframe={timeframe}&sort=asc", api_key)
-        quote = _request(f"quote/{code}", api_key)
-        return check_snapshot(candles, quote, symbol, timeframe, datetime.now(TAIPEI))
-    except HTTPError as exc:
-        return {"status": f"富果查詢未通過（HTTP {exc.code}）"}
-    except (OSError, URLError, TypeError, ValueError, KeyError, OverflowError):
-        return {"status": "富果回應、盤別或資料品質驗證未通過"}
+    except ValueError:
+        return {"status": "不支援此商品或週期", "stage": "request", "code": "INVALID_REQUEST"}
+    payloads = []
+    for endpoint, path in (("candles", f"candles/{code}?timeframe={timeframe}&sort=asc"),
+                           ("quote", f"quote/{code}")):
+        try:
+            payloads.append(_request(path, api_key))
+        except HTTPError as exc:
+            return {"status": f"富果查詢未通過（HTTP {exc.code}）", "endpoint": endpoint,
+                    "stage": "fetch", "code": "HTTP_ERROR", "http_status": exc.code}
+        except (OSError, URLError):
+            return {"status": "富果連線未完成", "endpoint": endpoint, "stage": "fetch", "code": "NETWORK"}
+        except ValidationError:
+            return {"status": "富果重新導向已停止", "endpoint": endpoint, "stage": "fetch", "code": "REDIRECT"}
+        except (UnicodeError, json.JSONDecodeError):
+            return {"status": "富果回傳格式無法讀取", "endpoint": endpoint, "stage": "decode", "code": "INVALID_JSON"}
+    try:
+        return check_snapshot(*payloads, symbol, timeframe, datetime.now(TAIPEI))
+    except CheckError as exc:
+        return {"status": "富果資料欄位未通過驗證", "stage": "validate", **exc.report}
+    except (ArithmeticError, TypeError, ValueError):
+        return {"status": "富果回應無法驗證", "stage": "validate", "code": "INVALID_RESPONSE"}

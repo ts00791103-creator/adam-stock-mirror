@@ -3,7 +3,7 @@ from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 
 from streamlit.testing.v1 import AppTest
 
@@ -13,6 +13,12 @@ from fugle_intraday_check import check_snapshot, run_intraday_check
 TZ = timezone(timedelta(hours=8))
 START = datetime(2026, 11, 16, 9, tzinfo=TZ)
 NOW = START + timedelta(minutes=2, seconds=10)
+
+
+class FixedDateTime(datetime):
+    @classmethod
+    def now(cls, tz=None):
+        return NOW.astimezone(tz)
 
 
 def fixture():
@@ -67,6 +73,50 @@ class FugleIntradayCheckTest(unittest.TestCase):
             self.assertEqual(run_intraday_check("2308.TW", 1, "test-key")["status"], "富果查詢未通過（HTTP 403）")
             self.assertEqual(get.call_count, 1)
 
+    def test_market_optional_and_integral_json_numbers_supported(self):
+        candles, quote = fixture()
+        del candles["market"]
+        candles["data"][0]["volume"] = 100.0
+        quote["total"]["tradeVolume"] = 200.0
+        self.assertEqual(self.run_snapshot(candles, quote)["difference"], 0)
+
+    def test_missing_bars_report_observed_range_without_volume_comparison(self):
+        candles, quote = fixture()
+        candles["data"][-1]["date"] = (START + timedelta(minutes=3)).isoformat()
+        result = self.run_snapshot(candles, quote, START + timedelta(minutes=4))
+        self.assertEqual(result["code"], "MISSING_BARS")
+        self.assertEqual(result["missing_bars"], 2)
+        self.assertEqual(result["first_bar"], START.isoformat())
+        self.assertTrue(result["last_bar_start"].endswith("09:03:00+08:00"))
+        self.assertNotIn("difference", result)
+
+    def test_validations_report_missing_field_without_exposing_payload(self):
+        candles, quote = fixture()
+        del quote["total"]["tradeVolume"]
+        quote["unknown"] = "private payload"
+        with (patch("fugle_intraday_check._request", side_effect=[candles, quote]) as fetch,
+              patch("fugle_intraday_check.datetime", FixedDateTime)):
+            result = run_intraday_check("2308.TW", 1, "private key")
+        self.assertEqual((result["stage"], result["endpoint"], result["code"], result["field"]),
+                         ("validate", "quote", "MISSING_FIELD", "total.tradeVolume"))
+        self.assertNotIn("private", repr(result))
+        self.assertEqual(result["bar_count"], 2)
+        self.assertEqual(fetch.call_count, 2)
+
+    def test_distinguishes_transport_endpoint_and_suppresses_raw_exception(self):
+        candles, _ = fixture()
+        with patch("fugle_intraday_check._request", side_effect=[candles, URLError("private detail")]):
+            result = run_intraday_check("2308.TW", 1, "test-key")
+        self.assertEqual((result["stage"], result["endpoint"], result["code"]), ("fetch", "quote", "NETWORK"))
+        self.assertNotIn("private", repr(result))
+
+    def test_closed_quote_never_claims_same_window_live_comparison(self):
+        candles, quote = fixture()
+        quote["isClose"] = True
+        result = self.run_snapshot(candles, quote)
+        self.assertEqual(result["code"], "SESSION_CLOSED")
+        self.assertNotIn("difference", result)
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -81,7 +131,7 @@ class CloudRouteTest(unittest.TestCase):
             app.query_params["view"] = "fugle-intraday"
             app.run()
             self.assertFalse(app.exception)
-            self.assertTrue(any("FUGLE-INTRADAY-20261116-1" in item.value for item in app.caption))
+            self.assertTrue(any("FUGLE-INTRADAY-20261116-2" in item.value for item in app.caption))
             probe.assert_not_called()
             app.text_input(key="fugle_intraday_preview_password").input("錯誤").run()
             probe.assert_not_called()
