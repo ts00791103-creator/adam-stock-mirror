@@ -7,7 +7,7 @@ from urllib.error import HTTPError, URLError
 
 from streamlit.testing.v1 import AppTest
 
-from fugle_intraday_check import check_snapshot, run_intraday_check
+from fugle_intraday_check import CheckError, check_snapshot, run_intraday_check
 
 
 TZ = timezone(timedelta(hours=8))
@@ -125,8 +125,55 @@ class FugleIntradayCheckTest(unittest.TestCase):
         self.assertIsNone(result["expected_bar_end"])
         self.assertEqual(result["missing_bar_times"], [])
         self.assertEqual(result["auction_window_gap_times"], ["2026-11-16T13:25:00+08:00"])
+        self.assertEqual(result["received_bar_times"], [row["date"] for row in candles["data"]])
+        self.assertEqual(result["bar_count"], len(result["received_bar_times"]))
         self.assertEqual((result["candles_volume"], result["quote_volume"]), (43378, 43378))
+        self.assertTrue(result["reported_totals_equal"])
+        self.assertFalse(result["comparison_performed"])
         self.assertNotIn("difference", result)
+
+    def test_verified_close_audits_missing_tail_but_unknown_close_does_not(self):
+        candles, quote = self.closed_five_minute_fixture()
+        candles["data"] = candles["data"][:52]
+        now = START.replace(hour=22)
+        result = check_snapshot(candles, quote, "2308.TW", 5, now)
+        self.assertEqual(result["coverage_end_basis"], "reported_close")
+        self.assertEqual(result["coverage_through"], "2026-11-16T13:25:00+08:00")
+        self.assertEqual(result["missing_bar_times"], ["2026-11-16T13:20:00+08:00"])
+        self.assertEqual(result["auction_window_gap_times"], ["2026-11-16T13:25:00+08:00"])
+        self.assertEqual(result["received_bar_times"][-1], "2026-11-16T13:15:00+08:00")
+        self.assertNotIn("difference", result)
+        del quote["closeTime"]
+        result = check_snapshot(candles, quote, "2308.TW", 5, now)
+        self.assertEqual(result["coverage_end_basis"], "received_extent")
+        self.assertEqual(result["coverage_through"], "2026-11-16T13:15:00+08:00")
+        self.assertIsNone(result["reported_close_time"])
+        self.assertEqual(result["missing_bars"], 0)
+
+    def test_received_times_are_normalized_without_forwarding_provider_payload(self):
+        candles, quote = fixture()
+        candles["data"][0]["date"] = "2026-11-16T01:00:00Z"
+        candles["data"][0].update(headers={"X-API-KEY": "private-value"}, password="private-password")
+        quote["token"] = "private-token"
+        result = self.run_snapshot(candles, quote)
+        self.assertEqual(result["received_bar_times"],
+                         ["2026-11-16T09:00:00+08:00", "2026-11-16T09:01:00+08:00"])
+        self.assertEqual(len(result["received_bar_times"]), result["bar_count"])
+        self.assertTrue(result["comparison_performed"])
+        for field in ("private", "headers", "X-API-KEY", "password", "token", "'open'", "'high'"):
+            self.assertNotIn(field, repr(result))
+
+    def test_wrong_quote_statistics_day_preserves_only_valid_candle_coverage(self):
+        candles, quote = self.closed_five_minute_fixture()
+        candles["data"] = candles["data"][:52]
+        quote["total"]["time"] -= 86_400_000_000
+        with self.assertRaises(CheckError) as failed:
+            check_snapshot(candles, quote, "2308.TW", 5, START.replace(hour=22))
+        report = failed.exception.report
+        self.assertEqual(report["code"], "STAT_DATE_MISMATCH")
+        self.assertEqual(report["coverage_end_basis"], "received_extent")
+        self.assertEqual(len(report["received_bar_times"]), 52)
+        self.assertNotIn("quote_volume", report)
 
     def test_interior_gap_is_reported_even_when_session_is_closed(self):
         candles, quote = self.closed_five_minute_fixture()
@@ -145,6 +192,7 @@ class FugleIntradayCheckTest(unittest.TestCase):
         result = check_snapshot(candles, quote, "2308.TW", 5, START.replace(hour=22))
         self.assertEqual(result["session_state"], "closed")
         self.assertEqual(result["reported_close_time"], match.isoformat())
+        self.assertEqual(result["received_bar_times"][-1], match.isoformat())
         self.assertIsNone(result["expected_bar_end"])
 
     def test_pending_delayed_close_and_open_bar_are_not_reconciled(self):
@@ -158,6 +206,8 @@ class FugleIntradayCheckTest(unittest.TestCase):
         candles, quote = fixture()
         result = self.run_snapshot(candles, quote, NOW - timedelta(seconds=15))
         self.assertEqual(result["code"], "BAR_NOT_CLOSED")
+        self.assertEqual(result["received_bar_times"][-1], "2026-11-16T09:01:00+08:00")
+        self.assertFalse(result["comparison_performed"])
         self.assertNotIn("difference", result)
 
     @staticmethod
@@ -178,15 +228,18 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class CloudRouteTest(unittest.TestCase):
     def test_candidate_route_requires_password_and_manual_action(self):
+        candles, quote = FugleIntradayCheckTest.closed_five_minute_fixture()
+        report = check_snapshot(candles, quote, "2308.TW", 5, START.replace(hour=22))
         with (
             patch("fugle_intraday_preview._secret", side_effect=lambda name: "test-key" if name == "FUGLE_API_KEY" else "密碼"),
-            patch("fugle_intraday_preview.run_intraday_check", return_value={"status": "測試狀態"}) as probe,
+            patch("fugle_intraday_preview.run_intraday_check", return_value=report) as probe,
         ):
             app = AppTest.from_file(str(ROOT / "app.py"))
             app.query_params["view"] = "fugle-intraday"
             app.run()
             self.assertFalse(app.exception)
-            self.assertTrue(any("FUGLE-INTRADAY-20261116-3" in item.value for item in app.caption))
+            self.assertTrue(any("FUGLE-INTRADAY-20261117-4" in item.value for item in app.caption))
+            self.assertFalse(app.json)
             probe.assert_not_called()
             app.text_input(key="fugle_intraday_preview_password").input("錯誤").run()
             probe.assert_not_called()
@@ -196,6 +249,9 @@ class CloudRouteTest(unittest.TestCase):
             app.button(key="fugle_intraday_preview_check").click().run()
             probe.assert_called_once_with("2330.TW", 5, "test-key")
             self.assertFalse(app.exception)
+            self.assertIn("received_bar_times", app.json[0].value)
+            self.assertNotIn("test-key", app.json[0].value)
+            self.assertTrue(any("尚未完成同截點對帳" in item.value for item in app.caption))
             self.assertTrue(any("當沖不可判定" in item.value for item in app.warning))
 
     def test_production_ignores_direct_candidate_query(self):

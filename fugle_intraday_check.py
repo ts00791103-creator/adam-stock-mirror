@@ -98,6 +98,27 @@ def _reported_close(quote, scheduled_close, last_possible_close, now):
     return None
 
 
+def _bar_coverage(bars, opening, auction, closing, interval, reported_close=None):
+    stamps = [stamp for stamp, _ in bars]
+    present = set(stamps)
+    last_grid_start = closing - interval
+    through = last_grid_start if reported_close else min(stamps[-1], last_grid_start)
+    expected = (opening + i * interval for i in range((through - opening) // interval + 1))
+    missing = [stamp for stamp in expected if stamp not in present]
+    return dict(
+        data_date=opening.date().isoformat(),
+        first_bar=stamps[0].isoformat(),
+        last_bar_start=stamps[-1].isoformat(),
+        bar_count=len(stamps),
+        received_bar_times=[stamp.isoformat() for stamp in stamps],
+        coverage_through=through.isoformat(),
+        coverage_end_basis="reported_close" if reported_close else "received_extent",
+        missing_bars=len(missing),
+        missing_bar_times=[stamp.isoformat() for stamp in missing if stamp < auction],
+        auction_window_gap_times=[stamp.isoformat() for stamp in missing if stamp >= auction],
+    )
+
+
 def check_snapshot(candles, quote, symbol, timeframe, now):
     code, market = _identity(symbol, timeframe)
     if now.utcoffset() is None:
@@ -141,22 +162,19 @@ def check_snapshot(candles, quote, symbol, timeframe, now):
         volume = _required(item, "volume", "candles", "data[].volume")
         bars.append((stamp, _regular_quantity(volume, "candles", "data[].volume")))
 
-    first_start, last_start = bars[0][0], bars[-1][0]
-    present = {stamp for stamp, _ in bars}
-    last_regular = min(last_start, closing - interval)
-    expected = [opening + i * interval for i in range((last_regular - opening) // interval + 1)]
-    missing = [stamp for stamp in expected if stamp not in present]
-    regular_gaps = [stamp.isoformat() for stamp in missing if stamp < auction]
-    auction_gaps = [stamp.isoformat() for stamp in missing if stamp >= auction]
-    coverage = dict(data_date=trade_day.isoformat(), first_bar=first_start.isoformat(),
-                    last_bar_start=last_start.isoformat(), bar_count=len(bars), missing_bars=len(missing),
-                    missing_bar_times=regular_gaps, auction_window_gap_times=auction_gaps)
+    last_start = bars[-1][0]
     try:
         _validate_header(quote, "quote", code, market, trade_day)
         quote_volume, quote_time = _quote_stats(quote)
+        if quote_time.date() != trade_day:
+            raise CheckError("quote", "STAT_DATE_MISMATCH", "total.time",
+                             quote_time=quote_time.isoformat())
     except CheckError as exc:
+        coverage = _bar_coverage(bars, opening, auction, closing, interval)
         exc.report.update({k: v for k, v in coverage.items() if k not in exc.report})
         raise
+    reported_close = _reported_close(quote, closing, latest_close, now)
+    coverage = _bar_coverage(bars, opening, auction, closing, interval, reported_close)
     end = last_start + interval if last_start < closing else None
     kind = "closing_auction" if end is None else "closing_auction_window" if last_start >= auction else "regular"
     state = "regular_session"
@@ -168,25 +186,27 @@ def check_snapshot(candles, quote, symbol, timeframe, now):
         state = "after_scheduled_close"
     elif now >= auction:
         state = "closing_auction_window"
+    candles_volume = sum(volume for _, volume in bars)
     result = dict(symbol=symbol, timeframe=timeframe, unit="張",
                   expected_bar_end=end.isoformat() if end else None, last_bar_kind=kind, session_state=state,
                   scheduled_regular_close=closing.isoformat(),
-                  reported_close_time=_reported_close(quote, closing, latest_close, now),
+                  reported_close_time=reported_close,
                   stage="reconcile",
                   obtained_at=now.isoformat(), quote_time=quote_time.isoformat(),
                   quote_age_seconds=(now - quote_time).total_seconds(), quote_volume=quote_volume,
-                  candles_volume=sum(volume for _, volume in bars), eligibility=UNVERIFIED, **coverage)
+                  candles_volume=candles_volume, reported_totals_equal=candles_volume == quote_volume,
+                  comparison_performed=False, eligibility=UNVERIFIED, **coverage)
 
-    if regular_gaps:
+    if coverage["missing_bar_times"]:
         result["gap_code"] = "MISSING_BARS"
-    elif auction_gaps:
+    elif coverage["auction_window_gap_times"]:
         result["gap_code"] = "AUCTION_WINDOW_GAPS"
 
     if state in ("delayed_close_pending", "delayed_close_unconfirmed"):
         result.update(status="待核：延後收盤尚未確認", code="DELAYED_CLOSE_PENDING", endpoint="quote")
     elif state in ("closed", "after_scheduled_close"):
         result.update(status="盤後資料，僅供回看", code="SESSION_CLOSED", endpoint="quote")
-    elif missing:
+    elif coverage["missing_bars"]:
         result.update(status="待核：分 K 時間格有缺口", code=result["gap_code"], endpoint="candles")
     elif end is None or not last_start <= quote_time < end or quote_time > now:
         result.update(status="待核：分 K 與統計截點不同", code="CUTOFF_MISMATCH")
@@ -197,7 +217,8 @@ def check_snapshot(candles, quote, symbol, timeframe, now):
     elif now - quote_time > interval:
         result.update(status="待核：統計時間已過期", code="STALE_QUOTE", endpoint="quote")
     else:
-        result["difference"] = result["candles_volume"] - quote_volume
+        result["difference"] = candles_volume - quote_volume
+        result["comparison_performed"] = True
         result["status"] = "同時段量一致" if result["difference"] == 0 else "待核：同時段量不符"
     return result
 
