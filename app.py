@@ -18,6 +18,10 @@ if PRODUCTION_MODE:
 st.info("鏡像右側為歷史路徑反向排列的情境示意，並非即時行情或未來價格預測；未來日期為示意刻度，未完整排除台股休市日及盤中休市時段。")
 
 if not PRODUCTION_MODE:
+    if st.query_params.get("view") == "tx-four-lines":
+        from tx_four_lines_ui import show_four_lines
+        show_four_lines(st)
+        st.stop()
     if st.query_params.get("view") == "fugle-intraday":
         from fugle_intraday_preview import show_fugle_intraday_preview
         show_fugle_intraday_preview()

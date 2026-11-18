@@ -7,6 +7,7 @@ from tx_provisional import replay, rotate_ohlc
 
 
 def show_demo(st):
+    st.markdown("[台指 TX 202611 四線價帶觀察](?view=tx-four-lines)")
     with st.expander("台指期｜延遲行情查看"):
         st.caption("TradingView 的期交所免費方案標示延遲 15 分鐘。資料時間、合約與交易時段請以來源畫面為準。")
         st.markdown("[開啟 TradingView 台指期連續合約](https://tw.tradingview.com/symbols/TAIFEX-TXF1%21/)")
